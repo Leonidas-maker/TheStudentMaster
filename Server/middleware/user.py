@@ -26,7 +26,7 @@ def get_user(
             user_uuid = uuid.UUID(user_uuid)
         return (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User.user_id)
-            .filter(user_uuid == user_uuid)
+            .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
     elif user_id:
@@ -67,7 +67,7 @@ def get_user_security(
 
         user_security = (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserSecurity.user_id)
-            .filter(user_uuid == user_uuid)
+            .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
 
@@ -88,7 +88,7 @@ def get_user_tokens(
             user_uuid = uuid.UUID(user_uuid)
         user_tokens = (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserTokens.user_id)
-            .filter(user_uuid == user_uuid)
+            .filter(m_user.UserUUID.user_uuid == user_uuid)
             .all()
         )
 
@@ -107,7 +107,7 @@ def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) 
             user_uuid = uuid.UUID(user_uuid)
         user_2fa = (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User2FA.user_id)
-            .filter(user_uuid == user_uuid)
+            .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
 
