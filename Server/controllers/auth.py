@@ -136,7 +136,6 @@ def logout(db: Session, refresh_token: str, access_token: str):
 
 def verify_account(db: Session, user_uuid: str, verify_code: str):
     user_security = get_user_security(db, user_uuid=user_uuid)
-    print(user_security.user_id, verify_code)
     if verify_simple_otp(user_security, verify_code):
         user_security.verified = True
         user_security.verify_otp = None
