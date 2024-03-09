@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mysql import MEDIUMBLOB, INTEGER as INT
 from config.database import Base
 from config.security import *
 import uuid
+from .m_general import *
 
 
 class User(Base):

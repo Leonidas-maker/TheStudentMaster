@@ -26,4 +26,3 @@ class ICalCustom(Base):
     name = Column(String(255), nullable=False)
     ical_data = Column(MEDIUMBLOB(204800), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
-
