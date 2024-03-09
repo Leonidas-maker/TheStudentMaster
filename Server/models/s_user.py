@@ -2,73 +2,11 @@ from pydantic import BaseModel, EmailStr, UUID4
 from typing import Optional
 from datetime import datetime
 
+from .s_general import AddressCreate, CompleteAdress
 
 ###########################################################################
 ############################# Pydantic models #############################
 ###########################################################################
-
-
-# ======================================================== #
-# ======================== Address ======================= #
-# ======================================================== #
-class AddressBase(BaseModel):
-    address1: str
-    address2: Optional[str] = None
-    district: str
-    postal_code: str
-
-
-class AddressCreate(AddressBase):
-    city: str
-    country: str
-
-
-class Address(AddressBase):
-    address_id: int
-    city_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# ======================================================== #
-# ========================= City ========================= #
-# ======================================================== #
-class CityBase(BaseModel):
-    city: str
-    country_id: int
-
-
-class CityCreate(CityBase):
-    pass
-
-
-class City(CityBase):
-    city_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# ======================================================== #
-# ======================== Country ======================= #
-# ======================================================== #
-class CountryBase(BaseModel):
-    country: str
-
-
-class CountryCreate(CountryBase):
-    pass
-
-
-class Country(CountryBase):
-    country_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
 
 
 # ======================================================== #
@@ -151,78 +89,6 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
-
-
-# ======================================================== #
-# ===================== ShoppingCart ===================== #
-# ======================================================== #
-class ShoppingCartBase(BaseModel):
-    user_id: int
-    product_id: int
-    quantity: int
-
-
-class ShoppingCartCreate(ShoppingCartBase):
-    pass
-
-
-class ShoppingCart(ShoppingCartBase):
-    shoppingCart_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# ======================================================== #
-# ==================== FavoriteProduct =================== #
-# ======================================================== #
-class FavoriteProductBase(BaseModel):
-    user_id: int
-    product_id: int
-
-
-class FavoriteProductCreate(FavoriteProductBase):
-    pass
-
-
-class FavoriteProduct(FavoriteProductBase):
-    favoriteProduct_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# ======================================================== #
-# ======================== Product ======================= #
-# ======================================================== #
-class ProductBase(BaseModel):
-    name: str
-    description: str
-    price: int
-
-
-class ProductCreate(ProductBase):
-    pass
-
-
-class Product(ProductBase):
-    product_id: int
-    last_modified: datetime
-
-    class Config:
-        from_attributes = True
-
-
-class CompleteAdress(BaseModel):
-    address1: str
-    address2: Optional[str] = None
-    district: str
-    postal_code: str
-    city: str
-    country: str
-
 
 class ResGetUser(UserBase):
     user_uuid: UUID4

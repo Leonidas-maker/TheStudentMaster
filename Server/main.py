@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from fastapi_cdn_host import monkey_patch_for_docs_ui 
 
-from models import m_user
+from models import m_user, m_ical, m_general
 from config.database import engine
 from routes import user, auth
 from data.email import send_with_template, EmailSchema
 
+m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
+m_ical.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 monkey_patch_for_docs_ui(app)
 
