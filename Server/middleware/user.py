@@ -24,7 +24,11 @@ def get_user(
     if user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
-        return query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User.user_id).filter(user_uuid=user_uuid).first()
+        return (
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User.user_id)
+            .filter(user_uuid == user_uuid)
+            .first()
+        )
     elif user_id:
         return query.filter(m_user.User.user_id == user_id).first()
     elif username:
@@ -61,7 +65,11 @@ def get_user_security(
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
 
-        user_security = query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserSecurity.user_id).filter(user_uuid=user_uuid).first()
+        user_security = (
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserSecurity.user_id)
+            .filter(user_uuid == user_uuid)
+            .first()
+        )
 
     if user_security:
         return user_security
@@ -78,7 +86,11 @@ def get_user_tokens(
     else:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
-        user_tokens = query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserTokens.user_id).filter(user_uuid=user_uuid).all()
+        user_tokens = (
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserTokens.user_id)
+            .filter(user_uuid == user_uuid)
+            .all()
+        )
 
     if user_tokens:
         return user_tokens
@@ -93,7 +105,11 @@ def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) 
     else:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
-        user_2fa = query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User2FA.user_id).filter(user_uuid=user_uuid).first()
+        user_2fa = (
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User2FA.user_id)
+            .filter(user_uuid == user_uuid)
+            .first()
+        )
 
     if user_2fa:
         return user_2fa
