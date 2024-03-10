@@ -1,67 +1,32 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, ForeignKey
+from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON
 from config.database import Base
-from sqlalchemy.orm import relationship, Mapped
-from typing import List
+from sqlalchemy.orm import validates, sessionmaker
+import json
 
-class ICalGeneral(Base):
-    __tablename__ = "ical_general"
 
-    ical_id = Column(Integer, primary_key=True, index=True, nullable=False)
-
+class ICalCustom(Base):
+    __tablename__ = "ical_custom"
+    id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
-    source = Column(String(255), nullable=False, unique=True)
-
-    is_active = Column(BOOLEAN, nullable=False, default=False)
-    is_custom = Column(BOOLEAN, nullable=False, default=False)
-    last_modified = Column(TIMESTAMP, nullable=False)
-
-    # Mapped is a type hint for the 1:n relationship
-    events: Mapped[List["ICalEventBase"]] = relationship(back_populates="ical")
-
-
-class ICalEventBase(Base):
-    __tablename__ = "ical_event_base"
-
-    base_event_id = Column(Integer, primary_key=True, index=True, nullable=False)
-    ical_id = Column(Integer, ForeignKey("ical_general.ical_id"), nullable=False)
-
-    summary = Column(String(255), nullable=False)
-    last_modified = Column(TIMESTAMP, nullable=False)
-
-    event = relationship("ICalEvent", backref="ical_event_base")
-    ical = relationship("ICalGeneral", backref="ical_event_base")
-
-
-class ICalEvent(Base):
-    __tablename__ = "ical_event"
-
-    event_id = Column(Integer, primary_key=True, index=True, nullable=False)
-    base_event_id = Column(Integer, ForeignKey("ical_event_base.base_event_id"), nullable=False)
-
-    description = Column(String(255))
-    location_id = Column(Integer, ForeignKey("ical_location.location_id"), nullable=False)
-
-    start = Column(TIMESTAMP, nullable=False)
-    end = Column(TIMESTAMP, nullable=False)
-    timezone_id = Column(Integer, ForeignKey("time_zones.timezone_id"), nullable=False)
+    source_url = Column(String(255), nullable=False)
+    data = Column(JSON, nullable=False)
+    hash = Column(String(255), nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    location = relationship("ICalLocation", backref="ical_event")
-    timezone = relationship("TimeZones", backref="ical_event")
+    @validates("data")
+    def validate_data(self, key, data):
+        if len(json.dumps(data)) > 200 * 1024:  # 200 Kilobytes
+            raise ValueError("Data is too large!")
+        return data
 
+class ICalDHBWMannheim(Base):
+    __tablename__ = "ical_dhbw_mannheim"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    source = Column(String(255), nullable=False)
+    data = Column(JSON, nullable=False)
+    hash = Column(String(255), nullable=False)
+    is_active = Column(BOOLEAN, default=False)
 
-class ICalLocation(Base):
-    __tablename__ = "ical_location"
-
-    location_id = Column(Integer, primary_key=True, index=True, nullable=False)
-    location = Column(String(255), nullable=False)
-    last_modified = Column(TIMESTAMP, nullable=False)
-
-
-class TimeZones(Base):
-    __tablename__ = "time_zones"
-
-    timezone_id = Column(Integer, primary_key=True, index=True, nullable=False)
-    timezone = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
