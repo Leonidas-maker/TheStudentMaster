@@ -33,8 +33,8 @@ function HomeBottomTabs() {
                     },
                     tabBarStyle: { backgroundColor: '#171717' },
                     headerTintColor: '#f5f5f5',
-                    tabBarActiveTintColor: '#a3a3a3',
-                    tabBarInactiveTintColor: '#f5f5f5'
+                    tabBarActiveTintColor: '#780000',
+                    tabBarInactiveTintColor: '#c1121f'
                 }}
             >
                 <Tab.Screen
