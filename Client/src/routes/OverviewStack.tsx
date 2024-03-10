@@ -6,7 +6,6 @@ import Overview from '../screens/overview/Overview';
 import Dualis from '../screens/dualis/Dualis';
 import Flashcards from '../screens/flashcards/Flashcards';
 import MealPlan from '../screens/mealPlan/MealPlan';
-import GeneralNavigator from '../components/navigator/ModuleNavigator';
 
 const Stack = createStackNavigator();
 
