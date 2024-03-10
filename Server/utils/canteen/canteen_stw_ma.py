@@ -74,7 +74,7 @@ def get_menu(
             menu_prices[i] = remove_markings(menu_prices[i])
 
             list_items_prices.append({"item": menu_items[i], "price": menu_prices[i]})
-        menu[menu_items[0]] = list_items_prices
+        menu[menu_items[0]] = list_items_prices[1:]
         
     return menu
 
@@ -89,6 +89,6 @@ def remove_empty_strings(list: list) -> list:
 
 if __name__ == "__main__":
 
-    menu = get_menu(canteen_id="greens", week_offset=0)
+    menu = get_menu(canteen_id="schlossmensa", week_offset=0)
 
     pass
