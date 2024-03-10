@@ -1,6 +1,5 @@
 from fastapi import HTTPException
 from typing import List
-from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
@@ -691,7 +690,7 @@ def remove_old_tokens(
 def remove_older_security_token(
     db: Session, user_security: m_user.UserSecurity, reason: str, max_tokens: int = 2
 ):
-    security_tokens: [m_user.UserTokens] = user_security.user_tokens
+    security_tokens: List[m_user.UserTokens] = user_security.user_tokens
     if len(security_tokens) >= max_tokens:
         security_tokens = security_tokens[
             : len(security_tokens) - max_tokens + 1
