@@ -2,59 +2,12 @@ import bcrypt
 from sqlalchemy.orm import Session
 
 from models import m_user, s_user
+from middleware.general import create_address
 
 
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
-    # Check if request.address exists
     if user.address:
-        # TODO: Performance improvements
-        new_city = (
-            db.query(m_user.Address)
-            .join(m_user.City)
-            .join(m_user.Country)
-            .filter(
-                m_user.City.city == user.address.city,
-                m_user.Country.country == user.address.country,
-            )
-            .first()
-        )
-
-        if not new_city:
-            # Check if country exists
-            new_country = db.query(m_user.Country).filter_by(country=user.address.country).first()
-            if not new_country:
-                # Create new country
-                new_country = m_user.Country(country=user.address.country)
-                db.add(new_country)
-                db.flush()
-
-            # Create new city
-            new_city = m_user.City(city=user.address.city, country_id=new_country.country_id)
-            db.add(new_city)
-            db.flush()
-
-        # Check if address exists
-        new_address = (
-            db.query(m_user.Address)
-            .filter_by(
-                address1=user.address.address1,
-                address2=user.address.address2,
-                postal_code=user.address.postal_code,
-                city_id=new_city.city_id,
-            )
-            .first()
-        )
-        if not new_address:
-            # Create new address
-            new_address = m_user.Address(
-                address1=user.address.address1,
-                address2=user.address.address2,
-                district=user.address.district,
-                postal_code=user.address.postal_code,
-                city_id=new_city.city_id,
-            )
-            db.add(new_address)
-            db.flush()
+        new_address = create_address(db, user.address)
 
     # Create new user
     new_user = m_user.User(
