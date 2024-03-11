@@ -1,9 +1,9 @@
-/// <reference types="nativewind/types" />
+import { registerRootComponent } from 'expo';
 import 'react-native-gesture-handler';
-import React from 'react';
 
 import LoadingStack from './routes/LoadingStack';
 import { NavigationContainer } from '@react-navigation/native';
+import "../global.css"
 
 export default function App() {
   return (
@@ -12,3 +12,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+registerRootComponent(App);
