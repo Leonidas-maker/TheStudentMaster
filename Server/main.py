@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from fastapi_cdn_host import monkey_patch_for_docs_ui 
 from sqlalchemy.orm import Session
 
-from models import m_user, m_ical, m_general
+from models.sql_models import m_user, m_ical, m_general
 from config.database import engine
 from routes import user, auth
 from data.email import send_with_template, EmailSchema
