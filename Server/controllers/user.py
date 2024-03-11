@@ -1,7 +1,8 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
-from models import m_user, s_user
+from models.sql_models import m_user
+from models.pydantic_schemas import s_user
 from middleware.general import create_address
 
 

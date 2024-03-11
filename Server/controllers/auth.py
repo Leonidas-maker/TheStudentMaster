@@ -9,7 +9,8 @@ from middleware.auth import (
     get_token_payload,
     get_user_security,
 )
-from models import s_user, m_user, s_auth
+from models.sql_models import m_user
+from models.pydantic_schemas import s_auth, s_user
 
 # ~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~ #
 from middleware.user import get_user, get_user_security, get_user_tokens, get_user_2fa

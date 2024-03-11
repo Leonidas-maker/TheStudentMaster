@@ -19,7 +19,8 @@ import uuid
 from pathlib import Path
 
 from config.security import *
-from models import s_user, m_user
+from models.sql_models import m_user
+from models.pydantic_schemas import s_user
 from middleware.user import get_user_security, get_user_2fa
 
 

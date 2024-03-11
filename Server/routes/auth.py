@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Path, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
-from models import s_auth, s_user
+from models.pydantic_schemas import s_auth, s_user
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_db
