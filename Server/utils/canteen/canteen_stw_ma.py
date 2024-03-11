@@ -4,13 +4,36 @@ from datetime import datetime
 import re
 
 
-
 def get_menu(
     canteen_id: str,
     week_offset: int,
 ) -> dict:
-    
+
+    if not isinstance(week_offset, int):
+        raise ValueError("week_offset must be an integer")
+    if week_offset < 0:
+        raise ValueError("week_offset must be a positive integer")
+    if week_offset > 4:
+        raise ValueError("week_offset must be less than 4")
+
+    if not canteen_id:
+        raise ValueError("canteen_id is required")
+    if not isinstance(canteen_id, str):
+        raise ValueError("canteen_id must be a string")
+
     date = datetime.now().day + 7 * week_offset
+
+    # get dates for the week
+    current_date = datetime.now().date() + datetime.timedelta(days=7 * week_offset)
+    weekday = current_date.weekday()
+    diff = datetime.timedelta(days=weekday)
+
+    monday = current_date - diff
+    tuesday = monday + datetime.timedelta(days=1)
+    wednesday = monday + datetime.timedelta(days=2)
+    thursday = monday + datetime.timedelta(days=3)
+    friday = monday + datetime.timedelta(days=4)
+
     # get url for canteen_id
     match canteen_id:
         case "schlossmensa":
@@ -60,7 +83,6 @@ def get_menu(
         for i in range(0, len(raw_price_list), 2):
             menu_prices.append(f"{raw_price_list[i+1]}: {raw_price_list[i]}")
 
-
         if not len(menu_items) == len(menu_prices) and len(menu_items) == len(
             menu_names
         ):
@@ -72,10 +94,29 @@ def get_menu(
             # clean up menu items and prices
             menu_items[i] = remove_markings(menu_items[i])
             menu_prices[i] = remove_markings(menu_prices[i])
-
-            list_items_prices.append({"item": menu_items[i], "price": menu_prices[i]})
+            match menu_prices[i]:
+                case "Montag":
+                    serving_date = monday
+                case "Dienstag":
+                    serving_date = tuesday
+                case "Mittwoch":
+                    serving_date = wednesday
+                case "Donnerstag":
+                    serving_date = thursday
+                case "Freitag":
+                    serving_date = friday
+                case _:
+                    serving_date = None
+                    
+            list_items_prices.append(
+                {
+                    "item": menu_items[i],
+                    "price": menu_prices[i],
+                    "serving_date": serving_date,
+                }
+            )
         menu[menu_items[0]] = list_items_prices[1:]
-        
+
     return menu
 
 
