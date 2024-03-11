@@ -1,11 +1,13 @@
 {
   "expo": {
+    "entryPoint": "./src/App.tsx",
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
     "version": "0.1.0-dev",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "entryPoint": "./src/App.tsx",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
