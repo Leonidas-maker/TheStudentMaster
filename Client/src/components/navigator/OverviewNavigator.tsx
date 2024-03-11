@@ -10,6 +10,10 @@ function OverviewNavigator() {
         navigation.navigate('OverviewStack', { screen: 'Loading' })
     };
 
+    const handleSettingsPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'Settings' })
+    };
+
     const { t } = useTranslation();
 
     return (
@@ -23,6 +27,18 @@ function OverviewNavigator() {
                         <View className="flex-row items-center">
                             <Icon name="hourglass-empty" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">Loading</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={handleSettingsPress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="settings" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">Settings</Text>
                         </View>
                         <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
                     </View>
