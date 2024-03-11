@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
-from models import s_user, m_user
+from models.pydantic_schemas import s_user
+from models.sql_models import m_user
 
 
 def create_address(db: Session, new_address: s_user.AddressCreate) -> m_user.Address:

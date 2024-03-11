@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.inspection import inspect
 import uuid
 
-from models import m_user
+from models.sql_models import m_user
 
 ###########################################################################
 ############################## Get functions ##############################

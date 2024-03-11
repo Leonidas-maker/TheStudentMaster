@@ -2,7 +2,7 @@ from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 
 from sqlalchemy.orm import Session
-from models import s_user
+from models.pydantic_schemas import s_user
 from middleware.database import get_db
 from middleware.auth import verify_access_token, check_jti
 from middleware.user import get_user, merge_sqlalchemy_objs_to_dict
