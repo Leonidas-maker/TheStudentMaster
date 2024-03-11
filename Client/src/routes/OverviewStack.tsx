@@ -6,6 +6,7 @@ import Overview from '../screens/overview/Overview';
 import Dualis from '../screens/dualis/Dualis';
 import Flashcards from '../screens/flashcards/Flashcards';
 import MealPlan from '../screens/mealPlan/MealPlan';
+import Settings from '../screens/settings/Settings';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ function OverviewStack() {
                 <Stack.Screen name="Dualis" component={Dualis} />
                 <Stack.Screen name="MealPlan" component={MealPlan} />
                 <Stack.Screen name="Flashcards" component={Flashcards} />
+                <Stack.Screen name="Settings" component={Settings} />
             </Stack.Navigator>
         </>
     );
