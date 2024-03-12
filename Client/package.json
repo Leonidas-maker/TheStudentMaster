@@ -23,11 +23,13 @@
     "react-dom": "18.2.0",
     "react-i18next": "^14.1.0",
     "react-native": "0.73.4",
+    "react-native-calendars": "^1.1304.1",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-reanimated": "^3.6.2",
     "react-native-svg": "^14.1.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
+    "react-native-week-view": "^0.30.0",
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
