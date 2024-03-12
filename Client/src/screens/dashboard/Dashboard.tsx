@@ -1,6 +1,7 @@
-import React from "react";
+import React from 'react';
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, Button } from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import Calendar from '../../components/calendar/Calendar';
 
 function Dashboard() {
 
@@ -11,6 +12,7 @@ function Dashboard() {
             <View>
                 <Text className="text-font_primary">Welcome to the Dashboard page</Text>
             </View>
+            <Calendar />
         </ScrollView>
     );
 }
