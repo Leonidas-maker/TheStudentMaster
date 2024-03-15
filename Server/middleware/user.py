@@ -115,21 +115,3 @@ def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) 
         return user_2fa
     else:
         raise HTTPException(status_code=400, detail="Invalid parameters")
-
-
-###########################################################################
-############################# Helper functions ############################
-###########################################################################
-
-
-def merge_sqlalchemy_objs_to_dict(*objs):
-    merged_dict = {}
-    for obj in objs:
-        if obj is not None:
-            obj_dict = {
-                c.key: getattr(obj, c.key)
-                for c in inspect(obj).mapper.column_attrs
-                if c.key not in merged_dict
-            }  # Ignoriert doppelte Schlüssel
-            merged_dict.update(obj_dict)
-    return merged_dict

@@ -55,7 +55,7 @@ def user_logout(
     return logout(db, tokens.refresh_token, tokens.access_token)
 
 
-@auth_router.post("/forgot-password/{user_uuid}")
+@auth_router.post("/forgot-password/")
 def user_forgot_password():
     return {"Hello": "World"}
 
