@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, ForeignKey, Integer, String, TIMESTAMP
+from sqlalchemy import Column, ForeignKey, Integer, String, TIMESTAMP, DateTime
 from sqlalchemy.orm import relationship
 
 from config.database import Base
@@ -17,7 +17,7 @@ class Canteen(Base):
 
     address = relationship("Address")
 
-    def as_dict(self):
+    def as_dict(self) -> dict:
         return {
             "canteen_id": self.canteen_id,
             "canteen_name": self.canteen_name,
@@ -26,7 +26,7 @@ class Canteen(Base):
             "address_id": self.address_id,
         }
 
-    def as_dict_complete(self):
+    def as_dict_complete(self) -> dict:
         address = self.address.as_dict_complete()
         return {
             "canteen_id": self.canteen_id,
@@ -51,7 +51,7 @@ class Dish(Base):
     dish_id = Column(Integer, primary_key=True, nullable=False)
     description = Column(String(255))
     image_url = Column(String(255))
-    price = Column(Integer, nullable=False)
+    price = Column(String(255), nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
@@ -63,7 +63,7 @@ class Menu(Base):
     canteen_id = Column(Integer, ForeignKey("canteens.canteen_id"), nullable=False)
     dish_id = Column(Integer, ForeignKey("canteen_dishes.dish_id"), nullable=False)
     dish_type = Column(String(255), nullable=False)
-    serving_date = Column(Date, nullable=False)
+    serving_date = Column(DateTime, nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
