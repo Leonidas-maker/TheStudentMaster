@@ -41,12 +41,3 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 def update_user(db: Session, user: s_user.User):
     # TODO Check if something changed
     pass
-
-
-def delete_user(db: Session, user_id: int):
-    # TODO Recursive delete address, city, country
-    # TODO Delete user_security
-    # TODO Delete shopping_cart
-    # TODO Delete favorite
-    # TODO Delete user
-    pass
