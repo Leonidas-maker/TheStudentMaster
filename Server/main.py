@@ -1,6 +1,7 @@
 import json
 from fastapi import FastAPI, Depends
 from fastapi_cdn_host import monkey_patch_for_docs_ui
+from fastapi_restful.tasks import repeat_every
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 
@@ -10,13 +11,14 @@ from routes import user, auth, canteen
 from data.email import send_with_template, EmailSchema
 from middleware.database import get_async_db, get_db
 from middleware.ical import update_ical_dhbw_mannheim
-from middleware.canteen import create_canteen
+from middleware.canteen import create_canteen, canteen_menu_to_db
 
 
 m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
 m_ical.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
+
 
 
 @asynccontextmanager
@@ -47,6 +49,15 @@ async def lifespan(app: FastAPI):
             )
             create_canteen(db, canteen_new)
         db.commit()
+    
+    # update all canteen menus
+    # async def update_canteen_menus():
+    async with get_async_db() as db:
+        canteens = db.query(m_canteen.Canteen).all()
+        for canteen_obj in canteens:
+            # TODO loading bar
+            canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id)
+        db.commit()
     # ----- End of code to run on startup -----
     yield
     # ----- Code to run on shutdown -----
@@ -62,6 +73,14 @@ monkey_patch_for_docs_ui(app)
 async def root(db: Session = Depends(get_db)):
     return {"message": "Hello World"}
 
+# TODO: add support to update mensa every 15 minutes
+# @repeat_every(seconds=60 * 60 // 60) # every 15 minutes
+# async def update_canteen_menus():
+#     async with get_async_db() as db:
+#         canteens = db.query(m_canteen.Canteen).all()
+#         for canteen_obj in canteens:
+#             canteen_menu_to_db(canteen_obj.canteen_short_name, db)
+#         db.commit()
 
 app.include_router(user.users_router, prefix="/user")
 app.include_router(auth.auth_router, prefix="/auth")

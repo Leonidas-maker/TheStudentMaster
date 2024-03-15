@@ -28,15 +28,15 @@ def create_address(db: Session, new_address: s_user.AddressCreate) -> m_user.Add
         .join(m_user.City)
         .join(m_user.Country)
         .filter(
-            m_user.City.city == new_address.city,
-            m_user.Country.country == new_address.country,
+            m_user.City.city == new_address.city.city, 
+            m_user.Country.country == new_address.city.country.country,
         )
         .first()
     )
     
     if not city_exists:
         # Check if country exists
-        country_exists = db.query(m_user.Country).filter_by(country=new_address.country).first()
+        country_exists = db.query(m_user.Country).filter_by(country=new_address.city.country.country).first()
         if not country_exists:
             # Create new country
             country_exists = m_user.Country(country=new_address.country)
