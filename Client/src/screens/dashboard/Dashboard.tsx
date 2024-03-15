@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView } from "react-native";
-import Calendar from '../../components/calendar/Calendar';
+import WeekCalendar from "../../components/calendar/WeekCalendar";
 
 function Dashboard() {
 
@@ -10,9 +10,8 @@ function Dashboard() {
     return (
         <ScrollView className='h-screen bg-primary'>
             <View>
-                <Text className="text-font_primary">Welcome to the Dashboard page</Text>
+                <WeekCalendar />
             </View>
-            <Calendar />
         </ScrollView>
     );
 }
