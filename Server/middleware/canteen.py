@@ -2,14 +2,39 @@ from sqlalchemy.orm import Session
 
 from utils.canteen.canteen_stw_ma import fetch_menu
 from middleware.general import create_address
-from models.sql_models import m_canteen
+from models.sql_models import m_canteen, m_general
+
+
+def get_canteen(
+    db: Session, short_name: str = "", canteen_id: int = ""
+) -> m_canteen.Canteen:
+
+    if not (short_name and canteen_id):
+        raise ValueError("Parameter short_name or canteen_id is required")
+
+    canteen = (
+        db.query(m_canteen.Canteen)
+        .filter(
+            m_canteen.Canteen.canteen_short_name == short_name
+            or m_canteen.Canteen.canteen_id == canteen_id
+        )
+        .first()
+    )
+    if not canteen:
+        raise ReferenceError("Canteen not found")
+
+    return canteen
 
 
 def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
-    if not canteen:
-        raise ValueError("Canteen is required")
-
-    canteen_address = create_address(db, canteen.address)
+    if isinstance(canteen.address, m_general.Address):
+        canteen_address = create_address(db, canteen.address)
+    elif canteen.address_id:
+        canteen_address = (
+            db.query(m_general.Address).filter_by(address_id=canteen.address_id).first()
+        )
+    else:
+        raise ValueError("Error while creating canteen. Address is missing.")
 
     # Check if canteen exists
     canteen_exists = (
@@ -39,12 +64,38 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
     return new_canteen
 
 
+def update_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
+    # TODO: Implement update_canteen
+    pass
+
+
+def get_dish(db: Session, description: str, dish_id: int = "") -> m_canteen.Dish:
+    if not (description and dish_id):
+        raise ValueError("Parameter description or dish_id is required")
+
+    dish = (
+        db.query(m_canteen.Dish)
+        .filter(
+            m_canteen.Dish.description == description
+            or m_canteen.Dish.dish_id == dish_id
+        )
+        .first()
+    )
+    if not dish:
+        print("Dish not found")
+        raise ReferenceError("Dish not found")
+
+    return dish
+
+
 def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     if not dish:
         raise ValueError("Parameter dish is required")
 
     # Check if dish exists
-    dish_exists = db.query(m_canteen.Dish).filter_by(description=dish.description).first()
+    dish_exists = (
+        db.query(m_canteen.Dish).filter_by(description=dish.description).first()
+    )
     if dish_exists:
         # check if price has been updated
         if dish_exists.price != dish.price:
@@ -67,6 +118,50 @@ def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     db.flush()
 
     return new_dish
+
+
+def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
+    # TODO: Implement update_dish
+    pass
+
+
+# TODO: Still bullshit for getting
+def get_menu(
+    db: Session,
+    canteen_id: int,
+    dish_id: int,
+    dish_type: str,
+    serving_date: str,
+) -> m_canteen.Menu:
+
+    if not (canteen_id and dish_id and dish_type and serving_date):
+        raise ValueError(
+            "Parameter canteen_id, dish_id, dish_type or serving_date is required"
+        )
+
+    menu = (
+        db.query(m_canteen.Menu)
+        .filter(
+            m_canteen.Menu.canteen_id == canteen_id,
+            m_canteen.Menu.dish_id == dish_id,
+            m_canteen.Menu.dish_type == dish_type,
+            m_canteen.Menu.serving_date == serving_date,
+        )
+        .first()
+    )
+    if not menu:
+        create_menu(
+            db,
+            m_canteen.Menu(
+                canteen_id=canteen_id,
+                dish_id=dish_id,
+                dish_type=dish_type,
+                serving_date=serving_date,
+            ),
+        )
+        raise ReferenceError("Menu not found")
+
+    return menu
 
 
 def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
@@ -110,6 +205,13 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
     db.flush()
 
     return new_menu
+
+
+def update_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
+    # TODO: Implement update_menu
+    pass
+
+
 def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bool:
     """This function fetches the menu from the canteen and stores it in the database.
 
@@ -200,7 +302,7 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
                 new_menu_item.canteen_id,
                 new_menu_item.serving_date,
                 new_menu_item.dish_type,
-                str(new_menu_item.serving_date)
+                str(new_menu_item.serving_date),
             )
             db.add(new_menu_item)
             db.flush()

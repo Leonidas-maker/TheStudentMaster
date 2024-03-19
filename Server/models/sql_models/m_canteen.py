@@ -15,7 +15,7 @@ class Canteen(Base):
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    address = relationship("Address")
+    address = relationship("Address", cascade="save-update")
 
     def as_dict(self) -> dict:
         return {
@@ -39,8 +39,8 @@ class Canteen(Base):
                 "address2": address["address2"],
                 "district": address["district"],
                 "postal_code": address["postal_code"],
-                "city": address["city"]["city"],
-                "country": address["city"]["country"]["country"],
+                "city": address["city"],
+                "country": address["country"],
             },
         }
 
