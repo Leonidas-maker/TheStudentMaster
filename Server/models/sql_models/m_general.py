@@ -39,6 +39,12 @@ class City(Base):
 
     addresses = relationship("Address", cascade="save-update", back_populates="city")
 
+    def as_dict_complete(self):
+        return {
+            "city": self.city,
+            "country": self.country.country,
+        }
+
 
 class Country(Base):
     __tablename__ = "countries"
