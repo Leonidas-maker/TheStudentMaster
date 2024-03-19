@@ -27,7 +27,7 @@ const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19 }) => {
     return (
         <View className="w-16">
             {hours.map((hour) => (
-                <View key={hour} className="h-12 border-b border-gray-200 flex justify-center">
+                <View key={hour} className="h-16 border-b border-gray-200 flex justify-top">
                     <Text className="text-xs text-center text-white">{`${hour}:00`}</Text>
                 </View>
             ))}
