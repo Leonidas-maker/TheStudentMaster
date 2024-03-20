@@ -7,7 +7,7 @@ import Hours from './Hours';
 import Event from './Event';
 
 //! Event import will be moved to WeekCalendar
- 
+
 const events = [
     {
         id: 1,
@@ -40,9 +40,7 @@ const Days: React.FC = () => {
 
     return (
         <View className='flex-row' onLayout={onLayout}>
-            <View className='mt-12'>
-                <Hours />
-            </View>
+            <Hours />
             {Array.from({ length: 5 }).map((_, index) => {
                 const day = addDays(startOfWeekDate, index);
                 return (

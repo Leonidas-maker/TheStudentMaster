@@ -6,7 +6,7 @@ import Days from './Days';
 
 const WeekCalendar: React.FC = () => {
     return (
-        <View className="flex-row">
+        <View className="h-full flex-row">
             <View className="flex-1">
                 <Days />
             </View>
