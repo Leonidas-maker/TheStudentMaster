@@ -8,11 +8,9 @@ function Dashboard() {
     const { t } = useTranslation();
 
     return (
-        <ScrollView className='h-screen bg-primary'>
-            <View>
-                <WeekCalendar />
-            </View>
-        </ScrollView>
+        <View className='h-screen bg-primary'>
+            <WeekCalendar />
+        </View>
     );
 }
 
