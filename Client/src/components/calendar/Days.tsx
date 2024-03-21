@@ -34,9 +34,7 @@ const Days: React.FC = () => {
     const onLayout = (event: LayoutChangeEvent) => {
         const { height } = event.nativeEvent.layout;
         setContainerHeight(height);
-        console.log(height)
     };
-
 
     return (
         <View className='flex-row' onLayout={onLayout}>
@@ -44,7 +42,7 @@ const Days: React.FC = () => {
             {Array.from({ length: 5 }).map((_, index) => {
                 const day = addDays(startOfWeekDate, index);
                 return (
-                    <View key={index} className='flex-1 items-center p-2 border-l border-gray-200 border-b'>
+                    <View key={index} className='flex-1 items-center p-2 border-l border-gray-200'>
                         <Text className='text-lg text-white'>{format(day, "eee")}</Text>
                         <Text className='text-sm text-white'>{format(day, 'd')}. {format(day, 'LLL')}</Text>
                         {events.filter(event => event.day === index).map(event => (
