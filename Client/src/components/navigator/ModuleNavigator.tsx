@@ -27,7 +27,7 @@ function ModuleNavigator() {
 
     return (
         <View className="m-4">
-            <Text className="text-font_primary text-xl font-bold mb-2">More Modules</Text>
+            <Text className="text-font_primary text-xl font-bold mb-2">Weitere Module</Text>
             <View className="bg-secondary rounded-lg shadow-md p-4 border border-gray-700">
                 <TouchableOpacity
                     onPress={handleDashboardPress}
