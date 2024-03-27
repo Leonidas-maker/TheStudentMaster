@@ -2,8 +2,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import 'nativewind';
 
-//! Positioning needs to be fixed
-
 interface EventProps {
     event: {
         id: number;

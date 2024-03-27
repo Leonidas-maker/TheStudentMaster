@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, Linking } from "react-native";
 import { useTranslation } from "react-i18next";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+
+//! Icons for GitLab, GitHub and TheMasterCollection need change
 
 function OverviewNavigator() {
     const navigation = useNavigation<any>();
@@ -85,6 +87,42 @@ function OverviewNavigator() {
                         <View className="flex-row items-center">
                             <Icon name="lightbulb" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">Credits</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={() => Linking.openURL('https://gitlab.com/themastercollection/thestudentmaster')}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="lightbulb" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">GitLab</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={() => Linking.openURL('https://github.com/Leonidas-maker/TheStudentMaster')}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="lightbulb" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">GitHub</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={() => Linking.openURL('https://themastercollection.de')}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="lightbulb" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">TheMasterCollection</Text>
                         </View>
                         <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
                     </View>

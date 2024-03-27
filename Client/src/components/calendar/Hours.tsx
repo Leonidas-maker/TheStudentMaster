@@ -1,7 +1,6 @@
 import React from "react";
-import { View, Text, useWindowDimensions, Platform } from "react-native";
+import { View, Text } from "react-native";
 import "nativewind";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 //* Prop startHour expects an integer between 0 and 24 (optional - default: 8)
 //* Prop endHour expects an integer between 0 and 24, endHour has to be greater than startHour (optional - default: 19)
