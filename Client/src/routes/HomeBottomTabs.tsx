@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'react-native';
+import { StatusBar, SafeAreaView } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import DashboardSVG from '../../public/images/svg/navigatorIcons/inactive/DashboardSVG';
 import ActiveDashboardSVG from '../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG';
@@ -22,7 +23,7 @@ const Tab = createBottomTabNavigator();
 
 function HomeBottomTabs() {
     return (
-        <>
+        <SafeAreaProvider>
             <StatusBar barStyle="light-content" />
             <Tab.Navigator
                 initialRouteName="Dashboard"
@@ -34,7 +35,8 @@ function HomeBottomTabs() {
                     tabBarStyle: { backgroundColor: '#171717' },
                     headerTintColor: '#f5f5f5',
                     tabBarActiveTintColor: '#780000',
-                    tabBarInactiveTintColor: '#c1121f'
+                    tabBarInactiveTintColor: '#c1121f',
+                    
                 }}
             >
                 <Tab.Screen
@@ -109,7 +111,7 @@ function HomeBottomTabs() {
                     }}
                 />
             </Tab.Navigator>
-        </>
+        </SafeAreaProvider>
     );
 }
 
