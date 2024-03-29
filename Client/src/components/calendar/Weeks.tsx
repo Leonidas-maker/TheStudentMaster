@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import 'nativewind';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-
+//* Weeks needs to be passed functions for onBackPress, onForwardPress and onTodayPress
 const Weeks: React.FC<{ onBackPress: () => void; onForwardPress: () => void; onTodayPress: () => void; }> = ({ onBackPress, onForwardPress, onTodayPress }) => {
     return (
         <View className="flex-row justify-between px-5 py-3">

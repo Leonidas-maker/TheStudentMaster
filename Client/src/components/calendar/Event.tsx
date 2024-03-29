@@ -2,9 +2,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import 'nativewind';
 
-//! Events not displayed in the right spot on web
-//! Event start is a bit to high on some devices
-
 interface EventProps {
     event: {
         id: number;
@@ -22,27 +19,35 @@ interface EventProps {
 }
 
 const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHeight, calender }) => {
-    let startHour: number, endHour: number, duration: number;
+    let eventStart: number, eventEnd: number, eventDuration: number;
 
+    // Event calculation for same day event
     if (event.start.getDate() === event.end.getDate()) {
-        startHour = event.start.getHours() + (event.start.getMinutes() / 60) - calender.startHour;
-        endHour = event.end.getHours() + (event.end.getMinutes() / 60) - calender.startHour;
-        duration = endHour - startHour;
+        // Event start calculation in hours minus the start hour of the calender
+        eventStart = event.start.getHours() + (event.start.getMinutes() / 60) - calender.startHour;
+        // Event end calculation in hours minus the start hour of the calender
+        eventEnd = event.end.getHours() + (event.end.getMinutes() / 60) - calender.startHour;
+        // Event duration calculation
+        eventDuration = eventEnd - eventStart;
     }
     else {
         // TODO Implement event spanning multiple days
-        startHour = event.start.getHours() + (event.start.getMinutes() / 60) - calender.startHour;
-        endHour = event.end.getHours() + (event.end.getMinutes() / 60) - calender.startHour;
-        duration = endHour - startHour;
+        eventStart = event.start.getHours() + (event.start.getMinutes() / 60) - calender.startHour;
+        eventEnd = event.end.getHours() + (event.end.getMinutes() / 60) - calender.startHour;
+        eventDuration = eventEnd - eventStart;
     }
 
-    //! Need to find better names
-
-    const height = containerHeight - hoursContainerHeight;
+    // Calculates the difference between the day container and the hours container
+    const dayHeight = containerHeight - hoursContainerHeight;
+    // Calculates the total hours displayed in the calender
     const totalHours = calender.endHour - calender.startHour;
+    // Calculates the height of 1 hour
     const hourHeight = hoursContainerHeight / totalHours;
-    const topPosition = startHour * hourHeight + height;
-    const eventHeight = duration * hourHeight;
+    // Calculates the top position of the event with event start time times the hour height 
+    // plus the difference between the day container and the hours container
+    const topPosition = eventStart * hourHeight + dayHeight;
+    // Calculates the total height of the event with the event duration times the hour height
+    const eventHeight = eventDuration * hourHeight;
 
     return (
         <View 
