@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { View, Text, LayoutChangeEvent } from "react-native";
 import "nativewind";
 
 //* Prop startHour expects an integer between 0 and 24 (optional - default: 8)
@@ -8,9 +8,10 @@ import "nativewind";
 interface HoursProps {
   startHour?: number;
   endHour?: number;
+  onHeightChange?: (height: number) => void;
 }
 
-const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19 }) => {
+const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19, onHeightChange }) => {
   if (!Number.isInteger(startHour) || !Number.isInteger(endHour)) {
     throw new Error("startHour and endHour must be an integer.");
   }
@@ -21,9 +22,17 @@ const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19 }) => {
     throw new Error("endHour must be greater than startHour.");
   }
 
-  const hoursReal = endHour - startHour - 1;
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    if(onHeightChange) {
+      onHeightChange(height);
+    }
+  };
+
+  const hoursCount = endHour - startHour - 2;
   const newStart = startHour + 1;
-  const hours = Array.from({ length: hoursReal }, (_, i) => newStart + i);
+  const newEnd = endHour - 1;
+  const hours = Array.from({ length: hoursCount }, (_, i) => newStart + i);
 
   return (
     <View className='w-14'>
@@ -31,7 +40,7 @@ const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19 }) => {
         <Text className="text-lg text-primary">-</Text>
         <Text className="text-sm text-primary">-</Text>
       </View>
-      <View className="flex-1 flex-col justify-between h-full">
+      <View className="flex-1 flex-col justify-between h-full" onLayout={onLayout}>
         <View className="border-t border-gray-200 justify-top">
           <Text className="text-xs text-center text-white">{`${startHour}:00`}</Text>
         </View>
@@ -41,9 +50,9 @@ const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19 }) => {
           </View>
         ))}
         <View className="border-t border-gray-200 justify-top">
-          <Text className="text-xs text-center text-white">{`${endHour}:00`}</Text>
+          <Text className="text-xs text-center text-white">{`${newEnd}:00`}</Text>
         </View>
-        <View/>
+        <View />
       </View>
     </View>
   );
