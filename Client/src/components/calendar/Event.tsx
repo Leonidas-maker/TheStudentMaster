@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import 'nativewind';
 
+//! Events not displayed in the right spot on web
+//! Event start is a bit to high on some devices
+
 interface EventProps {
     event: {
         id: number;
@@ -10,6 +13,7 @@ interface EventProps {
         start: Date;
         end: Date;
     },
+    hoursContainerHeight: number;
     containerHeight: number;
     calender: {
         startHour: number;
@@ -17,15 +21,13 @@ interface EventProps {
     }
 }
 
-const Event: React.FC<EventProps> = ({ event, containerHeight, calender }) => {
+const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHeight, calender }) => {
     let startHour: number, endHour: number, duration: number;
-    containerHeight = containerHeight - 46;
 
     if (event.start.getDate() === event.end.getDate()) {
         startHour = event.start.getHours() + (event.start.getMinutes() / 60) - calender.startHour;
         endHour = event.end.getHours() + (event.end.getMinutes() / 60) - calender.startHour;
         duration = endHour - startHour;
-        
     }
     else {
         // TODO Implement event spanning multiple days
@@ -34,10 +36,12 @@ const Event: React.FC<EventProps> = ({ event, containerHeight, calender }) => {
         duration = endHour - startHour;
     }
 
+    //! Need to find better names
 
-    const totalHours = calender.endHour - calender.startHour + 1;
-    const hourHeight = containerHeight / totalHours;
-    const topPosition = startHour * hourHeight + 52;
+    const height = containerHeight - hoursContainerHeight;
+    const totalHours = calender.endHour - calender.startHour;
+    const hourHeight = hoursContainerHeight / totalHours;
+    const topPosition = startHour * hourHeight + height;
     const eventHeight = duration * hourHeight;
 
     return (
