@@ -4,7 +4,6 @@ import { View } from "react-native";
 
 import WeekCalendar from "../../components/calendar/WeekCalendar";
 
-
 function Dashboard() {
 
     const { t } = useTranslation();
