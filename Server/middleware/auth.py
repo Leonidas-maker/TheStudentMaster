@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from typing import List
+from typing import List, Tuple
 from sqlalchemy.orm import Session
 from cryptography.hazmat.primitives.serialization import (
     load_pem_private_key,
@@ -18,9 +18,16 @@ import uuid
 
 from pathlib import Path
 
+# ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.security import *
+
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user
+
+# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user
+
+# ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.user import get_user_security, get_user_2fa
 
 
@@ -115,9 +122,7 @@ def load_key(
 ):
     if "private" in file_name:
         with (folder_path / file_name).open("rb") as key_file:
-            key = load_pem_private_key(
-                key_file.read(), password=key_password, backend=default_backend()
-            )
+            key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
     elif "public" in file_name:
         with (folder_path / file_name).open("rb") as key_file:
             key = load_pem_public_key(key_file.read(), backend=default_backend())
@@ -143,12 +148,10 @@ def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_ke
 # ~~~~~~~~~~~~~~ Private Keys ~~~~~~~~~~~~~ #
 def get_tokens_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
-) -> (ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey):
-    if (
-        not (folder_path / "refresh_private_key.pem").exists()
-        and not (folder_path / "access_private_key.pem").exists()
-    ):
+) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
+    if not (folder_path / "refresh_private_key.pem").exists() and not (folder_path / "access_private_key.pem").exists():
         generate_keys()
+        
     # Get the refresh private key
     refresh_private_key = load_key("refresh_private_key.pem")
 
@@ -246,7 +249,7 @@ def check_jti(
             is not None
         )
     elif user_security:
-        tokens: [m_user.UserTokens] = user_security.user_tokens
+        tokens: List[m_user.UserTokens] = user_security.user_tokens
         for token in tokens:
             if token.token_jti == jti and token.token_value == application_id:
                 token_exists = True
@@ -317,7 +320,7 @@ def verify_security_token(db: Session, token: str, is_2fa: bool = False):
             application_id=payload["aud"],
         ):
             return False, None
-        
+
         return payload, user_security
     except jwt.ExpiredSignatureError:
         return False, None
@@ -339,7 +342,7 @@ def create_tokens(
     user_uuid: str,  # TODO Maybe use relationship between user_security and user_uuid
     old_jti: str = None,
     application_id: str = None,
-) -> (str, str):
+) -> Tuple[str, str]:
     user_id = user_security.user_id
 
     # Check if the user is locked
@@ -348,9 +351,7 @@ def create_tokens(
     current_timestamp = unix_timestamp()
 
     # Remove expired tokens
-    _, temporary_tokens, active_access_tokens = remove_old_tokens(
-        db, user_security, current_timestamp, old_jti
-    )
+    _, temporary_tokens, active_access_tokens = remove_old_tokens(db, user_security, current_timestamp, old_jti)
 
     if len(active_access_tokens) >= MAX_ACTIVE_ACCESS_TOKENS:
         raise_security_warns(db, user_security, "Too many access tokens active")
@@ -442,7 +443,7 @@ def create_security_token(
     user_id: str,
     user_uuid: str,  # TODO Maybe use relationship between user_security and user_uuid
     reason: str,
-) -> (str, str):
+) -> Tuple[str, str]:
     new_jti = str(uuid.uuid4())
     current_timestamp = unix_timestamp()
     token_exp = unix_timestamp(minutes=5)
@@ -494,7 +495,7 @@ def revoke_token(db: Session, user_id: str, token_type: str, token_value: str, t
 # ~~~~~~~~~~~~~~ All Tokens ~~~~~~~~~~~~~ #
 def revoke_all_tokens(db: Session, user_id: str, token_type: str = None, token_value: str = None):
     query = db.query(m_user.UserTokens).filter(m_user.UserTokens.user_id == user_id)
-    
+
     if token_type:
         query = query.filter(m_user.UserTokens.token_type == token_type)
     elif token_value:
@@ -503,17 +504,22 @@ def revoke_all_tokens(db: Session, user_id: str, token_type: str = None, token_v
     query.delete(synchronize_session=False)
     db.commit()
 
+
 def revoke_all_application_tokens(db: Session, user: s_user.User):
     revoke_all_tokens(db, user.user_id, token_type="Application")
+
 
 def revoke_all_security_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Security")
 
+
 def revoke_all_temporary_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Temporary")
 
+
 def revoke_all_access_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Access")
+
 
 ###########################################################################
 ################################### OTP ###################################
@@ -531,7 +537,9 @@ def verify_totp(db: Session, otp: str, user_uuid: str = None, user_2fa: m_user.U
 
     totp_secret = user_2fa._2fa_secret
     totp = pyotp.TOTP(totp_secret)
-    if  user_2fa._2fa_last_used != otp and totp.verify(otp): #* short-circuit evaluation to prevent efficient timing attacks
+    if user_2fa._2fa_last_used != otp and totp.verify(
+        otp
+    ):  # * short-circuit evaluation to prevent efficient timing attacks
         user_2fa._2fa_last_used = otp
         db.commit()
         return True
@@ -567,10 +575,12 @@ def create_backup_codes(db: Session, user_uuid: str) -> List[str]:
     else:
         raise HTTPException(status_code=400, detail="2FA already enabled")
 
+
 def remove_2fa(db: Session, users_security: m_user.UserSecurity):
     users_security.user_2fa.delete(synchronize_session=False)
     users_security._2fa_enabled = False
     db.commit()
+
 
 # ======================================================== #
 # ====================== Simple-OTP ====================== #
@@ -588,9 +598,7 @@ def verify_simple_otp(user_security: m_user.UserSecurity, otp: str) -> bool:
         return False
 
 
-def create_simple_otp(
-    db: Session, user_security: m_user.UserSecurity, expire_time: int = 15
-) -> int:
+def create_simple_otp(db: Session, user_security: m_user.UserSecurity, expire_time: int = 15) -> int:
     # Create the otp: XXXXXX
     otp = secrets.randbelow(1000000)
     # Add the expire time: XXXXXX:XXXXXX and save it to the user_security
@@ -688,14 +696,10 @@ def remove_old_tokens(
     return application_tokens, temporary_tokens, access_tokens
 
 
-def remove_older_security_token(
-    db: Session, user_security: m_user.UserSecurity, reason: str, max_tokens: int = 2
-):
+def remove_older_security_token(db: Session, user_security: m_user.UserSecurity, reason: str, max_tokens: int = 2):
     security_tokens: List[m_user.UserTokens] = user_security.user_tokens
     if len(security_tokens) >= max_tokens:
-        security_tokens = security_tokens[
-            : len(security_tokens) - max_tokens + 1
-        ]  # Remove the oldest token
+        security_tokens = security_tokens[: len(security_tokens) - max_tokens + 1]  # Remove the oldest token
         db.query(m_user.UserTokens).filter(
             m_user.UserTokens.user_id == user_security.user_id,
             m_user.UserTokens.token_type == "Security",

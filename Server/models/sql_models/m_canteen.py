@@ -1,8 +1,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, TIMESTAMP, DateTime
 from sqlalchemy.orm import relationship
 
+# ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import Base
-
 
 class Canteen(Base):
     __tablename__ = "canteens"

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from .s_general import CompleteAdress
 
 
@@ -11,6 +12,16 @@ class CanteenBase(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# ======================================================== #
+# ======================= Requests ======================= #
+# ======================================================== #
+
+
+# ======================================================== #
+# ======================= Responses ====================== #
+# ======================================================== #
 
 
 class ResGetCanteen(CanteenBase):

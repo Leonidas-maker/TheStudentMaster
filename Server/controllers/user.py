@@ -1,10 +1,19 @@
 import bcrypt
 from sqlalchemy.orm import Session
 
+# ~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user
+
+# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user
+
+# ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.general import create_address
 
+
+# ======================================================== #
+# ======================= Register ======================= #
+# ======================================================== #
 
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
@@ -37,6 +46,10 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 
     return new_user, new_user_uuid.user_uuid
 
+
+# ======================================================== #
+# ====================== Update User ===================== #
+# ======================================================== #
 
 def update_user(db: Session, user: s_user.User):
     # TODO Check if something changed

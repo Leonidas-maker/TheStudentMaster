@@ -1,17 +1,29 @@
 from fastapi import FastAPI, APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-
 from sqlalchemy.orm import Session
+
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user
+
+
+# ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_db
 from middleware.auth import verify_access_token, check_jti, verify_refresh_token
 from middleware.user import get_user
 
+###########################################################################
+################################### MAIN ##################################
+###########################################################################
+
 users_router = APIRouter()
 
+# For token authentication
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
+# ======================================================== #
+# ========================== Me ========================== #
+# ======================================================== #
 @users_router.get("/me", response_model=s_user.ResGetUser)
 def read_me(access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     jwt_payload = verify_access_token(db, access_token)
@@ -44,11 +56,7 @@ def delete_me(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-@users_router.get("/me/all")
-def read_me_all():
-    return {"Hello": "World"}
-
-
+# ~~~~~~~~~~~~~~~~ Specific ~~~~~~~~~~~~~~~ #
 @users_router.get("/me/address")
 def read_me_address():
     return {"Hello": "World"}

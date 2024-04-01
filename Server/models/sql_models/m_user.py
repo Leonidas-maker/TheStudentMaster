@@ -4,8 +4,11 @@ from sqlalchemy.dialects.mysql import MEDIUMBLOB, INTEGER as INT
 from sqlalchemy.ext.orderinglist import ordering_list
 import uuid
 
+# ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import Base
 from config.security import *
+
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from .m_general import *
 
 

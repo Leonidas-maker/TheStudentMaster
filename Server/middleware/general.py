@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 
-from models.pydantic_schemas import  s_general
+# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
+from models.pydantic_schemas import s_general
+
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_general
 
 
@@ -18,7 +21,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         )
         .first()
     )
-    
+
     if address_exists:
         return address_exists
 
@@ -28,12 +31,12 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         .join(m_general.City)
         .join(m_general.Country)
         .filter(
-            m_general.City.city == new_address.city, 
+            m_general.City.city == new_address.city,
             m_general.Country.country == new_address.country,
         )
         .first()
     )
-    
+
     if not city_exists:
         # Check if country exists
         country_exists = db.query(m_general.Country).filter_by(country=new_address.country).first()
@@ -47,8 +50,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         city_exists = m_general.City(city=new_address.city, country_id=country_exists.country_id)
         db.add(city_exists)
         db.flush()
-        
-    
+
     # Create new address
     new_address = m_general.Address(
         address1=new_address.address1,
