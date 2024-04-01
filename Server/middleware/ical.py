@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from tqdm import tqdm
 
-
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models.m_ical import ICalCustom, ICalDHBWMannheim
+
+# ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 import utils.ical.nativ_sources as nativ_sources
 from utils.ical.general import get_ical_data, get_icals_data
 

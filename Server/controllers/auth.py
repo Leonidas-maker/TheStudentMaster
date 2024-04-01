@@ -3,18 +3,20 @@ from sqlalchemy.orm import Session
 import pyotp
 import uuid
 
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
+from models.sql_models import m_user
+from models.pydantic_schemas import s_auth, s_user
+
+# ~~~~~~~~~~~~~~ Controllers ~~~~~~~~~~~~~~ #
+from controllers.user import create_user
+
+# ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
+from middleware.user import get_user, get_user_security
 from middleware.auth import (
     verify_refresh_token,
     create_tokens,
     get_token_payload,
     get_user_security,
-)
-from models.sql_models import m_user
-from models.pydantic_schemas import s_auth, s_user
-
-# ~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~ #
-from middleware.user import get_user, get_user_security, get_user_tokens, get_user_2fa
-from middleware.auth import (
     check_password,
     verify_simple_otp,
     check_security_warns,
@@ -30,13 +32,12 @@ from middleware.auth import (
     raise_security_warns,
     remove_2fa,
 )
-from data.email import send_with_template, EmailSchema
 
-# ~~~~~~~~~~~~~~ Controllers ~~~~~~~~~~~~~~ #
-from controllers.user import create_user
+# ~~~~~~~~~~~~~~~~~~ Util ~~~~~~~~~~~~~~~~~ #
+from utils.email.email import send_with_template, EmailSchema
 
 
-def get_tokens(db: Session, refresh_token: str):
+def refresh_tokens(db: Session, refresh_token: str):
     payload = verify_refresh_token(db, refresh_token)
     if payload and payload.get("jti"):
         user_uuid = uuid.UUID(payload["sub"])
@@ -151,9 +152,7 @@ def verify_account(db: Session, user_uuid: str, verify_code: str):
 ###########################################################################
 
 
-def add_2fa(
-    user_add_2fa_req: s_auth.UserReqActivate2FA, access_token: str, db: Session
-) -> s_auth.UserResActivate2FA:
+def add_2fa(user_add_2fa_req: s_auth.UserReqActivate2FA, access_token: str, db: Session) -> s_auth.UserResActivate2FA:
     access_payload = verify_access_token(db, access_token)
     if not access_payload:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -197,9 +196,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str):
     if secret_payload:
         user_uuid = secret_payload["sub"]
         if verify_totp(db, otp, user_2fa=user_security.user_2fa):
-            revoke_token(
-                db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"]
-            )
+            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
 
             aud_split = secret_payload["aud"].split("::")
             application_id = aud_split[1] if len(aud_split) > 1 else None
@@ -212,7 +209,8 @@ def verify_2fa(db: Session, secret_token: str, otp: str):
             raise HTTPException(status_code=401, detail="Invalid credentials | Type: 2FA")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    
+
+
 def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
     secret_payload, user_security = verify_security_token(db, secret_token, is_2fa=True)
     if secret_payload:
@@ -224,11 +222,9 @@ def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
                 raise_security_warns(db, user_security, "2FA Backup Codes")
             else:
                 count_correct += 1
-                
-        if count_correct == len(otp.backup_codes): 
-            revoke_token(
-                db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"]
-            )
+
+        if count_correct == len(otp.backup_codes):
+            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
 
             remove_2fa(db, user_security)
 
@@ -244,7 +240,7 @@ def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
             raise HTTPException(status_code=401, detail="Invalid credentials | Type: 2FA")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    
+
 
 def remove_2fa(db: Session, access_token: str, otp: str):
     access_payload = verify_access_token(db, access_token)
@@ -259,4 +255,3 @@ def remove_2fa(db: Session, access_token: str, otp: str):
             raise HTTPException(status_code=401, detail="Invalid credentials | Type: 2FA")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
-

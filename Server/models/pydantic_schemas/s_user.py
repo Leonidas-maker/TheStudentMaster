@@ -2,6 +2,7 @@ from pydantic import BaseModel, EmailStr, UUID4
 from typing import Optional
 from datetime import datetime
 
+# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from .s_general import AddressCreate, CompleteAdress
 
 ###########################################################################
@@ -89,6 +90,17 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+
+
+# ======================================================== #
+# ======================= Requests ======================= #
+# ======================================================== #
+
+
+# ======================================================== #
+# ======================= Responses ====================== #
+# ======================================================== #
+
 
 class ResGetUser(UserBase):
     user_uuid: UUID4
