@@ -41,14 +41,14 @@ def get_source_url(type: str, source: str):
     
 def dict_hash(dictionary: Dict[str, Any]) -> str:
     dhash = hashlib.sha1()
-    encoded = json.dumps(dictionary, sort_keys=True).encode()
+    encoded = json.dumps(dictionary, sort_keys=True).encode("utf-8")
     dhash.update(encoded)
     return dhash.hexdigest()
 
 def get_ical_data(source:str, type: str = "iCal-Custom"):
     source_url = get_source_url(type, source)
 
-    data = requests.get(source_url).text
+    data = requests.get(source_url).content.decode("utf-8")
     if data:
         json_data = convert_ical_to_json(data)
         return json_data, dict_hash(json_data)
