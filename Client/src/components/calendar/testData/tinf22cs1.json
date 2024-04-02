@@ -16,9 +16,9 @@
       "end": "2023-01-18 19:30:00"
     },
     {
-      "summary": "WK Algorithmen und Komplexit\u00c3\u00a4t (Theoretische Informatik II)",
+      "summary": "WK Algorithmen und Komplexit\u00e4t (Theoretische Informatik II)",
       "description": null,
-      "location": "Raum Carl-Benz-H\u00c3\u00b6rsaal",
+      "location": "Raum Carl-Benz-H\u00f6rsaal",
       "start": "2023-03-28 13:00:00",
       "end": "2023-03-28 14:30:00"
     },
@@ -891,7 +891,7 @@
       "end": "2023-04-21 15:15:00"
     },
     {
-      "summary": "Entf\u00c3\u00a4llt! wissenschaftliches Arbeiten",
+      "summary": "Entf\u00e4llt! wissenschaftliches Arbeiten",
       "description": null,
       "location": "",
       "start": "2023-04-28 08:00:00",
@@ -1075,7 +1075,7 @@
     {
       "summary": "Kryptologie",
       "description": null,
-      "location": "Raum Carl-Benz-H\u00c3\u00b6rsaal",
+      "location": "Raum Carl-Benz-H\u00f6rsaal",
       "start": "2023-06-22 08:00:00",
       "end": "2023-06-22 10:00:00"
     },
@@ -1353,7 +1353,7 @@
       "end": "2023-10-18 12:30:00"
     },
     {
-      "summary": "Feedback-Gespr\u00c3\u00a4ch",
+      "summary": "Feedback-Gespr\u00e4ch",
       "description": null,
       "location": "Raum 179C",
       "start": "2023-10-18 12:30:00",
@@ -1848,13 +1848,6 @@
       "location": "",
       "start": "2023-12-05 13:00:00",
       "end": "2023-12-05 16:00:00"
-    },
-    {
-      "summary": "Betriebssysteme 2",
-      "description": null,
-      "location": "Raum 336B",
-      "start": "2024-04-24 09:00:00",
-      "end": "2024-04-24 12:45:00"
     },
     {
       "summary": "Betriebssysteme",
