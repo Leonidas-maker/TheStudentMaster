@@ -7,14 +7,16 @@ import { FlingGestureHandler, Directions } from 'react-native-gesture-handler';
 import Days from './Days';
 import Weeks from './Weeks';
 
+// Import TestData
+import testData from "./testData/tinf22cs1.json"
+//TODO Get JSON Data from Backend
+
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === 'android') {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
     }
 }
-
-//? Maybe use other transition 
 
 const WeekCalendar: React.FC = () => {
     // Gets the current date
@@ -43,6 +45,14 @@ const WeekCalendar: React.FC = () => {
         setCurrentDate(new Date());
     };
 
+    // Maps the events from the JSON data to the events array
+    // Converts the start and end date to a Date object
+    const events = testData.events.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+    }));
+
     // nativeEvent.state === 5 is the end of the gesture
     return (
         <FlingGestureHandler
@@ -59,9 +69,7 @@ const WeekCalendar: React.FC = () => {
             >
                 <View className="h-full flex-1">
                     <Weeks onBackPress={handleBackPress} onForwardPress={handleForwardPress} onTodayPress={handleTodayPress} />
-
-                    <Days currentDate={currentDate} />
-
+                    <Days currentDate={currentDate} events={events} />
                 </View>
             </FlingGestureHandler>
         </FlingGestureHandler >

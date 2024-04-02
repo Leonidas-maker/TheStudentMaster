@@ -28,6 +28,10 @@ function OverviewNavigator() {
         navigation.navigate('OverviewStack', { screen: 'Credits' })
     };
 
+    const handleDisclosurePress = () => {
+        navigation.navigate('OverviewStack', { screen: 'ResponsibleDisclosure' })
+    };
+
     const handleLogoutPress = () => {
         //! Insert logic for logout
         setIsUserLoggedIn(false);
@@ -81,6 +85,18 @@ function OverviewNavigator() {
                 </TouchableOpacity>
                 <View className="border-b border-gray-700 my-2" />
                 <TouchableOpacity
+                    onPress={handleDisclosurePress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="bug-report" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">Responsible Disclosure</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
                     onPress={handleCreditsPress}
                 >
                     <View className="flex-row justify-between items-center">
@@ -100,7 +116,7 @@ function OverviewNavigator() {
                             <Icon name="lightbulb" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">GitLab</Text>
                         </View>
-                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                        <Icon name="open-in-new" size={20} color="#E0E0E2" />
                     </View>
                 </TouchableOpacity>
                 <View className="border-b border-gray-700 my-2" />
@@ -112,7 +128,7 @@ function OverviewNavigator() {
                             <Icon name="lightbulb" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">GitHub</Text>
                         </View>
-                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                        <Icon name="open-in-new" size={20} color="#E0E0E2" />
                     </View>
                 </TouchableOpacity>
                 <View className="border-b border-gray-700 my-2" />
@@ -124,7 +140,7 @@ function OverviewNavigator() {
                             <Icon name="lightbulb" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">TheMasterCollection</Text>
                         </View>
-                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                        <Icon name="open-in-new" size={20} color="#E0E0E2" />
                     </View>
                 </TouchableOpacity>
                 {isUserLoggedIn && (
