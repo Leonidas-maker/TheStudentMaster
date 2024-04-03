@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, Platform } from 'react-native';
 import 'nativewind';
 
 interface EventProps {
@@ -23,6 +23,17 @@ interface EventProps {
 //TODO Implement all day events
 const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHeight, calendar, overlapCount = 1, overlapIndex = 0 }) => {
     let eventStart: number, eventEnd: number, eventDuration: number;
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [isWeb, setIsWeb] = useState(false);
+
+    useEffect(() => {
+        if (Platform.OS === 'web') {
+            setIsWeb(true);
+        } else {
+            setIsWeb(false);
+        };
+    }, []);
 
     // Event calculation for same day event
     if (event.start.getDate() === event.end.getDate()) {
@@ -53,25 +64,51 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     const eventHeight = eventDuration * hourHeight;
 
     const handleEventPress = () => {
-        console.log(event);
+        setModalVisible(true);
     };
 
+    // Calculates the width based on how many events take place at the same time
     const eventWidth = 100 / overlapCount;
-    const leftPosition = (100 / overlapCount) * overlapIndex;
+    // Calculates the left position based on how many events take place at the same time
+    const leftPosition = ((100 / overlapCount) * overlapIndex);
 
     return (
-        <TouchableOpacity
-            onPress={handleEventPress}
-            className='bg-blue-500 rounded-lg shadow-sm'
-            style={{
-                position: 'absolute',
-                top: topPosition,
-                left: `${leftPosition}%`,
-                width: `${eventWidth}%`,
-                height: eventHeight,
-            }}>
-            <Text className='text-white pt-2 px-1'>{event.summary}</Text>
-        </TouchableOpacity>
+        <View className='absolute w-full'>
+            <TouchableOpacity
+                onPress={handleEventPress}
+                className='bg-blue-500 rounded-lg shadow-sm'
+                style={{
+                    position: 'absolute',
+                    top: topPosition,
+                    left: `${leftPosition}%`,
+                    width: `${eventWidth}%`,
+                    height: eventHeight,
+                }}>
+                <Text className='text-white pt-2 px-2 text-sm'>{event.summary}</Text>
+            </TouchableOpacity>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}>
+                <View className='flex-1 justify-center items-center m-10'>
+                    <View className='bg-white p-5 rounded-2xl items-center shadow-md'>
+                        <Text className='item-center'>{event.summary}</Text>
+                        {isWeb &&
+                            <View className='pt-3'>
+                                <TouchableOpacity
+                                    className='bg-blue-500 rounded-3xl p-3'
+                                    onPress={() => setModalVisible(!modalVisible)}>
+                                    <Text className='text-white font-bold items-center'>Schließen</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
+                    </View>
+                </View>
+            </Modal>
+        </View>
     );
 };
 

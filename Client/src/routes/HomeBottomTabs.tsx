@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar, SafeAreaView } from 'react-native';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import DashboardSVG from '../../public/images/svg/navigatorIcons/inactive/DashboardSVG';

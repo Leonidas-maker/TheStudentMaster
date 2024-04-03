@@ -53,6 +53,7 @@ const WeekCalendar: React.FC = () => {
         end: new Date(event.end),
     }));
 
+    //TODO Add scrolling in web version
     // nativeEvent.state === 5 is the end of the gesture
     return (
         <FlingGestureHandler
