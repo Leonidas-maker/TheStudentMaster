@@ -41,3 +41,23 @@ class ResGetCanteenAddress(CanteenBase):
 
     class Config:
         from_attributes = True
+
+
+class ResGetCanteenMenu(CanteenBase):
+    canteen_name: str
+    canteen_short_name: Optional[str]
+    image_url: Optional[str]
+    menu: list[dict]
+
+    class Config:
+        from_attributes = True
+
+
+class ResGetCanteenMenuDay(CanteenBase):
+    canteen_name: str
+    canteen_short_name: Optional[str]
+    image_url: Optional[str]
+    menu: dict
+
+    class Config:
+        from_attributes = True

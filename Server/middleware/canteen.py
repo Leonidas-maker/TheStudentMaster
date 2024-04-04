@@ -45,10 +45,10 @@ def create_canteens(db: Session):
     db.commit()
 
 
-def update_canteen_menus(db: Session):
+def update_canteen_menus(db: Session, week_offset: int = 0):
     canteens = db.query(m_canteen.Canteen).all()
     for canteen_obj in canteens:
-        canteen_menu_to_db(canteen_obj.canteen_short_name, db)
+        canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_short_name, week_offset=week_offset)
     db.commit()
 
 
@@ -324,13 +324,13 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
                 dish_type=dish["dish_type"],
                 serving_date=dish["serving_date"],
             )
-            print(
-                new_menu_item.dish_id,
-                new_menu_item.canteen_id,
-                new_menu_item.serving_date,
-                new_menu_item.dish_type,
-                str(new_menu_item.serving_date),
-            )
+            # print(
+            #     new_menu_item.dish_id,
+            #     new_menu_item.canteen_id,
+            #     new_menu_item.serving_date,
+            #     new_menu_item.dish_type,
+            #     str(new_menu_item.serving_date),
+            # )
             db.add(new_menu_item)
             db.flush()
 
