@@ -68,18 +68,18 @@ def fetch_menu_dhbw_eppel(
         # dish 1
         menu_items.append(
             {
-                "dish_type": rows[i][1],
-                "description": rows[i][2],
-                "price": rows[i][3],
+                "dish_type": rows[i][1] if len(rows[i]) > 1 else None,
+                "description": rows[i][2] if len(rows[i]) > 2 else None,
+                "price": rows[i][3] if len(rows[i]) > 3 else None,
                 "serving_date": serving_date,
             }
         )
         # dish 2
         menu_items.append(
             {
-                "dish_type": rows[i + 1][0],
-                "description": rows[i + 1][1],
-                "price": rows[i + 1][2],
+                "dish_type": rows[i + 1][0] if len(rows[i + 1]) > 0 else None,
+                "description": rows[i + 1][1] if len(rows[i + 1]) > 1 else None,
+                "price": rows[i + 1][2] if len(rows[i + 1]) > 2 else None,
                 "serving_date": serving_date,
             }
         )
@@ -228,6 +228,6 @@ if __name__ == "__main__":
     #     "dhbw_eppelheim",
     # ]
 
-    # fetch_menu(canteen_short_name="schlossmensa", week_offset=0)
+    # fetch_menu(canteen_short_name="dhbw_eppelheim", week_offset=0)
 
     pass
