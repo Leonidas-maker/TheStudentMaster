@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, LayoutChangeEvent } from 'react-native';
 import 'nativewind';
 import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
@@ -17,20 +17,30 @@ interface Event {
 };
 
 const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDate, events }) => {
+    // State to store the height of the container
     const [containerHeight, setContainerHeight] = useState(0);
+    // State to store the height of the hours container
     const [hoursContainerHeight, setHoursContainerHeight] = useState(0);
+    // Sets the start of the current week
     const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });
+    // Stores the start and end hours of the calender
+    //TODO Implement dynamic start and end hours
     const calenderHours = { startHour: 8, endHour: 20 };
 
+    // Function to set the height of the container
     const onLayout = (container: LayoutChangeEvent) => {
         const { height } = container.nativeEvent.layout;
         setContainerHeight(height);
     };
 
+    // Function to calculate the overlap of events
     const calculateOverlaps = (eventsForDay: Event[]) => {
+        // Sorts the events by start time
         const sortedEvents: Event[] = [...eventsForDay].sort((a, b) => a.start.getTime() - b.start.getTime());
+        // Array to store the groups of overlapping events
         let overlapGroups: Event[][] = [];
     
+        // Loops through the sorted events and groups them by overlapping events
         sortedEvents.forEach(event => {
             let addedToGroup = false;
             for (const group of overlapGroups) {
@@ -46,6 +56,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
             }
         });
     
+        // Loops through the groups and sets the overlap count and index for each event
         overlapGroups.forEach(group => {
             group.forEach((event, index) => {
                 event.overlapCount = group.length;
