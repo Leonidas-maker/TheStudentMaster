@@ -105,7 +105,7 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
                     width: `${eventWidth}%`,
                     height: eventHeight,
                 }}>
-                <Text className='text-white pt-2 px-1 text-sm'>{truncateText(event.summary, MAX_EVENT_SUMMARY_LENGTH)}</Text>
+                <Text className='text-white pt-2 px-1 text-sm font-bold'>{truncateText(event.summary, MAX_EVENT_SUMMARY_LENGTH)}</Text>
                 {eventHeight > MIN_EVENT_HEIGHT_TIME && overlapCount === 1 && overlapIndex === 0 && (
                     <>
                         <Text className='text-white px-1 text-xs py-2'>{`${startTimeString} - ${endTimeString}`}</Text>

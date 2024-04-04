@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import "nativewind";
 
@@ -12,16 +12,20 @@ interface HoursProps {
 }
 
 const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19, onHeightChange }) => {
+  // Checks if startHour and endHour are integers
   if (!Number.isInteger(startHour) || !Number.isInteger(endHour)) {
     throw new Error("startHour and endHour must be an integer.");
   }
+  // Checks if startHour and endHour are between 0 and 24
   if (startHour < 0 || startHour > 24 || endHour < 0 || endHour > 24) {
     throw new Error("startHour and endHour must be between 0 and 24.");
   }
+  // Checks if endHours is greater than startHour
   if (endHour <= startHour) {
     throw new Error("endHour must be greater than startHour.");
   }
 
+  // Function to set the height of the hours container
   const onLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     if(onHeightChange) {
@@ -29,9 +33,13 @@ const Hours: React.FC<HoursProps> = ({ startHour = 8, endHour = 19, onHeightChan
     }
   };
 
+  // Calculates the total hours displayed in the calender
   const hoursCount = endHour - startHour - 2;
+  // Calculates the new start and end hours 
+  // Needed for the hours array because the first and last hour are displayed differently
   const newStart = startHour + 1;
   const newEnd = endHour - 1;
+  // Creates an array with the hours between startHour and endHour
   const hours = Array.from({ length: hoursCount }, (_, i) => newStart + i);
 
   return (
