@@ -63,8 +63,14 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     // Calculates the total height of the event with the event duration times the hour height
     const eventHeight = eventDuration * hourHeight;
 
+    // Handles the event press and sets the modal visible
     const handleEventPress = () => {
         setModalVisible(true);
+    };
+
+    // Handles the close press and sets the modal invisible
+    const handleClosePress = () => {
+        setModalVisible(false);
     };
 
     // Calculates the width based on how many events take place at the same time
@@ -72,6 +78,21 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     // Calculates the left position based on how many events take place at the same time
     const leftPosition = ((100 / overlapCount) * overlapIndex);
 
+    // Formats the start and end time of the event 
+    const startTimeString = event.start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    const endTimeString = event.end.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+    // Constants for the displayed event informations
+    const MIN_EVENT_HEIGHT_TIME = 95;
+    const MIN_EVENT_HEIGHT_LOCATION = 80;
+    const MAX_EVENT_SUMMARY_LENGTH = 25;
+
+    // Truncates the text if it is longer than the max length
+    const truncateText = (text: string, maxLength: number): string => {
+        return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
+      };
+
+    //TODO Better styling for event popup information
     return (
         <View className='absolute w-full'>
             <TouchableOpacity
@@ -84,7 +105,17 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
                     width: `${eventWidth}%`,
                     height: eventHeight,
                 }}>
-                <Text className='text-white pt-2 px-2 text-sm'>{event.summary}</Text>
+                <Text className='text-white pt-2 px-1 text-sm'>{truncateText(event.summary, MAX_EVENT_SUMMARY_LENGTH)}</Text>
+                {eventHeight > MIN_EVENT_HEIGHT_TIME && overlapCount === 1 && overlapIndex === 0 && (
+                    <>
+                        <Text className='text-white px-1 text-xs py-2'>{`${startTimeString} - ${endTimeString}`}</Text>
+                    </>
+                )}
+                {eventHeight > MIN_EVENT_HEIGHT_LOCATION && overlapCount === 1 && overlapIndex === 0 && (
+                    <>
+                        <Text className='text-white px-1 text-xs absolute bottom-1'>{event.location}</Text>
+                    </>
+                )}
             </TouchableOpacity>
             <Modal
                 animationType="slide"
@@ -93,20 +124,28 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View className='flex-1 justify-center items-center m-10'>
-                    <View className='bg-white p-5 rounded-2xl items-center shadow-md'>
-                        <Text className='item-center'>{event.summary}</Text>
+                <TouchableOpacity
+                    className='flex-1 justify-center items-center'
+                    activeOpacity={1}
+                    onPressOut={handleClosePress}>
+                    <View className='bg-white p-5 rounded-2xl items-center shadow-md' onStartShouldSetResponder={() => true}>
+                        <Text className='item-center pb-3'>{event.summary}</Text>
+                        <Text className='item-center font-bold'>{`Startzeit: ${startTimeString}`}</Text>
+                        <Text className='item-center font-bold'>{`Endzeit: ${endTimeString}`}</Text>
+                        <Text className='item-center font-bold'>{`Ort: ${event.location}`}</Text>
                         {isWeb &&
-                            <View className='pt-3'>
-                                <TouchableOpacity
-                                    className='bg-blue-500 rounded-3xl p-3'
-                                    onPress={() => setModalVisible(!modalVisible)}>
-                                    <Text className='text-white font-bold items-center'>Schließen</Text>
-                                </TouchableOpacity>
-                            </View>
+                            <>
+                                <View className='pt-3'>
+                                    <TouchableOpacity
+                                        className='bg-blue-500 rounded-3xl p-3'
+                                        onPress={handleClosePress}>
+                                        <Text className='text-white font-bold items-center'>Schließen</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </>
                         }
                     </View>
-                </View>
+                </TouchableOpacity>
             </Modal>
         </View>
     );
