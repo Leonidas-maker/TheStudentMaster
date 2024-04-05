@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, LayoutChangeEvent } from 'react-native';
 import 'nativewind';
-import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay, isToday, isPast } from 'date-fns';
 
 import Hours from './Hours';
 import Event from './Event';
+import TimeMarker from './TimeMarker';
+import PastMarker from './PastMarker';
 
 interface Event {
     summary: string;
@@ -39,7 +41,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
         const sortedEvents: Event[] = [...eventsForDay].sort((a, b) => a.start.getTime() - b.start.getTime());
         // Array to store the groups of overlapping events
         let overlapGroups: Event[][] = [];
-    
+
         // Loops through the sorted events and groups them by overlapping events
         sortedEvents.forEach(event => {
             let addedToGroup = false;
@@ -55,7 +57,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
                 overlapGroups.push([event]);
             }
         });
-    
+
         // Loops through the groups and sets the overlap count and index for each event
         overlapGroups.forEach(group => {
             group.forEach((event, index) => {
@@ -63,7 +65,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
                 event.overlapIndex = index;
             });
         });
-    };    
+    };
 
     return (
         <View className='flex-1 flex-row w-full'>
@@ -73,14 +75,20 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
                     const day = addDays(startOfWeekDate, index);
                     const eventsForDay = events.filter(event => isSameDay(event.start, day));
                     calculateOverlaps(eventsForDay);
+                    const isCurrentDay = isToday(day);
+                    const isPastDay = isPast(day);
 
                     return (
-                        <View key={index} className='flex-1 items-center pt-2 border-l border-gray-200'>
+                        <View key={index} className='flex-1 items-center pt-2 border-l border-gray-200' style={{ zIndex: 10 }}>
                             <Text className='text-lg text-white'>{format(day, "eee")}</Text>
                             <Text className='text-sm text-white'>{format(day, 'd')}. {format(day, 'LLL')}</Text>
                             {eventsForDay.map((event, eventIndex) => (
                                 <Event key={eventIndex} event={event} containerHeight={containerHeight} hoursContainerHeight={hoursContainerHeight} calendar={calenderHours} overlapCount={event.overlapCount} overlapIndex={event.overlapIndex} />
                             ))}
+                            <View className='absolute top-0 w-full h-full z-20' style={{ pointerEvents: 'none' }}>
+                                {isPastDay && <PastMarker containerHeight={containerHeight} hoursContainerHeight={hoursContainerHeight} calendar={calenderHours} isToday={isCurrentDay} />}
+                                {isCurrentDay && <TimeMarker containerHeight={containerHeight} hoursContainerHeight={hoursContainerHeight} calendar={calenderHours} />}
+                            </View>
                         </View>
                     );
                 })}

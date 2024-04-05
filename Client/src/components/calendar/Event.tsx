@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Platform } from 'react-native';
 import 'nativewind';
 
+import { calculateEventHeight, calculateTopPosition, calculateLeftPosition, calculateEventWidth } from './CalendarCalculations';
+
 interface EventProps {
     event: {
         summary: string;
@@ -19,10 +21,10 @@ interface EventProps {
     overlapCount?: number;
     overlapIndex?: number;
 }
-
+//TODO Implement a function to choose in settings if the start and end time should be displayed
+//TODO Implement a function to choose in settings if the location should be displayed
 //TODO Implement all day events
 const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHeight, calendar, overlapCount = 1, overlapIndex = 0 }) => {
-    let eventStart: number, eventEnd: number, eventDuration: number;
     const [modalVisible, setModalVisible] = useState(false);
 
     const [isWeb, setIsWeb] = useState(false);
@@ -35,33 +37,32 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
         };
     }, []);
 
-    // Event calculation for same day event
-    if (event.start.getDate() === event.end.getDate()) {
-        // Event start calculation in hours minus the start hour of the calender
-        eventStart = event.start.getHours() + (event.start.getMinutes() / 60) - calendar.startHour;
-        // Event end calculation in hours minus the start hour of the calender
-        eventEnd = event.end.getHours() + (event.end.getMinutes() / 60) - calendar.startHour;
-        // Event duration calculation
-        eventDuration = eventEnd - eventStart;
-    }
-    else {
-        // TODO Implement event spanning multiple days
-        eventStart = event.start.getHours() + (event.start.getMinutes() / 60) - calendar.startHour;
-        eventEnd = event.end.getHours() + (event.end.getMinutes() / 60) - calendar.startHour;
-        eventDuration = eventEnd - eventStart;
-    }
+    // Gets the Event Height
+    const eventHeight = calculateEventHeight({
+        start: event.start,
+        end: event.end,
+        startHour: calendar.startHour,
+        endHour: calendar.endHour,
+        hoursContainerHeight: hoursContainerHeight,
+    });
 
-    // Calculates the difference between the day container and the hours container
-    const dayHeight = containerHeight - hoursContainerHeight;
-    // Calculates the total hours displayed in the calender
-    const totalHours = calendar.endHour - calendar.startHour;
-    // Calculates the height of 1 hour
-    const hourHeight = hoursContainerHeight / totalHours;
-    // Calculates the top position of the event with event start time times the hour height 
-    // plus the difference between the day container and the hours container
-    const topPosition = eventStart * hourHeight + dayHeight;
-    // Calculates the total height of the event with the event duration times the hour height
-    const eventHeight = eventDuration * hourHeight;
+    // Gets the Top Position
+    const topPosition = calculateTopPosition({
+        start: event.start,
+        startHour: calendar.startHour,
+        endHour: calendar.endHour,
+        hoursContainerHeight: hoursContainerHeight,
+        containerHeight: containerHeight,
+    });
+
+    // Gets the Left Position
+    const leftPosition = calculateLeftPosition({
+        overlapCount: overlapCount,
+        overlapIndex: overlapIndex,
+    });
+
+    // Gets the Event Width
+    const eventWidth = calculateEventWidth(overlapCount);
 
     // Handles the event press and sets the modal visible
     const handleEventPress = () => {
@@ -72,11 +73,6 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     const handleClosePress = () => {
         setModalVisible(false);
     };
-
-    // Calculates the width based on how many events take place at the same time
-    const eventWidth = 100 / overlapCount;
-    // Calculates the left position based on how many events take place at the same time
-    const leftPosition = ((100 / overlapCount) * overlapIndex);
 
     // Formats the start and end time of the event 
     const startTimeString = event.start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
@@ -90,7 +86,7 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     // Truncates the text if it is longer than the max length
     const truncateText = (text: string, maxLength: number): string => {
         return text.length > maxLength ? text.substring(0, maxLength - 3) + "..." : text;
-      };
+    };
 
     //TODO Better styling for event popup information
     return (
