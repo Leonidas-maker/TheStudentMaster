@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, LayoutChangeEvent } from 'react-native';
 import 'nativewind';
-import { format, startOfWeek, addDays, isSameDay, isToday, isPast } from 'date-fns';
+import { format, startOfWeek, addDays, isSameDay, isToday, isPast, endOfWeek, isWithinInterval } from 'date-fns';
 
 import Hours from './Hours';
 import Event from './Event';
@@ -25,9 +25,54 @@ const Days: React.FC<{ currentDate: Date; events: Array<any>; }> = ({ currentDat
     const [hoursContainerHeight, setHoursContainerHeight] = useState(0);
     // Sets the start of the current week
     const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });
-    // Stores the start and end hours of the calender
-    //TODO Implement dynamic start and end hours
-    const calenderHours = { startHour: 8, endHour: 20 };
+    // Sets the end of the current week
+    const endOfWeekDate = endOfWeek(currentDate, { weekStartsOn: 1 });
+    // State to store the hours of the calendar
+    const [calenderHours, setCalenderHours] = useState({ startHour: 8, endHour: 20 });
+
+    //? Maybe we need to do this more efficiently
+    // Calculates the calendar hours when the events or the current date changes
+    useEffect(() => {
+        calculateCalendarHours();
+    }, [events, currentDate]);
+
+    const calculateCalendarHours = () => {
+        // Filters events that are within the current week
+        const eventsThisWeek = events.filter(event => 
+            isWithinInterval(event.start, { start: startOfWeekDate, end: endOfWeekDate })
+        );
+
+        // Sets calenderHours back to a default value if no events are found
+        if (eventsThisWeek.length === 0) {
+            setCalenderHours({ startHour: 8, endHour: 20 });
+            return;
+        }
+
+        // Sets start values for earliestStartHour and latestEndHour
+        let earliestStartHour = Infinity;
+        let latestEndHour = -Infinity;
+
+        // Loops through the events to find the earliest start and latest end hour
+        eventsThisWeek.forEach(event => {
+            const startHour = event.start.getHours();
+            const endHour = event.end.getHours();
+            earliestStartHour = Math.min(earliestStartHour, startHour);
+            latestEndHour = Math.max(latestEndHour, endHour);
+        });
+
+        // Sets the calender hours to the earliest start and latest end hour that was found if there are events
+        if (earliestStartHour !== Infinity && latestEndHour !== -Infinity) {
+            // Adds 1 hour to the earliest start hour and subtracts 1 hour from the latest end hour
+            // This is done to make sure that the events are not displayed at the edge of the calendar
+            earliestStartHour -= 1;
+            latestEndHour += 1;
+
+            setCalenderHours({
+                startHour: earliestStartHour,
+                endHour: latestEndHour
+            });
+        } 
+    };
 
     // Function to set the height of the container
     const onLayout = (container: LayoutChangeEvent) => {
