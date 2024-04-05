@@ -50,13 +50,19 @@ def create_canteens(db: Session):
 
 def update_canteen_menus(db: Session, week_offset: int = 0):
     canteens = db.query(m_canteen.Canteen).all()
-    progress = tqdm(canteens, leave=False, total=len(canteens), ascii=" ▖▘▝▗▚▞█")
+    progress = tqdm(
+        canteens,
+        leave=False,
+        total=len(canteens) * (3 - week_offset),
+        ascii=" ▖▘▝▗▚▞█",
+    )
     for canteen_obj in canteens:
         progress.set_description(f"[Canteen] Update {canteen_obj.canteen_name}")
-        progress.update(1)
-        canteen_menu_to_db(
-            db=db, canteen_id=canteen_obj.canteen_id, week_offset=week_offset
-        )
+        for week in range(week_offset, 3):
+            canteen_menu_to_db(
+                db=db, canteen_id=canteen_obj.canteen_id, week_offset=week
+            )
+            progress.update(1)
     progress.close()
     db.commit()
 

@@ -44,22 +44,6 @@ async def lifespan(app: FastAPI):
     async with get_async_db() as db:
         await asyncio.to_thread(create_canteens, db)
 
-    # update all canteen menus for this and the following 2 weeks
-    async with get_async_db() as db:
-        canteens = db.query(m_canteen.Canteen).all()
-        progress = tqdm(
-            canteens, leave=False, total=len(canteens) * 3, ascii=" ▖▘▝▗▚▞█"
-        )
-        for canteen_obj in canteens:
-            progress.set_description(f"[Canteen] Update {canteen_obj.canteen_name}")
-            for i in range(3):
-                canteen_menu_to_db(
-                    db=db, canteen_id=canteen_obj.canteen_id, week_offset=i
-                )
-                progress.update(1)
-        progress.close()
-        db.commit()
-
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
 
     # ~~~~~~~~ Repeated Tasks ~~~~~~~~ #
