@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
 
-from tqdm import tqdm
+from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn, TimeRemainingColumn
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import engine
@@ -13,12 +13,11 @@ from config.database import engine
 from middleware.database import get_async_db, get_db
 
 # from middleware.general import create_address
-from middleware.ical import update_all_ical_dhbw_mannheim
+from middleware.ical import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
 from middleware.canteen import canteen_menu_to_db, create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_general
-
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user, m_ical, m_general, m_canteen
@@ -30,6 +29,47 @@ m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
 m_ical.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
+
+# ======================================================== #
+# ===================== Repeated Task ==================== #
+# ======================================================== #
+
+async def create_task(task_function, progress, task_id):
+    # New db session for each task
+    async with get_async_db() as db:
+        await asyncio.to_thread(task_function, db, progress, task_id)
+
+async def repeated_task():
+    await asyncio.sleep(2)  # 15 minutes wait
+    while True:
+        with Progress(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
+            TimeRemainingColumn(),
+        ) as progress:
+            progress_id_ical_Update_Mannheim = progress.add_task(
+                "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
+            )
+            progress_id_ical_Update_Custom = progress.add_task(
+                "[bold green]iCal-Custom[/bold green] Update iCal...", total=None
+            )
+
+            progress_id_canteen_menu_ = progress.add_task(
+                "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
+            )
+
+            # All tasks that should be executed
+            tasks = [
+                create_task(update_ical_dhbw_mannheim, progress, progress_id_ical_Update_Mannheim),
+                create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
+                create_task(update_canteen_menus, progress, progress_id_canteen_menu_)
+            ]
+
+            await asyncio.gather(*tasks, return_exceptions=True)
+
+            progress.stop()
+        await asyncio.sleep(60 * 15)  # 15 minutes wait
 
 
 # ======================================================== #
@@ -44,26 +84,13 @@ async def lifespan(app: FastAPI):
     async with get_async_db() as db:
         await asyncio.to_thread(create_canteens, db)
 
-    # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
-
-    # ~~~~~~~~ Repeated Tasks ~~~~~~~~ #
-    async def repeated_task():
-        while True:
-            async with get_async_db() as db:
-                # Update iCal
-                await asyncio.to_thread(update_all_ical_dhbw_mannheim, db)
-
-                # Update canteen menu this week
-                await asyncio.to_thread(update_canteen_menus, db)
-            await asyncio.sleep(60 * 15)  # 15 minutes wait
-
+    # Start the repeated tasks
     task = asyncio.create_task(repeated_task())
 
-    # ~~~~~~~ End of Repeated Task ~~~~~~~~ #
-
+    # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
     # ~~~~~~~~ Code to run on shutdown ~~~~~~~~ #
-    # cancel the repeated task
+    # Cancel the repeated task
     task.cancel()
     try:
         await task
@@ -71,7 +98,6 @@ async def lifespan(app: FastAPI):
         pass
 
     # ~~~~~~~~ End of code to run on shutdown ~~~~~~~~ #
-    pass
 
 
 app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"})
