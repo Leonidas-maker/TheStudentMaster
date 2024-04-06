@@ -1,9 +1,17 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, Platform } from 'react-native';
 import 'nativewind';
 
-import { calculateEventHeight, calculateTopPosition, calculateLeftPosition, calculateEventWidth } from './CalendarCalculations';
+// ~~~~~~~~ Own components imports ~~~~~~~ //
+import {
+    calculateEventHeight,
+    calculateTopPosition,
+    calculateLeftPosition,
+    calculateEventWidth
+} from './CalendarCalculations';
 
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface EventProps {
     event: {
         summary: string;
@@ -18,17 +26,32 @@ interface EventProps {
         startHour: number;
         endHour: number;
     },
-    overlapCount?: number;
-    overlapIndex?: number;
+    overlapCount: number;
+    overlapIndex: number;
+    isSaturday: boolean;
 }
 //TODO Implement a function to choose in settings if the start and end time should be displayed
 //TODO Implement a function to choose in settings if the location should be displayed
 //TODO Implement all day events
-const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHeight, calendar, overlapCount = 1, overlapIndex = 0 }) => {
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
+const Event: React.FC<EventProps> = ({
+    event,
+    hoursContainerHeight,
+    containerHeight,
+    calendar,
+    overlapCount = 1,
+    overlapIndex = 0,
+    isSaturday
+}) => {
+    // ====================================================== //
+    // ======================= States ======================= //
+    // ====================================================== //
     const [modalVisible, setModalVisible] = useState(false);
-
     const [isWeb, setIsWeb] = useState(false);
 
+    // Checks if the platform is web
     useEffect(() => {
         if (Platform.OS === 'web') {
             setIsWeb(true);
@@ -37,6 +60,9 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
         };
     }, []);
 
+    // ====================================================== //
+    // ================= Event calculations ================= //
+    // ====================================================== //
     // Gets the Event Height
     const eventHeight = calculateEventHeight({
         start: event.start,
@@ -64,6 +90,9 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     // Gets the Event Width
     const eventWidth = calculateEventWidth(overlapCount);
 
+    // ====================================================== //
+    // ================ Press event handlers ================ //
+    // ====================================================== //
     // Handles the event press and sets the modal visible
     const handleEventPress = () => {
         setModalVisible(true);
@@ -74,13 +103,16 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
         setModalVisible(false);
     };
 
+    // ====================================================== //
+    // ================ Better event display ================ //
+    // ====================================================== //
     // Formats the start and end time of the event 
     const startTimeString = event.start.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
     const endTimeString = event.end.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 
     // Constants for the displayed event informations
-    const MIN_EVENT_HEIGHT_TIME = 95;
-    const MIN_EVENT_HEIGHT_LOCATION = 80;
+    const MIN_EVENT_HEIGHT_TIME = 100;
+    const MIN_EVENT_HEIGHT_LOCATION = 110;
     const MAX_EVENT_SUMMARY_LENGTH = 25;
 
     // Truncates the text if it is longer than the max length
@@ -89,6 +121,9 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
     };
 
     //TODO Better styling for event popup information
+    // ====================================================== //
+    // ================== Return component ================== //
+    // ====================================================== //
     return (
         <View className='absolute w-full'>
             <TouchableOpacity
@@ -107,7 +142,7 @@ const Event: React.FC<EventProps> = ({ event, hoursContainerHeight, containerHei
                         <Text className='text-white px-1 text-xs py-2'>{`${startTimeString} - ${endTimeString}`}</Text>
                     </>
                 )}
-                {eventHeight > MIN_EVENT_HEIGHT_LOCATION && overlapCount === 1 && overlapIndex === 0 && (
+                {eventHeight > MIN_EVENT_HEIGHT_LOCATION && overlapCount === 1 && overlapIndex === 0 && !isSaturday && (
                     <>
                         <Text className='text-white px-1 text-xs absolute bottom-1'>{event.location}</Text>
                     </>
