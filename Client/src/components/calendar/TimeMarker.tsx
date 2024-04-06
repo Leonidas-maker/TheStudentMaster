@@ -1,21 +1,28 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from 'react';
 import { View } from 'react-native';
 import 'nativewind';
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import { calculateMarkerPosition } from './CalendarCalculations';
 
-interface EventProps {
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
+interface TimeMarkerProps {
     hoursContainerHeight: number;
     containerHeight: number;
     calendar: {
         startHour: number;
         endHour: number;
-    },
-    overlapCount?: number;
-    overlapIndex?: number;
+    }
 }
 
-const TimeMarker: React.FC<EventProps> = ({ hoursContainerHeight, containerHeight, calendar }) => {
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
+const TimeMarker: React.FC<TimeMarkerProps> = ({ hoursContainerHeight, containerHeight, calendar }) => {
+    // ====================================================== //
+    // =============== TimeMarker calculations ============== //
+    // ====================================================== //
     // Gets the Marker Position
     const markerPosition = calculateMarkerPosition({
         startHour: calendar.startHour,
@@ -24,9 +31,12 @@ const TimeMarker: React.FC<EventProps> = ({ hoursContainerHeight, containerHeigh
         containerHeight: containerHeight,
     });
 
+    // ====================================================== //
+    // ================== Return component ================== //
+    // ====================================================== //
     return (
         <View className='absolute w-full'>
-            
+
             <View
                 className='bg-red-500 rounded-lg shadow-sm'
                 style={{

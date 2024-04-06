@@ -1,28 +1,33 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from 'react';
 import { View } from 'react-native';
 import 'nativewind';
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import { calculateMarkerPositionFilled, calculateDayHeight } from './CalendarCalculations';
 
-interface EventProps {
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
+interface PastMarkerProps {
     hoursContainerHeight: number;
     containerHeight: number;
     calendar: {
         startHour: number;
         endHour: number;
     },
-    overlapCount?: number;
-    overlapIndex?: number;
-    isToday?: boolean;
+    isToday: boolean;
 }
 
-const PastMarker: React.FC<EventProps> = ({ hoursContainerHeight, containerHeight, calendar, isToday = false }) => {
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
+const PastMarker: React.FC<PastMarkerProps> = ({ hoursContainerHeight, containerHeight, calendar, isToday }) => {
+    // ====================================================== //
+    // =============== PastMarker calculations ============== //
+    // ====================================================== //
     // Gets the Day Height
     const dayHeight = calculateDayHeight(containerHeight, hoursContainerHeight);
-
     // Sets the Past Height as the Hours Container Height
     const pastHeight = hoursContainerHeight;
-
     // Gets the Height of the Marker
     const markerPositionFilled = calculateMarkerPositionFilled({
         startHour: calendar.startHour,
@@ -31,6 +36,9 @@ const PastMarker: React.FC<EventProps> = ({ hoursContainerHeight, containerHeigh
         containerHeight: containerHeight,
     });
 
+    // ====================================================== //
+    // ================== Return component ================== //
+    // ====================================================== //
     return (
         <View className='absolute w-full'>
             {!isToday &&
@@ -46,14 +54,14 @@ const PastMarker: React.FC<EventProps> = ({ hoursContainerHeight, containerHeigh
             }
             {isToday &&
                 <View
-                className='bg-gray-400 opacity-30'
-                style={{
-                    position: 'absolute',
-                    top: dayHeight,
-                    width: '100%',
-                    height: markerPositionFilled,
-                }}>
-            </View>
+                    className='bg-gray-400 opacity-30'
+                    style={{
+                        position: 'absolute',
+                        top: dayHeight,
+                        width: '100%',
+                        height: markerPositionFilled,
+                    }}>
+                </View>
             }
         </View>
     );

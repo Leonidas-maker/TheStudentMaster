@@ -1,9 +1,11 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState } from 'react';
 import { View, LayoutAnimation, UIManager, Platform } from 'react-native';
 import 'nativewind';
 import { addWeeks, subWeeks } from 'date-fns';
 import { FlingGestureHandler, Directions } from 'react-native-gesture-handler';
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from './Days';
 import Weeks from './Weeks';
 
@@ -18,15 +20,27 @@ if (Platform.OS === 'android') {
     }
 }
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const WeekCalendar: React.FC = () => {
+    // ====================================================== //
+    // ======================= States ======================= //
+    // ====================================================== //
     // Gets the current date
     const [currentDate, setCurrentDate] = useState(new Date());
 
+    // ====================================================== //
+    // ===================== Animations ===================== //
+    // ====================================================== //
     // Defines the animation for the transition between weeks (animation: easeInEaseOut)
     const animateTransition = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     };
 
+    // ====================================================== //
+    // =================== Press handlers =================== //
+    // ====================================================== //
     // Handles the back press by subtracting a week from the current displayed date
     const handleBackPress = () => {
         animateTransition();
@@ -45,6 +59,9 @@ const WeekCalendar: React.FC = () => {
         setCurrentDate(new Date());
     };
 
+    // ====================================================== //
+    // =================== JSON convertion ================== //
+    // ====================================================== //
     // Maps the events from the JSON data to the events array
     // Converts the start and end date to a Date object
     const events = testData.events.map(event => ({
@@ -54,6 +71,9 @@ const WeekCalendar: React.FC = () => {
     }));
 
     //TODO Add scrolling in web version
+    // ====================================================== //
+    // ================== Return component ================== //
+    // ====================================================== //
     // nativeEvent.state === 5 is the end of the gesture
     return (
         <FlingGestureHandler
