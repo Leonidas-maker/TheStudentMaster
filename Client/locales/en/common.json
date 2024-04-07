@@ -1,0 +1,31 @@
+{
+    "greeting": "Hello",
+    "welcome_message": "Welcome to our application",
+    "home": "Home",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login",
+    "signup": "Sign Up",
+    "about": "About Us",
+    "contact": "Contact",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit",
+    "error": {
+        "page_not_found": "Page Not Found",
+        "unexpected": "An unexpected error occurred"
+    },
+    "success": {
+        "data_saved": "Data successfully saved",
+        "account_created": "Account successfully created"
+    }
+}
