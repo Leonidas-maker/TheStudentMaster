@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel
 from typing import Optional
 
@@ -43,11 +44,21 @@ class ResGetCanteenAddress(CanteenBase):
         from_attributes = True
 
 
+class ResGetMenuDay(BaseModel):
+    dish_type: str
+    dish: str
+    price: str
+    serving_date: datetime.datetime
+
+    class Config:
+        from_attributes = True
+
+
 class ResGetCanteenMenu(CanteenBase):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
-    menu: list[dict]
+    menu: list[ResGetMenuDay]
 
     class Config:
         from_attributes = True
@@ -57,7 +68,7 @@ class ResGetCanteenMenuDay(CanteenBase):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
-    menu: dict
+    menu: ResGetMenuDay
 
     class Config:
         from_attributes = True

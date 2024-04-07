@@ -1,4 +1,5 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from fastapi import BackgroundTasks
 from pydantic import EmailStr, BaseModel
 from typing import Dict, Any
 from pathlib import Path
@@ -12,8 +13,8 @@ class EmailSchema(BaseModel):
 
 
 def init_mailer(mail_from_name: str, ssl: bool = False):
-    configPath = Path(__file__).parent.parent.absolute() / "config.ini"
-    email_template_path = Path(__file__).parent.parent / "data" / "email_templates"
+    configPath = Path(__file__).parent.parent.parent.absolute() / "config.ini"
+    email_template_path = Path(__file__).parent / "email_templates"
     config = configparser.ConfigParser()
     config.read(configPath)
 
@@ -33,7 +34,7 @@ def init_mailer(mail_from_name: str, ssl: bool = False):
     return FastMail(conf)
 
 
-async def send_with_template(email: EmailSchema):
+async def async_send_mail_with_template(email: EmailSchema):
     email_template = ""
     email_subject = ""
     email_ssl = False
@@ -63,6 +64,8 @@ async def send_with_template(email: EmailSchema):
         case "deactivate-2fa":
             email_template = "mail_deactivate_2fa.html"
             email_subject = "2FA deactivated"
+        case _:
+            raise ValueError("Invalid email type")
 
     message = MessageSchema(
         subject=email_subject,
@@ -73,3 +76,7 @@ async def send_with_template(email: EmailSchema):
 
     fm = init_mailer("TheShopMaster-Service", email_ssl)
     await fm.send_message(message, template_name=email_template)
+
+
+def send_mail_with_template(background_tasks: BackgroundTasks, email: EmailSchema):
+    background_tasks.add_task(async_send_mail_with_template, email)

@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import json
-from tqdm import tqdm
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_stw_ma import fetch_menu
@@ -18,47 +17,55 @@ from models.pydantic_schemas import s_general
 # ======================================================== #
 # ======================== Update ======================== #
 # ======================================================== #
-
-
 def create_canteens(db: Session):
-    with open("./utils/canteen/canteen_addresses.json", "r") as file:
-        canteens = json.load(file)
-    for canteen_obj in canteens:
-        # print(canteen_obj)
-        address_new = s_general.AddressCreate(
-            address1=canteen_obj["address1"],
-            address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
-            district=canteen_obj["district"],
-            postal_code=canteen_obj["postal_code"],
-            city=canteen_obj["city"],
-            country=canteen_obj["country"],
-        )
-        address_new = create_address(db, address_new)
-        # print(address_new.address_id)
-        # create canteen
-        canteen_new = m_canteen.Canteen(
-            canteen_name=canteen_obj["name"],
-            canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
-            address_id=address_new.address_id,
-        )
-        # print(canteen_new.address)
-        create_canteen(db, canteen_new)
-    db.commit()
+    try:
+        with open("./utils/canteen/canteen_addresses.json", "r") as file:
+            canteens = json.load(file)
+        for canteen_obj in canteens:
+            # print(canteen_obj)
+            address_new = s_general.AddressCreate(
+                address1=canteen_obj["address1"],
+                address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
+                district=canteen_obj["district"],
+                postal_code=canteen_obj["postal_code"],
+                city=canteen_obj["city"],
+                country=canteen_obj["country"],
+            )
+            address_new = create_address(db, address_new)
+            # print(address_new.address_id)
+
+            # create canteen
+            canteen_new = m_canteen.Canteen(
+                canteen_name=canteen_obj["name"],
+                canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
+                address_id=address_new.address_id,
+            )
+            # print(canteen_new.address)
+            create_canteen(db, canteen_new)
+        db.commit()
+    except Exception as e:
+        print(e)
+        db.rollback()
 
 
 def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
-    canteens = db.query(m_canteen.Canteen).all()
+    try:
+        canteens = db.query(m_canteen.Canteen).all()
 
-    progress.update(task_id, total=(len(canteens) * (3 - week_offset)))
-    for canteen_obj in canteens:
+        progress.update(task_id, total=(len(canteens) * (3 - week_offset)))
+        for canteen_obj in canteens:
 
-        for week in range(week_offset, 3):
-            progress.update(
-                task_id, description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}"
-            )
-            canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
-            progress.update(task_id, advance=1)
-    db.commit()
+            for week in range(week_offset, 3):
+                progress.update(
+                    task_id,
+                    description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
+                )
+                canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
+                db.commit()
+                progress.update(task_id, advance=1)
+    except Exception as e:
+        print(e)
+        db.rollback()
 
 
 # ======================================================== #
@@ -69,11 +76,16 @@ def get_canteen(db: Session, short_name: str = "", canteen_id: int = "") -> m_ca
     if not (short_name and canteen_id):
         raise ValueError("Parameter short_name or canteen_id is required")
 
-    canteen = (
-        db.query(m_canteen.Canteen)
-        .filter(m_canteen.Canteen.canteen_short_name == short_name or m_canteen.Canteen.canteen_id == canteen_id)
-        .first()
-    )
+    try:
+        canteen = (
+            db.query(m_canteen.Canteen)
+            .filter(m_canteen.Canteen.canteen_short_name == short_name or m_canteen.Canteen.canteen_id == canteen_id)
+            .first()
+        )
+    except AttributeError as e:
+        print("Error while fetching canteen")
+        print(e)
+
     if not canteen:
         raise ReferenceError("Canteen not found")
 
@@ -88,15 +100,21 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
     else:
         raise ValueError("Error while creating canteen. Address is missing.")
 
-    # Check if canteen exists
-    canteen_exists = (
-        db.query(m_canteen.Canteen)
-        .filter_by(
-            canteen_name=canteen.canteen_name,
-            address_id=canteen_address.address_id,
+    try:
+        # Check if canteen exists
+        canteen_exists = (
+            db.query(m_canteen.Canteen)
+            .filter_by(
+                canteen_name=canteen.canteen_name,
+                address_id=canteen_address.address_id,
+            )
+            .first()
         )
-        .first()
-    )
+    except AttributeError as e:
+        print("Error while fetching canteen_exists")
+        print(e)
+        return False
+
     if canteen_exists:
         return canteen_exists
 
@@ -109,16 +127,14 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
         image_url=canteen.image_url,
         address_id=canteen_address.address_id,
     )
-
-    db.add(new_canteen)
-    db.flush()
-
+    try:
+        db.add(new_canteen)
+        db.flush()
+    except Exception as e:
+        print("Error while adding new canteen")
+        print(e)
+        return False
     return new_canteen
-
-
-def update_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
-    # TODO: Implement update_canteen
-    pass
 
 
 # ======================================================== #
@@ -128,11 +144,17 @@ def get_dish(db: Session, description: str, dish_id: int = "") -> m_canteen.Dish
     if not (description and dish_id):
         raise ValueError("Parameter description or dish_id is required")
 
-    dish = (
-        db.query(m_canteen.Dish)
-        .filter(m_canteen.Dish.description == description or m_canteen.Dish.dish_id == dish_id)
-        .first()
-    )
+    try:
+        dish = (
+            db.query(m_canteen.Dish)
+            .filter(m_canteen.Dish.description == description or m_canteen.Dish.dish_id == dish_id)
+            .first()
+        )
+    except AttributeError as e:
+        print("Error while fetching dish")
+        print(e)
+        return False
+
     if not dish:
         print("Dish not found")
         raise ReferenceError("Dish not found")
@@ -143,14 +165,24 @@ def get_dish(db: Session, description: str, dish_id: int = "") -> m_canteen.Dish
 def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     if not dish:
         raise ValueError("Parameter dish is required")
+    try:
+        # Check if dish exists
+        dish_exists = db.query(m_canteen.Dish).filter_by(description=dish.description).first()
+    except AttributeError as e:
+        print("Error while fetching dish_exists")
+        print(e)
+        return False
 
-    # Check if dish exists
-    dish_exists = db.query(m_canteen.Dish).filter_by(description=dish.description).first()
     if dish_exists:
         # check if price has been updated
         if dish_exists.price != dish.price:
-            dish_exists.price = dish.price
-            db.flush()
+            try:
+                dish_exists.price = dish.price
+                db.flush()
+            except Exception as e:
+                print("Error while updating dish price")
+                print(e)
+                return False
         return dish_exists
 
     # Check if dish image is empty
@@ -163,55 +195,55 @@ def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
         image_url=dish.image_url,
         description=dish.description,
     )
-
-    db.add(new_dish)
-    db.flush()
+    try:
+        db.add(new_dish)
+        db.flush()
+    except Exception as e:
+        print("Error while adding new dish")
+        print(e)
+        return False
 
     return new_dish
-
-
-def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
-    # TODO: Implement update_dish
-    pass
 
 
 # ======================================================== #
 # ========================= Menu ========================= #
 # ======================================================== #
-# TODO: Still bullshit for getting
-def get_menu(
-    db: Session,
-    canteen_id: int,
-    dish_id: int,
-    dish_type: str,
-    serving_date: str,
-) -> m_canteen.Menu:
+def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving_date: str) -> m_canteen.Menu:
 
     if not (canteen_id and dish_id and dish_type and serving_date):
         raise ValueError("Parameter canteen_id, dish_id, dish_type or serving_date is required")
-
-    menu = (
-        db.query(m_canteen.Menu)
-        .filter(
-            m_canteen.Menu.canteen_id == canteen_id,
-            m_canteen.Menu.dish_id == dish_id,
-            m_canteen.Menu.dish_type == dish_type,
-            m_canteen.Menu.serving_date == serving_date,
+    try:
+        menu = (
+            db.query(m_canteen.Menu)
+            .filter(
+                m_canteen.Menu.canteen_id == canteen_id,
+                m_canteen.Menu.dish_id == dish_id,
+                m_canteen.Menu.dish_type == dish_type,
+                m_canteen.Menu.serving_date == serving_date,
+            )
+            .first()
         )
-        .first()
-    )
+    except AttributeError as e:
+        print("Error while fetching menu, function get_menu")
+        print(e)
+        return False
+
     if not menu:
-        create_menu(
-            db,
-            m_canteen.Menu(
-                canteen_id=canteen_id,
-                dish_id=dish_id,
-                dish_type=dish_type,
-                serving_date=serving_date,
-            ),
-        )
-        raise ReferenceError("Menu not found")
-
+        try:
+            create_menu(
+                db,
+                m_canteen.Menu(
+                    canteen_id=canteen_id,
+                    dish_id=dish_id,
+                    dish_type=dish_type,
+                    serving_date=serving_date,
+                ),
+            )
+        except Exception as e:
+            print("Error while creating menu")
+            print(e)
+            return False
     return menu
 
 
@@ -219,27 +251,45 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
     if not menu:
         raise ValueError("Parameter menu is required")
 
-    # Check if canteen exists
-    canteen_exists = db.query(m_canteen.Canteen).filter_by(canteen_id=menu.canteen_id).first()
+    try:
+        # Check if canteen exists
+        canteen_exists = db.query(m_canteen.Canteen).filter_by(canteen_id=menu.canteen_id).first()
+    except AttributeError as e:
+        print("Error while fetching canteen_exists")
+        print(e)
+        return False
+
     if not canteen_exists:
         raise ReferenceError("Canteen not found")
 
-    # Check if dish exists
-    dish_exists = db.query(m_canteen.Dish).filter_by(dish_id=menu.dish_id).first()
+    try:
+        # Check if dish exists
+        dish_exists = db.query(m_canteen.Dish).filter_by(dish_id=menu.dish_id).first()
+    except AttributeError as e:
+        print("Error while fetching dish_exists")
+        print(e)
+        return False
+
     if not dish_exists:
         raise ReferenceError("Dish not found")
 
-    # Check if menu exists
-    menu_exists = (
-        db.query(m_canteen.Menu)
-        .filter_by(
-            canteen_id=menu.canteen_id,
-            dish_id=menu.dish_id,
-            dish_type=menu.dish_type,
-            serving_date=menu.serving_date,
+    try:
+        # Check if menu exists
+        menu_exists = (
+            db.query(m_canteen.Menu)
+            .filter_by(
+                canteen_id=menu.canteen_id,
+                dish_id=menu.dish_id,
+                dish_type=menu.dish_type,
+                serving_date=menu.serving_date,
+            )
+            .first()
         )
-        .first()
-    )
+    except AttributeError as e:
+        print("Error while fetching menu_exists")
+        print(e)
+        return False
+
     if menu_exists:
         return menu_exists
 
@@ -249,16 +299,15 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
         dish_type=menu.dish_type,
         serving_date=menu.serving_date,
     )
-
-    db.add(new_menu)
-    db.flush()
+    try:
+        db.add(new_menu)
+        db.flush()
+    except Exception as e:
+        print("Error while adding new menu")
+        print(e)
+        return False
 
     return new_menu
-
-
-def update_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
-    # TODO: Implement update_menu
-    pass
 
 
 # ======================================================== #
@@ -297,40 +346,66 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
         # get menu for week
         complete_menu = fetch_menu(canteen_short_name=canteen_short_name, week_offset=0)
     except ValueError as e:
+        print("Error while fetching menu, function canteen_menu_to_db")
+        print(e)
         return False
 
     days = complete_menu.keys()
     for day in days:
         for dish in complete_menu[day]:
-            # check if dish exists
-            dish_exists = db.query(m_canteen.Dish).filter_by(description=dish["description"]).first()
+
+            try:
+                # check if dish exists
+                dish_exists = db.query(m_canteen.Dish).filter_by(description=dish["description"]).first()
+            except AttributeError as e:
+                print("Error while fetching dish_exists")
+                print(e)
+                return False
+
             # create new dish if not exists
             if not dish_exists:
                 if dish["price"] is None:
                     continue
                 new_dish = m_canteen.Dish(description=dish["description"], price=dish["price"])
-                db.add(new_dish)
-                db.flush()
+                try:
+                    db.add(new_dish)
+                    db.flush()
+                except Exception as e:
+                    print("Error while adding new dish")
+                    print(e)
+                    return False
+
             else:
                 # update price if price has been changed
                 if dish_exists.price != dish["price"]:
                     dish_exists.price = dish["price"]
                     db.flush()
 
-            # get dish id
-            dish_id = db.query(m_canteen.Dish).filter_by(description=dish["description"]).first().dish_id
+            try:
+                # get dish id
+                dish_id = db.query(m_canteen.Dish).filter_by(description=dish["description"]).first().dish_id
+            except AttributeError as e:
+                print("Error while fetching dish_id")
+                print(e)
+                return False
 
-            # check if menu_item exists
-            menu_item_exists = (
-                db.query(m_canteen.Menu)
-                .filter_by(
-                    canteen_id=canteen_id,
-                    dish_id=dish_id,
-                    dish_type=dish["dish_type"],
-                    serving_date=dish["serving_date"],
+            try:
+
+                # check if menu_item exists
+                menu_item_exists = (
+                    db.query(m_canteen.Menu)
+                    .filter_by(
+                        canteen_id=canteen_id,
+                        dish_id=dish_id,
+                        dish_type=dish["dish_type"],
+                        serving_date=dish["serving_date"],
+                    )
+                    .first()
                 )
-                .first()
-            )
+            except AttributeError as e:
+                print("Error while fetching menu_item_exists")
+                print(e)
+                return False
 
             if menu_item_exists:
                 continue
@@ -341,14 +416,11 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
                 dish_type=dish["dish_type"],
                 serving_date=dish["serving_date"],
             )
-            # print(
-            #     new_menu_item.dish_id,
-            #     new_menu_item.canteen_id,
-            #     new_menu_item.serving_date,
-            #     new_menu_item.dish_type,
-            #     str(new_menu_item.serving_date),
-            # )
-            db.add(new_menu_item)
-            db.flush()
-
+            try:
+                db.add(new_menu_item)
+                db.flush()
+            except Exception as e:
+                print("Error while adding new menu_item")
+                print(e)
+                return False
     return True

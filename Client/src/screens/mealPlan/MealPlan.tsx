@@ -1,17 +1,17 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View } from "react-native";
 
-function MealPlan() {
+import MenuPlan from "../../components/menuPlan/MenuPlan";
 
-    const { t } = useTranslation();
+const MealPlan: React.FC = () => {
+  const { t } = useTranslation();
 
-    return (
-        <ScrollView className='h-screen bg-primary'>
-            <View>
-                <Text className="text-font_primary">Welcome to the MealPlan page</Text>
-            </View>
-        </ScrollView>
-    );
-}
+  return (
+    <View className="flex-1 bg-primary">
+      <MenuPlan />
+    </View>
+  );
+};
 
 export default MealPlan;

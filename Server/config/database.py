@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 import configparser
 from pathlib import Path
 
@@ -16,17 +15,15 @@ database = config["DATABASE"]["database"]
 
 ssl_args = {
     "ssl": {
-        "ca":  Path(__file__).parent.absolute() / "certs" / "ca-cert.pem",
+        "ca": Path(__file__).parent.absolute() / "certs" / "ca-cert.pem",
         "cert": Path(__file__).parent.absolute() / "certs" / "client-cert.pem",
         "key": Path(__file__).parent.absolute() / "certs" / "client-key.pem",
         "check_hostname": False,
     }
 }
 
-SQLALCHEMY_DATABASE_URL = (
-    f"mariadb+pymysql://{user}:{password}@{host}/{database}?charset=utf8mb4"
-)
+SQLALCHEMY_DATABASE_URL = f"mariadb+pymysql://{user}:{password}@{host}/{database}?charset=utf8mb4"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=ssl_args, pool_recycle=3600) #* recycle every hour
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=ssl_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()

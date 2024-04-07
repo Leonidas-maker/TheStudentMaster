@@ -1,75 +1,131 @@
 from fastapi import FastAPI, Depends, BackgroundTasks
-from fastapi_cdn_host import monkey_patch_for_docs_ui
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
-
-from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn, TimeRemainingColumn
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
+import datetime
+from fastapi_cdn_host import monkey_patch
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
+from models.sql_models import m_calendar
 from config.database import engine
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db, get_db
 
-# from middleware.general import create_address
-from middleware.ical import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
-from middleware.canteen import canteen_menu_to_db, create_canteens, update_canteen_menus
+from middleware.general import clean_address
+from middleware.calendar import (
+    prepareCalendarTables,
+    update_active_native_calendars,
+    update_all_native_calendars,
+    update_custom_calendars,
+    clean_custom_calendars,
+)
+from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_general
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user, m_ical, m_general, m_canteen
+from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
-from routes import user, auth, canteen
+from routes import user, auth, canteen, calendar
 
 m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
-m_ical.Base.metadata.create_all(bind=engine)
+m_auth.Base.metadata.create_all(bind=engine)
+m_calendar.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
 
 # ======================================================== #
 # ===================== Repeated Task ==================== #
 # ======================================================== #
 
-async def create_task(task_function, progress, task_id):
+
+async def create_task(task_function, progress, task_id, *args, **kwargs):
     # New db session for each task
     async with get_async_db() as db:
-        await asyncio.to_thread(task_function, db, progress, task_id)
+        await asyncio.to_thread(task_function, db, progress, task_id, *args, **kwargs)
+
 
 async def repeated_task():
-    await asyncio.sleep(2)  # 15 minutes wait
-    while True:
-        with Progress(
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
-            TimeRemainingColumn(),
-        ) as progress:
-            progress_id_ical_Update_Mannheim = progress.add_task(
-                "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
-            )
-            progress_id_ical_Update_Custom = progress.add_task(
-                "[bold green]iCal-Custom[/bold green] Update iCal...", total=None
-            )
+    try:
+        await asyncio.sleep(2)  # Wait for the app to start
 
-            progress_id_canteen_menu_ = progress.add_task(
-                "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
-            )
+        native_calender_loops = 0
+        while True:
+            current_time = datetime.datetime.now()
 
-            # All tasks that should be executed
-            tasks = [
-                create_task(update_ical_dhbw_mannheim, progress, progress_id_ical_Update_Mannheim),
-                create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
-                create_task(update_canteen_menus, progress, progress_id_canteen_menu_)
-            ]
+            async with get_async_db() as db:
+                backends = db.query(m_calendar.CalendarBackend).all()
 
-            await asyncio.gather(*tasks, return_exceptions=True)
+            with Progress(
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
+                TimeRemainingColumn(),
+            ) as progress:
+                tasks = []
 
-            progress.stop()
-        await asyncio.sleep(60 * 15)  # 15 minutes wait
+                # Native Calendar updates only between 6:00 and 18:00
+                if (
+                    current_time.hour > 6 and current_time.hour < 18 or True
+                ):  #! Remove the or True to enable the time restriction
+                    progress_id_update_calendar_dhbw_mannheim = progress.add_task(
+                        "[bold green]Native-Calendar-DHBWMannheim[/bold green] Updating...", total=None
+                    )
+
+                    # Update every 1 hours all calendars, otherwise only the active ones (user has subscribed to it)
+                    if native_calender_loops % 4 == 0:
+                        native_calender_loops = 0
+                        tasks.append(
+                            create_task(
+                                update_all_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
+                            )
+                        )
+                    else:
+                        tasks.append(
+                            create_task(
+                                update_active_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
+                            )
+                        )
+                else:
+                    native_calender_loops = 0
+
+                progress_ids_update_custom = []
+                for backend in backends:
+                    progress_ids_update_custom.append(
+                        (
+                            progress.add_task(
+                                f"[bold green]CalendarCustom-{backend.backend_name}[/bold green] Updating...",
+                                total=None,
+                            ),
+                            backend,
+                        )
+                    )
+                for progress_id_Update_Custom in progress_ids_update_custom:
+                    tasks.append(
+                        create_task(
+                            update_custom_calendars,
+                            progress,
+                            progress_id_Update_Custom[0],
+                            progress_id_Update_Custom[1],
+                        )
+                    )
+
+                # TODO @xxchillkroetexx: Update every 15 minutes necessary?
+                progress_id_canteen_menu = progress.add_task(
+                    "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
+                )
+                tasks.append(create_task(update_canteen_menus, progress, progress_id_canteen_menu))
+                native_calender_loops += 1
+                # await asyncio.gather(*tasks, return_exceptions=True)
+                progress.stop()
+            await asyncio.sleep(60 * 15)  # 15 minutes wait
+    except asyncio.CancelledError:
+        pass
+    except Exception as e:
+        print(e)
 
 
 # ======================================================== #
@@ -84,16 +140,19 @@ async def lifespan(app: FastAPI):
     async with get_async_db() as db:
         await asyncio.to_thread(create_canteens, db)
 
+    async with get_async_db() as db:
+        await asyncio.to_thread(prepareCalendarTables, db)
+
     # Start the repeated tasks
-    task = asyncio.create_task(repeated_task())
+    repeated_task1 = asyncio.create_task(repeated_task())
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
     # ~~~~~~~~ Code to run on shutdown ~~~~~~~~ #
-    # Cancel the repeated task
-    task.cancel()
     try:
-        await task
+        # Cancel the repeated task
+        repeated_task1.cancel()
+        await repeated_task1
     except asyncio.CancelledError:
         pass
 
@@ -101,7 +160,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"})
-monkey_patch_for_docs_ui(app)
+monkey_patch(app)
 
 
 # ======================================================== #
@@ -109,7 +168,7 @@ monkey_patch_for_docs_ui(app)
 # ======================================================== #
 @app.get("/")
 async def root(db: Session = Depends(get_db)):
-    update_all_ical_dhbw_mannheim(db)
+    clean_address(db)
     return {"message": "Hello World"}
 
 
@@ -120,3 +179,4 @@ async def root(db: Session = Depends(get_db)):
 app.include_router(user.users_router, prefix="/user", tags=["user"])
 app.include_router(auth.auth_router, prefix="/auth", tags=["auth"])
 app.include_router(canteen.canteen_router, prefix="/canteen", tags=["canteen"])
+app.include_router(calendar.calendar_router, prefix="/calendar", tags=["calendar"])
