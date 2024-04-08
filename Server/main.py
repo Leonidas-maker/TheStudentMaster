@@ -3,8 +3,7 @@ from fastapi_cdn_host import monkey_patch_for_docs_ui
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
-
-from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn, TimeRemainingColumn
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import engine
@@ -14,7 +13,7 @@ from middleware.database import get_async_db, get_db
 
 # from middleware.general import create_address
 from middleware.ical import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
-from middleware.canteen import canteen_menu_to_db, create_canteens, update_canteen_menus
+from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_general
@@ -34,13 +33,15 @@ m_canteen.Base.metadata.create_all(bind=engine)
 # ===================== Repeated Task ==================== #
 # ======================================================== #
 
+
 async def create_task(task_function, progress, task_id):
     # New db session for each task
     async with get_async_db() as db:
         await asyncio.to_thread(task_function, db, progress, task_id)
 
+
 async def repeated_task():
-    await asyncio.sleep(2)  # 15 minutes wait
+    await asyncio.sleep(2)  # Wait for the app to start
     while True:
         with Progress(
             TextColumn("[progress.description]{task.description}"),
@@ -63,7 +64,7 @@ async def repeated_task():
             tasks = [
                 create_task(update_ical_dhbw_mannheim, progress, progress_id_ical_Update_Mannheim),
                 create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
-                create_task(update_canteen_menus, progress, progress_id_canteen_menu_)
+                create_task(update_canteen_menus, progress, progress_id_canteen_menu_),
             ]
 
             await asyncio.gather(*tasks, return_exceptions=True)
