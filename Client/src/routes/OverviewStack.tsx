@@ -11,6 +11,8 @@ import Imprint from '../screens/imprint/Imprint';
 import Credits from '../screens/credits/Credits';
 import Profile from '../screens/profile/Profile';
 import ResponsibleDisclosure from '../screens/responsibleDisclosure/ResponsibleDisclosure';
+import Login from '../screens/accountManagement/login/Login';
+import Registration from '../screens/accountManagement/registration/Registration';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,8 @@ function OverviewStack() {
                 <Stack.Screen name="Credits" component={Credits} />
                 <Stack.Screen name="Profile" component={Profile} />
                 <Stack.Screen name="ResponsibleDisclosure" component={ResponsibleDisclosure} />
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Registration" component={Registration} />
             </Stack.Navigator>
         </>
     );

@@ -32,6 +32,10 @@ function OverviewNavigator() {
         navigation.navigate('OverviewStack', { screen: 'ResponsibleDisclosure' })
     };
 
+    const handleRegisterPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'Registration' })
+    };
+
     const handleLogoutPress = () => {
         //! Insert logic for logout
         setIsUserLoggedIn(false);
@@ -40,7 +44,8 @@ function OverviewNavigator() {
     const handleLoginPress = () => {
         //! Insert logic for login
         setIsUserLoggedIn(true);
-    }
+        navigation.navigate('OverviewStack', { screen: 'Login' })
+    };
 
     const { t } = useTranslation();
 
@@ -67,6 +72,18 @@ function OverviewNavigator() {
                         <View className="flex-row items-center">
                             <Icon name="settings" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">Settings</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={handleRegisterPress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="app-registration" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">Registrieren</Text>
                         </View>
                         <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
                     </View>

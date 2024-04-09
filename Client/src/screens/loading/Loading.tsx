@@ -18,7 +18,7 @@ const Loading = (props: any) => {
 	  useEffect(() => {
 		setTimeout(() => {
 		  navigateAndReset();
-		}, 2000);
+		}, 1000);
 	  }, []);
 
 	return (
