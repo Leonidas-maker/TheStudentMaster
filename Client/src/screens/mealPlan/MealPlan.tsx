@@ -1,14 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView } from "react-native";
 
+import MenuPlan from "../../components/menuPlan/MenuPlan";
+
 function MealPlan() {
 
     const { t } = useTranslation();
 
     return (
-        <ScrollView className='h-screen bg-primary'>
+        <ScrollView className='h-screen bg-white'>
             <View>
-                <Text className="text-font_primary">Welcome to the MealPlan page</Text>
+                <MenuPlan />
             </View>
         </ScrollView>
     );
