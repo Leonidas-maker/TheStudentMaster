@@ -9,6 +9,7 @@ function MenuPlan() {
 
     const [selected, setSelected] = React.useState("");
 
+    // Data for canteen names
     const canteenNames = [
         { key: '1', value: 'Mensaria am Schloss' },
         { key: '2', value: 'greens^2' },
