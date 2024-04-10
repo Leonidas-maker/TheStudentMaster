@@ -26,6 +26,7 @@ canteen_router = APIRouter()
 # ======================== Canteen ======================= #
 # ======================================================== #
 
+
 @canteen_router.get("/all", response_model=list[ResGetCanteen])
 def canteen_read_all(db: Session = Depends(get_db)) -> list[dict]:
     return [canteen.as_dict() for canteen in db.query(m_canteen.Canteen).all()]
@@ -53,19 +54,39 @@ def canteen_read_all_details(
         .as_dict_complete()
     )
 
+
 # ======================================================== #
 # ===================== Canteen Menu ===================== #
 # ======================================================== #
 
-@canteen_router.get("/{canteen_id}/menu/all", response_model=list[ResGetCanteenMenu])
+
+@canteen_router.get("/{canteen_short_name}/menu/all", response_model=ResGetCanteenMenu)
 def canteen_read_menu_all(
-    canteen_id: Annotated[int, "The ID of the canteen to retrieve the menu for."],
+    canteen_short_name: Annotated[
+        str, "The short name of the canteen to retrieve the menu for."
+    ],
     db: Session = Depends(get_db),
-) -> list[dict]:
-    return [
-        menu.as_dict()
-        for menu in db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
-    ]
+) -> dict:
+    canteen = (
+        db.query(m_canteen.Canteen)
+        .filter_by(canteen_short_name=canteen_short_name)
+        .first()
+    )
+    menu = list()
+    for line in db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all():
+        menu_row = dict()
+        menu_row["dish_type"] = line.dish_type
+        menu_row["dish"] = line.dish.description
+        menu_row["price"] = line.dish.price
+        menu_row["serving_date"] = line.serving_date
+        menu.append(menu_row)
+    returnvalue = {
+        "canteen_name": canteen.canteen_name,
+        "canteen_short_name": canteen.canteen_short_name,
+        "image_url": canteen.image_url,
+        "menu": menu,
+    }
+    return returnvalue
 
 
 @canteen_router.get("/menu/{day}", response_model=list[ResGetCanteenMenuDay])

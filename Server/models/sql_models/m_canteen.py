@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import Base
 
+
 class Canteen(Base):
     __tablename__ = "canteens"
 
@@ -69,3 +70,12 @@ class Menu(Base):
 
     canteen = relationship("Canteen")
     dish = relationship("Dish")
+
+    def as_dict(self) -> dict:
+        return {
+            "menu_id": self.menu_id,
+            "canteen_id": self.canteen_id,
+            "dish_id": self.dish_id,
+            "dish_type": self.dish_type,
+            "serving_date": self.serving_date,
+        }
