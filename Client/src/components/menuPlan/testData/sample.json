@@ -1,0 +1,428 @@
+{
+    "canteen_name": "Mensaria am Schloss",
+    "canteen_short_name": "schlossmensa",
+    "image_url": null,
+    "menu": [
+      {
+        "dish_type": "Menü 1",
+        "dish": "Rahmgulasch vom Schwein mit Pilzen, Spätzle, Blumenkohlsalat, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "gefüllte Paprikaschote, Tomatensoße, Salzkartoffeln, frische Kräuter, Beilagensalat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Kürbiskern-Hähnchenschnitzel, Kartoffelsalat, Feldsalat, frische Kräuter",
+        "price": "Portion: 5,00 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Joghurt-Dressing, Himbeerdressing, Antipasti, Radieschen, Apfel-Lauch-Salat, Tomatensalat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Putenschnitzel, veganes Schnitzel, Marktgemüse, Pfeffer-Rahmsoße, Tomatenreis, Bohnen-Currysuppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Mousse au Chocolat, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-01T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "hausgemachter Hackbraten, Bratensoße, gemischtes Gemüse, Salzkartoffeln",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Tikka-Masala, Jasmin-Duftreis, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Pflanzl-Burger, Spiegelei, 7-Kräuter-Mayo, Eisbergsalat, Tomaten, Süßkartoffel-Pommes",
+        "price": "Portion: 5,00 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Weißkrautsalat, Rotkrautsalat, Eiersalat, Gurkensalat, Brokkolisalat, Nudelsalat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, Valess Schnitzel, Marktgemüse, Tomatensoße, Spätzle, Rahmspinatsuppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Schoko-Vanille-Pudding, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-02T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "Hühnerfrikassee, Gemüsereis, Rote-Bete-Salat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "vegane Hackbällchen in Currysauce, Pommes frites, mexikanischer Krautsalat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Pulled-Pork-Burger, Brioche Brötchen, Kürbiskern-Kraut, gepickelte rote Zwiebeln, Kartoffel-Wedges",
+        "price": "Portion: 5,50 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Gurkensalat, Karottensalat, Tomatensalat, Bauernsalat, Hühnchensalat, Antipasti",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "paniertes Schnitzel vom Schwein, veganes Schnitzel, Marktgemüse, Bratensoße, Jasmin-Duftreis, Salzkartoffeln, Perlgraupeneintopf",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Vanillepudding, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-03T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "hausgemachter Pfälzer Saumagen, Bratensoße, Rosenkohl, Kartoffelpüree, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Gemüse Dal Ravioli, Linsen-Mango-Gemüse, Garam-Masala-Soße, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Hähnchengyros, Tsatsiki, Curry-Gemüsereis, gepickelte rote Zwiebeln",
+        "price": "Portion: 5,50 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Kichererbsensalat, Tomatensalat, Mais-Paprikasalat, Bauernsalat, Karottensalat, Rote-Bete-Salat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, veganes Schnitzel, Marktgemüse, Tomatensoße, Salzkartoffeln, Jasmin-Duftreis, Karotten-Ingwer Suppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Irish-Coffee-Creme, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-04T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "Linseneintopf mit Spätzle, Rindswurst, Baguette-Brötchen, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Rote-Bete-Falafel, Couscous, veganer Joghurt-Minz-Dip, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Seelachsfilet im Tempurateig, Remoulade, Kartoffelsalat, Zitronenecke, Karotten-Erdnuss-Salat",
+        "price": "Portion: 4,00 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Tomatensalat, Gurkensalat, Weißkrautsalat, Kichererbsensalat, Mais-Paprikasalat, Antipasti",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, paniertes Schnitzel vom Schwein, veganes Schnitzel, Marktgemüse, Gemüsereis, Curry-Reis, Bratensoße, Gemüsebrühe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Panna cotta, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-05T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "Rahmgulasch vom Schwein mit Pilzen, Spätzle, Blumenkohlsalat, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "gefüllte Paprikaschote, Tomatensoße, Salzkartoffeln, frische Kräuter, Beilagensalat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Kürbiskern-Hähnchenschnitzel, Kartoffelsalat, Feldsalat, frische Kräuter",
+        "price": "Portion: 5,00 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Joghurt-Dressing, Himbeerdressing, Antipasti, Radieschen, Apfel-Lauch-Salat, Tomatensalat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Putenschnitzel, veganes Schnitzel, Marktgemüse, Pfeffer-Rahmsoße, Tomatenreis, Bohnen-Currysuppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Mousse au Chocolat, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-08T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "hausgemachter Hackbraten, Bratensoße, gemischtes Gemüse, Salzkartoffeln",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Tikka-Masala, Jasmin-Duftreis, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Pflanzl-Burger, Spiegelei, 7-Kräuter-Mayo, Eisbergsalat, Tomaten, Süßkartoffel-Pommes",
+        "price": "Portion: 5,00 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Weißkrautsalat, Rotkrautsalat, Eiersalat, Gurkensalat, Brokkolisalat, Nudelsalat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, Valess Schnitzel, Marktgemüse, Tomatensoße, Spätzle, Rahmspinatsuppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Schoko-Vanille-Pudding, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-09T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "Hühnerfrikassee, Gemüsereis, Rote-Bete-Salat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "vegane Hackbällchen in Currysauce, Pommes frites, mexikanischer Krautsalat",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Pulled-Pork-Burger, Brioche Brötchen, Kürbiskern-Kraut, gepickelte rote Zwiebeln, Kartoffel-Wedges",
+        "price": "Portion: 5,50 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Gurkensalat, Karottensalat, Tomatensalat, Bauernsalat, Hühnchensalat, Antipasti",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "paniertes Schnitzel vom Schwein, veganes Schnitzel, Marktgemüse, Bratensoße, Jasmin-Duftreis, Salzkartoffeln, Perlgraupeneintopf",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Vanillepudding, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-10T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "hausgemachter Pfälzer Saumagen, Bratensoße, Rosenkohl, Kartoffelpüree, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Gemüse Dal Ravioli, Linsen-Mango-Gemüse, Garam-Masala-Soße, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Hähnchengyros, Tsatsiki, Curry-Gemüsereis, gepickelte rote Zwiebeln",
+        "price": "Portion: 5,50 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Kichererbsensalat, Tomatensalat, Mais-Paprikasalat, Bauernsalat, Karottensalat, Rote-Bete-Salat",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, veganes Schnitzel, Marktgemüse, Tomatensoße, Salzkartoffeln, Jasmin-Duftreis, Karotten-Ingwer Suppe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Irish-Coffee-Creme, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-11T00:00:00"
+      },
+      {
+        "dish_type": "Menü 1",
+        "dish": "Linseneintopf mit Spätzle, Rindswurst, Baguette-Brötchen, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "Menü vegan",
+        "dish": "Rote-Bete-Falafel, Couscous, veganer Joghurt-Minz-Dip, frische Kräuter",
+        "price": "Portion: 3,00 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "MA(h)l was anderes",
+        "dish": "Seelachsfilet im Tempurateig, Remoulade, Kartoffelsalat, Zitronenecke, Karotten-Erdnuss-Salat",
+        "price": "Portion: 4,00 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "Pastatheke",
+        "dish": "Conchiglie, Käse-Sahne-Soße, Puttanesca Sauce, Ragù alla Maiale-Bolognese",
+        "price": "Portion: 2,80 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "Salatbuffet",
+        "dish": "Blattsalate, Rohkostsalate, Tomatensalat, Gurkensalat, Weißkrautsalat, Kichererbsensalat, Mais-Paprikasalat, Antipasti",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "Themenpark",
+        "dish": "Hähnchenschnitzel, paniertes Schnitzel vom Schwein, veganes Schnitzel, Marktgemüse, Gemüsereis, Curry-Reis, Bratensoße, Gemüsebrühe",
+        "price": "pro 100g: 1,20 €",
+        "serving_date": "2024-04-12T00:00:00"
+      },
+      {
+        "dish_type": "Dessert",
+        "dish": "Obstsalat, Panna cotta, Fruchtjoghurt",
+        "price": "Glas: 1,20 €",
+        "serving_date": "2024-04-12T00:00:00"
+      }
+    ]
+  }
+  

@@ -8,11 +8,9 @@ function MealPlan() {
     const { t } = useTranslation();
 
     return (
-        <ScrollView className='h-screen bg-white'>
-            <View>
-                <MenuPlan />
-            </View>
-        </ScrollView>
+        <View className="h-screen bg-primary">
+            <MenuPlan />
+        </View>
     );
 }
 
