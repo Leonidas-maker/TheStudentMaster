@@ -27,7 +27,7 @@ const Hours: React.FC<HoursProps> = ({ startHour, endHour, onHeightChange }) => 
   // ====================================================== //
   // Calculates the total hours displayed in the calender
   const hoursCount = endHour - startHour - 2;
-  
+
   // Calculates the new start and end hours 
   // Needed for the hours array because the first and last hour are displayed differently
   const newStart = startHour + 1;
