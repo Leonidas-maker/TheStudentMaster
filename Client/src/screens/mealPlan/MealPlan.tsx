@@ -8,7 +8,7 @@ function MealPlan() {
     const { t } = useTranslation();
 
     return (
-        <View className="h-screen bg-primary">
+        <View className="flex-1 bg-primary">
             <MenuPlan />
         </View>
     );

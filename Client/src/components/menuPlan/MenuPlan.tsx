@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -12,6 +12,7 @@ import {
 
 import canteenData from "./testData/canteenSample.json";
 import canteenSample from "./testData/sample.json";
+import Weeks from "../calendar/Weeks";
 
 interface CanteenProps {
     key: string;
@@ -56,7 +57,13 @@ function MenuPlan() {
 
     const currentDate = new Date();
     const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 })
-    const tabBarHeight = useBottomTabBarHeight();
+
+    const scrollViewRef = useRef<ScrollView>(null);
+
+    useEffect(() => {
+        // Sicherstellen, dass die Referenz existiert und dann die Methode `scrollTo` aufrufen
+        scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+    }, [selectedDate]);
 
     return (
         <View className="flex-1">
@@ -95,7 +102,7 @@ function MenuPlan() {
                     );
                 })}
             </View>
-            <ScrollView className="flex-grow" contentContainerStyle={{ paddingBottom: tabBarHeight }}>
+            <ScrollView className="flex-1" ref={scrollViewRef}>
                 {dishes.map((dish, index) => (
                     <View key={index} className="m-2 p-2 bg-gray-400">
                         <Text>{dish.dish_type}: {dish.dish}</Text>
