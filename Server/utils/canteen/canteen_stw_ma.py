@@ -219,6 +219,6 @@ if __name__ == "__main__":
     #     "dhbw_eppelheim",
     # ]
 
-    # fetch_menu(canteen_short_name="dhbw_eppelheim", week_offset=0)
+    # fetch_menu(canteen_short_name="schlossmensa", week_offset=0)
 
     pass
