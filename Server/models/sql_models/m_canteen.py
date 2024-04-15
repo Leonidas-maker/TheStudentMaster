@@ -50,7 +50,7 @@ class Dish(Base):
     __tablename__ = "canteen_dishes"
 
     dish_id = Column(Integer, primary_key=True, nullable=False)
-    description = Column(String(255))
+    description = Column(String(510))
     image_url = Column(String(255))
     price = Column(String(255), nullable=False)
 
