@@ -25,7 +25,8 @@
         "permissions": [
           "android.permission.DETECT_SCREEN_CAPTURE"
         ]
-      }
+      },
+      "package": "com.schuetze1000.TheStudentMaster"
     },
     "web": {
       "favicon": "./assets/favicon.png"
