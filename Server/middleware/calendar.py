@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models.m_ical import ICalCustom, ICalDHBWMannheim
+from Server.models.sql_models.m_calendar import ICalCustom, ICalDHBWMannheim
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
-import utils.ical.nativ_sources as nativ_sources
-from utils.ical.general import get_ical_data, get_icals_data
+import Server.utils.calendar.nativ_sources as nativ_sources
+from Server.utils.calendar.calendar_wrapper import get_ical_data, get_icals_data
 
 # ======================================================== #
 # ===================== ICal Updater ===================== #

@@ -89,7 +89,7 @@ def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Dep
     return refresh_tokens(db, refresh_token)
 
 
-@auth_router.post("/register-application")
+@auth_router.post("/register-application") #! May not needed 
 def register_application():
     return {"Hello": "World"}
 

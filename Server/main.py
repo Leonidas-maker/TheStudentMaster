@@ -6,27 +6,28 @@ import asyncio
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
+from Server.models.sql_models import m_calendar
 from config.database import engine
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db, get_db
 
 # from middleware.general import create_address
-from middleware.ical import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
+from Server.middleware.calendar import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
 from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_general
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user, m_ical, m_general, m_canteen
+from models.sql_models import m_user, m_general, m_canteen
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
 from routes import user, auth, canteen
 
 m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
-m_ical.Base.metadata.create_all(bind=engine)
+m_calendar.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
 
 # ======================================================== #

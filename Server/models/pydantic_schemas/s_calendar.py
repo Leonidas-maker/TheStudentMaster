@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 
-class ICalDHBWMannheim(BaseModel):
+class CalendarNative(BaseModel):
     name: str
     ical_source_id: int
     ical_data: str
@@ -13,7 +13,7 @@ class ICalDHBWMannheim(BaseModel):
         orm_mode = True
 
 
-class CustomICal(BaseModel):
+class CalendarCustom(BaseModel):
     name: str
     source_url: str
     ical_data: str
