@@ -341,13 +341,6 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
                 dish_type=dish["dish_type"],
                 serving_date=dish["serving_date"],
             )
-            # print(
-            #     new_menu_item.dish_id,
-            #     new_menu_item.canteen_id,
-            #     new_menu_item.serving_date,
-            #     new_menu_item.dish_type,
-            #     str(new_menu_item.serving_date),
-            # )
             db.add(new_menu_item)
             db.flush()
 
