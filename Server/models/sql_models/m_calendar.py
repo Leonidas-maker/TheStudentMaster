@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON
+from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON, ForeignKey
 from config.database import Base
 from sqlalchemy.orm import validates, relationship
 import json
@@ -7,20 +7,25 @@ import json
 class CalendarCustom(Base):
     __tablename__ = "calendar_custom"
     id = Column(Integer, primary_key=True, index=True)
-    university_id = Column(Integer, nullable=True)  
+    university_id = Column(Integer, ForeignKey("university.id"), nullable=True)
 
-    lecture_name = Column(String(255), nullable=False)
+    lecture_name = Column(String(255), nullable=False, unique=True)
 
-    source_backend = Column(String(255), nullable=False)
-    source_url = Column(String(255), nullable=False)
+    source_backend_id = Column(Integer, ForeignKey("calendar_backend.id"), nullable=False)
+    source_url = Column(String(255), nullable=False, unique=True)
 
     data = Column(JSON, nullable=False)
     hash = Column(String(255), nullable=False)
 
-    verified = Column(BOOLEAN, default=False) # True if the data is from a verified source or is validated by other users (e.g. by voting)
+    refresh_interval = Column(Integer, nullable=False, default=15) # In minutes
+    last_updated = Column(TIMESTAMP, nullable=False)
+
+
+    verified = Column(BOOLEAN, default=False) # True if the data is from a verified source or is validated by other users (e.g. by voting) 
     last_modified = Column(TIMESTAMP, nullable=False)
 
     university = relationship("University", cascade="save-update", uselist=False)
+    source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
 
     @validates("data")
     def validate_data(self, key, data):
@@ -31,9 +36,13 @@ class CalendarCustom(Base):
 class CalendarNative(Base):
     __tablename__ = "calendar_native"
     id = Column(Integer, primary_key=True, index=True)
-    university_id = Column(Integer, nullable=False)
-    lecture_name = Column(String(255), nullable=False)
+    university_id = Column(Integer, ForeignKey("university.id"), nullable=False)
+
+    lecture_name = Column(String(255), nullable=False, unique=True)
+
+    source_backend_id = Column(Integer, ForeignKey("calendar_backend.id"), nullable=False)
     source = Column(String(255), nullable=False)
+
     data = Column(JSON, nullable=False)
     hash = Column(String(255), nullable=False)
     is_active = Column(BOOLEAN, default=False)
@@ -41,18 +50,25 @@ class CalendarNative(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     university = relationship("University", cascade="save-update", uselist=False)
+    source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
+
 
 class University(Base):
     __tablename__ = "university"
     id = Column(Integer, primary_key=True, index=True)
-    address_id = Column(Integer, nullable=False)
-    name = Column(String(255), nullable=False)
-    rooms = Column(JSON, nullable=False)
+    address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=True)
+    name = Column(String(255), nullable=False, unique=True)
+    rooms = Column(JSON, nullable=True)
 
 
     last_modified = Column(TIMESTAMP, nullable=False)
     address = relationship("Address", uselist=False)
     
+class CalendarBackend(Base):
+    __tablename__ = "calendar_backend"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False, unique=True)
+    last_modified = Column(TIMESTAMP, nullable=False)
 
 # {
 #     "reserved_rooms": [...],

@@ -14,7 +14,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         self,
         backend: str,
         type: str = "custom",
-        source_schema: Dict[str, str] | str = None,
+        source: Dict[str, str] | str = None,
     ):
         if backend not in ["ical", "rapla"]:
             raise ValueError("Invalid backend")
@@ -23,7 +23,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
         self.backend = backend
         self.type = type
-        self.source_schema = source_schema
+        self.source = source
 
         self.exam_keywords = [
             "klausur",
@@ -50,27 +50,38 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         dhash.update(encoded)
         return dhash.hexdigest()
 
+
+    def set_type(self, type: str):
+        if type not in ["custom", "dhbw-mannheim"]:
+            raise ValueError("Invalid type")
+        self.type = type
+
+    def set_backend(self, backend: str):
+        if backend not in ["ical", "rapla"]:
+            raise ValueError("Invalid backend")
+        self.backend = backend
+
     def get_data(
         self, source: Dict[str, str] | str = None
     ):
         if source is None:
-            if self.source_schema is None:
+            if self.source is None:
                 raise ValueError("No source provided!")
         else:
-            self.source_schema = source
+            self.source = source
         
 
-        if isinstance(self.source_schema, dict):
+        if isinstance(self.source, dict):
             if self.backend == "ical":
-                return self.__ical_get_data_multiple(self.source_schema)
+                return self.__ical_get_data_multiple(self.source)
             else:  # rapla
-                return self.__rapla_get_data_multiple(self.source_schema)
+                return self.__rapla_get_data_multiple(self.source)
 
         else:
             if self.backend == "ical":
-                return self.__ical_get_data_single(self.source_schema)
+                return self.__ical_get_data_single(self.source)
             else: # rapla
-                return self.__rapla_get_data_single(self.source_schema)
+                return self.__rapla_get_data_single(self.source)
             
     # ======================================================== #
     # ======================= ICalendar ====================== #
@@ -127,7 +138,6 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
     def __ical_get_data_single(self, source: str) -> Dict[str, any]:
         source_url = self.__ical_get_source_url(source)
-
         data = requests.get(source_url).content.decode("utf-8")
         if data:
             json_data = self.__ical_convert_to_json(data)

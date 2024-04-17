@@ -6,14 +6,14 @@ import asyncio
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
-from Server.models.sql_models import m_calendar
+from models.sql_models import m_calendar
 from config.database import engine
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db, get_db
 
 # from middleware.general import create_address
-from Server.middleware.calendar import update_all_ical_dhbw_mannheim, update_ical_dhbw_mannheim, update_ical_custom
+from middleware.calendar import prepareCalendarTables, update_active_native_calendars
 from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
@@ -53,9 +53,9 @@ async def repeated_task():
             progress_id_ical_Update_Mannheim = progress.add_task(
                 "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
             )
-            progress_id_ical_Update_Custom = progress.add_task(
-                "[bold green]iCal-Custom[/bold green] Update iCal...", total=None
-            )
+            # progress_id_ical_Update_Custom = progress.add_task(
+            #     "[bold green]iCal-Custom[/bold green] Update iCal...", total=None
+            # )
 
             progress_id_canteen_menu_ = progress.add_task(
                 "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
@@ -63,8 +63,8 @@ async def repeated_task():
 
             # All tasks that should be executed
             tasks = [
-                create_task(update_ical_dhbw_mannheim, progress, progress_id_ical_Update_Mannheim),
-                create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
+                create_task(update_active_native_calendars, progress, progress_id_ical_Update_Mannheim),
+                #create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
                 create_task(update_canteen_menus, progress, progress_id_canteen_menu_),
             ]
 
@@ -85,6 +85,9 @@ async def lifespan(app: FastAPI):
 
     async with get_async_db() as db:
         await asyncio.to_thread(create_canteens, db)
+
+    async with get_async_db() as db:
+        await asyncio.to_thread(prepareCalendarTables, db)
 
     # Start the repeated tasks
     task = asyncio.create_task(repeated_task())
@@ -111,7 +114,18 @@ monkey_patch_for_docs_ui(app)
 # ======================================================== #
 @app.get("/")
 async def root(db: Session = Depends(get_db)):
-    update_all_ical_dhbw_mannheim(db)
+    with Progress(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
+            TimeRemainingColumn(),
+        ) as progress:
+
+        progress_id_ical_Update_Mannheim = progress.add_task(
+                    "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
+                )
+        
+        update_all_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
     return {"message": "Hello World"}
 
 

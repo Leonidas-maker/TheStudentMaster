@@ -4,9 +4,14 @@ from datetime import datetime
 
 
 class CalendarNative(BaseModel):
-    name: str
-    ical_source_id: int
-    ical_data: str
+    id: int
+    university_id: int
+    lecture_name: str
+    source_backend_id: int
+    source: str
+    data: dict
+    hash: str
+    is_active: bool
     last_modified: datetime
 
     class Config:
@@ -14,9 +19,34 @@ class CalendarNative(BaseModel):
 
 
 class CalendarCustom(BaseModel):
-    name: str
+    id: int
+    university_id: int
+    lecture_name: str
+    source_backend_id: int
     source_url: str
-    ical_data: str
+    data: dict
+    hash: str
+    verified: bool
+    last_modified: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class University(BaseModel):
+    id: int
+    address_id: int
+    name: str
+    rooms: dict
+    last_modified: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class Backend(BaseModel):
+    id: int
+    name: str
     last_modified: datetime
 
     class Config:
@@ -31,3 +61,6 @@ class CalendarCustom(BaseModel):
 # ======================================================== #
 # ======================= Responses ====================== #
 # ======================================================== #
+class ResponseCalendarNative(BaseModel):
+    data: CalendarNative
+    status: str
