@@ -172,7 +172,7 @@ def fetch_menu_general(
                 serving_date = friday
             case _:
                 serving_date = None
-                
+
         # get price
         raw_price_list = rows[i + 1]
         raw_price_list = re.split(r"[\n\t]+", raw_price_list.text)
@@ -189,9 +189,6 @@ def fetch_menu_general(
 
         list_items_prices = list()
         for i in range(len(menu_items)):
-            # clean up menu items and prices
-            menu_items[i] = remove_markings(menu_items[i])
-            menu_prices[i] = remove_markings(menu_prices[i])
 
             list_items_prices.append(
                 {
@@ -204,10 +201,6 @@ def fetch_menu_general(
         menu[menu_items[0]] = list_items_prices[1:]
 
     return menu
-
-
-def remove_markings(text: str) -> str:
-    return re.sub(r"\s\([a-zA-Z0-9\,]+\)", "", text)
 
 
 def remove_empty_strings(list: list) -> list:
@@ -228,6 +221,6 @@ if __name__ == "__main__":
     #     "dhbw_eppelheim",
     # ]
 
-    # fetch_menu(canteen_short_name="dhbw_eppelheim", week_offset=0)
+    # fetch_menu(canteen_short_name="schlossmensa", week_offset=0)
 
     pass

@@ -11,7 +11,7 @@ function Overview(props: any) {
     const { t } = useTranslation();
 
     return (
-        <ScrollView className='h-screen bg-primary'>
+        <ScrollView className='h-screen bg-white dark:bg-primary'>
             <ProfileView />
             <ModuleNavigator />
             <OverviewNavigator />
