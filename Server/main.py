@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Depends, BackgroundTasks
-from fastapi_cdn_host import monkey_patch_for_docs_ui
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
@@ -106,8 +105,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"})
-monkey_patch_for_docs_ui(app)
-
 
 # ======================================================== #
 # ======================= Test-API ======================= #
@@ -125,7 +122,7 @@ async def root(db: Session = Depends(get_db)):
                     "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
                 )
         
-        update_all_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
+        update_active_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
     return {"message": "Hello World"}
 
 

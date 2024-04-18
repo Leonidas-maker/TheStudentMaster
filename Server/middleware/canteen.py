@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import json
-from tqdm import tqdm
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_stw_ma import fetch_menu
