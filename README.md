@@ -63,6 +63,8 @@ After all packages have been successfully installed, run the following command t
 
 Now you can scan the QR code shown with your iOS or Android device and the app should open in Expo. With iOS you have to scan the QR code with the camera app and with Android you scan the code directly in the Expo app. For the web version, press `w` in the terminal.
 
+⚠️ Please not that the web version will not compile on windows. This is a known issue.
+
 ---
 
 ### Support and Feedback:
