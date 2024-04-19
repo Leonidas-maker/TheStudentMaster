@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON, ForeignKey
+from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON, ForeignKey, CheckConstraint
 from config.database import Base
 from sqlalchemy.orm import validates, relationship
 import json
@@ -17,11 +17,12 @@ class CalendarCustom(Base):
     data = Column(JSON, nullable=False)
     hash = Column(String(255), nullable=False)
 
-    refresh_interval = Column(Integer, nullable=False, default=15) # In minutes
+    refresh_interval = Column(Integer, nullable=False, default=15)  # In minutes
     last_updated = Column(TIMESTAMP, nullable=False)
 
-
-    verified = Column(BOOLEAN, default=False) # True if the data is from a verified source or is validated by other users (e.g. by voting) 
+    verified = Column(
+        BOOLEAN, default=False
+    )  # True if the data is from a verified source
     last_modified = Column(TIMESTAMP, nullable=False)
 
     university = relationship("University", cascade="save-update", uselist=False)
@@ -32,6 +33,7 @@ class CalendarCustom(Base):
         if len(json.dumps(data)) > 200 * 1024:  # 200 Kilobytes
             raise ValueError("Data is too large!")
         return data
+
 
 class CalendarNative(Base):
     __tablename__ = "calendar_native"
@@ -45,12 +47,12 @@ class CalendarNative(Base):
 
     data = Column(JSON, nullable=False)
     hash = Column(String(255), nullable=False)
-    is_active = Column(BOOLEAN, default=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
+    
 
 
 class University(Base):
@@ -59,16 +61,37 @@ class University(Base):
     address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=True)
     name = Column(String(255), nullable=False, unique=True)
     rooms = Column(JSON, nullable=True)
-
+    domains = Column(JSON, nullable=True)
 
     last_modified = Column(TIMESTAMP, nullable=False)
     address = relationship("Address", uselist=False)
-    
+
+
 class CalendarBackend(Base):
     __tablename__ = "calendar_backend"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, unique=True)
     last_modified = Column(TIMESTAMP, nullable=False)
+
+
+class UserCalendar(Base):
+    __tablename__ = "calendar_users"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+
+    custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.id"), nullable=True)
+    native_calendar_id = Column(Integer, ForeignKey("calendar_native.id"), nullable=True)
+
+    last_modified = Column(TIMESTAMP, nullable=False)
+
+    __table_args__ = (
+        CheckConstraint(
+            "(custom_calendar_id IS NOT NULL AND native_calendar_id IS NULL) OR "
+            "(custom_calendar_id IS NULL AND native_calendar_id IS NOT NULL)",
+            name="chk_one_calendar_id",
+        ),
+    )
+
 
 # {
 #     "reserved_rooms": [...],

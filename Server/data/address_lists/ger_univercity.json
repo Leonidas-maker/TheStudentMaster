@@ -1,7 +1,9 @@
 [
     {
         "name": "AKAD Hochschulen f\u00fcr Berufst\u00e4tige, Fachhochschule Leipzig",
-        "domains": "akad.de",
+        "domains": [
+            "akad.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -12,7 +14,9 @@
     },
     {
         "name": "Alice-Salomon-Fachhochschule f\u00fcr Sozialarbeit und Sozialp\u00e4dagogik Berlin",
-        "domains": "asfh-berlin.de",
+        "domains": [
+            "asfh-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -23,7 +27,9 @@
     },
     {
         "name": "Augustana Hochschule Neuendettelsau",
-        "domains": "augustana.de",
+        "domains": [
+            "augustana.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -34,7 +40,9 @@
     },
     {
         "name": "Kirchliche Hochschule Bethel",
-        "domains": "bethel.de",
+        "domains": [
+            "bethel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -45,7 +53,9 @@
     },
     {
         "name": "BiTS - Business and Information Technology School gGmbH",
-        "domains": "bits-iserlohn.de",
+        "domains": [
+            "bits-iserlohn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -56,7 +66,9 @@
     },
     {
         "name": "Cologne Business School",
-        "domains": "cbs.de",
+        "domains": [
+            "cbs.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -67,7 +79,9 @@
     },
     {
         "name": "CODE University of Applied Sciences Berlin",
-        "domains": "code.berlin",
+        "domains": [
+            "code.berlin"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -78,7 +92,9 @@
     },
     {
         "name": "Deutsche Hochschule f\u00fcr Verwaltungswissenschaften Speyer",
-        "domains": "dhv-speyer.de",
+        "domains": [
+            "dhv-speyer.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -89,7 +105,9 @@
     },
     {
         "name": "DIPLOMA-Fachhochschule \u00d6lsnitz/Vogtland",
-        "domains": "diploma.de",
+        "domains": [
+            "diploma.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -100,7 +118,9 @@
     },
     {
         "name": "Deutsche Sporthochschule K\u00f6ln",
-        "domains": "dshs-koeln.de",
+        "domains": [
+            "dshs-koeln.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -111,7 +131,9 @@
     },
     {
         "name": "E.A.P. Europ\u00e4ische Wirtschaftshochschule Berlin",
-        "domains": "eap.net",
+        "domains": [
+            "eap.net"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -122,7 +144,9 @@
     },
     {
         "name": "Europ\u00e4ische Betriebswirtschafts-Akademie",
-        "domains": "eba-muenchen.de",
+        "domains": [
+            "eba-muenchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -133,7 +157,9 @@
     },
     {
         "name": "European Business School Schlo\u00df Reichartshausen",
-        "domains": "ebs.de",
+        "domains": [
+            "ebs.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -144,7 +170,9 @@
     },
     {
         "name": "European College of Liberal Arts",
-        "domains": "ecla.de",
+        "domains": [
+            "ecla.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -155,7 +183,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Rheinland-Westfalen-Lippe",
-        "domains": "efh-bochum.de",
+        "domains": [
+            "efh-bochum.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -166,7 +196,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Darmstadt",
-        "domains": "eh-darmstadt.de",
+        "domains": [
+            "eh-darmstadt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -177,7 +209,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Freiburg, Hochschule f\u00fcr Soziale Arbeit, Diakonie und Religionsp\u00e4dagogik",
-        "domains": "efh-freiburg.de",
+        "domains": [
+            "efh-freiburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -188,7 +222,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Hannover",
-        "domains": "efh-hannover.de",
+        "domains": [
+            "efh-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -199,7 +235,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Ludwigshafen Hochschule f\u00fcr Sozial- und Gesundheitswesen",
-        "domains": "efhlu.de",
+        "domains": [
+            "efhlu.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -210,7 +248,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Reutlingen-Ludwigsburg, Hochschule f\u00fcr Soziale Arbeit, Religionsp\u00e4dagogik und Diakonie",
-        "domains": "efh-reutlingen-ludwigsburg.de",
+        "domains": [
+            "efh-reutlingen-ludwigsburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -221,7 +261,9 @@
     },
     {
         "name": "Evangelische Hochschule f\u00fcr Soziale Arbeit Dresden (FH)",
-        "domains": "ehs-dresden.de",
+        "domains": [
+            "ehs-dresden.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -232,7 +274,9 @@
     },
     {
         "name": "European Management School",
-        "domains": "ems-mainz.de",
+        "domains": [
+            "ems-mainz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -243,7 +287,9 @@
     },
     {
         "name": "Europ\u00e4ische Fachhochschule",
-        "domains": "eufh.de",
+        "domains": [
+            "eufh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -254,7 +300,9 @@
     },
     {
         "name": "Europa-Universit\u00e4t Viadrina Frankfurt (Oder)",
-        "domains": "euv-frankfurt-o.de",
+        "domains": [
+            "euv-frankfurt-o.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -265,7 +313,9 @@
     },
     {
         "name": "Evangelische Fachhochschule Berlin, Fachhochschule f\u00fcr Sozialarbeit und Sozialp\u00e4dagogik",
-        "domains": "evfh-berlin.de",
+        "domains": [
+            "evfh-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -276,7 +326,9 @@
     },
     {
         "name": "Evangelische Fachhochschule N\u00fcrnberg",
-        "domains": "evfh-nuernberg.de",
+        "domains": [
+            "evfh-nuernberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -287,7 +339,9 @@
     },
     {
         "name": "Fern-Fachhochschule Hamburg",
-        "domains": "fern-fh.de",
+        "domains": [
+            "fern-fh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -298,7 +352,9 @@
     },
     {
         "name": "Fernuniversit\u00e4t Gesamthochschule Hagen",
-        "domains": "fernuni-hagen.de",
+        "domains": [
+            "fernuni-hagen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -309,7 +365,9 @@
     },
     {
         "name": "Fachhochschule Aachen",
-        "domains": "fh-aachen.de",
+        "domains": [
+            "fh-aachen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -320,7 +378,9 @@
     },
     {
         "name": "Fachhochschule Aschaffenburg",
-        "domains": "fh-aschaffenburg.de",
+        "domains": [
+            "fh-aschaffenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -331,7 +391,9 @@
     },
     {
         "name": "Fachhochschule Augsburg",
-        "domains": "fh-augsburg.de",
+        "domains": [
+            "fh-augsburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -342,7 +404,9 @@
     },
     {
         "name": "Internationale Fachhochschule Bad Honnef",
-        "domains": "fh-bad-honnef.de",
+        "domains": [
+            "fh-bad-honnef.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -353,7 +417,9 @@
     },
     {
         "name": "Fachhochschule Biberach, Hochschule f\u00fcr Bauwesen und Wirtschaft",
-        "domains": "fh-biberach.de",
+        "domains": [
+            "fh-biberach.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -364,7 +430,9 @@
     },
     {
         "name": "Fachhochschule Bielefeld",
-        "domains": "fh-bielefeld.de",
+        "domains": [
+            "fh-bielefeld.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -375,7 +443,9 @@
     },
     {
         "name": "Fachhochschule Bingen",
-        "domains": "fh-bingen.de",
+        "domains": [
+            "fh-bingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -386,7 +456,9 @@
     },
     {
         "name": "Fachhochschule Bochum",
-        "domains": "fh-bochum.de",
+        "domains": [
+            "fh-bochum.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -397,7 +469,10 @@
     },
     {
         "name": "Hochschule Bonn-Rhein-Sieg",
-        "domains": "hochschule-bonn-rhein-sieg.de",
+        "domains": [
+            "hochschule-bonn-rhein-sieg.de",
+            "h-brs.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -408,7 +483,9 @@
     },
     {
         "name": "Fachhochschule Brandenburg",
-        "domains": "fh-brandenburg.de",
+        "domains": [
+            "fh-brandenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -419,7 +496,9 @@
     },
     {
         "name": "Technische Hochschule Brandenburg",
-        "domains": "th-brandenburg.de",
+        "domains": [
+            "th-brandenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -430,7 +509,9 @@
     },
     {
         "name": "Technische Hochschule Deggendorf",
-        "domains": "th-deg.de",
+        "domains": [
+            "th-deg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -441,7 +522,9 @@
     },
     {
         "name": "Fachhochschule Dortmund",
-        "domains": "fh-dortmund.de",
+        "domains": [
+            "fh-dortmund.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -452,7 +535,9 @@
     },
     {
         "name": "Hochschule D\u00fcsseldorf",
-        "domains": "hs-duesseldorf.de",
+        "domains": [
+            "hs-duesseldorf.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -463,7 +548,9 @@
     },
     {
         "name": "Fachhochschule f\u00fcr die Wirtschaft",
-        "domains": "fhdw.bib.de",
+        "domains": [
+            "fhdw.bib.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -474,7 +561,9 @@
     },
     {
         "name": "Fachhochschule der Wirtschaft",
-        "domains": "fhdw.de",
+        "domains": [
+            "fhdw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -485,7 +574,9 @@
     },
     {
         "name": "Fachhochschule Eberswalde",
-        "domains": "fh-eberswalde.de",
+        "domains": [
+            "fh-eberswalde.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -496,7 +587,9 @@
     },
     {
         "name": "Fachhochschule Erfurt",
-        "domains": "fh-erfurt.de",
+        "domains": [
+            "fh-erfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -507,7 +600,9 @@
     },
     {
         "name": "Fachhochschule Flensburg",
-        "domains": "fh-flensburg.de",
+        "domains": [
+            "fh-flensburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -518,7 +613,9 @@
     },
     {
         "name": "Fachhochschule Frankfurt am Main",
-        "domains": "fh-frankfurt.de",
+        "domains": [
+            "fh-frankfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -529,7 +626,9 @@
     },
     {
         "name": "Europa Fachhochschule Fresenius",
-        "domains": "fh-fresenius.de",
+        "domains": [
+            "fh-fresenius.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -540,7 +639,9 @@
     },
     {
         "name": "Fachhochschule Furtwangen, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-furtwangen.de",
+        "domains": [
+            "fh-furtwangen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -551,7 +652,9 @@
     },
     {
         "name": "Fachhochschule Gelsenkirchen",
-        "domains": "fh-gelsenkirchen.de",
+        "domains": [
+            "fh-gelsenkirchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -562,7 +665,9 @@
     },
     {
         "name": "Fachhochschule Gie\u00dfen-Friedberg",
-        "domains": "fh-giessen.de",
+        "domains": [
+            "fh-giessen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -573,7 +678,9 @@
     },
     {
         "name": "Fachhochschule Hamburg",
-        "domains": "fh-hamburg.de",
+        "domains": [
+            "fh-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -584,7 +691,9 @@
     },
     {
         "name": "Hamburg University of Applied Sciences (HAW Hamburg)",
-        "domains": "haw-hamburg.de",
+        "domains": [
+            "haw-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -595,7 +704,9 @@
     },
     {
         "name": "Fachhochschule Hannover",
-        "domains": "fh-hannover.de",
+        "domains": [
+            "fh-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -606,7 +717,9 @@
     },
     {
         "name": "Fachhochschule Heidelberg",
-        "domains": "fh-heidelberg.de",
+        "domains": [
+            "fh-heidelberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -617,7 +730,9 @@
     },
     {
         "name": "Fachhochschule Heilbronn, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-heilbronn.de",
+        "domains": [
+            "fh-heilbronn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -628,7 +743,9 @@
     },
     {
         "name": "Fachhochschule Hildesheim/Holzminden/G\u00f6ttingen, Hochschule f\u00fcr angewandte Wissenschaft und Kunst",
-        "domains": "fh-hildesheim.de",
+        "domains": [
+            "fh-hildesheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -639,7 +756,9 @@
     },
     {
         "name": "Fachhochschule Hof",
-        "domains": "fh-hof.de",
+        "domains": [
+            "fh-hof.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -650,7 +769,9 @@
     },
     {
         "name": "Technische Hochschule Ingolstadt",
-        "domains": "thi.de",
+        "domains": [
+            "thi.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -661,7 +782,9 @@
     },
     {
         "name": "Fachhochschule und Berufskollegs NTA, Prof.Dr. Gr\u00fcbler gemein. GmbH",
-        "domains": "fh-isny.de",
+        "domains": [
+            "fh-isny.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -672,7 +795,9 @@
     },
     {
         "name": "Fachhochschule Jena",
-        "domains": "fh-jena.de",
+        "domains": [
+            "fh-jena.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -683,7 +808,9 @@
     },
     {
         "name": "Fachhochschule Karlsruhe, Hochschule f\u00fcr Technik",
-        "domains": "fh-karlsruhe.de",
+        "domains": [
+            "fh-karlsruhe.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -694,7 +821,9 @@
     },
     {
         "name": "Fachhochschule Kempten, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-kempten.de",
+        "domains": [
+            "fh-kempten.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -705,7 +834,9 @@
     },
     {
         "name": "Fachhochschule Kiel",
-        "domains": "fh-kiel.de",
+        "domains": [
+            "fh-kiel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -716,7 +847,9 @@
     },
     {
         "name": "Fachhochschule Kaiserslautern",
-        "domains": "fh-kl.de",
+        "domains": [
+            "fh-kl.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -727,7 +860,9 @@
     },
     {
         "name": "Fachhochschule Koblenz",
-        "domains": "fh-koblenz.de",
+        "domains": [
+            "fh-koblenz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -738,7 +873,10 @@
     },
     {
         "name": "Technische Hochschule K\u00f6ln",
-        "domains": "th-koeln.de",
+        "domains": [
+            "th-koeln.de",
+            "fh-koeln.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -749,7 +887,9 @@
     },
     {
         "name": "Fachhochschule Konstanz, Hochschule f\u00fcr Technik, Wirtschaft und Gestaltung",
-        "domains": "fh-konstanz.de",
+        "domains": [
+            "fh-konstanz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -760,7 +900,9 @@
     },
     {
         "name": "Staatlich anerkannte Fachhochschule f\u00fcr Kunsttherapie",
-        "domains": "fhkt.de",
+        "domains": [
+            "fhkt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -771,7 +913,9 @@
     },
     {
         "name": "Fachhochschule Landshut, Hochschule f\u00fcr Wirtschaft - Sozialwesen - Technik",
-        "domains": "fh-landshut.de",
+        "domains": [
+            "fh-landshut.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -782,7 +926,9 @@
     },
     {
         "name": "Fachhochschule Lausitz",
-        "domains": "fh-lausitz.de",
+        "domains": [
+            "fh-lausitz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -793,7 +939,9 @@
     },
     {
         "name": "Fachhochschule Lippe",
-        "domains": "fh-lippe.de",
+        "domains": [
+            "fh-lippe.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -804,7 +952,9 @@
     },
     {
         "name": "Fachhochschule Ludwigshafen, Hochschule f\u00fcr Wirtschaft",
-        "domains": "fh-ludwigshafen.de",
+        "domains": [
+            "fh-ludwigshafen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -815,7 +965,9 @@
     },
     {
         "name": "Fachhochschule L\u00fcbeck",
-        "domains": "fh-luebeck.de",
+        "domains": [
+            "fh-luebeck.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -826,7 +978,9 @@
     },
     {
         "name": "Fachhochschule Mainz",
-        "domains": "fh-mainz.de",
+        "domains": [
+            "fh-mainz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -837,7 +991,9 @@
     },
     {
         "name": "Fachhochschule Mannheim, Hochschule f\u00fcr Technik und Gestaltung",
-        "domains": "fh-mannheim.de",
+        "domains": [
+            "fh-mannheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -848,7 +1004,9 @@
     },
     {
         "name": "Fachhochschule Merseburg",
-        "domains": "fh-merseburg.de",
+        "domains": [
+            "fh-merseburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -859,7 +1017,9 @@
     },
     {
         "name": "Fachhochschule des Mittelstandes (FHM)",
-        "domains": "fhm-mittelstand.de",
+        "domains": [
+            "fhm-mittelstand.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -870,7 +1030,9 @@
     },
     {
         "name": "Fachhochschule M\u00fcnchen",
-        "domains": "fh-muenchen.de",
+        "domains": [
+            "fh-muenchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -881,7 +1043,9 @@
     },
     {
         "name": "Hochschule M\u00fcnchen",
-        "domains": "hm.edu",
+        "domains": [
+            "hm.edu"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -892,7 +1056,9 @@
     },
     {
         "name": "Fachhochschule M\u00fcnster",
-        "domains": "fh-muenster.de",
+        "domains": [
+            "fh-muenster.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -903,7 +1069,9 @@
     },
     {
         "name": "Fachhochschule Neubrandenburg",
-        "domains": "fh-nb.de",
+        "domains": [
+            "fh-nb.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -914,7 +1082,9 @@
     },
     {
         "name": "Hochschule Neu-Ulm, Hochschule Neu-Ulm University of applied sciences",
-        "domains": "hs-neu-ulm.de",
+        "domains": [
+            "hs-neu-ulm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -925,7 +1095,9 @@
     },
     {
         "name": "Fachhochschule Niederrhein",
-        "domains": "fh-niederrhein.de",
+        "domains": [
+            "fh-niederrhein.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -936,7 +1108,9 @@
     },
     {
         "name": "Fachhochschule Nordostniedersachsen",
-        "domains": "fhnon.de",
+        "domains": [
+            "fhnon.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -947,7 +1121,9 @@
     },
     {
         "name": "Fachhochschule Nordhausen",
-        "domains": "fh-nordhausen.de",
+        "domains": [
+            "fh-nordhausen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -958,7 +1134,9 @@
     },
     {
         "name": "Georg-Simon-Ohm-Fachhochschule N\u00fcrnberg",
-        "domains": "fh-nuernberg.de",
+        "domains": [
+            "fh-nuernberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -969,7 +1147,9 @@
     },
     {
         "name": "Fachhochschule N\u00fcrtingen, Hochschule f\u00fcr Wirtschaft, Landwirtschaft und Landespflege",
-        "domains": "fh-nuertingen.de",
+        "domains": [
+            "fh-nuertingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -980,7 +1160,9 @@
     },
     {
         "name": "Fachhochschule f\u00fcr das \u00f6ffentliche Bibliothekswesen Bonn",
-        "domains": "fhoebb.de",
+        "domains": [
+            "fhoebb.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -991,7 +1173,9 @@
     },
     {
         "name": "Fachhochschule Offenburg, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-offenburg.de",
+        "domains": [
+            "fh-offenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1002,7 +1186,9 @@
     },
     {
         "name": "Fachhochschule Oldenburg/Ostfriesland/Wilhelmshaven",
-        "domains": "fh-oow.de",
+        "domains": [
+            "fh-oow.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1013,7 +1199,9 @@
     },
     {
         "name": "Fachhochschule Osnabr\u00fcck",
-        "domains": "fh-osnabrueck.de",
+        "domains": [
+            "fh-osnabrueck.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1024,7 +1212,9 @@
     },
     {
         "name": "Freie Kunst-Studienst\u00e4tte Ottersberg",
-        "domains": "fh-ottersberg.de",
+        "domains": [
+            "fh-ottersberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1035,7 +1225,9 @@
     },
     {
         "name": "Fachhochschule Pforzheim, Hochschule f\u00fcr Gestaltung, Technik und Wirtschaft",
-        "domains": "fh-pforzheim.de",
+        "domains": [
+            "fh-pforzheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1046,7 +1238,9 @@
     },
     {
         "name": "Fachhochschule Potsdam",
-        "domains": "fh-potsdam.de",
+        "domains": [
+            "fh-potsdam.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1057,7 +1251,9 @@
     },
     {
         "name": "Fachhochschule Regensburg",
-        "domains": "fh-regensburg.de",
+        "domains": [
+            "fh-regensburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1068,7 +1264,9 @@
     },
     {
         "name": "Fachhochschule Reutlingen, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-reutlingen.de",
+        "domains": [
+            "fh-reutlingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1079,7 +1277,9 @@
     },
     {
         "name": "Deutsch-Ordens Fachhochschule Riedlingen, Hochschule f\u00fcr Wirtschaft",
-        "domains": "fh-riedlingen.de",
+        "domains": [
+            "fh-riedlingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1090,7 +1290,9 @@
     },
     {
         "name": "Fachhochschule Rosenheim, Hochschule f\u00fcr Technik und Wirtschaft",
-        "domains": "fh-rosenheim.de",
+        "domains": [
+            "fh-rosenheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1101,7 +1303,9 @@
     },
     {
         "name": "Fachhochschule Rottenburg, Hochschule f\u00fcr Forstwirtschaft",
-        "domains": "fh-rottenburg.de",
+        "domains": [
+            "fh-rottenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1112,7 +1316,9 @@
     },
     {
         "name": "Fachhochschule Schmalkalden",
-        "domains": "fh-schmalkalden.de",
+        "domains": [
+            "fh-schmalkalden.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1123,7 +1329,9 @@
     },
     {
         "name": "Fachhochschule Schw\u00e4bisch Hall, Hochschule f\u00fcr Gestaltung",
-        "domains": "fh-schwaebischhall.de",
+        "domains": [
+            "fh-schwaebischhall.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1134,7 +1342,9 @@
     },
     {
         "name": "Fachhochschule Mannheim, Hochschule f\u00fcr Sozialwesen",
-        "domains": "fhs-mannheim.de",
+        "domains": [
+            "fhs-mannheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1145,7 +1355,9 @@
     },
     {
         "name": "Evangelische Fachhochschule f\u00fcr Religionsp\u00e4dagogik, und Gemeindediakonie Moritzburg",
-        "domains": "fhs-moritzburg.de",
+        "domains": [
+            "fhs-moritzburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1156,7 +1368,9 @@
     },
     {
         "name": "Fachhochschule Stralsund",
-        "domains": "fh-stralsund.de",
+        "domains": [
+            "fh-stralsund.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1167,7 +1381,9 @@
     },
     {
         "name": "Deutsche Telekom Fachhochschule Leipzig",
-        "domains": "fh-telekom-leipzig.de",
+        "domains": [
+            "fh-telekom-leipzig.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1178,7 +1394,9 @@
     },
     {
         "name": "Fachhochschule Trier, Hochschule f\u00fcr Technik, Wirtschaft und Gestaltung",
-        "domains": "fh-trier.de",
+        "domains": [
+            "fh-trier.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1189,7 +1407,9 @@
     },
     {
         "name": "Fachhochschule Stuttgart, Hochschule f\u00fcr Technik",
-        "domains": "fht-stuttgart.de",
+        "domains": [
+            "fht-stuttgart.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1200,7 +1420,10 @@
     },
     {
         "name": "Hochschule f\u00fcr Technik und Wirtschaft Berlin",
-        "domains": "fhtw-berlin.de",
+        "domains": [
+            "fhtw-berlin.de",
+            "htw-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1211,7 +1434,9 @@
     },
     {
         "name": "Hochschule Ulm, Hochschule f\u00fcr Angewandte Wissenschaft",
-        "domains": "hs-ulm.de",
+        "domains": [
+            "hs-ulm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1222,7 +1447,9 @@
     },
     {
         "name": "Fachhochschule f\u00fcr Verwaltung und Rechtspflege Berlin",
-        "domains": "fhvr.berlin.de",
+        "domains": [
+            "fhvr.berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1233,7 +1460,9 @@
     },
     {
         "name": "Fachhochschule f\u00fcr Wirtschaft Berlin",
-        "domains": "fhw-berlin.de",
+        "domains": [
+            "fhw-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1244,7 +1473,9 @@
     },
     {
         "name": "Fachhochschule Wedel",
-        "domains": "fh-wedel.de",
+        "domains": [
+            "fh-wedel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1255,7 +1486,9 @@
     },
     {
         "name": "Fachhochschule Weihenstephan",
-        "domains": "fh-weihenstephan.de",
+        "domains": [
+            "fh-weihenstephan.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1266,7 +1499,9 @@
     },
     {
         "name": "Fachhochschule Ravensburg-Weingarten",
-        "domains": "fh-weingarten.de",
+        "domains": [
+            "fh-weingarten.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1277,7 +1512,9 @@
     },
     {
         "name": "Fachhochschule Westk\u00fcste, Hochschule f\u00fcr Wirtschaft und Technik",
-        "domains": "fh-westkueste.de",
+        "domains": [
+            "fh-westkueste.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1288,7 +1525,9 @@
     },
     {
         "name": "Fachhochschule Wiesbaden",
-        "domains": "fh-wiesbaden.de",
+        "domains": [
+            "fh-wiesbaden.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1299,7 +1538,10 @@
     },
     {
         "name": "Ostfalia Hochschule f\u00fcr angewandte Wissenschaften",
-        "domains": "ostfalia.de",
+        "domains": [
+            "ostfalia.de",
+            "fh-wolfenbuettel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1310,7 +1552,9 @@
     },
     {
         "name": "Fachhochschule Worms",
-        "domains": "fh-worms.de",
+        "domains": [
+            "fh-worms.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1321,7 +1565,9 @@
     },
     {
         "name": "Private Fachhochschule f\u00fcr Wirtschaft und Technik Vechta/Diepholz",
-        "domains": "fhwt.de",
+        "domains": [
+            "fhwt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1332,7 +1578,9 @@
     },
     {
         "name": "Fachhochschule W\u00fcrzburg - Schweinfurt",
-        "domains": "fh-wuerzburg.de",
+        "domains": [
+            "fh-wuerzburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1343,7 +1591,9 @@
     },
     {
         "name": "Wests\u00e4chsische Hochschule Zwickau (FH)",
-        "domains": "fh-zwickau.de",
+        "domains": [
+            "fh-zwickau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1354,7 +1604,9 @@
     },
     {
         "name": "Fachhochschule f\u00fcr Oekonomie und Management (FOM)",
-        "domains": "fom.de",
+        "domains": [
+            "fom.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1365,7 +1617,9 @@
     },
     {
         "name": "Freie Universit\u00e4t Berlin",
-        "domains": "fu-berlin.de",
+        "domains": [
+            "fu-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1376,7 +1630,9 @@
     },
     {
         "name": "Private Hanseuniversit\u00e4t",
-        "domains": "hanseuni.de",
+        "domains": [
+            "hanseuni.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1387,7 +1643,9 @@
     },
     {
         "name": "Hafencity Universit\u00e4t Hamburg",
-        "domains": "hcu-hamburg.de",
+        "domains": [
+            "hcu-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1398,7 +1656,9 @@
     },
     {
         "name": "Fachhochschule Stuttgart, Hochschule der Medien",
-        "domains": "hdm-stuttgart.de",
+        "domains": [
+            "hdm-stuttgart.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1409,7 +1669,9 @@
     },
     {
         "name": "Hertie School of Governance",
-        "domains": "hertie-school.org",
+        "domains": [
+            "hertie-school.org"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1420,7 +1682,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Bankwirtschaft (HfB), Private Fachhochschule der Bankakademie",
-        "domains": "hfb.de",
+        "domains": [
+            "hfb.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1431,7 +1695,9 @@
     },
     {
         "name": "Fachhochschule Schw\u00e4bisch Gm\u00fcnd, Hochschule f\u00fcr Gestaltung",
-        "domains": "hfg-gmuend.de",
+        "domains": [
+            "hfg-gmuend.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1442,7 +1708,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Philosophie M\u00fcnchen",
-        "domains": "hfph.mwn.de",
+        "domains": [
+            "hfph.mwn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1453,7 +1721,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Politik (HFP)",
-        "domains": "hfp.mhn.de",
+        "domains": [
+            "hfp.mhn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1464,7 +1734,9 @@
     },
     {
         "name": "Handelshochschule Leipzig",
-        "domains": "hhl.de",
+        "domains": [
+            "hhl.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1475,7 +1747,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Internationales Management",
-        "domains": "himh.de",
+        "domains": [
+            "himh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1486,7 +1760,9 @@
     },
     {
         "name": "Hochschule f\u00fcr J\u00fcdische Studien Heidelberg",
-        "domains": "hjs.uni-heidelberg.de",
+        "domains": [
+            "hjs.uni-heidelberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1497,7 +1773,9 @@
     },
     {
         "name": "Hochschule Albstadt-Sigmaringen",
-        "domains": "hs-albsig.de",
+        "domains": [
+            "hs-albsig.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1508,7 +1786,10 @@
     },
     {
         "name": "Hochschule Anhalt (FH), Hochschule f\u00fcr angewandte Wissenschaften",
-        "domains": "hs-anhalt.de",
+        "domains": [
+            "hs-anhalt.de",
+            "student.hs-anhalt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1519,7 +1800,9 @@
     },
     {
         "name": "Hochschule Bremen",
-        "domains": "hs-bremen.de",
+        "domains": [
+            "hs-bremen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1530,7 +1813,9 @@
     },
     {
         "name": "Hochschule Bremerhaven",
-        "domains": "hs-bremerhaven.de",
+        "domains": [
+            "hs-bremerhaven.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1541,7 +1826,9 @@
     },
     {
         "name": "Hochschule Coburg",
-        "domains": "hs-coburg.de",
+        "domains": [
+            "hs-coburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1552,7 +1839,9 @@
     },
     {
         "name": "Hochschule Darmstadt",
-        "domains": "h-da.de",
+        "domains": [
+            "h-da.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1563,7 +1852,9 @@
     },
     {
         "name": "Hochschule Esslingen",
-        "domains": "hs-esslingen.de",
+        "domains": [
+            "hs-esslingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1574,7 +1865,9 @@
     },
     {
         "name": "Hochschule Fulda",
-        "domains": "hs-fulda.de",
+        "domains": [
+            "hs-fulda.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1585,7 +1878,9 @@
     },
     {
         "name": "Hochschule Harz, Hochschule f\u00fcr angewandte Wissenschaften (FH)",
-        "domains": "hs-harz.de",
+        "domains": [
+            "hs-harz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1596,7 +1891,9 @@
     },
     {
         "name": "Hochschule Magdeburg-Stendal (FH)",
-        "domains": "hs-magdeburg.de",
+        "domains": [
+            "hs-magdeburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1607,7 +1904,9 @@
     },
     {
         "name": "Hochschule Wismar, Fachhochschule f\u00fcr Technik, Wirtschaft und Gestaltung",
-        "domains": "hs-wismar.de",
+        "domains": [
+            "hs-wismar.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1618,7 +1917,9 @@
     },
     {
         "name": "Hochschule Zittau/G\u00f6rlitz (FH)",
-        "domains": "hs-zigr.de",
+        "domains": [
+            "hs-zigr.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1629,7 +1930,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Technik und Wirtschaft Dresden (FH)",
-        "domains": "htw-dresden.de",
+        "domains": [
+            "htw-dresden.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1640,7 +1943,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Technik, Wirtschaft und Kultur Leipzig (FH)",
-        "domains": "htwk-leipzig.de",
+        "domains": [
+            "htwk-leipzig.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1651,7 +1956,12 @@
     },
     {
         "name": "Hochschule Mittweida, University of Applied Sciences",
-        "domains": "htwm.de",
+        "domains": [
+            "htwm.de",
+            "hs-mittweida.de",
+            "campus-m-university.de",
+            "campusm21.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1662,7 +1972,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Technik und Wirtschaft des Saarlandes",
-        "domains": "htw-saarland.de",
+        "domains": [
+            "htw-saarland.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1673,7 +1985,9 @@
     },
     {
         "name": "Humboldt Universit\u00e4t Berlin",
-        "domains": "hu-berlin.de",
+        "domains": [
+            "hu-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1684,7 +1998,9 @@
     },
     {
         "name": "HWP - Hamburger Universit\u00e4t f\u00fcr Wirtschaft und Politik",
-        "domains": "hwp-hamburg.de",
+        "domains": [
+            "hwp-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1695,7 +2011,9 @@
     },
     {
         "name": "Internationales Hochschulinstitut Zittau",
-        "domains": "ihi-zittau.de",
+        "domains": [
+            "ihi-zittau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1706,7 +2024,9 @@
     },
     {
         "name": "Internationale Fachhochschule Aalen",
-        "domains": "international.fh-aalen.de",
+        "domains": [
+            "international.fh-aalen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1717,7 +2037,9 @@
     },
     {
         "name": "International School of Management ISM Dortmund",
-        "domains": "ism-dortmund.de",
+        "domains": [
+            "ism-dortmund.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1728,7 +2050,9 @@
     },
     {
         "name": "International School of New Media, University of L\u00fcbeck",
-        "domains": "isnm.de",
+        "domains": [
+            "isnm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1739,7 +2063,9 @@
     },
     {
         "name": "International University in Germany",
-        "domains": "i-u.de",
+        "domains": [
+            "i-u.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1750,7 +2076,9 @@
     },
     {
         "name": "Jacobs University Bremen",
-        "domains": "jacobs-university.de",
+        "domains": [
+            "jacobs-university.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1761,7 +2089,9 @@
     },
     {
         "name": "Karlshochschule International University",
-        "domains": "karlshochschule.de",
+        "domains": [
+            "karlshochschule.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1772,7 +2102,9 @@
     },
     {
         "name": "Katholische Fachhochschule Norddeutschland",
-        "domains": "kath-fh-nord.de",
+        "domains": [
+            "kath-fh-nord.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1783,7 +2115,9 @@
     },
     {
         "name": "Katholische Fachhochschule Berlin (KFB)",
-        "domains": "kfb-berlin.de",
+        "domains": [
+            "kfb-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1794,7 +2128,9 @@
     },
     {
         "name": "Katholische Fachhochschule Freiburg, Hochschule f\u00fcr Sozialwesen, Religionsp\u00e4dagogik und Pflege",
-        "domains": "kfh-freiburg.de",
+        "domains": [
+            "kfh-freiburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1805,7 +2141,9 @@
     },
     {
         "name": "Katholische Fachhochschule Mainz",
-        "domains": "kfh-mainz.de",
+        "domains": [
+            "kfh-mainz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1816,7 +2154,9 @@
     },
     {
         "name": "Katholische Fachhochschule Nordrhein-Westfalen",
-        "domains": "kfhnw.de",
+        "domains": [
+            "kfhnw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1827,7 +2167,9 @@
     },
     {
         "name": "Kunsthochschule Berlin-Weissensee, Hochschule f\u00fcr Gestaltung",
-        "domains": "kh-berlin.de",
+        "domains": [
+            "kh-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1838,7 +2180,9 @@
     },
     {
         "name": "Katholische Hochschule f\u00fcr Soziale Arbeit Saarbr\u00fccken",
-        "domains": "khsa.de",
+        "domains": [
+            "khsa.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1849,7 +2193,9 @@
     },
     {
         "name": "Katholische Stiftungsfachhochschule M\u00fcnchen",
-        "domains": "ksfh.de",
+        "domains": [
+            "ksfh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1860,7 +2206,9 @@
     },
     {
         "name": "Katholische Universit\u00e4t Eichst\u00e4tt",
-        "domains": "ku-eichstaett.de",
+        "domains": [
+            "ku-eichstaett.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1871,7 +2219,9 @@
     },
     {
         "name": "Kunstakademie D\u00fcsseldorf.",
-        "domains": "kunstakademie-duesseldorf.de",
+        "domains": [
+            "kunstakademie-duesseldorf.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1882,7 +2232,9 @@
     },
     {
         "name": "Merkur Internationale FH Karlsruhe",
-        "domains": "merkur-fh.org",
+        "domains": [
+            "merkur-fh.org"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1893,7 +2245,9 @@
     },
     {
         "name": "Merz Akademie, Hochschule f\u00fcr Gestaltung Stuttgart",
-        "domains": "merz-akademie.de",
+        "domains": [
+            "merz-akademie.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1904,7 +2258,9 @@
     },
     {
         "name": "M\u00e4rkische Fachhochschule Iserlohn",
-        "domains": "mfh-iserlohn.de",
+        "domains": [
+            "mfh-iserlohn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1915,7 +2271,9 @@
     },
     {
         "name": "Medizinische Hochschule Hannover",
-        "domains": "mh-hannover.de",
+        "domains": [
+            "mh-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1926,7 +2284,9 @@
     },
     {
         "name": "Staatliche Hochschule f\u00fcr Musik",
-        "domains": "mh-trossingen.de",
+        "domains": [
+            "mh-trossingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1937,7 +2297,9 @@
     },
     {
         "name": "Medizinische Universit\u00e4t L\u00fcbeck",
-        "domains": "mu-luebeck.de",
+        "domains": [
+            "mu-luebeck.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1948,7 +2310,9 @@
     },
     {
         "name": "Muthesius-Hochschule, Fachhochschule f\u00fcr Kunst und Gestaltung",
-        "domains": "muthesius.de",
+        "domains": [
+            "muthesius.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1959,7 +2323,9 @@
     },
     {
         "name": "Nordakademie, Staatlich anerkannte private Fachhochschule mit dualen Studieng\u00e4ngen",
-        "domains": "nordakademie.de",
+        "domains": [
+            "nordakademie.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1970,7 +2336,9 @@
     },
     {
         "name": "Theologische Fakult\u00e4t Paderborn",
-        "domains": "paderborn.de",
+        "domains": [
+            "paderborn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1981,7 +2349,9 @@
     },
     {
         "name": "Private Fachhochschule G\u00f6ttingen",
-        "domains": "pfh-goettingen.de",
+        "domains": [
+            "pfh-goettingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -1992,7 +2362,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Erfurt/M\u00fchlhausen",
-        "domains": "ph-erfurt.de",
+        "domains": [
+            "ph-erfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2003,7 +2375,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Freiburg",
-        "domains": "ph-freiburg.de",
+        "domains": [
+            "ph-freiburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2014,7 +2388,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Schw\u00e4bisch Gm\u00fcnd",
-        "domains": "ph-gmuend.de",
+        "domains": [
+            "ph-gmuend.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2025,7 +2401,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Heidelberg",
-        "domains": "ph-heidelberg.de",
+        "domains": [
+            "ph-heidelberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2036,7 +2414,9 @@
     },
     {
         "name": "Philosophisch-Theologische Hochschule SVD Sankt Augustin",
-        "domains": "philtheol-augustin.de",
+        "domains": [
+            "philtheol-augustin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2047,7 +2427,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Karlsruhe",
-        "domains": "ph-karlsruhe.de",
+        "domains": [
+            "ph-karlsruhe.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2058,7 +2440,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Ludwigsburg",
-        "domains": "ph-ludwigsburg.de",
+        "domains": [
+            "ph-ludwigsburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2069,7 +2453,9 @@
     },
     {
         "name": "P\u00e4dagogische Hochschule Weingarten",
-        "domains": "ph-weingarten.de",
+        "domains": [
+            "ph-weingarten.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2080,7 +2466,9 @@
     },
     {
         "name": "Popakademie Baden-Wuerttemberg",
-        "domains": "popakademie.de",
+        "domains": [
+            "popakademie.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2091,7 +2479,9 @@
     },
     {
         "name": "Private FernFachhochschule Darmstadt",
-        "domains": "privatfh-da.de",
+        "domains": [
+            "privatfh-da.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2102,7 +2492,9 @@
     },
     {
         "name": "Philosophisch-Theologische Hochschule der Salesianer Don Boscos",
-        "domains": "pth-bb.de",
+        "domains": [
+            "pth-bb.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2113,7 +2505,9 @@
     },
     {
         "name": "Philosophisch-Theologische Hochschule M\u00fcnster",
-        "domains": "pth-muenster.de",
+        "domains": [
+            "pth-muenster.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2124,7 +2518,9 @@
     },
     {
         "name": "Philosophisch-Theologische Hochschule Vallendar der Gesellschaft des Katholischen Apostolates (Pallottiner)",
-        "domains": "pthv.de",
+        "domains": [
+            "pthv.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2135,7 +2531,9 @@
     },
     {
         "name": "Evangelische Fachhochschule f\u00fcr Sozialp\u00e4dagogik der \"Diakonenanstalt des Rauhen Hauses\" Hamburg",
-        "domains": "rauheshaus.de",
+        "domains": [
+            "rauheshaus.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2146,7 +2544,9 @@
     },
     {
         "name": "Rheinische Fachhochschule K\u00f6ln",
-        "domains": "rfh-koeln.de",
+        "domains": [
+            "rfh-koeln.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2157,7 +2557,9 @@
     },
     {
         "name": "Ruhr-Universit\u00e4t Bochum",
-        "domains": "ruhr-uni-bochum.de",
+        "domains": [
+            "ruhr-uni-bochum.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2168,7 +2570,9 @@
     },
     {
         "name": "Rheinisch Westf\u00e4lische Technische Hochschule Aachen",
-        "domains": "rwth-aachen.de",
+        "domains": [
+            "rwth-aachen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2179,7 +2583,9 @@
     },
     {
         "name": "Lutherische Theologische Hochschule Oberursel",
-        "domains": "selk.de",
+        "domains": [
+            "selk.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2190,7 +2596,9 @@
     },
     {
         "name": "Gustav-Siewerth-Akademie",
-        "domains": "siewerth-akademie.de",
+        "domains": [
+            "siewerth-akademie.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2201,7 +2609,9 @@
     },
     {
         "name": "Schiller International University, Heidelberg",
-        "domains": "siu-heidelberg.de",
+        "domains": [
+            "siu-heidelberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2212,7 +2622,9 @@
     },
     {
         "name": "SRH University of Applied Sciences",
-        "domains": "srh-berlin.de",
+        "domains": [
+            "srh-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2223,7 +2635,9 @@
     },
     {
         "name": "Philosophisch-Theologische Hochschule Sankt Georgen",
-        "domains": "st-georgen.uni-frankfurt.de",
+        "domains": [
+            "st-georgen.uni-frankfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2234,7 +2648,9 @@
     },
     {
         "name": "Steinbeis-Hochschule-Berlin",
-        "domains": "stw.de",
+        "domains": [
+            "stw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2245,7 +2661,9 @@
     },
     {
         "name": "Technische Fachhochschule Berlin",
-        "domains": "tfh-berlin.de",
+        "domains": [
+            "tfh-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2256,7 +2674,9 @@
     },
     {
         "name": "Technische Fachhochschule Georg Agricola f\u00fcr Rohstoff, Energie und, Umwelt zu Bochum",
-        "domains": "tfh-bochum.de",
+        "domains": [
+            "tfh-bochum.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2267,7 +2687,9 @@
     },
     {
         "name": "Technische Fachhochschule Wildau",
-        "domains": "tfh-wildau.de",
+        "domains": [
+            "tfh-wildau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2278,7 +2700,9 @@
     },
     {
         "name": "Theologische Hochschule Friedensau",
-        "domains": "thh-friedensau.de",
+        "domains": [
+            "thh-friedensau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2289,7 +2713,9 @@
     },
     {
         "name": "Tier\u00e4rztliche Hochschule Hannover",
-        "domains": "tiho-hannover.de",
+        "domains": [
+            "tiho-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2300,7 +2726,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Berlin",
-        "domains": "tu-berlin.de",
+        "domains": [
+            "tu-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2311,7 +2739,10 @@
     },
     {
         "name": "Technische Universit\u00e4t Carolo-Wilhelmina zu Braunschweig",
-        "domains": "tu-braunschweig.de",
+        "domains": [
+            "tu-braunschweig.de",
+            "tu-bs.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2322,7 +2753,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Chemnitz",
-        "domains": "tu-chemnitz.de",
+        "domains": [
+            "tu-chemnitz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2333,7 +2766,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Clausthal",
-        "domains": "tu-clausthal.de",
+        "domains": [
+            "tu-clausthal.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2344,7 +2779,9 @@
     },
     {
         "name": "Brandenburgische Technische Universit\u00e4t Cottbus",
-        "domains": "tu-cottbus.de",
+        "domains": [
+            "tu-cottbus.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2355,7 +2792,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Darmstadt",
-        "domains": "tu-darmstadt.de",
+        "domains": [
+            "tu-darmstadt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2366,7 +2805,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Dresden",
-        "domains": "tu-dresden.de",
+        "domains": [
+            "tu-dresden.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2377,7 +2818,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Bergakademie Freiberg",
-        "domains": "tu-freiberg.de",
+        "domains": [
+            "tu-freiberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2388,7 +2831,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Hamburg",
-        "domains": "tuhh.de",
+        "domains": [
+            "tuhh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2399,7 +2844,9 @@
     },
     {
         "name": "Technische Universit\u00e4t Ilmenau",
-        "domains": "tu-ilmenau.de",
+        "domains": [
+            "tu-ilmenau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2410,7 +2857,11 @@
     },
     {
         "name": "Technische Universit\u00e4t M\u00fcnchen",
-        "domains": "tum.de",
+        "domains": [
+            "tum.de",
+            "tum.edu",
+            "mytum.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2421,7 +2872,9 @@
     },
     {
         "name": "Universit\u00e4t Augsburg",
-        "domains": "uni-augsburg.de",
+        "domains": [
+            "uni-augsburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2432,7 +2885,9 @@
     },
     {
         "name": "Otto-Friedrich Universit\u00e4t Bamberg",
-        "domains": "uni-bamberg.de",
+        "domains": [
+            "uni-bamberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2443,7 +2898,9 @@
     },
     {
         "name": "Universit\u00e4t Bayreuth",
-        "domains": "uni-bayreuth.de",
+        "domains": [
+            "uni-bayreuth.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2454,7 +2911,9 @@
     },
     {
         "name": "Universit\u00e4t Bielefeld",
-        "domains": "uni-bielefeld.de",
+        "domains": [
+            "uni-bielefeld.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2465,7 +2924,9 @@
     },
     {
         "name": "Rheinische Friedrich-Wilhelms Universit\u00e4t Bonn",
-        "domains": "uni-bonn.de",
+        "domains": [
+            "uni-bonn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2476,7 +2937,9 @@
     },
     {
         "name": "Universit\u00e4t Bremen",
-        "domains": "uni-bremen.de",
+        "domains": [
+            "uni-bremen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2487,7 +2950,9 @@
     },
     {
         "name": "Universit\u00e4t der Bundeswehr Hamburg",
-        "domains": "unibw-hamburg.de",
+        "domains": [
+            "unibw-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2498,7 +2963,9 @@
     },
     {
         "name": "Universit\u00e4t der Bundeswehr M\u00fcnchen",
-        "domains": "unibw-muenchen.de",
+        "domains": [
+            "unibw-muenchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2509,7 +2976,10 @@
     },
     {
         "name": "Technische Universit\u00e4t Dortmund",
-        "domains": "tu-dortmund.de",
+        "domains": [
+            "tu-dortmund.de",
+            "udo.edu"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2520,7 +2990,9 @@
     },
     {
         "name": "Heinrich-Heine Universit\u00e4t D\u00fcsseldorf",
-        "domains": "uni-duesseldorf.de",
+        "domains": [
+            "uni-duesseldorf.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2531,7 +3003,9 @@
     },
     {
         "name": "Universit\u00e4t Duisburg-Essen",
-        "domains": "uni-duisburg-essen.de",
+        "domains": [
+            "uni-duisburg-essen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2542,7 +3016,9 @@
     },
     {
         "name": "Universit\u00e4t Erfurt",
-        "domains": "uni-erfurt.de",
+        "domains": [
+            "uni-erfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2553,7 +3029,10 @@
     },
     {
         "name": "Friedrich-Alexander Universit\u00e4t Erlangen-N\u00fcrnberg",
-        "domains": "fau.de",
+        "domains": [
+            "fau.de",
+            "uni-erlangen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2564,7 +3043,9 @@
     },
     {
         "name": "Universit\u00e4t Flensburg",
-        "domains": "uni-flensburg.de",
+        "domains": [
+            "uni-flensburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2575,7 +3056,9 @@
     },
     {
         "name": "Johann Wolfgang Goethe Universit\u00e4t Frankfurt am Main",
-        "domains": "uni-frankfurt.de",
+        "domains": [
+            "uni-frankfurt.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2586,7 +3069,9 @@
     },
     {
         "name": "Albert-Ludwigs-Universit\u00e4t Freiburg",
-        "domains": "uni-freiburg.de",
+        "domains": [
+            "uni-freiburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2597,7 +3082,9 @@
     },
     {
         "name": "Justus Liebig Universit\u00e4t Gie\u00dfen",
-        "domains": "uni-giessen.de",
+        "domains": [
+            "uni-giessen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2608,7 +3095,9 @@
     },
     {
         "name": "Georg-August Universit\u00e4t G\u00f6ttingen",
-        "domains": "uni-goettingen.de",
+        "domains": [
+            "uni-goettingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2619,7 +3108,9 @@
     },
     {
         "name": "Ernst-Moritz-Arndt Universit\u00e4t Greifswald",
-        "domains": "uni-greifswald.de",
+        "domains": [
+            "uni-greifswald.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2630,7 +3121,9 @@
     },
     {
         "name": "Martin-Luther Universit\u00e4t Halle-Wittenberg",
-        "domains": "uni-halle.de",
+        "domains": [
+            "uni-halle.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2641,7 +3134,9 @@
     },
     {
         "name": "Universit\u00e4t Hamburg",
-        "domains": "uni-hamburg.de",
+        "domains": [
+            "uni-hamburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2652,7 +3147,9 @@
     },
     {
         "name": "Universit\u00e4t Hannover",
-        "domains": "uni-hannover.de",
+        "domains": [
+            "uni-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2663,7 +3160,9 @@
     },
     {
         "name": "Ruprecht-Karls-Universit\u00e4t Heidelberg",
-        "domains": "uni-heidelberg.de",
+        "domains": [
+            "uni-heidelberg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2674,7 +3173,9 @@
     },
     {
         "name": "Universit\u00e4t Hildesheim",
-        "domains": "uni-hildesheim.de",
+        "domains": [
+            "uni-hildesheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2685,7 +3186,9 @@
     },
     {
         "name": "Universit\u00e4t Hohenheim",
-        "domains": "uni-hohenheim.de",
+        "domains": [
+            "uni-hohenheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2696,7 +3199,9 @@
     },
     {
         "name": "Friedrich-Schiller Universit\u00e4t Jena",
-        "domains": "uni-jena.de",
+        "domains": [
+            "uni-jena.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2707,7 +3212,9 @@
     },
     {
         "name": "Karlsruher Institut f\u00fcr Technologie",
-        "domains": "kit.edu",
+        "domains": [
+            "kit.edu"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2718,7 +3225,9 @@
     },
     {
         "name": "Universit\u00e4t Kassel",
-        "domains": "uni-kassel.de",
+        "domains": [
+            "uni-kassel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2729,7 +3238,9 @@
     },
     {
         "name": "Christian-Albrechts-Universit\u00e4t Kiel",
-        "domains": "uni-kiel.de",
+        "domains": [
+            "uni-kiel.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2740,7 +3251,9 @@
     },
     {
         "name": "Universit\u00e4t Kaiserslautern",
-        "domains": "uni-kl.de",
+        "domains": [
+            "uni-kl.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2751,7 +3264,9 @@
     },
     {
         "name": "Universit\u00e4t Koblenz-Landau",
-        "domains": "uni-koblenz-landau.de",
+        "domains": [
+            "uni-koblenz-landau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2762,7 +3277,9 @@
     },
     {
         "name": "Universit\u00e4t K\u00f6ln",
-        "domains": "uni-koeln.de",
+        "domains": [
+            "uni-koeln.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2773,7 +3290,9 @@
     },
     {
         "name": "Universit\u00e4t Konstanz",
-        "domains": "uni-konstanz.de",
+        "domains": [
+            "uni-konstanz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2784,7 +3303,9 @@
     },
     {
         "name": "Universit\u00e4t Leipzig",
-        "domains": "uni-leipzig.de",
+        "domains": [
+            "uni-leipzig.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2795,7 +3316,9 @@
     },
     {
         "name": "Universit\u00e4t L\u00fcneburg",
-        "domains": "uni-lueneburg.de",
+        "domains": [
+            "uni-lueneburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2806,7 +3329,9 @@
     },
     {
         "name": "Otto-von-Guericke Universit\u00e4t Magdeburg",
-        "domains": "uni-magdeburg.de",
+        "domains": [
+            "uni-magdeburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2817,7 +3342,9 @@
     },
     {
         "name": "Johannes-Gutenberg Universit\u00e4t Mainz",
-        "domains": "uni-mainz.de",
+        "domains": [
+            "uni-mainz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2828,7 +3355,9 @@
     },
     {
         "name": "Universit\u00e4t Mannheim",
-        "domains": "uni-mannheim.de",
+        "domains": [
+            "uni-mannheim.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2839,7 +3368,9 @@
     },
     {
         "name": "Phillips-Universit\u00e4t Marburg",
-        "domains": "uni-marburg.de",
+        "domains": [
+            "uni-marburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2850,7 +3381,10 @@
     },
     {
         "name": "Ludwig-Maximilians-Universit\u00e4t M\u00fcnchen",
-        "domains": "lmu.de",
+        "domains": [
+            "lmu.de",
+            "uni-muenchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2861,7 +3395,10 @@
     },
     {
         "name": "Westf\u00e4lische Wilhelms-Universit\u00e4t M\u00fcnster",
-        "domains": "uni-muenster.de",
+        "domains": [
+            "uni-muenster.de",
+            "wwu.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2872,7 +3409,10 @@
     },
     {
         "name": "Carl von Ossietzky Universit\u00e4t Oldenburg",
-        "domains": "uol.de",
+        "domains": [
+            "uol.de",
+            "uni-oldenburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2883,7 +3423,9 @@
     },
     {
         "name": "Universit\u00e4t Osnabr\u00fcck",
-        "domains": "uni-osnabrueck.de",
+        "domains": [
+            "uni-osnabrueck.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2894,7 +3436,9 @@
     },
     {
         "name": "Universit\u00e4t Paderborn",
-        "domains": "uni-paderborn.de",
+        "domains": [
+            "uni-paderborn.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2905,7 +3449,9 @@
     },
     {
         "name": "Universit\u00e4t Passau",
-        "domains": "uni-passau.de",
+        "domains": [
+            "uni-passau.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2916,7 +3462,9 @@
     },
     {
         "name": "Universit\u00e4t Potsdam",
-        "domains": "uni-potsdam.de",
+        "domains": [
+            "uni-potsdam.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2927,7 +3475,9 @@
     },
     {
         "name": "Universit\u00e4t Polsdam",
-        "domains": "uni-polsdam.de",
+        "domains": [
+            "uni-polsdam.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2938,7 +3488,9 @@
     },
     {
         "name": "Universit\u00e4t Regensburg",
-        "domains": "uni-regensburg.de",
+        "domains": [
+            "uni-regensburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2949,7 +3501,9 @@
     },
     {
         "name": "Universit\u00e4t Rostock",
-        "domains": "uni-rostock.de",
+        "domains": [
+            "uni-rostock.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2960,7 +3514,9 @@
     },
     {
         "name": "Universit\u00e4t des Saarlandes",
-        "domains": "uni-saarland.de",
+        "domains": [
+            "uni-saarland.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2971,7 +3527,9 @@
     },
     {
         "name": "Universit\u00e4t Siegen",
-        "domains": "uni-siegen.de",
+        "domains": [
+            "uni-siegen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2982,7 +3540,9 @@
     },
     {
         "name": "Universit\u00e4t Stuttgart",
-        "domains": "uni-stuttgart.de",
+        "domains": [
+            "uni-stuttgart.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -2993,7 +3553,9 @@
     },
     {
         "name": "Universit\u00e4t Trier",
-        "domains": "uni-trier.de",
+        "domains": [
+            "uni-trier.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3004,7 +3566,9 @@
     },
     {
         "name": "Eberhard-Karls-Universit\u00e4t T\u00fcbingen",
-        "domains": "uni-tuebingen.de",
+        "domains": [
+            "uni-tuebingen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3015,7 +3579,9 @@
     },
     {
         "name": "Universit\u00e4t Ulm",
-        "domains": "uni-ulm.de",
+        "domains": [
+            "uni-ulm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3026,7 +3592,9 @@
     },
     {
         "name": "Hochschule Vechta",
-        "domains": "uni-vechta.de",
+        "domains": [
+            "uni-vechta.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3037,7 +3605,9 @@
     },
     {
         "name": "Bauhaus Universit\u00e4t Weimar",
-        "domains": "uni-weimar.de",
+        "domains": [
+            "uni-weimar.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3048,7 +3618,9 @@
     },
     {
         "name": "Private Universit\u00e4t Witten/Herdecke",
-        "domains": "uni-wh.de",
+        "domains": [
+            "uni-wh.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3059,7 +3631,9 @@
     },
     {
         "name": "Bayerische Julius-Maximilians-Universit\u00e4t W\u00fcrzburg",
-        "domains": "uni-wuerzburg.de",
+        "domains": [
+            "uni-wuerzburg.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3070,7 +3644,9 @@
     },
     {
         "name": "Bergische Universit\u00e4t Gesamthochschule Wuppertal",
-        "domains": "uni-wuppertal.de",
+        "domains": [
+            "uni-wuppertal.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3081,7 +3657,9 @@
     },
     {
         "name": "Wissenschaftliche Hochschule f\u00fcr Unternehmensf\u00fchrung, Otto-Beisheim Hochschule",
-        "domains": "whu-koblenz.de",
+        "domains": [
+            "whu-koblenz.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3092,7 +3670,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg",
-        "domains": "dhbw.de",
+        "domains": [
+            "dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3103,7 +3683,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Heidenheim",
-        "domains": "heidenheim.dhbw.de",
+        "domains": [
+            "heidenheim.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3114,7 +3696,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Center for Advanced Studies (CAS)",
-        "domains": "cas.dhbw.de",
+        "domains": [
+            "cas.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3125,7 +3709,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg L\u00f6rrach",
-        "domains": "dhbw-loerrach.de",
+        "domains": [
+            "dhbw-loerrach.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3136,7 +3722,10 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Mosbach",
-        "domains": "dhbw-mosbach.de",
+        "domains": [
+            "dhbw-mosbach.de",
+            "mosbach.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3147,7 +3736,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Ravensburg",
-        "domains": "ravensburg.dhbw.de",
+        "domains": [
+            "ravensburg.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3158,7 +3749,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Stuttgart",
-        "domains": "dhbw-stuttgart.de",
+        "domains": [
+            "dhbw-stuttgart.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3169,7 +3762,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Villingen-Schwenningen",
-        "domains": "dhbw-vs.de",
+        "domains": [
+            "dhbw-vs.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3180,7 +3775,9 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Heilbronn",
-        "domains": "heilbronn.dhbw.de",
+        "domains": [
+            "heilbronn.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3191,7 +3788,10 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Karlsruhe",
-        "domains": "dhbw-karlsruhe.de",
+        "domains": [
+            "dhbw-karlsruhe.de",
+            "karlsruhe.dhbw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3202,7 +3802,10 @@
     },
     {
         "name": "Duale Hochschule Baden-Wuerttemberg Mannheim",
-        "domains": "dhbw-mannheim.de",
+        "domains": [
+            "dhbw-mannheim.de",
+            "mannheim.dhbw.de"
+        ],
         "address1": "Coblitzallee 1-9",
         "address2": null,
         "city": "Mannheim",
@@ -3213,7 +3816,10 @@
     },
     {
         "name": "Hochschule Hannover",
-        "domains": "hs-hannover.de",
+        "domains": [
+            "hs-hannover.de",
+            "stud.hs-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3224,7 +3830,9 @@
     },
     {
         "name": "Staatliche Studienakademie Bautzen",
-        "domains": "ba-bautzen.de",
+        "domains": [
+            "ba-bautzen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3235,7 +3843,9 @@
     },
     {
         "name": "Technische Hochschule Mittelhessen",
-        "domains": "thm.de",
+        "domains": [
+            "thm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3246,7 +3856,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Wirtschaft und Gesellschaft Ludwigshafen",
-        "domains": "hwg-lu.de",
+        "domains": [
+            "hwg-lu.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3257,7 +3869,9 @@
     },
     {
         "name": "Leuphana Universit\u00e4t L\u00fcneburg",
-        "domains": "leuphana.de",
+        "domains": [
+            "leuphana.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3268,7 +3882,9 @@
     },
     {
         "name": "Ostbayerische Technische Hochschule Amberg-Weiden",
-        "domains": "oth-aw.de",
+        "domains": [
+            "oth-aw.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3279,7 +3895,9 @@
     },
     {
         "name": "Musikhochschule L\u00fcbeck",
-        "domains": "mh-luebeck.de",
+        "domains": [
+            "mh-luebeck.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3290,7 +3908,10 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik und Theater M\u00fcnchen",
-        "domains": "musikhochschule-muenchen.de",
+        "domains": [
+            "musikhochschule-muenchen.de",
+            "hmtm.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3301,7 +3922,9 @@
     },
     {
         "name": "Universit\u00e4t der K\u00fcnste Berlin",
-        "domains": "udk-berlin.de",
+        "domains": [
+            "udk-berlin.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3312,7 +3935,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik und Tanz K\u00f6ln",
-        "domains": "hfmt-koeln.de",
+        "domains": [
+            "hfmt-koeln.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3323,7 +3948,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik Carl Maria von Weber",
-        "domains": "hfmdd.de",
+        "domains": [
+            "hfmdd.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3334,7 +3961,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik und Darstellende Kunst Stuttgart",
-        "domains": "hmdk-stuttgart.de",
+        "domains": [
+            "hmdk-stuttgart.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3345,7 +3974,10 @@
     },
     {
         "name": "Hochschule f\u00fcr K\u00fcnste Bremen",
-        "domains": "hfk-bremen.de",
+        "domains": [
+            "hfk-bremen.de",
+            "hfk2020.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3356,7 +3988,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik und Theater \u201eFelix Mendelssohn Bartholdy\u201c Leipzig",
-        "domains": "hmt-leipzig.de",
+        "domains": [
+            "hmt-leipzig.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3367,7 +4001,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik, Theater und Medien Hannover",
-        "domains": "hmtm-hannover.de",
+        "domains": [
+            "hmtm-hannover.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3378,7 +4014,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Musik Detmold",
-        "domains": "hfm-detmold.de",
+        "domains": [
+            "hfm-detmold.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3389,7 +4027,9 @@
     },
     {
         "name": "Deutsche Universit\u00e4t f\u00fcr Verwaltungswissenschaften Speyer",
-        "domains": "uni-speyer.de",
+        "domains": [
+            "uni-speyer.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3400,7 +4040,9 @@
     },
     {
         "name": "Europa-Universit\u00e4t Viadrina",
-        "domains": "europa-uni.de",
+        "domains": [
+            "europa-uni.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3411,7 +4053,10 @@
     },
     {
         "name": "Frankfurt School of Finance & Management",
-        "domains": "fs.de",
+        "domains": [
+            "fs.de",
+            "fs-students.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3422,7 +4067,9 @@
     },
     {
         "name": "Hochschule f\u00fcr Fernsehen und Film M\u00fcnchen",
-        "domains": "hff-muenchen.de",
+        "domains": [
+            "hff-muenchen.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,
@@ -3433,7 +4080,9 @@
     },
     {
         "name": "IST-Hochschule fur Management",
-        "domains": "ist-hochschule.de",
+        "domains": [
+            "ist-hochschule.de"
+        ],
         "address1": null,
         "address2": null,
         "city": null,

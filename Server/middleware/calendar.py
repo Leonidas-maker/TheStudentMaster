@@ -51,6 +51,7 @@ def prepareCalendarTables(db: Session):
             m_calendar.University(
                 name=university.get("name"),
                 rooms=university.get("rooms"),
+                domains=university.get("domains"),
                 address_id=university_address.address_id if university_address else None,
             )
         )
@@ -69,9 +70,9 @@ def update_active_native_calendars(db: Session, progress, task_id):
     try:
         dhbw_calendars = (
             db.query(m_calendar.CalendarNative)
-            .join(m_calendar.CalendarNative.university)  # Join auf die University über die Beziehung
+            .join(m_calendar.CalendarNative.university).join(m_calendar.UserCalendar)
             .filter(
-                m_calendar.CalendarNative.is_active == True,
+                m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.id,
                 m_calendar.University.name == "Duale Hochschule Baden-Württemberg Mannheim",
             )
             .options(*query_options)
@@ -104,8 +105,6 @@ def get_backend_ids(db: Session):
 
 def update_all_native_calendars(db: Session, progress, task_id: int):
     query_options = [
-        joinedload(m_calendar.CalendarNative.source_backend),
-        joinedload(m_calendar.CalendarNative.university),
         defer(m_calendar.CalendarNative.data),
     ]
     calendar_wrapper = calendarWrapper("ical", "dhbw-mannheim")

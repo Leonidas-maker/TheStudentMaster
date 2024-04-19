@@ -12,7 +12,7 @@ from config.database import engine
 from middleware.database import get_async_db, get_db
 
 # from middleware.general import create_address
-from middleware.calendar import prepareCalendarTables, update_active_native_calendars
+from middleware.calendar import prepareCalendarTables, update_active_native_calendars, update_all_native_calendars
 from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
@@ -52,19 +52,20 @@ async def repeated_task():
             progress_id_ical_Update_Mannheim = progress.add_task(
                 "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
             )
+            
             # progress_id_ical_Update_Custom = progress.add_task(
             #     "[bold green]iCal-Custom[/bold green] Update iCal...", total=None
             # )
 
-            progress_id_canteen_menu_ = progress.add_task(
-                "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
-            )
+            # progress_id_canteen_menu_ = progress.add_task(
+            #     "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
+            # )
 
             # All tasks that should be executed
             tasks = [
                 create_task(update_active_native_calendars, progress, progress_id_ical_Update_Mannheim),
-                #create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
-                create_task(update_canteen_menus, progress, progress_id_canteen_menu_),
+                # create_task(update_ical_custom, progress, progress_id_ical_Update_Custom),
+                # create_task(update_canteen_menus, progress, progress_id_canteen_menu_),
             ]
 
             await asyncio.gather(*tasks, return_exceptions=True)
@@ -106,23 +107,24 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"})
 
+
 # ======================================================== #
 # ======================= Test-API ======================= #
 # ======================================================== #
 @app.get("/")
 async def root(db: Session = Depends(get_db)):
     with Progress(
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
-            TimeRemainingColumn(),
-        ) as progress:
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
+        TimeRemainingColumn(),
+    ) as progress:
 
         progress_id_ical_Update_Mannheim = progress.add_task(
-                    "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
-                )
+            "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
+        )
+        update_all_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
         
-        update_active_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
     return {"message": "Hello World"}
 
 
