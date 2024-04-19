@@ -12,8 +12,8 @@ class EmailSchema(BaseModel):
 
 
 def init_mailer(mail_from_name: str, ssl: bool = False):
-    configPath = Path(__file__).parent.parent.absolute() / "config.ini"
-    email_template_path = Path(__file__).parent.parent / "data" / "email_templates"
+    configPath = Path(__file__).parent.parent.parent.absolute() / "config.ini"
+    email_template_path = Path(__file__).parent / "email_templates"
     config = configparser.ConfigParser()
     config.read(configPath)
 

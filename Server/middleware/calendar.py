@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session, joinedload, defer
 import json
+import datetime
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_calendar
@@ -8,7 +9,7 @@ from models.sql_models import m_calendar
 from middleware.general import create_address
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_general
+from models.pydantic_schemas import s_general, s_calendar
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 import utils.calendar.nativ_sources as nativ_sources
@@ -65,16 +66,13 @@ def update_active_native_calendars(db: Session, progress, task_id):
     query_options = [
         defer(m_calendar.CalendarNative.data),
     ]
-    calendar_wrapper = calendarWrapper("ical", "dhbw-mannheim")
-
     try:
+        calendar_wrapper = calendarWrapper("iCalender", "dhbw-mannheim")
         dhbw_calendars = (
             db.query(m_calendar.CalendarNative)
-            .join(m_calendar.CalendarNative.university).join(m_calendar.UserCalendar)
-            .filter(
-                m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.id,
-                m_calendar.University.name == "Duale Hochschule Baden-Württemberg Mannheim",
-            )
+            .join(m_calendar.UserCalendar, m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.id)
+            .join(m_calendar.University)
+            .filter(m_calendar.University.name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
             .options(*query_options)
             .all()
         )
@@ -84,7 +82,7 @@ def update_active_native_calendars(db: Session, progress, task_id):
         for dhbw_calendar in dhbw_calendars:
             progress.update(
                 task_id,
-                description=f"[bold green]Native-Calendar[/bold green] Update DHBW-Mannheim - {dhbw_calendar.lecture_name}",
+                description=f"[bold green]Native-Calendar[/bold green] Update DHBW-Mannheim - {dhbw_calendar.course_name}",
             )
             calendar_data = calendar_wrapper.get_data(dhbw_calendar.source)
             if calendar_data and calendar_data.get("hash") != dhbw_calendar.hash:
@@ -93,6 +91,7 @@ def update_active_native_calendars(db: Session, progress, task_id):
                 db.add(dhbw_calendar)
             progress.update(task_id, advance=1)
         db.commit()
+        progress.update(task_id, description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!", visible=True, refresh=True)
     except Exception as e:
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
@@ -107,10 +106,8 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
     query_options = [
         defer(m_calendar.CalendarNative.data),
     ]
-    calendar_wrapper = calendarWrapper("ical", "dhbw-mannheim")
-
     try:
-
+        calendar_wrapper = calendarWrapper("iCalender", "dhbw-mannheim")
         calendar_backends = get_backend_ids(db)
 
         dhbw_mannheim = (
@@ -132,13 +129,13 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
         for dhbw_calendar in dhbw_calendars:
             progress.update(
                 task_id,
-                description=f"[bold green]Native-Calendar[/bold green] Update DHBW-Mannheim - {dhbw_calendar.lecture_name}",
+                description=f"[bold green]Native-Calendar[/bold green] Update DHBW-Mannheim - {dhbw_calendar.course_name}",
             )
             if dhbw_calendar.source not in dhbw_available_sources.values():
                 db.delete(dhbw_calendar)
                 continue
             else:
-                dhbw_available_sources.pop(dhbw_calendar.lecture_name, None)
+                dhbw_available_sources.pop(dhbw_calendar.course_name, None)
 
             calendar_data = calendar_wrapper.get_data(dhbw_calendar.source)
 
@@ -156,7 +153,7 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
             if calendar_data:
                 calendar = m_calendar.CalendarNative(
                     university_id=dhbw_mannheim.id,
-                    lecture_name=name,
+                    course_name=name,
                     source_backend_id=calendar_backends.get("iCalender"),
                     source=source,
                     data=calendar_data.get("data"),
@@ -164,83 +161,67 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
                 )
                 db.add(calendar)
             progress.update(task_id, advance=1)
-
         db.commit()
+        progress.update(task_id, description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!", visible=True, refresh=True)
     except Exception as e:
-        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
 
 
-# # ======================================================== #
-# # ===================== ICal Updater ===================== #
-# # ======================================================== #
-# def update_ical_custom(db: Session, progress, task_id):
-#     icals = db.query(ICalCustom).all()
-#     progress.update(task_id, total=len(icals), refresh=True)
-#     for ical in icals:
-#         progress.update(task_id, description=f"[bold green]iCal-Custom[/bold green] Update {ical.name}")
-#         ical_data, ical_hash = get_ical_data(ical.source_url, "iCal-Custom")
-#         if ical_hash != ical.hash:
-#             ical.data = ical_data
-#             ical.hash = ical_hash
-#             db.add(ical)
-#         progress.update(task_id, advance=1)
-#     db.commit()
+# ======================================================== #
+# ===================== Custom Update ==================== #
+# ======================================================== #
+def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.CalendarBackend):
+    query_options = [
+        defer(m_calendar.CalendarCustom.data),
+    ]
+
+    try:
+        calendar_wrapper = calendarWrapper(backend.name)
+
+        custom_calendars = (
+            db.query(m_calendar.CalendarCustom)
+            .filter(m_calendar.CalendarCustom.source_backend_id == backend.id)
+            .options(*query_options)
+            .all()
+        )
+        progress.update(task_id, total=len(custom_calendars), refresh=True)
+
+        current_time = datetime.datetime.now()
+
+        for custom_calendar in custom_calendars:
+            if (
+                custom_calendar.last_updated + datetime.timedelta(minutes=custom_calendar.refresh_interval)
+                > current_time
+            ):
+                continue
+
+            progress.update(
+                task_id,
+                description=f"[bold green]Custom-Calendar[/bold green] Update {backend.name} - {custom_calendar.course_name}",
+            )
+            calendar_data = calendar_wrapper.get_data(custom_calendar.source_url)
+            if calendar_data and calendar_data.get("hash") != custom_calendar.hash:
+                custom_calendar.data = calendar_data.get("data")
+                custom_calendar.hash = calendar_data.get("hash")
+                db.add(custom_calendar)
+            progress.update(task_id, advance=1)
+        db.commit()
+        progress.update(task_id, description=f"[bold green]Custom-Calendar-{backend.name}[/bold green] Done!", visible=True, refresh=True) 
+    except Exception as e:
+        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
+        print(e)
 
 
-# def update_ical_dhbw_mannheim(db: Session, progress, task_id, only_active: bool = True):
-#     if only_active:
-#         icals = db.query(ICalDHBWMannheim).filter(ICalDHBWMannheim.is_active == True).all()
-#     else:
-#         icals = db.query(ICalDHBWMannheim).all()
+def clean_custom_calendars(db: Session):
+    query_options = [defer(m_calendar.CalendarCustom.data)]
 
-#     progress.update(task_id, total=len(icals), refresh=True)
+    try:
+        # Delete all custom calendars that are not used by any user
+        db.query(m_calendar.CalendarCustom).options(*query_options).outerjoin(
+            m_calendar.UserCalendar, m_calendar.CalendarCustom.id == m_calendar.UserCalendar.custom_calendar_id
+        ).filter(m_calendar.UserCalendar.id == None).delete(synchronize_session=False)
 
-#     for ical in icals:
-#         progress.update(task_id, description=f"[bold green]iCal-DHBWMannheim[/bold green] Update {ical.name}")
-#         ical_data, ical_hash = get_ical_data(ical.source, "iCal-DHBWMannheim")
-#         if ical_hash != ical.hash:
-#             ical.data = ical_data
-#             ical.hash = ical_hash
-#             db.add(ical)
-#         progress.update(task_id, advance=1)
-
-#     db.commit()
-
-# def update_all_ical_dhbw_mannheim(db: Session, progress, task_ids:tuple):
-#     try:
-#         icals = db.query(ICalDHBWMannheim).all()
-#         available_sources = nativ_sources.get_source_dhbw_ma()
-#         progress.update(task_ids[0], total=len(icals), refresh=True)
-
-#         for i, ical in enumerate(icals):
-#             progress.update(task_ids[0], description=f"[bold green]iCal-DHBWMannheim[/bold green] Update {ical.name}")
-#             if ical.source not in available_sources.values():
-#                 db.delete(ical)
-#             else:
-#                 available_sources.pop(ical.name, None)
-#                 ical_data, ical_hash = get_ical_data(ical.source, "iCal-DHBWMannheim")
-#                 if ical_hash != ical.hash:
-#                     ical.data = ical_data
-#                     ical.hash = ical_hash
-#                     db.add(ical)
-#             progress.update(task_ids[0], advance=1)
-
-#         i = 0
-#         progress.update(task_ids[1], total=len(available_sources), refresh=True)
-
-#         for name, source in available_sources.items():
-#             progress.update(task_ids[0], description=f"[bold green]iCal-DHBWMannheim[/bold green] Adding {ical.name}")
-
-#             ical_data, ical_hash = get_ical_data(source, "iCal-DHBWMannheim")
-#             ical = ICalDHBWMannheim(name=name, source=source, data=ical_data, hash=ical_hash)
-#             db.add(ical)
-#             progress.update(task_ids[1], advance=1)
-#             i += 1
-
-#         db.commit()
-#     except Exception as e:
-#         progress.update(task_ids[0], description=f"[bold red]Error[/bold red]", visible=True)
-#         progress.update(task_ids[1], description=f"[bold red]Error[/bold red]", visible=True)
-#         print(e)
+        db.commit()
+    except Exception as e:
+        print(e)

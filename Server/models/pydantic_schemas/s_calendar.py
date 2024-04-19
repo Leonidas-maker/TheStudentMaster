@@ -1,36 +1,28 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, UUID4
+from typing import Optional, List
 from datetime import datetime
 
-
 class CalendarNative(BaseModel):
-    id: int
-    university_id: int
-    lecture_name: str
-    source_backend_id: int
-    source: str
+    university_name: str
+    course_name: str
     data: dict
     hash: str
-    is_active: bool
     last_modified: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CalendarCustom(BaseModel):
-    id: int
-    university_id: int
-    lecture_name: str
-    source_backend_id: int
-    source_url: str
+    university_name: str
+    course_name: str
     data: dict
     hash: str
     verified: bool
     last_modified: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class University(BaseModel):
@@ -41,16 +33,16 @@ class University(BaseModel):
     last_modified: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
-class Backend(BaseModel):
+class CalendarBackend(BaseModel):
     id: int
     name: str
     last_modified: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # ======================================================== #
@@ -61,6 +53,9 @@ class Backend(BaseModel):
 # ======================================================== #
 # ======================= Responses ====================== #
 # ======================================================== #
-class ResponseCalendarNative(BaseModel):
-    data: CalendarNative
-    status: str
+class ResAvailableNativeCalendars(BaseModel):
+    university_name: str
+    university_uuid: UUID4
+    course_names: List[str]
+
+

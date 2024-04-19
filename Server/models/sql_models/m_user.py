@@ -52,7 +52,7 @@ class UserUUID(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    user = relationship("User", back_populates="user_uuid", uselist=False)
+    user = relationship("User", back_populates="user_uuid", uselist=False, cascade="save-update")
 
 
 # TODO New table for application tokens (application_id, user_id or security_id, refresh_token, last_modified) 1 to n relationship betweem user_security and application_tokens

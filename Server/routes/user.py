@@ -39,6 +39,7 @@ def update_me(access_token: str = Depends(oauth2_scheme), db: Session = Depends(
     jwt_payload = verify_access_token(db, access_token)
     if jwt_payload:
         user = get_user(db, user_uuid=jwt_payload["sub"])
+        
         # TODO Update user
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")

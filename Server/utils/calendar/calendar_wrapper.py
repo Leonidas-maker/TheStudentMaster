@@ -16,7 +16,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         type: str = "custom",
         source: Dict[str, str] | str = None,
     ):
-        if backend not in ["ical", "rapla"]:
+        if backend not in ["iCalender", "Rapla"]:
             raise ValueError("Invalid backend")
         if type not in ["custom", "dhbw-mannheim"]:
             raise ValueError("Invalid type")
@@ -57,7 +57,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         self.type = type
 
     def set_backend(self, backend: str):
-        if backend not in ["ical", "rapla"]:
+        if backend not in ["iCalender", "Rapla"]:
             raise ValueError("Invalid backend")
         self.backend = backend
 
@@ -72,13 +72,13 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         
 
         if isinstance(self.source, dict):
-            if self.backend == "ical":
+            if self.backend == "iCalender":
                 return self.__ical_get_data_multiple(self.source)
             else:  # rapla
                 return self.__rapla_get_data_multiple(self.source)
 
         else:
-            if self.backend == "ical":
+            if self.backend == "iCalender":
                 return self.__ical_get_data_single(self.source)
             else: # rapla
                 return self.__rapla_get_data_single(self.source)
