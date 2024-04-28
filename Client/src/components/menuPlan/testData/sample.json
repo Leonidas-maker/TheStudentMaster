@@ -1,0 +1,175 @@
+{
+  "canteen_name": "Mensaria am Schloss",
+  "canteen_short_name": "schlossmensa",
+  "image_url": null,
+  "menu": [
+    {
+      "dish_type": "Menü 1",
+      "dish": "Putensteak (G), Tomatensoße (1,3,9,Sw,Sl,Vga), Romanesco (Sl,Vga), Tagliatelle (GlW,Gl,Ei,Veg)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "veganes Geschnetzeltes (9,GlW,Gl,So,GIG,Vga), Erdnuss-Ingwersoße (3,En,Vga), knackiges Asia-Gemüse (Vga), Reismehlbandnudeln (Vga), Asia-Nudeln (1,2,4,GlW,Gl,So,Vga), frische Kräuter (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "MA(h)l was anderes",
+      "dish": "Jamaika Jerk-Chicken-Drumsticks (3,G), Mango-Currysoße (GlW,Gl,Vga), gegrillte Paprika (Vga), Reis mit Kochbananen (Vga), Koriander (Vga), Limettenecke, geröstete Kokosraspeln (Vga)",
+      "price": "Portion: 5,00 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "Salatbuffet",
+      "dish": "Blattsalate (Vga), Rohkostsalate (Vga), Tomatensalat mit Pappaya (1,3,Sw,Vga), grüner Bohnensalat mit Papaya (3,Sw,Vga), Mango (Vga), Rotkrautsalat (3,Sw,Vga), Brokkolisalat (3,Sw,Vga), Fenchel-Orangen-Salat (Mi,Veg)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "Themenpark",
+      "dish": "Hähnchenschnitzel (GlW,Gl,G), Valess Schnitzel (9,GlW,Gl,Mi,Ei,GlH,Veg), Marktgemüse (Vga), Süßkartoffel-Gnocchi (9,Vga), Fusilli (GlW,Gl,Vga), Pilzrahmsoße (Sl,GlW,Gl,Mi,So,Veg), Gemüse-Curry Suppe (Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga), bayerische Creme (Mi,Ei,R,Veg), Fruchtjoghurt (1,9,Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-22T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "hausgemachte Bratwurst (Sl,Mi,Sf,S), Bratensoße (1,3,9,Sw,Sl,GlW,Gl,So,R,16), Bohnengemüse (Vga), Kartoffelstampf (Mi,Veg)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "tunesische Reispfanne (ScM,Vga), Blumenkohl-Curry (3,Sw,Vga), frische Kräuter (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "MA(h)l was anderes",
+      "dish": "Ropa Vieja - kubanisches geschmortes Rindfleisch (3,Sl,R,16), Reis mit Bohnen (Vga), Nachos (9,Vga), Tomatensalsa (Sw,Vga), Frühlingszwiebeln (Vga)",
+      "price": "Portion: 5,00 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "Salatbuffet",
+      "dish": "Blattsalate (Vga), Rohkostsalate (Vga), Fenchel-Orangen-Salat (Mi,Veg), Bauernsalat (6,Sw,Vga), Fetawürfel (Mi,Veg), Radieschen (Vga), Brokkolisalat (3,Sw,Vga), Rotkrautsalat (3,Sw,Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "Themenpark",
+      "dish": "Hähnchenschnitzel (GlW,Gl,G), paniertes Schnitzel vom Schwein (S), veganes Schnitzel (Sl,GlW,Gl,Sf,So,Vga), Marktgemüse (Vga), Tomatensoße (1,3,9,Sw,Sl,Vga), Fusilli (GlW,Gl,Vga), Karotten-Ingwer Suppe (Sl,GlW,Gl,Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Schokopudding (Mi,Veg), Obstsalat (Vga), Fruchtjoghurt (1,9,Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-23T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "Hähnchen Cordon bleu (2,3,9,13,GlW,Gl,Mi,Ei,G), Bratensoße (1,3,9,Sw,Sl,GlW,Gl,So,R,16), Buttererbsen (Sl,Veg), Kroketten (GlW,Gl,Veg)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "Grünkernsuppe (Sw,Sl,Vga), Gemüsewürfel (Sl,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Gurkensalat (Sw,Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "MA(h)l was anderes",
+      "dish": "kreolisches Jambalaya (Sl,S,Kr,G,Me), Hähnchenbrust (Sl,G), Chorizowurst (1,3,4,9,Mi,Sf,S), Garnelen (Kr,Me), Langkornreis (Vga)",
+      "price": "Portion: 5,00 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "Salatbuffet",
+      "dish": "Blattsalate (Vga), Rohkostsalate (Vga), Nudelsalat (3,Sw,GlW,Gl,Mi,Ei), Gurkensalat (Sw,Vga), Fetawürfel (Mi,Veg), Mais-Paprikasalat (3,Sw,Vga), Tomatensalat (1,3,Sw,Vga), Weißkrautsalat (3,Sw,Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "Themenpark",
+      "dish": "Hähnchenschnitzel (GlW,Gl,G), paniertes Schnitzel vom Schwein (S), veganes Schnitzel (Sl,GlW,Gl,Sf,So,Vga), Valess Schnitzel (9,GlW,Gl,Mi,Ei,GlH,Veg), Tomatenreis (Vga), Bohnengemüse (Vga), Pfeffer-Rahmsoße (Sl,GlW,Gl,Mi,So,GIG,Veg), Tomatencremesuppe (9,Sl,Mi,Veg)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Schokopudding (Mi,Veg), Obstsalat (Vga), Fruchtjoghurt (1,9,Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-24T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "hausgemachte Geflügelfrikadelle (3,4,8,Sl,G), Geflügel-Frikadelle (3,4,8,Sl,G), orientalisches Gemüse (Vga), Bulgur (Sl,GlW,Vga), scharfer Joghurt-Dip (Sw,Mi,Veg)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "Tortellini Verdura (Sl,GlW,Gl,Vga), Knoblauch-Gemüsesoße (Sl,GlW,Gl,Vga), Rucola (Vga), Beilagensalat (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "MA(h)l was anderes",
+      "dish": "Gallo Pinto - karibischer Bohnen-Reis (Sl,Gl,GIG,Vga), Maistortillas (Vga), gebackene Süßkartoffeln (Vga), gegrillte Paprika (Vga), Koriander (Vga), Nüsse (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 4,50 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "Salatbuffet",
+      "dish": "Blattsalate (Vga), Rohkostsalate (Vga), Himbeerdressing (3,Sw,Sf,Vga), Joghurt-Dressing (Mi,Sf,Veg), Balsamico-Dressing (1,3,Sw,Gl,Sf,GlH,Vga), Croûtons (GlW,Gl,Vga), Kürbiskerne (Vga), Sonnenblumenkerne (Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "Themenpark",
+      "dish": "paniertes Schnitzel vom Schwein (S), veganes Schnitzel (Sl,GlW,Gl,Sf,So,Vga), Marktgemüse (Vga)",
+      "price": "pro 100g: 1,20 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-25T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-30T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-26T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-29T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Obstsalat (Vga)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-04-15T00:00:00"
+    }
+  ]
+}
