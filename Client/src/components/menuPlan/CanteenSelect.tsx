@@ -24,8 +24,15 @@ const CanteenSelect: React.FC<CanteenSelectProps> = ({
     canteenNameData,
     setSelectedCanteen
 }) => {
+    // ====================================================== //
+    // ======================= States ======================= //
+    // ====================================================== //
     const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
 
+    // ====================================================== //
+    // ===================== useEffects ===================== //
+    // ====================================================== //
+    // Sets the canteen names to the canteen name data
     useEffect(() => {
         const names: CanteenProps[] = canteenNameData.canteens.map((canteenName, index) => ({
             key: String(index + 1),
@@ -38,7 +45,7 @@ const CanteenSelect: React.FC<CanteenSelectProps> = ({
     // ================== Return component ================== //
     // ====================================================== //
     return (
-        <View className="pt-2 px-2">
+        <View className="py-2 px-2">
             <SelectList
                 setSelected={setSelectedCanteen}
                 data={canteenNames}

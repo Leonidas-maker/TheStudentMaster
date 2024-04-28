@@ -1,10 +1,11 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { format, addDays } from 'date-fns';
+import { format, addDays, isSameDay } from 'date-fns';
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface DayViewProps {
+    selectedDate: Date;
     setSelectedDate: (date: Date) => void;
     startOfWeekDate: Date;
 }
@@ -13,6 +14,7 @@ interface DayViewProps {
 // ====================== Component ===================== //
 // ====================================================== //
 const DayView: React.FC<DayViewProps> = ({
+    selectedDate,
     setSelectedDate,
     startOfWeekDate
 }) => {
@@ -22,20 +24,24 @@ const DayView: React.FC<DayViewProps> = ({
     return (
         <View className='flex-row py-3'>
             {Array.from({ length: 5 }).map((_, index) => {
+                // Creates a new date for each day of the week
                 const day = addDays(startOfWeekDate, index);
+                // Checks if the day is the first day of the week, if true then it will not have a border on the left side
                 const isFirstDay = index === 0;
+                // Checks if the day is the selected day
+                const isSelectedDay = isSameDay(day, selectedDate);
 
                 return (
                     <View className="flex-1">
                         {isFirstDay ?
                             <TouchableOpacity key={index} className="items-center pt-2 z-10" onPress={() => setSelectedDate(day)}>
-                                <Text className='text-lg text-white'>{format(day, "eee")}</Text>
-                                <Text className='text-sm text-white'>{format(day, 'd')}. {format(day, 'LLL')}</Text>
+                                <Text className={`text-lg text-white ${isSelectedDay ? 'font-bold' : ''}`}>{format(day, "eee")}</Text>
+                                <Text className={`text-lg text-white ${isSelectedDay ? 'font-bold' : ''}`}>{format(day, 'd')}. {format(day, 'LLL')}</Text>
                             </TouchableOpacity>
                             :
                             <TouchableOpacity key={index} className="items-center pt-2 border-l border-gray-200 z-10" onPress={() => setSelectedDate(day)}>
-                                <Text className='text-lg text-white'>{format(day, "eee")}</Text>
-                                <Text className='text-sm text-white'>{format(day, 'd')}. {format(day, 'LLL')}</Text>
+                                <Text className={`text-lg text-white ${isSelectedDay ? 'font-bold' : ''}`}>{format(day, "eee")}</Text>
+                                <Text className={`text-lg text-white ${isSelectedDay ? 'font-bold' : ''}`}>{format(day, 'd')}. {format(day, 'LLL')}</Text>
                             </TouchableOpacity>
                         }
                     </View>
