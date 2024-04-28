@@ -13,9 +13,17 @@ class CalendarNative(BaseModel):
         from_attributes = True
 
 
-class CalendarCustom(BaseModel):
-    university_name: str
+class CalendarCustomBase(BaseModel):
     course_name: str
+    refresh_interval: int
+
+class CalendarCustomCreate(CalendarCustomBase):
+    university_uuid: Optional[UUID4] = None
+    source_backend: str
+    source_url: str
+    
+class CalendarCustom(CalendarCustomBase):
+    university_name: str
     data: dict
     hash: str
     verified: bool
@@ -49,6 +57,9 @@ class CalendarBackend(BaseModel):
 # ======================= Requests ======================= #
 # ======================================================== #
 
+class NativeCalenderIdentifier(BaseModel):
+    university_uuid: UUID4
+    course_name: str
 
 # ======================================================== #
 # ======================= Responses ====================== #
@@ -59,3 +70,10 @@ class ResAvailableNativeCalendars(BaseModel):
     course_names: List[str]
 
 
+class ResUserCalendar(BaseModel):
+    university_name: str
+    university_uuid: UUID4
+    course_name: str
+    data: dict
+    hash: str
+    last_modified: datetime

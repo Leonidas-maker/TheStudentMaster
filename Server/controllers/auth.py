@@ -77,9 +77,9 @@ def login(
     application_id: str = None,
 ):
     if "@" in ident:
-        user = get_user(db, email=ident, with_user_uuid=True)
+        user = get_user(db, email=ident, with_uuid=True)
     else:
-        user = get_user(db, username=ident, with_user_uuid=True)
+        user = get_user(db, username=ident, with_uuid=True)
 
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -94,6 +94,9 @@ def login(
         raise HTTPException(status_code=401, detail="Account not verified")
     check_security_warns(user_security)
 
+    if not check_password(db, password, user_security=user_security):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
     if user_security._2fa_enabled:
         remove_older_security_token(db, user_security, "login-2fa")
         return {
@@ -105,8 +108,7 @@ def login(
             )
         }
 
-    if not check_password(db, password, user_security=user_security):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
 
     refresh_token, access_token = create_tokens(db, user_security, user_uuid, application_id)
     return {"refresh_token": refresh_token, "access_token": access_token}

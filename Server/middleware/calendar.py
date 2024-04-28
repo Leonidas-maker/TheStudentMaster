@@ -1,6 +1,9 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload, defer
+from profanity_check import predict
 import json
 import datetime
+import uuid
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_calendar
@@ -16,16 +19,19 @@ import utils.calendar.nativ_sources as nativ_sources
 from utils.calendar.calendar_wrapper import calendarWrapper
 
 
+###########################################################################
+############################ Major Update Logic ###########################
+###########################################################################
+
+
 # ======================================================== #
 # =================== Startup functions ================== #
 # ======================================================== #
-
-
 def prepareCalendarTables(db: Session):
     backends = ["Rapla", "iCalender"]
     for backend in backends:
-        if not db.query(m_calendar.CalendarBackend).filter(m_calendar.CalendarBackend.name == backend).first():
-            db.add(m_calendar.CalendarBackend(name=backend))
+        if not db.query(m_calendar.CalendarBackend).filter(m_calendar.CalendarBackend.backend_name == backend).first():
+            db.add(m_calendar.CalendarBackend(backend_name=backend))
 
     with open(
         "./data/address_lists/ger_univercity.json", "r", encoding="utf-8"
@@ -34,7 +40,11 @@ def prepareCalendarTables(db: Session):
 
     for university in data:
         university_address = None
-        if db.query(m_calendar.University).filter(m_calendar.University.name == university.get("name")).first():
+        if (
+            db.query(m_calendar.University)
+            .filter(m_calendar.University.university_name == university.get("name"))
+            .first()
+        ):
             continue
         if university.get("address1"):
             new_address = s_general.AddressCreate(
@@ -50,7 +60,7 @@ def prepareCalendarTables(db: Session):
 
         db.add(
             m_calendar.University(
-                name=university.get("name"),
+                university_name=university.get("name"),
                 rooms=university.get("rooms"),
                 domains=university.get("domains"),
                 address_id=university_address.address_id if university_address else None,
@@ -70,9 +80,12 @@ def update_active_native_calendars(db: Session, progress, task_id):
         calendar_wrapper = calendarWrapper("iCalender", "dhbw-mannheim")
         dhbw_calendars = (
             db.query(m_calendar.CalendarNative)
-            .join(m_calendar.UserCalendar, m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.id)
+            .join(
+                m_calendar.UserCalendar,
+                m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.calendar_native_id,
+            )
             .join(m_calendar.University)
-            .filter(m_calendar.University.name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
+            .filter(m_calendar.University.university_name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
             .options(*query_options)
             .all()
         )
@@ -91,7 +104,12 @@ def update_active_native_calendars(db: Session, progress, task_id):
                 db.add(dhbw_calendar)
             progress.update(task_id, advance=1)
         db.commit()
-        progress.update(task_id, description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!", visible=True, refresh=True)
+        progress.update(
+            task_id,
+            description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!",
+            visible=True,
+            refresh=True,
+        )
     except Exception as e:
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
@@ -99,7 +117,7 @@ def update_active_native_calendars(db: Session, progress, task_id):
 
 def get_backend_ids(db: Session):
     backends = db.query(m_calendar.CalendarBackend).all()
-    return {backend.name: backend.id for backend in backends}
+    return {backend.backend_name: backend.calendar_backend_id for backend in backends}
 
 
 def update_all_native_calendars(db: Session, progress, task_id: int):
@@ -112,13 +130,13 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
 
         dhbw_mannheim = (
             db.query(m_calendar.University)
-            .filter(m_calendar.University.name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
+            .filter(m_calendar.University.university_name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
             .first()
         )
 
         dhbw_calendars = (
             db.query(m_calendar.CalendarNative)
-            .filter(m_calendar.CalendarNative.university_id == dhbw_mannheim.id)
+            .filter(m_calendar.CalendarNative.university_id == dhbw_mannheim.university_id)
             .options(*query_options)
             .all()
         )
@@ -152,7 +170,7 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
             calendar_data = calendar_wrapper.get_data(source)
             if calendar_data:
                 calendar = m_calendar.CalendarNative(
-                    university_id=dhbw_mannheim.id,
+                    university_id=dhbw_mannheim.university_id,
                     course_name=name,
                     source_backend_id=calendar_backends.get("iCalender"),
                     source=source,
@@ -162,7 +180,12 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
                 db.add(calendar)
             progress.update(task_id, advance=1)
         db.commit()
-        progress.update(task_id, description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!", visible=True, refresh=True)
+        progress.update(
+            task_id,
+            description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!",
+            visible=True,
+            refresh=True,
+        )
     except Exception as e:
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
@@ -177,11 +200,11 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
     ]
 
     try:
-        calendar_wrapper = calendarWrapper(backend.name)
+        calendar_wrapper = calendarWrapper(backend.backend_name)
 
         custom_calendars = (
             db.query(m_calendar.CalendarCustom)
-            .filter(m_calendar.CalendarCustom.source_backend_id == backend.id)
+            .filter(m_calendar.CalendarCustom.source_backend_id == backend.calendar_backend_id)
             .options(*query_options)
             .all()
         )
@@ -198,7 +221,7 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
 
             progress.update(
                 task_id,
-                description=f"[bold green]Custom-Calendar[/bold green] Update {backend.name} - {custom_calendar.course_name}",
+                description=f"[bold green]Custom-Calendar[/bold green] Update {backend.backend_name} - {custom_calendar.course_name}",
             )
             calendar_data = calendar_wrapper.get_data(custom_calendar.source_url)
             if calendar_data and calendar_data.get("hash") != custom_calendar.hash:
@@ -207,7 +230,12 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
                 db.add(custom_calendar)
             progress.update(task_id, advance=1)
         db.commit()
-        progress.update(task_id, description=f"[bold green]Custom-Calendar-{backend.name}[/bold green] Done!", visible=True, refresh=True) 
+        progress.update(
+            task_id,
+            description=f"[bold green]Custom-Calendar-{backend.backend_name}[/bold green] Done!",
+            visible=True,
+            refresh=True,
+        )
     except Exception as e:
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
@@ -215,12 +243,177 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
 
 def clean_custom_calendars(db: Session):
     query_options = [defer(m_calendar.CalendarCustom.data)]
-
     try:
         # Delete all custom calendars that are not used by any user
         db.query(m_calendar.CalendarCustom).options(*query_options).outerjoin(
-            m_calendar.UserCalendar, m_calendar.CalendarCustom.id == m_calendar.UserCalendar.custom_calendar_id
-        ).filter(m_calendar.UserCalendar.id == None).delete(synchronize_session=False)
+            m_calendar.UserCalendar,
+            m_calendar.CalendarCustom.calendar_custom_id == m_calendar.UserCalendar.custom_calendar_id,
+        ).filter(m_calendar.UserCalendar.calendar_users_id == None).delete(synchronize_session=False)
+
+        db.commit()
+    except Exception as e:
+        print(e)
+
+
+###########################################################################
+######################## Calendar_Users Management ########################
+###########################################################################
+
+
+# ======================================================== #
+# ===================== Adder/Updater ==================== #
+# ======================================================== #
+def add_update_user_calendar(
+    db: Session, user_id: int, custom_calendar_id: int = None, native_calendar_id: int = None
+) -> m_calendar.UserCalendar:
+    if custom_calendar_id and native_calendar_id or not custom_calendar_id and not native_calendar_id:
+        raise ValueError("Invalid calendar id combination")
+
+    user_calendar = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user_id).first()
+
+    if user_calendar:
+        user_calendar.custom_calendar_id = custom_calendar_id
+        user_calendar.native_calendar_id = native_calendar_id
+    else:
+        user_calendar = m_calendar.UserCalendar(
+            user_id=user_id,
+            custom_calendar_id=custom_calendar_id,
+            native_calendar_id=native_calendar_id,
+        )
+        db.add(user_calendar)
+    db.flush()
+    return user_calendar
+
+
+def add_native_calendar_to_user(
+    db: Session, user_id: int, course_name: int, university_uuid: uuid.UUID
+) -> m_calendar.CalendarNative | None:
+    calendar_native = (
+        db.query(m_calendar.CalendarNative)
+        .join(m_calendar.University)
+        .filter(
+            m_calendar.University.university_uuid == university_uuid,
+            m_calendar.CalendarNative.course_name == course_name,
+        )
+        .first()
+    )
+
+    # Check if calendar exists
+    if calendar_native:
+        add_update_user_calendar(db, user_id, native_calendar_id=calendar_native.calendar_native_id)
+        db.commit()
+        return calendar_native
+    return None
+
+
+def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):
+    # Check if course name does not contain profanity
+    if predict([new_custom_calendar.course_name]):
+        raise HTTPException(status_code=406, detail="Course name not accepted")
+
+    # Check if backend exists
+    backend = (
+        db.query(m_calendar.CalendarBackend)
+        .filter(m_calendar.CalendarBackend.backend_name == new_custom_calendar.source_backend)
+        .first()
+    )
+
+    if backend:
+        # Check if custom calendar already exists
+        custom_calendar = (
+            db.query(m_calendar.CalendarCustom)
+            .filter(m_calendar.CalendarCustom.source_url == new_custom_calendar.source_url)
+            .first()
+        )
+
+        # Create new custom calendar if it does not exist
+        if not custom_calendar:
+
+            custom_calendar_data = calendarWrapper(backend.backend_name).get_data(new_custom_calendar.source_url)
+
+            if not custom_calendar_data:
+                raise HTTPException(status_code=400, detail="Invalid calendar source")
+
+            university = db.query(m_calendar.University).filter(m_calendar.University.university_uuid == new_custom_calendar.university_uuid).first()
+
+            custom_calendar = m_calendar.CalendarCustom(
+                university_id=university.university_id if university else None,
+                course_name=new_custom_calendar.course_name,
+                source_backend_id=backend.calendar_backend_id,
+                source_url=new_custom_calendar.source_url,
+                data=custom_calendar_data.get("data"),
+                hash=custom_calendar_data.get("hash"),
+                refresh_interval=new_custom_calendar.refresh_interval,
+                last_updated=datetime.datetime.now(),
+                verified=False,
+                last_modified=datetime.datetime.now(),
+            )
+            db.add(custom_calendar)
+            db.flush()
+
+        # Add custom calendar to user
+        add_update_user_calendar(db, user_id, custom_calendar_id=custom_calendar.calendar_custom_id)
+        db.commit()
+
+        # Return the custom calendar
+        return custom_calendar
+    else:
+        raise HTTPException(status_code=400, detail="Invalid backend source")
+
+
+# ======================================================== #
+# ======================== Getter ======================== #
+# ======================================================== #
+def get_calendar(
+    db: Session, user_id: int, with_university: bool = False, with_data: bool = False
+) -> m_calendar.CalendarCustom | m_calendar.CalendarNative | None:
+    query_options = []
+
+    if with_university:
+        query_options += [joinedload(m_calendar.CalendarNative.university)]
+
+    user_calendar = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user_id).first()
+
+    # Check if user has a calendar
+    if user_calendar:
+        if user_calendar.native_calendar_id:
+            if not with_data:
+                query_options += [defer(m_calendar.CalendarNative.data)]
+
+            # Get native calendar
+            calendar = (
+                db.query(m_calendar.CalendarNative)
+                .options(*query_options)
+                .filter(m_calendar.CalendarNative.calendar_native_id == user_calendar.native_calendar_id)
+                .first()
+            )
+        else:
+            if not with_data:
+                query_options += [defer(m_calendar.CalendarCustom.data)]
+            # Get custom calendar
+            calendar = (
+                db.query(m_calendar.CalendarCustom)
+                .options(*query_options)
+                .filter(m_calendar.CalendarCustom.calendar_custom_id == user_calendar.custom_calendar_id)
+                .first()
+            )
+        return calendar
+
+    # Return None if user has no calendar
+    return None
+
+
+# ======================================================== #
+# ========================= Utils ======================== #
+# ======================================================== #
+def clean_custom_calendars(db: Session) -> None:
+    query_options = [defer(m_calendar.CalendarCustom.data)]
+    try:
+        # Delete all custom calendars that are not used by any user
+        db.query(m_calendar.CalendarCustom).options(*query_options).outerjoin(
+            m_calendar.UserCalendar,
+            m_calendar.CalendarCustom.calendar_custom_id == m_calendar.UserCalendar.custom_calendar_id,
+        ).filter(m_calendar.UserCalendar.calendar_users_id == None).delete(synchronize_session=False)
 
         db.commit()
     except Exception as e:

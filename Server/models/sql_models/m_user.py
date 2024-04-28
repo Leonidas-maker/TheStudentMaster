@@ -35,14 +35,22 @@ class User(Base):
     )
     address = relationship("Address", uselist=False)
 
-    def as_dict(self):
-        return {
-            "username": self.username,
-            "email": self.email,
-            "user_uuid": self.user_uuid.user_uuid,
-            "avatar": self.avatar,
-            "address": self.address.as_dict_complete() if self.address else None,
-        }
+    def as_dict(self, address=False):
+        if address:
+            return {
+                "username": self.username,
+                "email": self.email,
+                "user_uuid": self.user_uuid.user_uuid,
+                "avatar": self.avatar,
+                "address": self.address.as_dict_complete() if self.address else None,
+            }
+        else:
+            return {
+                "username": self.username,
+                "email": self.email,
+                "user_uuid": self.user_uuid.user_uuid,
+                "avatar": self.avatar,
+            }
 
 
 class UserUUID(Base):

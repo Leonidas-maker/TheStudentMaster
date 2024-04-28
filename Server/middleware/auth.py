@@ -28,7 +28,7 @@ from models.sql_models import m_user
 from models.pydantic_schemas import s_user
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
-from middleware.user import get_user_security, get_user_2fa
+from middleware.user import get_user_security, get_user_2fa, get_user
 
 
 ###########################################################################
@@ -332,6 +332,24 @@ def get_token_payload(token: str):
     payload = jwt.decode(token, options={"verify_signature": False})
     return payload
 
+
+# ======================================================== #
+# ===================== Check Tokens ===================== #
+# ======================================================== #
+def check_refresh_token(db: Session, token: str) -> m_user.User:
+    jwt_payload = verify_refresh_token(db, token)
+    if jwt_payload:
+        return get_user(db, user_uuid=jwt_payload["sub"])
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+
+def check_access_token(db: Session, token: str, with_uuid: bool = False, with_address: bool = False, with_avatar: bool = False ) -> m_user.User:
+    jwt_payload = verify_access_token(db, token)
+    if jwt_payload:
+        return get_user(db, user_uuid=jwt_payload["sub"], with_uuid=with_uuid, with_address=with_address, with_avatar=with_avatar)
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 # ======================================================== #
 # ==================== Tokens-Rotation =================== #

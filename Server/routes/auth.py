@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Path, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+from typing import Union
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_auth, s_user
@@ -29,7 +30,7 @@ from controllers.auth import (
 auth_router = APIRouter()
 
 # For token authentication
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 # ======================================================== #
 # ======================= Register ======================= #
@@ -70,7 +71,7 @@ def user_reset_password():
 # ======================================================== #
 
 
-@auth_router.post("/login", response_model=s_auth.UserTokens | s_auth.UserSecurityToken)
+@auth_router.post("/login", response_model=Union[s_auth.UserTokens, s_auth.UserSecurityToken])
 def user_login(user_login: s_auth.UserLogin, db: Session = Depends(get_db)):
     return login(db, user_login.ident, user_login.password, user_login.application_id)
 
@@ -119,7 +120,7 @@ def user_verify_first_2fa(otp: s_auth.OTP, access_token: str = Depends(oauth2_sc
     return verify_first_2fa(db, access_token, otp.otp_code)
 
 
-@auth_router.post("/verify-2fa/")
+@auth_router.post("/verify-2fa/", response_model=s_auth.UserTokens)
 def user_verify_2fa(otp: s_auth.OTP, security_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return verify_2fa(db, security_token, otp.otp_code)
 

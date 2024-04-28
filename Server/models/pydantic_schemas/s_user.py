@@ -74,19 +74,30 @@ class UserUUID(BaseModel):
 class UserBase(BaseModel):
     username: str
     email: EmailStr
-    is_active: Optional[bool] = True
-
+    
 
 class UserCreate(UserBase):
     security: UserSecurityCeate
     address: Optional[AddressCreate] = None
 
+class UserUpdate(UserBase):
+    
+    #* Need password authentication
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+    old_password: Optional[str] = None
+    new_password: Optional[str] = None
+
+    #* No password authentication needed
+    address: Optional[AddressCreate] = None 
+    avatar: Optional[bytes] = None
 
 class User(UserBase):
     user_id: int
     avatar: Optional[bytes] = None
     address_id: Optional[int] = None
     last_modified: datetime
+    is_active: Optional[bool] = True
 
     class Config:
         from_attributes = True

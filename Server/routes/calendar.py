@@ -22,8 +22,8 @@ calendar_router = APIRouter()
 # ======================================================== #
 # ======================== Calendar ====================== #
 # ======================================================== #
-@calendar_router.get("/available_calendars")
-def get_available_calendars(db: Session = Depends(get_db)) -> List[s_calendar.ResAvailableNativeCalendars]:
+@calendar_router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars])
+def get_available_calendars(db: Session = Depends(get_db)):
     query_options = [joinedload(m_calendar.CalendarNative.university), defer(m_calendar.CalendarNative.data)]
 
     calendars = db.query(m_calendar.CalendarNative).options(*query_options).all()
@@ -32,11 +32,11 @@ def get_available_calendars(db: Session = Depends(get_db)) -> List[s_calendar.Re
     university_uuids = {}
 
     for calendar in calendars:
-        if calendar.university.name not in available_calendars:
-            available_calendars[calendar.university.name] = []
-            university_uuids[calendar.university.name] = calendar.university.uuid
+        if calendar.university.university_name not in available_calendars:
+            available_calendars[calendar.university.university_name] = []
+            university_uuids[calendar.university.university_name] = calendar.university.university_uuid
 
-        available_calendars[calendar.university.name].append(calendar.course_name)
+        available_calendars[calendar.university.university_name].append(calendar.course_name)
 
     response = []
 
@@ -46,19 +46,19 @@ def get_available_calendars(db: Session = Depends(get_db)) -> List[s_calendar.Re
 
     return response
   
-@calendar_router.get("/calendar/{university_uuid}/{course_name}")
-def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)) -> s_calendar.CalendarNative:
+@calendar_router.get("/calendar/{university_uuid}/{course_name}", response_model=s_calendar.CalendarNative)
+def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)):
     query_options = [joinedload(m_calendar.CalendarNative.university)]
 
     course_name = course_name.replace("_", " ")
 
     calendar = db.query(m_calendar.CalendarNative).options(*query_options).filter(
-        m_calendar.University.uuid == university_uuid,
+        m_calendar.University.university_uuid == university_uuid,
         m_calendar.CalendarNative.course_name == course_name
     ).first()
 
     res_calendar = s_calendar.CalendarNative(
-        university_name=calendar.university.name,
+        university_name=calendar.university.university_name,
         course_name=calendar.course_name,
         data=calendar.data,
         hash=calendar.hash,
@@ -66,14 +66,14 @@ def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Dep
     )
     return res_calendar
 
-@calendar_router.get("/calendar/{university_uuid}/{course_name}/hash")
-def get_calendar_hash(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)) -> str:
+@calendar_router.get("/calendar/{university_uuid}/{course_name}/hash", response_model=str)
+def get_calendar_hash(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)):
     query_options = [joinedload(m_calendar.CalendarNative.university)]
 
     course_name = course_name.replace("_", " ")
 
     calendar = db.query(m_calendar.CalendarNative).options(*query_options).filter(
-        m_calendar.University.uuid == university_uuid,
+        m_calendar.University.university_uuid == university_uuid,
         m_calendar.CalendarNative.course_name == course_name
     ).first()
 

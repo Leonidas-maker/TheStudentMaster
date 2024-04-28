@@ -1,6 +1,5 @@
 from fastapi import HTTPException
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import Session, joinedload, defer
 import uuid
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
@@ -10,34 +9,42 @@ from models.sql_models import m_user
 ############################## Get functions ##############################
 ###########################################################################
 
-
 def get_user(
     db: Session,
     user_uuid: uuid.UUID = None,
     user_id: int = None,
     username: str = None,
     email: str = None,
-    with_user_uuid: bool = False,
-):
-    query_options = [joinedload(m_user.User.user_uuid)] if with_user_uuid else []
+    with_uuid: bool = False,
+    with_address: bool = False,
+    with_avatar: bool = False,
+) -> m_user.User:
+    query_options = [joinedload(m_user.User.user_uuid)] if with_uuid else []
+    query_options += [joinedload(m_user.User.address)] if with_address else []
+    query_options += [defer(m_user.User.avatar)] if not with_avatar else []
     query = db.query(m_user.User).options(*query_options)
+    user = None
 
     if user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
-        return (
+        user = (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User.user_id)
             .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
+
     elif user_id:
-        return query.filter(m_user.User.user_id == user_id).first()
+        user = query.filter(m_user.User.user_id == user_id).first()
     elif username:
-        return query.filter(m_user.User.username == username).first()
+        user = query.filter(m_user.User.username == username).first()
     elif email:
-        return query.filter(m_user.User.email == email).first()
+        user = query.filter(m_user.User.email == email).first()
+    
+    if user:
+        return user
     else:
-        raise HTTPException(status_code=400, detail="Invalid parameters")
+        raise HTTPException(status_code=404, detail="Not Found")
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -58,11 +65,12 @@ def get_user_security(
         query_options.append(joinedload(m_user.UserSecurity.user_2fa))
 
     query = db.query(m_user.UserSecurity).options(*query_options)
+    user_security = None
 
     if user_id:
         user_security = query.filter_by(user_id=user_id).first()
 
-    else:
+    elif user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
 
@@ -75,16 +83,16 @@ def get_user_security(
     if user_security:
         return user_security
     else:
-        raise HTTPException(status_code=400, detail="Invalid parameters")
+        raise HTTPException(status_code=400, detail="Invalid Parameters")
 
 
-def get_user_tokens(
-    db: Session, user_uuid: uuid.UUID = None, user_id: str = None
-) -> m_user.UserTokens:
+def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_user.UserTokens:
     query = db.query(m_user.UserTokens)
+    user_tokens = None
+
     if user_id:
         user_tokens = query.filter_by(user_id=user_id).all()
-    else:
+    elif user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
         user_tokens = (
@@ -96,14 +104,16 @@ def get_user_tokens(
     if user_tokens:
         return user_tokens
     else:
-        raise HTTPException(status_code=400, detail="Invalid parameters")
+        raise HTTPException(status_code=400, detail="Invalid Parameters")
 
 
 def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_user.User2FA:
     query = db.query(m_user.User2FA)
+    user_2fa = None
+
     if user_id:
         user_2fa = query.filter_by(user_id=user_id).first()
-    else:
+    elif user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
         user_2fa = (
@@ -115,4 +125,4 @@ def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) 
     if user_2fa:
         return user_2fa
     else:
-        raise HTTPException(status_code=400, detail="Invalid parameters")
+        raise HTTPException(status_code=400, detail="Invalid Parameters")

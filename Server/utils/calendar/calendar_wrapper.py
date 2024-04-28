@@ -9,6 +9,7 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 
+# TODO Max size of source
 class calendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
     def __init__(
         self,
@@ -24,6 +25,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         self.backend = backend
         self.type = type
         self.source = source
+        self.check_required = check_required
 
         self.exam_keywords = [
             "klausur",
@@ -69,7 +71,6 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
                 raise ValueError("No source provided!")
         else:
             self.source = source
-        
 
         if isinstance(self.source, dict):
             if self.backend == "iCalender":
@@ -138,8 +139,10 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
     def __ical_get_data_single(self, source: str) -> Dict[str, any]:
         source_url = self.__ical_get_source_url(source)
-        data = requests.get(source_url).content.decode("utf-8")
+        data = requests.get(source_url, stream=True).content.decode("utf-8")
+             
         if data:
+
             json_data = self.__ical_convert_to_json(data)
             if json_data.get("events"):
                 return {"data": json_data, "hash": self.__dict_hash(json_data)}

@@ -1,17 +1,29 @@
-from sqlalchemy import Column, Integer, String, TIMESTAMP, BOOLEAN, JSON, ForeignKey, CheckConstraint, Uuid, UniqueConstraint
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    TIMESTAMP,
+    BOOLEAN,
+    JSON,
+    ForeignKey,
+    CheckConstraint,
+    Uuid,
+    UniqueConstraint,
+)
 from config.database import Base
 from sqlalchemy.orm import validates, relationship
 import json
 import uuid
 
+
 class CalendarCustom(Base):
     __tablename__ = "calendar_custom"
-    id = Column(Integer, primary_key=True, index=True)
-    university_id = Column(Integer, ForeignKey("university.id"), nullable=True)
+    calendar_custom_id = Column(Integer, primary_key=True, index=True)
+    university_id = Column(Integer, ForeignKey("university.university_id"), nullable=True)
 
     course_name = Column(String(255), nullable=False, unique=True)
 
-    source_backend_id = Column(Integer, ForeignKey("calendar_backend.id"), nullable=False)
+    source_backend_id = Column(Integer, ForeignKey("calendar_backend.calendar_backend_id"), nullable=False)
     source_url = Column(String(255), nullable=False, unique=True)
 
     data = Column(JSON, nullable=False)
@@ -20,22 +32,20 @@ class CalendarCustom(Base):
     refresh_interval = Column(Integer, nullable=False, default=15)  # In minutes
     last_updated = Column(TIMESTAMP, nullable=False)
 
-    verified = Column(
-        BOOLEAN, default=False
-    )  # True if the data is from a verified source
+    verified = Column(BOOLEAN, default=False)  # True if the data is from a verified source (not used yet will be implemented later in the project)
     last_modified = Column(TIMESTAMP, nullable=False)
 
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
 
-    __table_args__ = (UniqueConstraint('university_id', 'course_name', name='uix_university_id_course_name'),)
+    __table_args__ = (UniqueConstraint("university_id", "course_name", name="uix_university_id_course_name"),)
 
     @validates("data")
     def validate_data(self, key, data):
         if len(json.dumps(data)) > 200 * 1024:  # 200 Kilobytes
             raise ValueError("Data is too large!")
         return data
-    
+
     @validates("refresh_interval")
     def validate_refresh_interval(self, key, interval):
         if interval % 15 != 0 or interval > 120:
@@ -45,13 +55,13 @@ class CalendarCustom(Base):
 
 class CalendarNative(Base):
     __tablename__ = "calendar_native"
-    id = Column(Integer, primary_key=True, index=True)
+    calendar_native_id = Column(Integer, primary_key=True, index=True)
 
-    university_id = Column(Integer, ForeignKey("university.id"), nullable=False)
+    university_id = Column(Integer, ForeignKey("university.university_id"), nullable=False)
 
     course_name = Column(String(255), nullable=False, unique=True)
 
-    source_backend_id = Column(Integer, ForeignKey("calendar_backend.id"), nullable=False)
+    source_backend_id = Column(Integer, ForeignKey("calendar_backend.calendar_backend_id"), nullable=False)
     source = Column(String(255), nullable=False)
 
     data = Column(JSON, nullable=False)
@@ -62,17 +72,16 @@ class CalendarNative(Base):
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
 
-    __table_args__ = (UniqueConstraint('university_id', 'course_name', name='uix_university_id_course_name'),)
-
-    
+    __table_args__ = (UniqueConstraint("university_id", "course_name", name="uix_university_id_course_name"),)
 
 
 class University(Base):
     __tablename__ = "university"
-    id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(Uuid(as_uuid=True), unique=True, nullable=False, default=uuid.uuid4)
+    university_id = Column(Integer, primary_key=True, index=True)
+    university_uuid = Column(Uuid(as_uuid=True), unique=True, nullable=False, default=uuid.uuid4)
+    university_name = Column(String(255), nullable=False, unique=True)
+
     address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=True)
-    name = Column(String(255), nullable=False, unique=True)
     rooms = Column(JSON, nullable=True)
     domains = Column(JSON, nullable=True)
 
@@ -82,18 +91,18 @@ class University(Base):
 
 class CalendarBackend(Base):
     __tablename__ = "calendar_backend"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), nullable=False, unique=True)
+    calendar_backend_id = Column(Integer, primary_key=True, index=True)
+    backend_name = Column(String(255), nullable=False, unique=True)
     last_modified = Column(TIMESTAMP, nullable=False)
 
 
 class UserCalendar(Base):
     __tablename__ = "calendar_users"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    calendar_users_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False, unique=True)
 
-    custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.id"), nullable=True)
-    native_calendar_id = Column(Integer, ForeignKey("calendar_native.id"), nullable=True)
+    custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.calendar_custom_id"), nullable=True)
+    native_calendar_id = Column(Integer, ForeignKey("calendar_native.calendar_native_id"), nullable=True)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 

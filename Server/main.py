@@ -67,11 +67,10 @@ async def repeated_task():
                
 
                 # Native Calendar updates only between 6:00 and 18:00
-                if current_time.hour > 6 and current_time.hour > 18:
+                if current_time.hour > 6 and current_time.hour < 18:
                     progress_id_update_calendar_dhbw_mannheim = progress.add_task(
                         "[bold green]Native-Calendar-DHBWMannheim[/bold green] Updating...", total=None
                     )
-                    native_calender_loops += 1
 
                     # Update every 1 hours all calendars, otherwise only the active ones (user has subscribed to it) 
                     if native_calender_loops % 4 == 0:
@@ -89,7 +88,7 @@ async def repeated_task():
                     progress_ids_update_custom.append(
                         (
                             progress.add_task(
-                                f"[bold green]CalendarCustom-{backend.name}[/bold green] Updating...", total=None
+                                f"[bold green]CalendarCustom-{backend.backend_name}[/bold green] Updating...", total=None
                             ),
                             backend,
                         )
@@ -104,14 +103,13 @@ async def repeated_task():
                         )
                     )
 
-
                 # TODO @xxchillkroetexx: Update every 15 minutes necessary?
                 progress_id_canteen_menu = progress.add_task(
                     "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
                 )
                 tasks.append(create_task(update_canteen_menus, progress, progress_id_canteen_menu))
+                native_calender_loops += 1
                 #await asyncio.gather(*tasks, return_exceptions=True)
-
                 progress.stop()
             await asyncio.sleep(60 * 15)  # 15 minutes wait
     except asyncio.CancelledError:
