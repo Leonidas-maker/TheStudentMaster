@@ -15,10 +15,6 @@ function ModuleNavigator() {
         navigation.navigate('OverviewStack', { screen: 'Dualis' })
     };
 
-    const handleFlashcardsPress = () => {
-        navigation.navigate('OverviewStack', { screen: 'Flashcards' })
-    };
-
     const handleMealPlanPress = () => {
         navigation.navigate('OverviewStack', { screen: 'MealPlan' })
     };
@@ -48,18 +44,6 @@ function ModuleNavigator() {
                         <View className="flex-row items-center">
                             <Icon name="school" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">Dualis</Text>
-                        </View>
-                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
-                    </View>
-                </TouchableOpacity>
-                <View className="border-b border-gray-700 my-2" />
-                <TouchableOpacity
-                    onPress={handleFlashcardsPress}
-                >
-                    <View className="flex-row justify-between items-center">
-                        <View className="flex-row items-center">
-                            <Icon name="style" size={20} color="#E0E0E2" />
-                            <Text className="text-font_primary font-bold text-lg ml-2">Flashcards</Text>
                         </View>
                         <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
                     </View>
