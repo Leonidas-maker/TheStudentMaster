@@ -13,6 +13,7 @@ interface DayViewProps {
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
+// TODO Add swipe to change week
 const DayView: React.FC<DayViewProps> = ({
     selectedDate,
     setSelectedDate,

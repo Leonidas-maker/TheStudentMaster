@@ -6,8 +6,6 @@ import DashboardSVG from '../../public/images/svg/navigatorIcons/inactive/Dashbo
 import ActiveDashboardSVG from '../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG';
 import DualisSVG from '../../public/images/svg/navigatorIcons/inactive/DualisSVG';
 import ActiveDualisSVG from '../../public/images/svg/navigatorIcons/active/ActiveDualisSVG';
-import FlashcardsSVG from '../../public/images/svg/navigatorIcons/inactive/FlashcardsSVG';
-import ActiveFlashcardsSVG from '../../public/images/svg/navigatorIcons/active/ActiveFlashcardsSVG';
 import MealPlanSVG from '../../public/images/svg/navigatorIcons/inactive/MealPlanSVG';
 import ActiveMealPlanSVG from '../../public/images/svg/navigatorIcons/active/ActiveMealPlanSVG';
 import OverviewSVG from '../../public/images/svg/navigatorIcons/inactive/OverviewSVG';
@@ -15,7 +13,6 @@ import ActiveOverviewSVG from '../../public/images/svg/navigatorIcons/active/Act
 
 import Dashboard from '../screens/dashboard/Dashboard';
 import Dualis from '../screens/dualis/Dualis';
-import Flashcards from '../screens/flashcards/Flashcards';
 import MealPlan from '../screens/mealPlan/MealPlan';
 import OverviewStack from './OverviewStack';
 
@@ -63,20 +60,6 @@ function HomeBottomTabs() {
                                 return <ActiveDualisSVG width={size} height={size} fill={color} />;
                             } else {
                                 return <DualisSVG width={size} height={size} fill={color} />;
-                            }
-                        },
-                    }}
-                />
-                <Tab.Screen
-                    name="Flashcards"
-                    component={Flashcards}
-                    options={{
-                        headerTitle: 'TheStudentMaster',
-                        tabBarIcon: ({ color, size, focused }) => {
-                            if (focused) {
-                                return <ActiveFlashcardsSVG width={size} height={size} fill={color} />;
-                            } else {
-                                return <FlashcardsSVG width={size} height={size} fill={color} />;
                             }
                         },
                     }}
