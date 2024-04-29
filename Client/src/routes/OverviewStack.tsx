@@ -12,6 +12,10 @@ import Profile from '../screens/profile/Profile';
 import ResponsibleDisclosure from '../screens/responsibleDisclosure/ResponsibleDisclosure';
 import Login from '../screens/accountManagement/login/Login';
 import Registration from '../screens/accountManagement/registration/Registration';
+import ForgotPassword from '../screens/accountManagement/forgotPassword/ForgotPassword';
+import AddMfa from '../screens/accountManagement/mfa/AddMfa';
+import VerifyLogin from '../screens/accountManagement/mfa/VerifyLogin';
+import VerifyRegistration from '../screens/accountManagement/registration/VerifyRegistration';
 
 const Stack = createStackNavigator();
 
@@ -42,6 +46,10 @@ function OverviewStack() {
                 <Stack.Screen name="ResponsibleDisclosure" component={ResponsibleDisclosure} />
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Registration" component={Registration} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+                <Stack.Screen name="AddMFA" component={AddMfa} />
+                <Stack.Screen name="VerifyLogin" component={VerifyLogin} />
+                <Stack.Screen name="VerifyRegistration" component={VerifyRegistration} />
             </Stack.Navigator>
         </>
     );
