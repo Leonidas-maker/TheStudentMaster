@@ -31,6 +31,18 @@ function AccountNavigator() {
         navigation.navigate('OverviewStack', { screen: 'VerifyRegistration' })
     };
 
+    const handleVerifyMFAPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'VerifyMFA' })
+    };
+
+    const handleNewPasswordPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'NewPassword' })
+    };
+
+    const handleVerifyForgotPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'VerifyForgot' })
+    };
+
     const { t } = useTranslation();
 
     return (
@@ -74,12 +86,48 @@ function AccountNavigator() {
                 </TouchableOpacity>
                 <View className="border-b border-gray-700 my-2" />
                 <TouchableOpacity
+                    onPress={handleVerifyForgotPress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="apps" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">Verify Forgot</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={handleNewPasswordPress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="apps" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">New Password</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
                     onPress={handleAddMFAPress}
                 >
                     <View className="flex-row justify-between items-center">
                         <View className="flex-row items-center">
                             <Icon name="apps" size={20} color="#E0E0E2" />
                             <Text className="text-font_primary font-bold text-lg ml-2">Add MFA</Text>
+                        </View>
+                        <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
+                    </View>
+                </TouchableOpacity>
+                <View className="border-b border-gray-700 my-2" />
+                <TouchableOpacity
+                    onPress={handleVerifyMFAPress}
+                >
+                    <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center">
+                            <Icon name="apps" size={20} color="#E0E0E2" />
+                            <Text className="text-font_primary font-bold text-lg ml-2">Verify MFA</Text>
                         </View>
                         <Icon name="arrow-forward-ios" size={20} color="#E0E0E2" />
                     </View>
