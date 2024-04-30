@@ -14,8 +14,11 @@ import Login from '../screens/accountManagement/login/Login';
 import Registration from '../screens/accountManagement/registration/Registration';
 import ForgotPassword from '../screens/accountManagement/forgotPassword/ForgotPassword';
 import AddMfa from '../screens/accountManagement/mfa/AddMfa';
-import VerifyLogin from '../screens/accountManagement/mfa/VerifyLogin';
+import VerifyLogin from '../screens/accountManagement/login/VerifyLogin';
 import VerifyRegistration from '../screens/accountManagement/registration/VerifyRegistration';
+import VerifyMfa from '../screens/accountManagement/mfa/VerifyMfa';
+import NewPassword from '../screens/accountManagement/forgotPassword/NewPassword';
+import VerifyForgot from '../screens/accountManagement/forgotPassword/VerifyForgot';
 
 const Stack = createStackNavigator();
 
@@ -50,6 +53,9 @@ function OverviewStack() {
                 <Stack.Screen name="AddMFA" component={AddMfa} />
                 <Stack.Screen name="VerifyLogin" component={VerifyLogin} />
                 <Stack.Screen name="VerifyRegistration" component={VerifyRegistration} />
+                <Stack.Screen name="VerifyMFA" component={VerifyMfa} />
+                <Stack.Screen name="NewPassword" component={NewPassword} />
+                <Stack.Screen name="VerifyForgot" component={VerifyForgot} />
             </Stack.Navigator>
         </>
     );
