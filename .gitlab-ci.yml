@@ -14,7 +14,7 @@ black-format:
         git config user.email "gitlab-ci@example.com"
         git add .
         git commit -m "Format code using Black"
-        git push https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
+        git push git@gitlab.com:themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
       else
         echo "No changes to commit. Code is already formatted correctly."
       fi
@@ -37,7 +37,7 @@ prettier-format:
         git config user.email "gitlab-ci@example.com"
         git add .
         git commit -m "Format code using Prettier"
-        git push https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
+        git push git@gitlab.com:themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
       else
         echo "No changes to commit. Code is already formatted correctly."
       fi
