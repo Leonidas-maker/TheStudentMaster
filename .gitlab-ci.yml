@@ -12,6 +12,8 @@ black-format:
       if [ -n "$(git status --porcelain)" ]; then
         mkdir -p ~/.ssh
         echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
         git config user.name "GitLab CI/CD"
         git config user.email "gitlab-ci@example.com"
         git add .
@@ -37,6 +39,8 @@ prettier-format:
       if [ -n "$(git status --porcelain)" ]; then
         mkdir -p ~/.ssh
         echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
         git config user.name "GitLab CI/CD"
         git config user.email "gitlab-ci@example.com"
         git add .
