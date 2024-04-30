@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from datetime import datetime, timedelta
 
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
@@ -32,24 +33,31 @@ def canteen_read_all(db: Session = Depends(get_db)) -> list[dict]:
     return [canteen.as_dict() for canteen in db.query(m_canteen.Canteen).all()]
 
 
-@canteen_router.get("/{canteen_id}", response_model=ResGetCanteen)
+@canteen_router.get("/{canteen_short_name}", response_model=ResGetCanteen)
 def canteen_read(
-    canteen_id: Annotated[int, "The ID of the canteen to retrieve."],
-    db: Session = Depends(get_db),
-):
-    return (
-        db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first().as_dict()
-    )
-
-
-@canteen_router.get("/{canteen_id}/address", response_model=ResGetCanteenAddress)
-def canteen_read_all_details(
-    canteen_id: Annotated[int, "The ID of the canteen to retrieve."],
+    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
     db: Session = Depends(get_db),
 ):
     return (
         db.query(m_canteen.Canteen)
-        .filter_by(canteen_id=canteen_id)
+        .filter_by(canteen_short_name=canteen_short_name)
+        .first()
+        .as_dict()
+    )
+
+
+@canteen_router.get(
+    "/{canteen_short_name}/address", response_model=ResGetCanteenAddress
+)
+def canteen_read_all_details(
+    canteen_short_name: Annotated[
+        str, "The short name of the canteen to retrieve the address for."
+    ],
+    db: Session = Depends(get_db),
+):
+    return (
+        db.query(m_canteen.Canteen)
+        .filter_by(canteen_short_name=canteen_short_name)
         .first()
         .as_dict_complete()
     )
@@ -114,12 +122,49 @@ def canteen_read_menu_day(
     return return_value
 
 
-# TODO: not finished
-# @canteen_router.get("/canteen/menu/{day}", response_model=list[ResGetCanteenMenu])
-# def canteen_read_menu(
-#     day: Annotated[str, "The day to retrieve the menu for."],
-#     db: Session = Depends(get_db),
-# ) -> list[dict]:
-#     return [
-#         menu.as_dict() for menu in db.query(m_canteen.Menu).filter_by(day=day).all()
-#     ]
+@canteen_router.get(
+    "/menu/{canteen_short_name}/currentweek", response_model=ResGetCanteenMenu
+)
+def canteen_read_canteen_menu(
+    canteen_short_name: Annotated[
+        str, "The short name of the canteen to retrieve the menu for."
+    ],
+    db: Session = Depends(get_db),
+) -> ResGetCanteenMenu:
+
+    menus = (
+        db.query(m_canteen.Menu)
+        .filter_by(
+            canteen_id=db.query(m_canteen.Canteen)
+            .filter_by(canteen_short_name=canteen_short_name)
+            .first()
+            .canteen_id
+        )
+        .all()
+    )
+    return_value = dict()
+    return_value["canteen_name"] = (
+        menus[0].canteen.canteen_name if menus[0].canteen.canteen_name else None
+    )
+    return_value["canteen_short_name"] = (
+        menus[0].canteen.canteen_short_name
+        if menus[0].canteen.canteen_short_name
+        else None
+    )
+    return_value["image_url"] = (
+        menus[0].canteen.image_url if menus[0].canteen.image_url else None
+    )
+    return_value["menu"] = list()
+
+    return_value["menu"] = [
+        {
+            "dish_type": menu.dish_type,
+            "dish": menu.dish.description,
+            "price": menu.dish.price,
+            "serving_date": menu.serving_date,
+        }
+        for menu in sorted(menus, key=lambda x: x.serving_date)
+        if menu.serving_date.date() > (datetime.now()-timedelta(days=datetime.now().weekday())).date()
+    ]
+
+    return return_value
