@@ -69,10 +69,7 @@ def canteen_read_all_details(
 
 
 @canteen_router.get("/{canteen_short_name}/menu/all", response_model=ResGetCanteenMenu)
-def canteen_read_menu_all(
-    canteen_short_name: Annotated[
-        str, "The short name of the canteen to retrieve the menu for."
-    ],
+def canteen_read_menu_all(canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the menu for."],
     db: Session = Depends(get_db),
 ) -> dict:
     canteen = (
@@ -122,9 +119,7 @@ def canteen_read_menu_day(
     return return_value
 
 
-@canteen_router.get(
-    "/menu/{canteen_short_name}/currentweek", response_model=ResGetCanteenMenu
-)
+@canteen_router.get("/menu/{canteen_short_name}/currentweek", response_model=ResGetCanteenMenu)
 def canteen_read_canteen_menu(
     canteen_short_name: Annotated[
         str, "The short name of the canteen to retrieve the menu for."

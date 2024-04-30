@@ -230,13 +230,7 @@ def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
 # ========================= Menu ========================= #
 # ======================================================== #
 # TODO: Still bullshit for getting
-def get_menu(
-    db: Session,
-    canteen_id: int,
-    dish_id: int,
-    dish_type: str,
-    serving_date: str,
-) -> m_canteen.Menu:
+def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving_date: str) -> m_canteen.Menu:
 
     if not (canteen_id and dish_id and dish_type and serving_date):
         raise ValueError(
