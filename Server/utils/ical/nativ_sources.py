@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 def get_source_dhbw_ma() -> dict[str, str]:
     url = "https://vorlesungsplan.dhbw-mannheim.de/ical.php"
     response = requests.get(url)

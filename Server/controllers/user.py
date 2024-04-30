@@ -15,6 +15,7 @@ from middleware.general import create_address
 # ======================= Register ======================= #
 # ======================================================== #
 
+
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
         new_address = create_address(db, user.address)
@@ -50,6 +51,7 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 # ======================================================== #
 # ====================== Update User ===================== #
 # ======================================================== #
+
 
 def update_user(db: Session, user: s_user.User):
     # TODO Check if something changed

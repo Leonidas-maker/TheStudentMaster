@@ -1,13 +1,17 @@
-# Dualis 
+# Dualis
 
 ## Login - Post call
+
 ### URL
+
 `https://dualis.dhbw.de/scripts/mgrqispi.dll`
 
 ### Header
+
 - **Content-Type:** `application/x-www-form-urlencoded`
 
 ### Parameter
+
 - **usrname:** `{Email}`
 - **pass:** `{Password}`
 - **APPNAME:** `CampusNet`
@@ -20,19 +24,22 @@
 - **platform:** (nicht spezifiziert)
 
 ### Response Header:
+
 - **Set-Cookie:** `cnsc`
 - **REFRESH:** `ARGUMENTS: Get SessionID -N910493016265489`
-
 
 ## Grades- Get call
 
 ### URL
+
 `https://dualis.dhbw.de/scripts/mgrqispi.dll`
 
 ### Header
+
 - **Cookie**: `Previous received cookie`
 
 ### Parameter
+
 - **APPNAME:** `CampusNet`
 - **PRGNAME:** `COURSERESULTS`
 - **ARGUMENTS:** `{session},-N000307,{semester_id}`
