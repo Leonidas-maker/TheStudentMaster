@@ -151,7 +151,7 @@ def get_tokens_private(
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
     if not (folder_path / "refresh_private_key.pem").exists() and not (folder_path / "access_private_key.pem").exists():
         generate_keys()
-        
+
     # Get the refresh private key
     refresh_private_key = load_key("refresh_private_key.pem")
 

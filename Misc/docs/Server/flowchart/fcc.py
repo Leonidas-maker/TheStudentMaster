@@ -5,6 +5,7 @@ from graphviz import Digraph
 import sys
 from collections import defaultdict
 
+
 class FunctionAnalysisVisitor(ast.NodeVisitor):
     def __init__(self, own_modules):
         super().__init__()
@@ -28,7 +29,11 @@ class FunctionAnalysisVisitor(ast.NodeVisitor):
         called_function = None
         module_prefix = None
         # Check if the call is to a function from an imported module
-        if isinstance(node.func, ast.Attribute) and hasattr(node.func.value, 'id') and node.func.value.id in self.imported_own_modules:
+        if (
+            isinstance(node.func, ast.Attribute)
+            and hasattr(node.func.value, "id")
+            and node.func.value.id in self.imported_own_modules
+        ):
             module_prefix = self.imported_own_modules[node.func.value.id]
             called_function = node.func.attr
         elif isinstance(node.func, ast.Name):
@@ -63,9 +68,10 @@ class FunctionAnalysisVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def climb_up(from_path: Path, to_path:Path = Path.cwd()) -> str:
+def climb_up(from_path: Path, to_path: Path = Path.cwd()) -> str:
     relative_path = from_path.relative_to(to_path)
-    return ".".join(relative_path.parts)[:-3]    
+    return ".".join(relative_path.parts)[:-3]
+
 
 def get_own_modules(path: Path = Path.cwd()) -> List[str]:
     own_modules = []
@@ -73,7 +79,8 @@ def get_own_modules(path: Path = Path.cwd()) -> List[str]:
         if file.name != "__init__.py":
             own_modules.append(climb_up(file))
     return own_modules
-   
+
+
 def get_routes(path: Path = Path.cwd()) -> List[Path]:
     routes = []
     for file in path.glob("routes/*.py"):
@@ -81,14 +88,21 @@ def get_routes(path: Path = Path.cwd()) -> List[Path]:
             routes.append(file)
     return routes
 
+
 def get_non_routes(path: Path = Path.cwd()) -> List[Path]:
     non_routes = []
     routes = get_routes()
     for file in path.glob("**/*.py"):
-        if file.name != "__init__.py" and file not in routes and not file.name == "main.py" and not file.name.startswith(("s", "m")):
+        if (
+            file.name != "__init__.py"
+            and file not in routes
+            and not file.name == "main.py"
+            and not file.name.startswith(("s", "m"))
+        ):
             non_routes.append(file)
 
     return non_routes
+
 
 def analyse(own_modules: List[str], files: List[Path]) -> dict:
     functions = {}
@@ -103,19 +117,20 @@ def analyse(own_modules: List[str], files: List[Path]) -> dict:
                 functions[f"{climb_up(file)}.{function}"] = []
             for call in calls:
                 functions[f"{climb_up(file)}.{function}"].append((call[0], f"{climb_up(file)}.{call[1]}"))
-    
 
     return functions
-    
+
+
 def depend_on(functions: dict, function: str):
     for main_function, called_functions in functions.items():
         if called_functions:
-            _, called_functions_name= zip(*called_functions)
+            _, called_functions_name = zip(*called_functions)
             called_functions_name = list(called_functions_name)
-        
+
             if function in called_functions_name:
                 return True
     return False
+
 
 def split_function_calls(functions: dict):
     empty_functions = {}
@@ -131,7 +146,8 @@ def split_function_calls(functions: dict):
             empty_functions[mainfunction] = called_functions
     return empty_functions, depending_functions, independing_functions
 
-#TODO Recusive functions not implemented
+
+# TODO Recusive functions not implemented
 def combine_functions(functions: dict) -> dict:
     empty_functions, depending_functions, independing_functions = split_function_calls(functions)
 
@@ -152,14 +168,13 @@ def combine_functions(functions: dict) -> dict:
                 modified_calls.append(call)
         # Update the dictionary with the modified list of calls
         depending_functions[function] = modified_calls
-        if function in depending_functions_depending_calls: 
+        if function in depending_functions_depending_calls:
             combine_needed = True
 
     if combine_needed:
-        #print("First\n", depending_functions)
+        # print("First\n", depending_functions)
         depending_functions = combine_functions(depending_functions)
-        #print("\nSecond", depending_functions)
-    
+        # print("\nSecond", depending_functions)
 
     for function, calls in independing_functions.items():
         modified_calls = []
@@ -174,36 +189,39 @@ def combine_functions(functions: dict) -> dict:
                 modified_calls.append(call)
         independing_functions[function] = modified_calls
     return independing_functions
-    
+
+
 def get_call_name(calls: tuple):
     if isinstance(calls[1], tuple):
         return calls[1][0]
     return calls[1]
-    
 
-def füge_nebenfunktionen_korrigiert_hinzu(dot, startpunkt, aufrufe, pfad_prefix=''):
+
+def füge_nebenfunktionen_korrigiert_hinzu(dot, startpunkt, aufrufe, pfad_prefix=""):
     letzter_knoten = startpunkt
     for zeile, aufruf in aufrufe:
         if isinstance(aufruf, tuple) and aufruf[1]:  # NF mit weiteren Aufrufen
             nf, unteraufrufe = aufruf
-            eindeutige_nf_id = f'{pfad_prefix}{nf}_{zeile}'
+            eindeutige_nf_id = f"{pfad_prefix}{nf}_{zeile}"
             # Erstelle einen umrandeten Kasten für NF, die selbst aufrufen
-            with dot.subgraph(name=f'cluster_{eindeutige_nf_id}') as c:
-                c.attr(color='red', label=nf)
-                untereindeutiger_id = f'{eindeutige_nf_id}_unter'
-                c.node(untereindeutiger_id, f'{nf}\n(Zeile {zeile})', shape='box')
+            with dot.subgraph(name=f"cluster_{eindeutige_nf_id}") as c:
+                c.attr(color="red", label=nf)
+                untereindeutiger_id = f"{eindeutige_nf_id}_unter"
+                c.node(untereindeutiger_id, f"{nf}\n(Zeile {zeile})", shape="box")
                 # Rekursiv für untergeordnete Aufrufe
-                füge_nebenfunktionen_korrigiert_hinzu(c, untereindeutiger_id, unteraufrufe, pfad_prefix=eindeutige_nf_id+'_')
+                füge_nebenfunktionen_korrigiert_hinzu(
+                    c, untereindeutiger_id, unteraufrufe, pfad_prefix=eindeutige_nf_id + "_"
+                )
             # Verweise von der vorherigen NF (oder HF) auf den umrandeten Kasten
-            dot.edge(letzter_knoten, untereindeutiger_id, style='dashed')
+            dot.edge(letzter_knoten, untereindeutiger_id, style="dashed")
             letzter_knoten = untereindeutiger_id
         else:  # Einfache NF ohne weitere Aufrufe
             if isinstance(aufruf, tuple):
                 nf, _ = aufruf
             else:
                 nf = aufruf
-            eindeutige_nf_id = f'{pfad_prefix}{nf}_{zeile}'
-            dot.node(eindeutige_nf_id, f'{nf}\n(Zeile {zeile})')
+            eindeutige_nf_id = f"{pfad_prefix}{nf}_{zeile}"
+            dot.node(eindeutige_nf_id, f"{nf}\n(Zeile {zeile})")
             dot.edge(letzter_knoten, eindeutige_nf_id)
             letzter_knoten = eindeutige_nf_id
 
@@ -216,17 +234,15 @@ def draw_graph(functions: dict, file_path: Path = (Path(__file__).parent / "flow
             aufruf_struktur[hf].append((zeile, nf))
 
     # Neues Diagramm erstellen mit separater Behandlung jeder Hauptfunktion
-    dot = Digraph(comment='Flowdiagramm mit separaten Hauptfunktionen', format='png', graph_attr={'rankdir': 'LR'})
+    dot = Digraph(comment="Flowdiagramm mit separaten Hauptfunktionen", format="png", graph_attr={"rankdir": "LR"})
 
     # Hauptfunktionen und deren Aufrufe hinzufügen
     for hf, aufrufe in aufruf_struktur.items():
-        dot.node(hf, hf, shape='box', color='lightblue2', style='filled')
+        dot.node(hf, hf, shape="box", color="lightblue2", style="filled")
         füge_nebenfunktionen_korrigiert_hinzu(dot, hf, aufrufe)
 
     # Diagramm rendern und Pfad zurückgeben
     dot.render(file_path, view=True)
-
-
 
 
 if __name__ == "__main__":
@@ -234,10 +250,10 @@ if __name__ == "__main__":
 
     # routes = get_routes()
     # routes_analyse = analyse(own_modules, routes)
-    
+
     non_routes = get_non_routes()
     non_routes_analyse = analyse(own_modules, non_routes)
-    
+
     # print("Routes")
     # for file, functions in routes_analyse.items():
     #     print(f"{file}: {functions}\n")
@@ -252,7 +268,7 @@ if __name__ == "__main__":
     # print("\nDepending Functions")
     # for file, functions in depending_functions.items():
     #     print(f"{file}: {functions}")
-    
+
     # print("\nEmpty Functions")
     # for file, functions in empty_functions.items():
     #     print(f"{file}: {functions}")

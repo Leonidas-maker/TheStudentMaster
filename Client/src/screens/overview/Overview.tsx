@@ -9,19 +9,19 @@ import ProfileView from "../../components/profileView/ProfileView";
 import AccountNavigator from "../../components/navigator/AccountNavigator";
 
 function Overview(props: any) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    return (
-        <ScrollView className='h-screen bg-white dark:bg-primary'>
-            <ProfileView />
-            <ModuleNavigator />
-            <AccountNavigator />
-            <OverviewNavigator />
-            <View className='justify-center items-center my-2'>
-                <Text className='text-white'>App Version: {expo.version} ❤️</Text>
-            </View>
-        </ScrollView>
-    );
+  return (
+    <ScrollView className="h-screen bg-white dark:bg-primary">
+      <ProfileView />
+      <ModuleNavigator />
+      <AccountNavigator />
+      <OverviewNavigator />
+      <View className="justify-center items-center my-2">
+        <Text className="text-white">App Version: {expo.version} ❤️</Text>
+      </View>
+    </ScrollView>
+  );
 }
 
 export default Overview;
