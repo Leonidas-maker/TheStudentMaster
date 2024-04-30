@@ -10,10 +10,19 @@ def fetch_menu(
 ) -> dict:
     match canteen_short_name:
         case "dhbw_eppelheim":
-            return fetch_menu_dhbw_eppel(week_offset)
+            try:
+                return fetch_menu_dhbw_eppel(week_offset)
+            except Exception as e:
+                print("Error fetching DHBW Eppelheim Menu")
+                print(e)
+                return {}
         case _:
-            return fetch_menu_general(canteen_short_name, week_offset)
-
+            try:
+                return fetch_menu_general(canteen_short_name, week_offset)
+            except Exception as e:
+                # print("Error fetching Menu, general")
+                # print(e)
+                return {}
 
 def fetch_menu_dhbw_eppel(
     week_offset: int,
@@ -101,9 +110,9 @@ def fetch_menu_general(
         raise ValueError("week_offset must be less than 4")
 
     if not canteen_short_name:
-        raise ValueError("canteen_id is required")
+        raise ValueError("canteen_short_name is required")
     if not isinstance(canteen_short_name, str):
-        raise ValueError("canteen_id must be a string")
+        raise ValueError("canteen_short_name must be a string")
 
     date = datetime.now().day + 7 * week_offset
 
@@ -136,8 +145,6 @@ def fetch_menu_general(
             url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-2024%25252d03%25252d{date}-view-week.html"
         case "mensaria_wohlgelegen":
             url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-2024%25252d03%25252d{date}-view-week.html"
-        # case "dhbw_eppelheim":
-        #     url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Speisenausgabe+DHBW+Eppelheim-date-2024%25252d03%25252d{date}-view-week.html"
         case _:
             raise ValueError("Invalid canteen_id").add_note(
                 "canteen_id must be one of the following: schlossmensa, greens, mensawagon, hochschule_mannheim, cafeteria_musikhochschule, popakademie, mensaria_metropol, mensaria_wohlgelegen, dhbw_eppelheim"
