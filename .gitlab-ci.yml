@@ -10,6 +10,8 @@ black-format:
     - black --line-length 120 --target-version py312 .
     - |
       if [ -n "$(git status --porcelain)" ]; then
+        mkdir -p ~/.ssh
+        echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         git config user.name "GitLab CI/CD"
         git config user.email "gitlab-ci@example.com"
         git add .
@@ -33,6 +35,8 @@ prettier-format:
       "**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}"
     - |
       if [ -n "$(git status --porcelain)" ]; then
+        mkdir -p ~/.ssh
+        echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
         git config user.name "GitLab CI/CD"
         git config user.email "gitlab-ci@example.com"
         git add .
