@@ -1,0 +1,63 @@
+stages:
+  - format
+  - test
+
+black-format:
+  stage: format
+  image: python:3.12
+  script:
+    - pip install black
+    - black --line-length 120 --target-version py312 .
+    - |
+      if [ -n "$(git status --porcelain)" ]; then
+        git config user.name "GitLab CI/CD"
+        git config user.email "gitlab-ci@example.com"
+        git add .
+        git commit -m "Format code using Black"
+        git push https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
+      else
+        echo "No changes to commit. Code is already formatted correctly."
+      fi
+  rules:
+    - changes:
+        - "**/*.py"
+
+prettier-format:
+  stage: format
+  image: node:lts
+  script:
+    - npm install --global prettier
+    - prettier
+      "!.gitlab-ci.yml"
+      --write
+      "**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}"
+    - |
+      if [ -n "$(git status --porcelain)" ]; then
+        git config user.name "GitLab CI/CD"
+        git config user.email "gitlab-ci@example.com"
+        git add .
+        git commit -m "Format code using Prettier"
+        git push https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/themastercollection/thestudentmaster.git HEAD:$CI_COMMIT_REF_NAME
+      else
+        echo "No changes to commit. Code is already formatted correctly."
+      fi
+  rules:
+    - changes:
+        - "**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}"
+
+black:
+  stage: test
+  image: python:3.12
+  script:
+    - pip install black
+    - black --check --line-length 120 .
+
+prettier:
+  stage: test
+  image: node:lts
+  script:
+    - npm install --global prettier
+    - prettier
+      "!.gitlab-ci.yml"
+      --check
+      "**/*.{js,jsx,ts,tsx,json,css,scss,md,yml}"
