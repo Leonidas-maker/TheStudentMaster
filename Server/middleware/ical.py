@@ -7,11 +7,12 @@ from models.sql_models.m_ical import ICalCustom, ICalDHBWMannheim
 import utils.ical.nativ_sources as nativ_sources
 from utils.ical.general import get_ical_data, get_icals_data
 
+
 # ======================================================== #
 # ===================== ICal Updater ===================== #
 # ======================================================== #
 def update_ical_custom(db: Session, progress, task_id):
-    icals = db.query(ICalCustom).all() 
+    icals = db.query(ICalCustom).all()
     progress.update(task_id, total=len(icals), refresh=True)
     for ical in icals:
         progress.update(task_id, description=f"[bold green]iCal-Custom[/bold green] Update {ical.name}")
@@ -40,15 +41,16 @@ def update_ical_dhbw_mannheim(db: Session, progress, task_id, only_active: bool 
             ical.hash = ical_hash
             db.add(ical)
         progress.update(task_id, advance=1)
-        
+
     db.commit()
 
-def update_all_ical_dhbw_mannheim(db: Session, progress, task_ids:tuple):
+
+def update_all_ical_dhbw_mannheim(db: Session, progress, task_ids: tuple):
     try:
         icals = db.query(ICalDHBWMannheim).all()
         available_sources = nativ_sources.get_source_dhbw_ma()
         progress.update(task_ids[0], total=len(icals), refresh=True)
-        
+
         for i, ical in enumerate(icals):
             progress.update(task_ids[0], description=f"[bold green]iCal-DHBWMannheim[/bold green] Update {ical.name}")
             if ical.source not in available_sources.values():

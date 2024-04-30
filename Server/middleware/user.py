@@ -78,9 +78,7 @@ def get_user_security(
         raise HTTPException(status_code=400, detail="Invalid parameters")
 
 
-def get_user_tokens(
-    db: Session, user_uuid: uuid.UUID = None, user_id: str = None
-) -> m_user.UserTokens:
+def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_user.UserTokens:
     query = db.query(m_user.UserTokens)
     if user_id:
         user_tokens = query.filter_by(user_id=user_id).all()

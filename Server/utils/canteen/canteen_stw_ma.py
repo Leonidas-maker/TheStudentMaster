@@ -181,9 +181,7 @@ def fetch_menu_general(
         for i in range(0, len(raw_price_list), 2):
             menu_prices.append(f"{raw_price_list[i+1]}: {raw_price_list[i]}")
 
-        if not len(menu_items) == len(menu_prices) and len(menu_items) == len(
-            menu_names
-        ):
+        if not len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names):
             print("Error: Length of menu items and prices do not match")
             return
 

@@ -53,4 +53,4 @@ class Country(Base):
     country = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    cities  = relationship("City", cascade="save-update", back_populates="country")
+    cities = relationship("City", cascade="save-update", back_populates="country")

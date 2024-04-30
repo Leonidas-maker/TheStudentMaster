@@ -37,9 +37,7 @@ def canteen_read(
     canteen_id: Annotated[int, "The ID of the canteen to retrieve."],
     db: Session = Depends(get_db),
 ):
-    return (
-        db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first().as_dict()
-    )
+    return db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first().as_dict()
 
 
 @canteen_router.get("/{canteen_id}/address", response_model=ResGetCanteenAddress)
@@ -47,12 +45,7 @@ def canteen_read_all_details(
     canteen_id: Annotated[int, "The ID of the canteen to retrieve."],
     db: Session = Depends(get_db),
 ):
-    return (
-        db.query(m_canteen.Canteen)
-        .filter_by(canteen_id=canteen_id)
-        .first()
-        .as_dict_complete()
-    )
+    return db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first().as_dict_complete()
 
 
 # ======================================================== #
@@ -62,16 +55,10 @@ def canteen_read_all_details(
 
 @canteen_router.get("/{canteen_short_name}/menu/all", response_model=ResGetCanteenMenu)
 def canteen_read_menu_all(
-    canteen_short_name: Annotated[
-        str, "The short name of the canteen to retrieve the menu for."
-    ],
+    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the menu for."],
     db: Session = Depends(get_db),
 ) -> dict:
-    canteen = (
-        db.query(m_canteen.Canteen)
-        .filter_by(canteen_short_name=canteen_short_name)
-        .first()
-    )
+    canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
     menu = list()
     for line in db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all():
         menu_row = dict()
@@ -98,12 +85,8 @@ def canteen_read_menu_day(
     for menu in db.query(m_canteen.Menu).filter_by(serving_date=day).all():
         menu_row = dict()
         menu_row["canteen_name"] = menu.canteen.canteen_name
-        menu_row["canteen_short_name"] = (
-            menu.canteen.canteen_short_name if menu.canteen.canteen_short_name else None
-        )
-        menu_row["image_url"] = (
-            menu.canteen.image_url if menu.canteen.image_url else None
-        )
+        menu_row["canteen_short_name"] = menu.canteen.canteen_short_name if menu.canteen.canteen_short_name else None
+        menu_row["image_url"] = menu.canteen.image_url if menu.canteen.image_url else None
         menu_row["menu"] = {
             "dish_type": menu.dish_type,
             "dish": menu.dish.description,

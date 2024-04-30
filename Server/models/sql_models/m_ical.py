@@ -20,6 +20,7 @@ class ICalCustom(Base):
             raise ValueError("Data is too large!")
         return data
 
+
 class ICalDHBWMannheim(Base):
     __tablename__ = "ical_dhbw_mannheim"
     id = Column(Integer, primary_key=True, index=True)
