@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView } from "react-native";
 
-function Dualis() {
+const Dualis: React.FC = () => {
 
     const { t } = useTranslation();
 

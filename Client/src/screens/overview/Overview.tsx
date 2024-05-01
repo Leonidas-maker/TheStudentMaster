@@ -8,7 +8,7 @@ import OverviewNavigator from "../../components/navigator/OverviewNavigator";
 import ProfileView from "../../components/profileView/ProfileView";
 import AccountNavigator from "../../components/navigator/AccountNavigator";
 
-function Overview(props: any) {
+const Overview: React.FC = () => {
     const { t } = useTranslation();
 
     return (

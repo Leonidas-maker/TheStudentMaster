@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, TextInput, Keyboard, TouchableOpacity } from "react-native";
 
-function NewPassword() {
+const NewPassword: React.FC = () => {
 
     const { t } = useTranslation();
 

@@ -1,8 +1,8 @@
-import { useEffect }  from "react";
+import React, { useEffect }  from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ActivityIndicator } from "react-native";
 
-const Loading = (props: any) => {
+const Loading: React.FC = (props: any) => {
 	const { navigation } = props;
 
 	const { t } = useTranslation();

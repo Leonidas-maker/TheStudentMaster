@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, TextInput, Keyboard, TouchableOpacity, NativeSyntheticEvent, TextInputKeyPressEventData } from "react-native";
 import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 
-function VerifyForgot() {
+const VerifyForgot: React.FC = () => {
 
     const { t } = useTranslation();
 
