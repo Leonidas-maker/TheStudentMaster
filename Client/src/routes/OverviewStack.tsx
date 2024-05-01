@@ -1,5 +1,7 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'react-native';
+
 import Dashboard from '../screens/dashboard/Dashboard';
 import Loading from '../screens/loading/Loading';
 import Overview from '../screens/overview/Overview';
@@ -22,7 +24,7 @@ import VerifyForgot from '../screens/accountManagement/forgotPassword/VerifyForg
 
 const Stack = createStackNavigator();
 
-function OverviewStack() {
+const OverviewStack: React.FC = () => {
     return (
         <>
             <StatusBar barStyle="light-content" />

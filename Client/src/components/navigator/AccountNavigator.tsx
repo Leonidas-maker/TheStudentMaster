@@ -1,10 +1,11 @@
+import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 
-function AccountNavigator() {
+const AccountNavigator: React.FC = () => {
     const navigation = useNavigation<any>();
 
     const handleLoginPress = () => {

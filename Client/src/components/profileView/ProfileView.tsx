@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
-function ProfileView() {
+const ProfileView: React.FC = () => {
     const navigation = useNavigation<any>();
 
     const handleProfilePress = () => {

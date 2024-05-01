@@ -4,7 +4,7 @@ import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
 import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 
-function VerifyRegistration() {
+const VerifyRegistration: React.FC = () => {
 
     const { t } = useTranslation();
 

@@ -5,8 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 //! Icons for GitLab, GitHub and TheMasterCollection need change
-
-function OverviewNavigator() {
+const OverviewNavigator: React.FC = () => {
     const navigation = useNavigation<any>();
 
     //! Placeholder for testing if logout can be set to invisble and visible

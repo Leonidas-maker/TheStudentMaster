@@ -17,7 +17,7 @@ interface UniversityDropdownItem {
     value: string;
 }
 
-function Registration() {
+const Registration: React.FC = () => {
 
     const { t } = useTranslation();
     const [isNotification, setIsNotification] = useState(false);

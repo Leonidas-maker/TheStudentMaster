@@ -9,7 +9,7 @@ interface UniversityDropdownItem {
 }
 
 // TODO Add funcitonality to select a Course
-function CourseSelect() {
+const CourseSelect: React.FC = () => {
 
     const { t } = useTranslation();
 

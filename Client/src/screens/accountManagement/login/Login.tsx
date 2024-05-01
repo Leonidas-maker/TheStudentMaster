@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, TextInput, TouchableOpacity, Keyboard } from "react-native";
 
-function Login() {
+const Login: React.FC = () => {
     const { t } = useTranslation();
 
     const dismissKeyboard = () => {

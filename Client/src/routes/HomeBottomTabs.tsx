@@ -1,3 +1,4 @@
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -18,7 +19,7 @@ import OverviewStack from './OverviewStack';
 
 const Tab = createBottomTabNavigator();
 
-function HomeBottomTabs() {
+const HomeBottomTabs: React.FC = () => {
     return (
         <SafeAreaProvider>
             <StatusBar barStyle="light-content" />

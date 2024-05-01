@@ -1,7 +1,8 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView } from "react-native";
 
-function VerifyMfa() {
+const VerifyMfa: React.FC = () => {
 
     const { t } = useTranslation();
 
