@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SelectList } from 'react-native-dropdown-select-list';
 
 import universityData from "../testData/courseData.json";
+import Dropdown from "../../../components/dropdown/Dropdown";
 
 interface University {
     university_name: string;
@@ -79,32 +80,8 @@ const Registration: React.FC = () => {
                     <TextInput className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 mt-3" autoCapitalize="none" enterKeyHint="done" placeholder="Passwort wiederholen" placeholderTextColor={"#733932"} secureTextEntry={true} autoComplete="new-password" />
                 </View>
                 <View>
-                    <View className="px-3 pt-3">
-                        <SelectList
-                            setSelected={onSelectUniversity}
-                            data={universities}
-                            save="value"
-                            search={false}
-                            placeholder={"Universität auswählen"}
-                            boxStyles={{ backgroundColor: "#444444", borderColor: "#444444" }}
-                            dropdownStyles={{ backgroundColor: "#444444", borderColor: "#444444" }}
-                            dropdownTextStyles={{ color: "#FFFFFF" }}
-                            inputStyles={{ color: "#FFFFFF" }}
-                        />
-                    </View>
-                    <View className="p-3">
-                        <SelectList
-                            setSelected={onSelectCourse}
-                            data={courses}
-                            save="value"
-                            search={true}
-                            placeholder={"Kurs auswählen"}
-                            boxStyles={{ backgroundColor: "#444444", borderColor: "#444444" }}
-                            dropdownStyles={{ backgroundColor: "#444444", borderColor: "#444444" }}
-                            dropdownTextStyles={{ color: "#FFFFFF" }}
-                            inputStyles={{ color: "#FFFFFF" }}
-                        />
-                    </View>
+                    <Dropdown setSelected={onSelectUniversity} values={universities} placeholder="Universität auswählen" />
+                    <Dropdown setSelected={onSelectCourse} values={courses} placeholder="Kurs auswählen" search={true} />
                 </View>
                 <View className="justify-center items-center">
 
