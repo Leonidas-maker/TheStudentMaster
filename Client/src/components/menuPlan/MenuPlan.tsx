@@ -7,13 +7,19 @@ import { startOfWeek, subWeeks, addWeeks, isSameWeek, isSaturday, isSunday, setD
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
 import DishView from "./DishView";
-import CanteenSelect from "./CanteenSelect";
 import WeekSelector from "../selector/WeekSelector";
+
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
+interface CanteenProps {
+    key: string;
+    value: string;
+};
 
 // TODO Implement a function to get the canteen name data from the backend
 // TODO Implement a function to get the menu data from the backend
 import canteenData from "./testData/canteenSample.json";
 import canteenSample from "./testData/sample.json";
+import Dropdown from "../dropdown/Dropdown";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -27,6 +33,7 @@ const MenuPlan: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [todaysDate, setTodaysDate] = useState(new Date());
     const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+    const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
 
     // ====================================================== //
     // ====================== Constants ===================== //
@@ -48,6 +55,15 @@ const MenuPlan: React.FC = () => {
     // Sets the selected date to the current date and adjusts it for the weekend (if weekend then set to friday)
     useEffect(() => {
         setSelectedDate(date => adjustDateForWeekend(date));
+    }, []);
+
+    // Sets the canteen names to the canteen name data
+    useEffect(() => {
+        const names: CanteenProps[] = canteenData.canteens.map((canteenName, index) => ({
+            key: String(index + 1),
+            value: canteenName
+        }));
+        setCanteenNames(names);
     }, []);
 
     // Scrolls to the top of the ScrollView when the selected date changes
@@ -118,7 +134,7 @@ const MenuPlan: React.FC = () => {
             <WeekSelector mode={"menu"} onBackPress={handleBackPress} onForwardPress={handleForwardPress} currentDate={currentWeek} startDate={startOfMenuDate} endDate={endOfMenuDate} />
             <DayView selectedDate={selectedDate} setSelectedDate={setSelectedDate} startOfWeekDate={startOfWeekDate} />
             <DishView menu={canteenSample} scrollViewRef={scrollViewRef} selectedCanteen={selectedCanteen} selectedDate={selectedDate} />
-            <CanteenSelect canteenNameData={canteenData} setSelectedCanteen={setSelectedCanteen} />
+            <Dropdown setSelected={setSelectedCanteen} values={canteenNames} placeholder="Mensa auswählen" />
         </View>
     );
 }
