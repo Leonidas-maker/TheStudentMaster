@@ -1,7 +1,5 @@
 # TheStudentMaster
 
-# Project Readme: DHBW Student App
-
 ### Project Description:
 
 TheStudentMaster is a project being developed to facilitate the daily lives of students at the Cooperative State University Baden-Württemberg (DHBW). The app offers various features and services tailored specifically to the needs of students. It is being developed by a group of six students enrolled in the Cyber Security program at DHBW.
@@ -69,7 +67,7 @@ Now you can scan the QR code shown with your iOS or Android device and the app s
 
 #### Backend
 
-⚠️ Please note that you must already have `Python v11` installed on your computer in order to run the backend application.
+⚠️ Please note that you must already have `Python v3.11` installed on your computer in order to run the backend application.
 
 ##### Installation and Setup
 
