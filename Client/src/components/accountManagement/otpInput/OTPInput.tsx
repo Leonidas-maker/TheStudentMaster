@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
+import TextFieldInput from "../../textInputs/TextFieldInput";
 
 interface OTPInputProps {
     otpLength?: number;
 }
 
 // TODO Implement paste functionality
+// TODO Block non-numeric characters
 const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6 }) => {
     const [otp, setOtp] = useState<string[]>(Array(otpLength).fill(""));
     const inputRefs = useRef<(TextInput | null)[]>(Array(otpLength).fill(null));
@@ -19,9 +21,17 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6 }) => {
     }, [otp, otpLength]);
 
     const handleOtpChange = (text: string, index: number) => {
-        const newOtp = [...otp];
-        newOtp[index] = text;
-        setOtp(newOtp);
+        const newText = text.replace(/[^0-9]/g, '');
+        if (newText !== text) {
+            const lastValidValue = otp[index] || '';
+            const newOtp = [...otp];
+            newOtp[index] = lastValidValue;
+            setOtp(newOtp);
+        } else {
+            const newOtp = [...otp];
+            newOtp[index] = newText;
+            setOtp(newOtp);
+        }
     };
 
     const handleKeyPress = (e: NativeSyntheticEvent<TextInputKeyPressEventData>, index: number) => {
@@ -65,7 +75,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6 }) => {
     return (
         <View className="justify-center items-center flex-row flex-wrap">
             {Array.from({ length: otpLength }).map((_, index) => (
-                <TextInput
+                <TextFieldInput
                     key={index}
                     ref={el => inputRefs.current[index] = el}
                     value={otp[index]}
@@ -75,8 +85,8 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6 }) => {
                     keyboardType="numeric"
                     maxLength={1}
                     editable={isFieldEditable(index)}
-                    style={{ width: 40, height: 40 }}
-                    className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 text-center m-1"
+                    isOTP={true}
+                    placeholder=''
                 />
             ))}
         </View>

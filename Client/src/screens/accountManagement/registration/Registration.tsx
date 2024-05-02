@@ -6,6 +6,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 
 import universityData from "../testData/courseData.json";
 import Dropdown from "../../../components/dropdown/Dropdown";
+import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 
 interface University {
     university_name: string;
@@ -74,10 +75,10 @@ const Registration: React.FC = () => {
             <ScrollView className='h-screen bg-primary'>
                 <View className="justify-center items-center">
                     <Text className="text-font_primary pt-10 text-4xl font-bold">Account erstellen</Text>
-                    <TextInput className="bg-white w-3/4 h-10 rounded-xl border-2 bosrder-white focus:border-red-500 opacity-50" autoCapitalize="none" autoFocus={true} enterKeyHint="next" placeholder="Nutzername" autoComplete="username" />
-                    <TextInput className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50" autoCapitalize="none" enterKeyHint="next" placeholder="E-Mail Adresse" autoComplete="email" />
-                    <TextInput className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 mt-3" autoCapitalize="none" enterKeyHint="done" placeholder="Passwort" placeholderTextColor={"#733932"} secureTextEntry={true} autoComplete="new-password" />
-                    <TextInput className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 mt-3" autoCapitalize="none" enterKeyHint="done" placeholder="Passwort wiederholen" placeholderTextColor={"#733932"} secureTextEntry={true} autoComplete="new-password" />
+                    <TextFieldInput autoCapitalize="none" autoFocus={true} enterKeyHint="next" placeholder="Nutzername" autoComplete="username" />
+                    <TextFieldInput autoCapitalize="none" enterKeyHint="next" placeholder="E-Mail Adresse" autoComplete="email" />
+                    <TextFieldInput autoCapitalize="none" enterKeyHint="next" placeholder="Passwort" secureTextEntry={true} autoComplete="new-password" />
+                    <TextFieldInput autoCapitalize="none" enterKeyHint="done" placeholder="Passwort wiederholen" secureTextEntry={true} autoComplete="new-password" />
                 </View>
                 <View>
                     <Dropdown setSelected={onSelectUniversity} values={universities} placeholder="Universität auswählen" />
