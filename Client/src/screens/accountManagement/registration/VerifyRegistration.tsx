@@ -1,8 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 
 import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
+import DefaultButton from "../../../components/buttons/DefaultButton";
 
 const VerifyRegistration: React.FC = () => {
 
@@ -18,9 +19,7 @@ const VerifyRegistration: React.FC = () => {
             </View>
             <OTPInput />
             <View className="justify-center items-center">
-                <TouchableOpacity className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 justify-center items-center mt-10">
-                    <Text className="text-black">Registrieren</Text>
-                </TouchableOpacity>
+                <DefaultButton text="Registrieren" />
             </View>
         </ScrollView>
     );

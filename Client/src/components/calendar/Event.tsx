@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, Platform } from 'react-native';
+import { View, Text, Modal, Platform, Pressable } from 'react-native';
 import 'nativewind';
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
@@ -10,6 +10,7 @@ import {
     calculateLeftPosition,
     calculateEventWidth
 } from './CalendarCalculations';
+import DefaultButton from '../buttons/DefaultButton';
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface EventProps {
@@ -126,9 +127,9 @@ const Event: React.FC<EventProps> = ({
     // ====================================================== //
     return (
         <View className='absolute w-full'>
-            <TouchableOpacity
+            <Pressable
                 onPress={handleEventPress}
-                className='bg-blue-500 rounded-lg shadow-sm'
+                className='bg-blue-500 rounded-lg shadow-sm active:bg-blue-600'
                 style={{
                     position: 'absolute',
                     top: topPosition,
@@ -147,7 +148,7 @@ const Event: React.FC<EventProps> = ({
                         <Text className='text-white px-1 text-xs absolute bottom-1'>{event.location}</Text>
                     </>
                 )}
-            </TouchableOpacity>
+            </Pressable>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -155,9 +156,8 @@ const Event: React.FC<EventProps> = ({
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <TouchableOpacity
+                <Pressable
                     className='flex-1 justify-center items-center'
-                    activeOpacity={1}
                     onPressOut={handleClosePress}>
                     <View className='bg-white p-5 rounded-2xl items-center shadow-md' onStartShouldSetResponder={() => true}>
                         <Text className='item-center pb-3'>{event.summary}</Text>
@@ -166,17 +166,11 @@ const Event: React.FC<EventProps> = ({
                         <Text className='item-center font-bold'>{`Ort: ${event.location}`}</Text>
                         {isWeb &&
                             <>
-                                <View className='pt-3'>
-                                    <TouchableOpacity
-                                        className='bg-blue-500 rounded-3xl p-3'
-                                        onPress={handleClosePress}>
-                                        <Text className='text-white font-bold items-center'>Schließen</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                <DefaultButton text='Schließen' />
                             </>
                         }
                     </View>
-                </TouchableOpacity>
+                </Pressable>
             </Modal>
         </View>
     );

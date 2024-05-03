@@ -1,9 +1,8 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, Modal, Platform } from 'react-native';
+import { View, ScrollView, Text, Modal, Platform, Pressable } from 'react-native';
 import 'nativewind';
 import { format, parseISO } from 'date-fns';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface DishProps {
@@ -93,13 +92,13 @@ const DishView: React.FC<DishProps> = ({
         <ScrollView className="flex-1" ref={scrollViewRef}>
             {dishes.length > 0 ? (
                 dishes.map((dish, index) => (
-                    <TouchableOpacity className='flex-1' onPress={handleDishPress}>
-                        <View key={index} className="m-2 p-2 bg-gray-400">
+                    <Pressable className='flex-1' onPress={handleDishPress}>
+                        <View key={index} className="m-2 p-2 bg-gray-400 active:bg-gray-500">
                             <Text>{dish.dish_type}: {dish.dish}</Text>
                             <Text>{dish.price}</Text>
                             <Text>{dish.serving_date}</Text>
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                 ))
             ) : (
                 <View className="m-2 p-2 bg-gray-400">
