@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, TouchableOpacity, Keyboard, TextInput, Switch } from "react-native";
+import { Text, View, ScrollView, Keyboard, Switch, Pressable } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { SelectList } from 'react-native-dropdown-select-list';
 
 import universityData from "../testData/courseData.json";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
+import DefaultButton from "../../../components/buttons/DefaultButton";
 
 interface University {
     university_name: string;
@@ -71,7 +71,7 @@ const Registration: React.FC = () => {
     // Checkbox for Terms and Conditions
     // Checkbox for Email Notifications
     return (
-        <TouchableOpacity activeOpacity={1} onPress={dismissKeyboard}>
+        <Pressable onPress={dismissKeyboard}>
             <ScrollView className='h-screen bg-primary'>
                 <View className="justify-center items-center">
                     <Text className="text-font_primary pt-10 text-4xl font-bold">Account erstellen</Text>
@@ -86,9 +86,7 @@ const Registration: React.FC = () => {
                 </View>
                 <View className="justify-center items-center">
 
-                    <TouchableOpacity className="bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 justify-center items-center mt-10">
-                        <Text className="text-black">Registrieren</Text>
-                    </TouchableOpacity>
+                    <DefaultButton text="Registrieren" />
                 </View>
                 <View className="m-4">
                     <Text className="text-font_primary text-xl font-bold mb-2">Weitere Optionen</Text>
@@ -117,7 +115,7 @@ const Registration: React.FC = () => {
                     </View>
                 </View>
             </ScrollView>
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 

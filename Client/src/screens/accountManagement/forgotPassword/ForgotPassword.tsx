@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, TextInput, Keyboard, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Keyboard, Pressable } from "react-native";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 
@@ -13,7 +13,7 @@ const ForgotPassword: React.FC = () => {
     };
 
     return (
-        <TouchableOpacity activeOpacity={1} onPress={dismissKeyboard}>
+        <Pressable onPress={dismissKeyboard}>
             <ScrollView className='h-screen bg-primary'>
                 <View className="p-3 justify-center items-center">
                     <Text className="text-font_primary text-3xl font-bold text-center">Du hast dein Passwort vergessen?</Text>
@@ -22,7 +22,7 @@ const ForgotPassword: React.FC = () => {
                     <DefaultButton text="Passwort zurücksetzen" />
                 </View>
             </ScrollView>
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 

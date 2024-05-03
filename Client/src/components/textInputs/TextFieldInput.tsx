@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from "react";
-import { View, TextInput, TextInputProps, NativeSyntheticEvent, TextInputChangeEventData, TextInputKeyPressEventData } from "react-native";
+import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputChangeEventData, TextInputKeyPressEventData } from "react-native";
 
 interface TextFieldInputProps {
     autoCapitalize?: "none" | "sentences" | "words" | "characters";

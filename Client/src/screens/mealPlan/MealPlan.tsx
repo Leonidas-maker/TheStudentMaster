@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View} from "react-native";
 
 import MenuPlan from "../../components/menuPlan/MenuPlan";
 
