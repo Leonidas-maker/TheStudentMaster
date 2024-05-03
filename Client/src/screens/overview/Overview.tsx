@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { expo } from "../../../app.json";
 import { Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import ProfileView from "../../components/profileView/ProfileView";
 import Navigator from "../../components/navigator/Navigator";
+import DefaultText from "../../components/textFields/DefaultText";
 
 const Overview: React.FC = () => {
     const { t } = useTranslation();
@@ -157,7 +158,7 @@ const Overview: React.FC = () => {
             <Navigator title={accountTitle} onPressFunctions={onPressAccountFunctions} texts={accountTexts} iconNames={accountIconNames} />
             <Navigator title={overviewTitle} onPressFunctions={onPressOverviewFunctions} texts={overviewTexts} iconNames={moduleIcons} isExternalLink={moduleIsExternalLink} />
             <View className='justify-center items-center my-2'>
-                <Text className='text-white'>App Version: {expo.version} ❤️</Text>
+                <DefaultText text={`App Version: ${expo.version} ❤️`} />
             </View>
         </ScrollView>
     );
