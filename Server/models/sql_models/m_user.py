@@ -1,10 +1,11 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, Uuid
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 from sqlalchemy.dialects.mysql import MEDIUMBLOB, INTEGER as INT
+from sqlalchemy.ext.orderinglist import ordering_list
+import uuid
 
 from config.database import Base
 from config.security import *
-import uuid
 from .m_general import *
 
 
@@ -19,9 +20,27 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    user_security = relationship("UserSecurity", back_populates="user", uselist=False)
-    user_uuid = relationship("UserUUID", back_populates="user", uselist=False)
+    user_security = relationship(
+        "UserSecurity",
+        back_populates="user",
+        uselist=False,
+        cascade="save-update, delete",
+        single_parent=True,
+    )
+    user_uuid = relationship(
+        "UserUUID", back_populates="user", uselist=False, cascade="save-update, delete"
+    )
     address = relationship("Address", uselist=False)
+
+    def as_dict(self):
+        return {
+            "username": self.username,
+            "email": self.email,
+            "user_uuid": self.user_uuid.user_uuid,
+            "avatar": self.avatar,
+            "address": self.address.as_dict_complete() if self.address else None,
+        }
+
 
 class UserUUID(Base):
     __tablename__ = "users_uuid"
@@ -30,7 +49,8 @@ class UserUUID(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    user = relationship("User", back_populates="user_uuid")
+    user = relationship("User", back_populates="user_uuid", uselist=False)
+
 
 # TODO New table for application tokens (application_id, user_id or security_id, refresh_token, last_modified) 1 to n relationship betweem user_security and application_tokens
 class UserSecurity(Base):
@@ -52,11 +72,19 @@ class UserSecurity(Base):
     verified = Column(Boolean, default=False)
     verify_otp = Column(String(255))  #! Equivalent to name simple_otp
     last_modified = Column(TIMESTAMP, nullable=False)
-    _2fa_enabled = Column(Boolean)
+    _2fa_enabled = Column(Boolean, default=False)
 
-    user = relationship("User", back_populates="user_security")
-    user_tokens = relationship("UserTokens", back_populates="user_security")
-    user_2fa = relationship("User2FA", back_populates="user_security", uselist=False)
+    user = relationship("User", back_populates="user_security", uselist=False)
+    user_tokens = relationship(
+        "UserTokens",
+        back_populates="user_security",
+        cascade="save-update, delete",
+        order_by="UserTokens.creation_time",
+        collection_class=ordering_list("creation_time"),
+    )  # * Performance improved by ordering tokens by creation_time
+    user_2fa = relationship(
+        "User2FA", back_populates="user_security", cascade="save-update, delete"
+    )
 
 
 class User2FA(Base):
@@ -70,7 +98,7 @@ class User2FA(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     # Relationship to UserSecurity
-    user_security = relationship("UserSecurity", back_populates="user_2fa")
+    user_security = relationship("UserSecurity", back_populates="user_2fa", uselist=False)
 
 
 class UserTokens(Base):
@@ -84,4 +112,4 @@ class UserTokens(Base):
     creation_time = Column(INT(11), nullable=False)
     expiration_time = Column(INT(11), nullable=False)
 
-    user_security = relationship("UserSecurity", back_populates="user_tokens", order_by="UserTokens.creation_time") #* Performance improved by ordering tokens by creation_time
+    user_security = relationship("UserSecurity", back_populates="user_tokens")

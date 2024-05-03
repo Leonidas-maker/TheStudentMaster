@@ -14,27 +14,16 @@ class Address(Base):
     city_id = Column(Integer, ForeignKey("cities.city_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    city = relationship("City")
-
-    def as_dict(self):
-        return {
-            "address_id": self.address_id,
-            "address1": self.address1,
-            "address2": self.address2,
-            "district": self.district,
-            "postal_code": self.postal_code,
-            "city_id": self.city_id,
-        }
+    city = relationship("City", cascade="save-update", back_populates="addresses")
 
     def as_dict_complete(self):
         return {
-            "address_id": self.address_id,
             "address1": self.address1,
             "address2": self.address2,
             "district": self.district,
             "postal_code": self.postal_code,
-            "city_id": self.city_id,
-            "city": self.city.as_dict_complete(),
+            "city": self.city.city,
+            "country": self.city.country.country,
         }
 
 
@@ -46,22 +35,9 @@ class City(Base):
     country_id = Column(Integer, ForeignKey("countries.country_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    country = relationship("Country")
+    country = relationship("Country", back_populates="cities")
 
-    def as_dict(self):
-        return {
-            "city_id": self.city_id,
-            "city": self.city,
-            "country_id": self.country_id,
-        }
-
-    def as_dict_complete(self):
-        return {
-            "city_id": self.city_id,
-            "city": self.city,
-            "country_id": self.country_id,
-            "country": self.country.as_dict(),
-        }
+    addresses = relationship("Address", cascade="save-update", back_populates="city")
 
 
 class Country(Base):
@@ -71,8 +47,4 @@ class Country(Base):
     country = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    def as_dict(self):
-        return {
-            "country_id": self.country_id,
-            "country": self.country,
-        }
+    cities  = relationship("City", cascade="save-update", back_populates="country")

@@ -94,8 +94,7 @@ class ResGetUser(UserBase):
     user_uuid: UUID4
 
     avatar: Optional[bytes] = None
-    address: CompleteAdress
-    last_modified: datetime
+    address: Optional[CompleteAdress] = None
 
     class Config:
         from_attributes = True
