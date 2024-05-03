@@ -4,9 +4,8 @@ import { View, ScrollView, Keyboard, Pressable } from "react-native";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
-import Subheading from "../../../components/textFields/Subheading";
 
-const ForgotPassword: React.FC = () => {
+const NewPassword: React.FC = () => {
   const { t } = useTranslation();
 
   const dismissKeyboard = () => {
@@ -17,14 +16,21 @@ const ForgotPassword: React.FC = () => {
     <Pressable onPress={dismissKeyboard}>
       <ScrollView className="h-screen bg-primary">
         <View className="p-3 justify-center items-center">
-          <Heading text="Du hast dein Passwort vergessen?" />
-          <Subheading text="Setze dein Passwort hier zurück indem du deine EMail Adresse eingibst." />
+          <Heading text="Gib dein neues Passwort ein" />
           <TextFieldInput
             autoCapitalize="none"
             autoFocus={true}
+            enterKeyHint="next"
+            placeholder="Neues Passwort"
+            autoComplete="new-password"
+            secureTextEntry={true}
+          />
+          <TextFieldInput
+            autoCapitalize="none"
             enterKeyHint="done"
-            placeholder="Email"
-            autoComplete="email"
+            placeholder="Neues Passwort wiederholen"
+            autoComplete="new-password"
+            secureTextEntry={true}
           />
           <DefaultButton text="Passwort zurücksetzen" />
         </View>
@@ -33,4 +39,4 @@ const ForgotPassword: React.FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default NewPassword;
