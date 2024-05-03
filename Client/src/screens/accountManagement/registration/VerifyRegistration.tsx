@@ -11,8 +11,6 @@ const VerifyRegistration: React.FC = () => {
 
     const { t } = useTranslation();
 
-    // TODO Implement paste functionality
-    // TODO I have to create own components for this stuff
     return (
         <ScrollView className='h-screen bg-primary'>
             <View className="justify-center items-center p-3">

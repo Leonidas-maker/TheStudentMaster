@@ -52,20 +52,6 @@ const HomeBottomTabs: React.FC = () => {
                     }}
                 />
                 <Tab.Screen
-                    name="Dualis"
-                    component={Dualis}
-                    options={{
-                        headerTitle: 'TheStudentMaster',
-                        tabBarIcon: ({ color, size, focused }) => {
-                            if (focused) {
-                                return <ActiveDualisSVG width={size} height={size} fill={color} />;
-                            } else {
-                                return <DualisSVG width={size} height={size} fill={color} />;
-                            }
-                        },
-                    }}
-                />
-                <Tab.Screen
                     name="Essensplan"
                     component={MealPlan}
                     options={{
