@@ -10,20 +10,20 @@ import DefaultButton from "../../../components/buttons/DefaultButton";
 // TODO Implement show Backup-Codes
 // TODO Implement save Backup-Codes as Screenshot
 const BackupMFA: React.FC = () => {
-    return (
-        <View className="h-screen bg-primary">
-            <Heading text="Geschafft!" />
-            <Subheading text="MFA wurde erfolgreich aktiviert" />
-            <DefaultText text="Bitte speichere deine Backup-Codes an einem sicheren Ort" />
-            <DefaultText text="Du kannst sie verwenden, wenn du keinen Zugriff auf deine Authenticator App hast" />
-            <DefaultText text="Die Codes können nicht wiederhergestellt werden" />
-            <DefaultText text="Solltest du sie verlieren, musst du dir einen neuen Account erstellen" />
-            <DefaultText text="Deine Backup-Codes:" />
+  return (
+    <View className="h-screen bg-primary">
+      <Heading text="Geschafft!" />
+      <Subheading text="MFA wurde erfolgreich aktiviert" />
+      <DefaultText text="Bitte speichere deine Backup-Codes an einem sicheren Ort" />
+      <DefaultText text="Du kannst sie verwenden, wenn du keinen Zugriff auf deine Authenticator App hast" />
+      <DefaultText text="Die Codes können nicht wiederhergestellt werden" />
+      <DefaultText text="Solltest du sie verlieren, musst du dir einen neuen Account erstellen" />
+      <DefaultText text="Deine Backup-Codes:" />
 
-            <DefaultButton text="Backup-Codes kopieren" />
-            <DefaultButton text="Mach einen Screenshot" />
-        </View>
-    );
+      <DefaultButton text="Backup-Codes kopieren" />
+      <DefaultButton text="Mach einen Screenshot" />
+    </View>
+  );
 };
 
 export default BackupMFA;

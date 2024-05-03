@@ -7,31 +7,31 @@ import Heading from "../../../components/textFields/Heading";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import QRCode from "react-native-qrcode-svg";
 
-// TODO Implement get QR-Code 
+// TODO Implement get QR-Code
 // TODO Implement copy code to clipboard
 const AddMfa: React.FC = () => {
+  const { t } = useTranslation();
 
-    const { t } = useTranslation();
+  const sampleQRData =
+    "https://gitlab.com/themastercollection/thestudentmaster";
 
-    const sampleQRData = "https://gitlab.com/themastercollection/thestudentmaster";
-
-    return (
-        <ScrollView className='h-screen bg-primary'>
-            <View className="justify-center items-center">
-                <Heading text="MFA aktivieren" />
-                <Subheading text="Scanne den QR-Code in deiner Authenticator App" />
-                <QRCode
-                    value={sampleQRData} 
-                    size={200} 
-                    color="black" 
-                    backgroundColor="white"
-                />
-                <DefaultText text="Du kannst den QR-Code nicht scannen?" />
-                <DefaultButton text="Drücke hier um den Code zu kopieren" />
-                <DefaultButton text="Verifzieren" />
-            </View>
-        </ScrollView>
-    );
-}
+  return (
+    <ScrollView className="h-screen bg-primary">
+      <View className="justify-center items-center">
+        <Heading text="MFA aktivieren" />
+        <Subheading text="Scanne den QR-Code in deiner Authenticator App" />
+        <QRCode
+          value={sampleQRData}
+          size={200}
+          color="black"
+          backgroundColor="white"
+        />
+        <DefaultText text="Du kannst den QR-Code nicht scannen?" />
+        <DefaultButton text="Drücke hier um den Code zu kopieren" />
+        <DefaultButton text="Verifzieren" />
+      </View>
+    </ScrollView>
+  );
+};
 
 export default AddMfa;

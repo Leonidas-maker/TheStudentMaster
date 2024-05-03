@@ -8,14 +8,14 @@ These guidelines are designed to ensure consistency and maintainability within o
 - **`__init__.py` Files**: Each directory containing Python modules should include an `__init__.py` to denote it as a package.
 - **Naming Conventions**: Follow industry standards for naming variables, functions, classes, and modules in Python. See the table below for examples.
 
-| Element        | Convention                   | Example                 |
-|----------------|------------------------------|-------------------------|
-| Class names    | CamelCase                    | `DatabaseManager`       |
-| Function names | Lowercase with underscores   | `update_record`         |
-| Variable names | Lowercase with underscores   | `user_id`               |
-| Module names   | Lowercase without spaces     | `email_utils`           |
-| Constants      | Uppercase with underscores   | `MAX_CONNECTIONS`       |
-| Controller files | Lowercase with underscores | `user_controller.py`    |
+| Element          | Convention                 | Example              |
+| ---------------- | -------------------------- | -------------------- |
+| Class names      | CamelCase                  | `DatabaseManager`    |
+| Function names   | Lowercase with underscores | `update_record`      |
+| Variable names   | Lowercase with underscores | `user_id`            |
+| Module names     | Lowercase without spaces   | `email_utils`        |
+| Constants        | Uppercase with underscores | `MAX_CONNECTIONS`    |
+| Controller files | Lowercase with underscores | `user_controller.py` |
 
 ## 2. Data Models and Schemas
 
