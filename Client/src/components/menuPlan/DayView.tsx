@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { format, addDays, isSameDay } from "date-fns";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
@@ -35,7 +35,7 @@ const DayView: React.FC<DayViewProps> = ({
         return (
           <View className="flex-1">
             {isFirstDay ? (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 className="items-center pt-2 z-10"
                 onPress={() => setSelectedDate(day)}
@@ -50,9 +50,9 @@ const DayView: React.FC<DayViewProps> = ({
                 >
                   {format(day, "d")}. {format(day, "LLL")}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ) : (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 className="items-center pt-2 border-l border-gray-200 z-10"
                 onPress={() => setSelectedDate(day)}
@@ -67,7 +67,7 @@ const DayView: React.FC<DayViewProps> = ({
                 >
                   {format(day, "d")}. {format(day, "LLL")}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             )}
           </View>
         );

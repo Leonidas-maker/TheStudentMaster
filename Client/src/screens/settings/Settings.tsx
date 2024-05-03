@@ -5,7 +5,7 @@ import { useColorScheme } from "nativewind";
 
 type SchemeType = "light" | "dark" | "system";
 
-function Settings() {
+const Settings: React.FC = () => {
   const { t } = useTranslation();
   const { colorScheme, setColorScheme } = useColorScheme();
   const [selectedScheme, setSelectedScheme] = useState<SchemeType>("system");
@@ -91,6 +91,6 @@ function Settings() {
       </View>
     </ScrollView>
   );
-}
+};
 
 export default Settings;

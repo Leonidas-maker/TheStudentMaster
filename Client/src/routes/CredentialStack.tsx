@@ -1,10 +1,11 @@
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "react-native";
 import Registration from "../screens/accountManagement/registration/Registration";
 
 const Stack = createStackNavigator();
 
-function CredentialStack() {
+const CredentialStack: React.FC = () => {
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -25,6 +26,6 @@ function CredentialStack() {
       </Stack.Navigator>
     </>
   );
-}
+};
 
 export default CredentialStack;

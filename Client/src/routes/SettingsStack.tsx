@@ -1,10 +1,11 @@
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "react-native";
 import Settings from "../screens/settings/Settings";
 
 const Stack = createStackNavigator();
 
-function SettingsStack() {
+const SettingsStack: React.FC = () => {
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -25,6 +26,6 @@ function SettingsStack() {
       </Stack.Navigator>
     </>
   );
-}
+};
 
 export default SettingsStack;

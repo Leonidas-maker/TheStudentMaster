@@ -1,3 +1,4 @@
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -18,7 +19,7 @@ import OverviewStack from "./OverviewStack";
 
 const Tab = createBottomTabNavigator();
 
-function HomeBottomTabs() {
+const HomeBottomTabs: React.FC = () => {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
@@ -47,22 +48,6 @@ function HomeBottomTabs() {
                 );
               } else {
                 return <DashboardSVG width={size} height={size} fill={color} />;
-              }
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Dualis"
-          component={Dualis}
-          options={{
-            headerTitle: "TheStudentMaster",
-            tabBarIcon: ({ color, size, focused }) => {
-              if (focused) {
-                return (
-                  <ActiveDualisSVG width={size} height={size} fill={color} />
-                );
-              } else {
-                return <DualisSVG width={size} height={size} fill={color} />;
               }
             },
           }}
@@ -103,6 +88,6 @@ function HomeBottomTabs() {
       </Tab.Navigator>
     </SafeAreaProvider>
   );
-}
+};
 
 export default HomeBottomTabs;
