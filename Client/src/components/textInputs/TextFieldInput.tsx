@@ -74,7 +74,10 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(({
     return (
         <TextInput
             style={isOTP ? { width: 40, height: 40 } : {}}
-            className={isOTP ? "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 text-center m-1" : "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 p-2"}
+            className={isOTP ?
+                "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 text-center m-1"
+                :
+                "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 p-2"}
             ref={ref}
             autoCapitalize={autoCapitalize}
             autoComplete={autoComplete}

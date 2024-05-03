@@ -1,6 +1,7 @@
 import React, { useEffect }  from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
+import DefaultText from "../../components/textFields/DefaultText";
 
 const Loading: React.FC = (props: any) => {
 	const { navigation } = props;
@@ -24,7 +25,7 @@ const Loading: React.FC = (props: any) => {
 	return (
 		<View className='flex h-screen items-center justify-center bg-primary'>
 			<ActivityIndicator size="large" />
-			<Text className='text-font_primary font-bold p-5'>Loading...</Text>
+			<DefaultText text="Loading..." />
 		</View>
 	);
 };

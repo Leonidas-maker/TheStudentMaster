@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
+import DefaultText from "../../components/textFields/DefaultText";
 
 const Dualis: React.FC = () => {
 
@@ -9,7 +10,7 @@ const Dualis: React.FC = () => {
     return (
         <ScrollView className='h-screen bg-primary'>
             <View>
-                <Text className="text-font_primary">Welcome to the Dualis page</Text>
+                <DefaultText text="Welcome to the Dualis page" />
             </View>
         </ScrollView>
     );

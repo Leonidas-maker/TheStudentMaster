@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, Keyboard, Switch, Pressable } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, ScrollView, Keyboard, Pressable } from "react-native";
 
 import universityData from "../testData/courseData.json";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
+import OptionSwitch from "../../../components/switch/OptionSwitch";
+import Heading from "../../../components/textFields/Heading";
 
 interface University {
     university_name: string;
@@ -65,6 +66,19 @@ const Registration: React.FC = () => {
         Keyboard.dismiss();
     };
 
+    // ====================================================== //
+    // ==================== OptionSwitch ==================== //
+    // ====================================================== //
+    const optionTitle = "Weitere Optionen";
+
+    const optionTexts = ["Benachrichtigungen", "2FA"];
+
+    const optionIconNames = ["dashboard", "school"];
+
+    const optionOnValueChanges = [toggleNotification, toggle2FA];
+
+    const optionValues = [isNotification, is2FA];
+
     // Username, Email, Password, Confirm Password, Register Button
     // Optional fields: Address, City, State, Zip Code, Country, Profile Picture
     // Checkbox for 2FA
@@ -74,7 +88,7 @@ const Registration: React.FC = () => {
         <Pressable onPress={dismissKeyboard}>
             <ScrollView className='h-screen bg-primary'>
                 <View className="justify-center items-center">
-                    <Text className="text-font_primary pt-10 text-4xl font-bold">Account erstellen</Text>
+                    <Heading text="Account erstellen" />
                     <TextFieldInput autoCapitalize="none" autoFocus={true} enterKeyHint="next" placeholder="Nutzername" autoComplete="username" />
                     <TextFieldInput autoCapitalize="none" enterKeyHint="next" placeholder="E-Mail Adresse" autoComplete="email" />
                     <TextFieldInput autoCapitalize="none" enterKeyHint="next" placeholder="Passwort" secureTextEntry={true} autoComplete="new-password" />
@@ -85,35 +99,9 @@ const Registration: React.FC = () => {
                     <Dropdown setSelected={onSelectCourse} values={courses} placeholder="Kurs auswählen" search={true} />
                 </View>
                 <View className="justify-center items-center">
-
                     <DefaultButton text="Registrieren" />
                 </View>
-                <View className="m-4">
-                    <Text className="text-font_primary text-xl font-bold mb-2">Weitere Optionen</Text>
-                    <View className="bg-secondary rounded-lg shadow-md p-4 border border-gray-700">
-                        <View className="flex-row justify-between items-center">
-                            <View className="flex-row items-center">
-                                <Icon name="dashboard" size={20} color="#E0E0E2" />
-                                <Text className="text-font_primary font-bold text-lg ml-2">Benachrichtigungen</Text>
-                            </View>
-                            <Switch
-                                onValueChange={toggleNotification}
-                                value={isNotification}
-                            />
-                        </View>
-                        <View className="border-b border-gray-700 my-2" />
-                        <View className="flex-row justify-between items-center">
-                            <View className="flex-row items-center">
-                                <Icon name="school" size={20} color="#E0E0E2" />
-                                <Text className="text-font_primary font-bold text-lg ml-2">2FA</Text>
-                            </View>
-                            <Switch
-                                onValueChange={toggle2FA}
-                                value={is2FA}
-                            />
-                        </View>
-                    </View>
-                </View>
+                <OptionSwitch title={optionTitle} texts={optionTexts} iconNames={optionIconNames} onValueChanges={optionOnValueChanges} values={optionValues} />
             </ScrollView>
         </Pressable>
     );
