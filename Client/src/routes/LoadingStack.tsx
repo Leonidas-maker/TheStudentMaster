@@ -1,3 +1,4 @@
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Loading from "../screens/loading/Loading";
 import HomeBottomTabs from "./HomeBottomTabs";
@@ -7,7 +8,7 @@ import CredentialStack from "./CredentialStack";
 
 const Stack = createStackNavigator();
 
-function LoadingStack() {
+const LoadingStack: React.FC = () => {
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -24,6 +25,6 @@ function LoadingStack() {
       </Stack.Navigator>
     </>
   );
-}
+};
 
 export default LoadingStack;

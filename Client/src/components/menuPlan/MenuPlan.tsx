@@ -21,18 +21,24 @@ import {
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
 import DishView from "./DishView";
-import CanteenSelect from "./CanteenSelect";
 import WeekSelector from "../selector/WeekSelector";
+
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
+interface CanteenProps {
+  key: string;
+  value: string;
+}
 
 // TODO Implement a function to get the canteen name data from the backend
 // TODO Implement a function to get the menu data from the backend
 import canteenData from "./testData/canteenSample.json";
 import canteenSample from "./testData/sample.json";
+import Dropdown from "../dropdown/Dropdown";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-function MenuPlan() {
+const MenuPlan: React.FC = () => {
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -43,6 +49,7 @@ function MenuPlan() {
   const [currentWeek, setCurrentWeek] = useState(
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
+  const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
 
   // ====================================================== //
   // ====================== Constants ===================== //
@@ -66,6 +73,17 @@ function MenuPlan() {
   // Sets the selected date to the current date and adjusts it for the weekend (if weekend then set to friday)
   useEffect(() => {
     setSelectedDate((date) => adjustDateForWeekend(date));
+  }, []);
+
+  // Sets the canteen names to the canteen name data
+  useEffect(() => {
+    const names: CanteenProps[] = canteenData.canteens.map(
+      (canteenName, index) => ({
+        key: String(index + 1),
+        value: canteenName,
+      }),
+    );
+    setCanteenNames(names);
   }, []);
 
   // Scrolls to the top of the ScrollView when the selected date changes
@@ -152,12 +170,13 @@ function MenuPlan() {
         selectedCanteen={selectedCanteen}
         selectedDate={selectedDate}
       />
-      <CanteenSelect
-        canteenNameData={canteenData}
-        setSelectedCanteen={setSelectedCanteen}
+      <Dropdown
+        setSelected={setSelectedCanteen}
+        values={canteenNames}
+        placeholder="Mensa auswählen"
       />
     </View>
   );
-}
+};
 
 export default MenuPlan;

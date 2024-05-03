@@ -1,18 +1,18 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
+import DefaultText from "../../components/textFields/DefaultText";
 
-function ResponsibleDisclosure() {
+const ResponsibleDisclosure: React.FC = () => {
   const { t } = useTranslation();
 
   return (
     <ScrollView className="h-screen bg-primary">
       <View>
-        <Text className="text-font_primary">
-          Welcome to the Responsible Disclosure page
-        </Text>
+        <DefaultText text="Welcome to the Responsible Disclosure page" />
       </View>
     </ScrollView>
   );
-}
+};
 
 export default ResponsibleDisclosure;
