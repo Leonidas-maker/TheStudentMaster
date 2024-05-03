@@ -53,15 +53,19 @@ const Overview: React.FC = () => {
         navigation.navigate('OverviewStack', { screen: 'VerifyForgot' })
     };
 
+    const handleBackupPress = () => {
+        navigation.navigate('OverviewStack', { screen: 'BackupMFA' })
+    };
+
     const accountTitle = "Account Management Screens";
 
     const onPressAccountFunctions = [handleLoginPagePress, handleRegistrationPress, handleForgotPress, handleVerifyForgotPress,
-        handleNewPasswordPress, handleAddMFAPress, handleVerifyMFAPress, handleVerifyLoginPress, handleVerifyRegistrationPress];
+        handleNewPasswordPress, handleAddMFAPress, handleVerifyMFAPress, handleVerifyLoginPress, handleVerifyRegistrationPress, handleBackupPress];
 
     const accountTexts = ["Login", "Registration", "Forgot Password", "Verify Forgot", "New Password", "Add MFA",
-        "Verify MFA", "Verify Login", "Verify Registration",];
+        "Verify MFA", "Verify Login", "Verify Registration", "Backup MFA"];
 
-    const accountIconNames = ["apps", "apps", "apps", "apps", "apps", "apps", "apps", "apps", "apps"];
+    const accountIconNames = ["apps", "apps", "apps", "apps", "apps", "apps", "apps", "apps", "apps", "apps"];
 
     // ====================================================== //
     // =================== ModuleNavigator ================== //

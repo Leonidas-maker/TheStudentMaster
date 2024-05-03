@@ -21,6 +21,7 @@ import VerifyRegistration from '../screens/accountManagement/registration/Verify
 import VerifyMfa from '../screens/accountManagement/mfa/VerifyMfa';
 import NewPassword from '../screens/accountManagement/forgotPassword/NewPassword';
 import VerifyForgot from '../screens/accountManagement/forgotPassword/VerifyForgot';
+import BackupMFA from '../screens/accountManagement/mfa/BackupMFA';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,7 @@ const OverviewStack: React.FC = () => {
                 <Stack.Screen name="VerifyMFA" component={VerifyMfa} />
                 <Stack.Screen name="NewPassword" component={NewPassword} />
                 <Stack.Screen name="VerifyForgot" component={VerifyForgot} />
+                <Stack.Screen name="BackupMFA" component={BackupMFA} />
             </Stack.Navigator>
         </>
     );
