@@ -68,7 +68,7 @@ class ResGetCanteenMenuDay(CanteenBase):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
-    menu: list[ResGetMenuDay]
+    menu: ResGetMenuDay
 
     class Config:
         from_attributes = True
