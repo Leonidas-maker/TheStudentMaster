@@ -30,9 +30,7 @@ class User(Base):
         cascade="save-update, delete",
         single_parent=True,
     )
-    user_uuid = relationship(
-        "UserUUID", back_populates="user", uselist=False, cascade="save-update, delete"
-    )
+    user_uuid = relationship("UserUUID", back_populates="user", uselist=False, cascade="save-update, delete")
     address = relationship("Address", uselist=False)
 
     def as_dict(self):
@@ -66,9 +64,7 @@ class UserSecurity(Base):
     forgot_password = Column(String(255))
 
     # ~~~~~~~~~~~~~~~~ Security ~~~~~~~~~~~~~~~ #
-    secutity_warns = Column(
-        Integer, default=0
-    )  # * Number of times suspicious activity has been detected max. 10
+    secutity_warns = Column(Integer, default=0)  # * Number of times suspicious activity has been detected max. 10
     locked = Column(Boolean, default=False)
 
     # ~~~~~~~~~~~~~~ Verification ~~~~~~~~~~~~~ #
@@ -85,9 +81,7 @@ class UserSecurity(Base):
         order_by="UserTokens.creation_time",
         collection_class=ordering_list("creation_time"),
     )  # * Performance improved by ordering tokens by creation_time
-    user_2fa = relationship(
-        "User2FA", back_populates="user_security", cascade="save-update, delete"
-    )
+    user_2fa = relationship("User2FA", back_populates="user_security", cascade="save-update, delete")
 
 
 class User2FA(Base):

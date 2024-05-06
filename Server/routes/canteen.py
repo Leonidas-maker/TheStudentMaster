@@ -72,11 +72,7 @@ def canteen_read_all_details(
 def canteen_read_menu_all(canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the menu for."],
     db: Session = Depends(get_db),
 ) -> dict:
-    canteen = (
-        db.query(m_canteen.Canteen)
-        .filter_by(canteen_short_name=canteen_short_name)
-        .first()
-    )
+    canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
     menu = list()
     for line in db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all():
         menu_row = dict()

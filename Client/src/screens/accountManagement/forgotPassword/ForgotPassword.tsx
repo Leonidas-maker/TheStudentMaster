@@ -1,17 +1,36 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView } from "react-native";
+import { View, ScrollView, Keyboard, Pressable } from "react-native";
+import TextFieldInput from "../../../components/textInputs/TextFieldInput";
+import DefaultButton from "../../../components/buttons/DefaultButton";
+import Heading from "../../../components/textFields/Heading";
+import Subheading from "../../../components/textFields/Subheading";
 
-function ForgotPassword() {
+const ForgotPassword: React.FC = () => {
+  const { t } = useTranslation();
 
-    const { t } = useTranslation();
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
-    return (
-        <ScrollView className='h-screen bg-primary'>
-            <View>
-                <Text className="text-font_primary">Welcome to the ForgotPassword page</Text>
-            </View>
-        </ScrollView>
-    );
-}
+  return (
+    <Pressable onPress={dismissKeyboard}>
+      <ScrollView className="h-screen bg-primary">
+        <View className="p-3 justify-center items-center">
+          <Heading text="Du hast dein Passwort vergessen?" />
+          <Subheading text="Setze dein Passwort hier zurück indem du deine EMail Adresse eingibst." />
+          <TextFieldInput
+            autoCapitalize="none"
+            autoFocus={true}
+            enterKeyHint="done"
+            placeholder="Email"
+            autoComplete="email"
+          />
+          <DefaultButton text="Passwort zurücksetzen" />
+        </View>
+      </ScrollView>
+    </Pressable>
+  );
+};
 
 export default ForgotPassword;

@@ -7,16 +7,16 @@ These guidelines are designed to ensure consistency and maintainability within o
 - **Directories and Files**: Organize code logically into specific directories named for their purpose or functionality. Maintain a clear hierarchy for component directories.
 - **File Naming Conventions**: Use PascalCase for React components and camelCase for instances, functions, and other variables.
 
-| Element           | Convention                   | Example                 |
-|-------------------|------------------------------|-------------------------|
-| Component files   | PascalCase                   | `Dashboard.tsx`         |
-| Function names    | camelCase                    | `fetchUserData`         |
-| Variable names    | camelCase                    | `userData`              |
-| Hook files        | camelCase with 'use' prefix  | `useUserProfile.ts`     |
-| Constants         | Uppercase with underscores   | `API_BASE_URL`          |
-| Service files     | camelCase                    | `apiClient.ts`          |
-| Utility files     | camelCase                    | `stringUtils.ts`        |
-| Test files        | PascalCase with `.test` suffix | `Dashboard.test.tsx`  |
+| Element         | Convention                     | Example              |
+| --------------- | ------------------------------ | -------------------- |
+| Component files | PascalCase                     | `Dashboard.tsx`      |
+| Function names  | camelCase                      | `fetchUserData`      |
+| Variable names  | camelCase                      | `userData`           |
+| Hook files      | camelCase with 'use' prefix    | `useUserProfile.ts`  |
+| Constants       | Uppercase with underscores     | `API_BASE_URL`       |
+| Service files   | camelCase                      | `apiClient.ts`       |
+| Utility files   | camelCase                      | `stringUtils.ts`     |
+| Test files      | PascalCase with `.test` suffix | `Dashboard.test.tsx` |
 
 ## 2. React Components and Screens
 
@@ -26,7 +26,6 @@ These guidelines are designed to ensure consistency and maintainability within o
 ## 3. Routing
 
 - **Routing**: Store route components in the `routes/` directory. Use descriptive names for route files, such as `HomeBottomTabs.tsx` and `SettingsStack.tsx`.
-
 
 ## 4. Styles and Static Resources
 
