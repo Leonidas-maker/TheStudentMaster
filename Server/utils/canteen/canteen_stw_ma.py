@@ -102,18 +102,22 @@ def fetch_menu_general(
     week_offset: int,
 ) -> dict:
 
+    #* check input
+    # check week_offset
     if not isinstance(week_offset, int):
         raise ValueError("week_offset must be an integer")
     if week_offset < 0:
         raise ValueError("week_offset must be a positive integer")
     if week_offset > 4:
         raise ValueError("week_offset must be less than 4")
-
+    
+    # check canteen_short_name
     if not canteen_short_name:
         raise ValueError("canteen_short_name is required")
     if not isinstance(canteen_short_name, str):
         raise ValueError("canteen_short_name must be a string")
 
+    # get dates
     date = datetime.now().day + 7 * week_offset
     day = f"0{date}" if date < 10 else f"{date}"
     month = f"0{datetime.now().month}" if datetime.now().month < 10 else f"{datetime.now().month}"
@@ -153,6 +157,7 @@ def fetch_menu_general(
                 "canteen_id must be one of the following: schlossmensa, greens, mensawagon, hochschule_mannheim, cafeteria_musikhochschule, popakademie, mensaria_metropol, mensaria_wohlgelegen, dhbw_eppelheim"
             )
 
+    # fetch menu from url
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
     rows = soup.find_all("tr")
@@ -188,23 +193,36 @@ def fetch_menu_general(
         raw_price_list = re.split(r"[\n\t]+", raw_price_list.text)
         raw_price_list = remove_empty_strings(raw_price_list)
         menu_prices = ["Montag"]
-        for i in range(0, len(raw_price_list), 2):
-            menu_prices.append(f"{raw_price_list[i+1]}: {raw_price_list[i]}")
+        for j in range(0, len(raw_price_list), 2):
+            # catch errors from the website regarding price
+            if not re.match(r"(Portion|Glas|pro 100g): \d+,\d{2} €", f"{raw_price_list[j+1]}: {raw_price_list[j]}"):
+                # if quantity is missing, add it
+                if re.match(r"\d+,\d{2} €", raw_price_list[j]):
+                    price = raw_price_list[j]
+                    raw_price_list[j] = "Portion"
+                    raw_price_list.insert(j, price)
+                # if price is missing, add it
+                if re.match(r"(Portion|Glas|pro 100g)", raw_price_list[j]):
+                    raw_price_list.insert(j, "-,-- €")
 
+            menu_prices.append(f"{raw_price_list[j+1]}: {raw_price_list[j]}")
+
+        # check if menu items and prices match
         if not len(menu_items) == len(menu_prices) and len(menu_items) == len(
             menu_names
         ):
             print("Error: Length of menu items and prices do not match")
             return
-
+        
+        # create menu dictionary
         list_items_prices = list()
-        for i in range(len(menu_items)):
+        for j in range(len(menu_items)):
 
             list_items_prices.append(
                 {
-                    "dish_type": menu_names[i],
-                    "description": menu_items[i],
-                    "price": menu_prices[i],
+                    "dish_type": menu_names[j],
+                    "description": menu_items[j],
+                    "price": menu_prices[j],
                     "serving_date": serving_date,
                 }
             )
