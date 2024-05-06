@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, BackgroundTasks
+from fastapi import FastAPI, Depends
 from fastapi_cdn_host import monkey_patch_for_docs_ui
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
@@ -16,7 +16,6 @@ from middleware.ical import update_all_ical_dhbw_mannheim, update_ical_dhbw_mann
 from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_general
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user, m_ical, m_general, m_canteen
