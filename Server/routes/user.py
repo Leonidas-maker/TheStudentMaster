@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-
+from models.sql_models import m_user, m_calendar
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user, s_calendar
@@ -45,9 +45,13 @@ def read_me(
 def update_me(
     new_user: s_user.UserUpdate, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
-    user = check_access_token(db, access_token, with_uuid=True, with_address=True, with_avatar=True)
-    user = update_user(db, user, new_user)
-    return s_user.ResGetUser(**user.as_dict(True))
+    new_user_check_result = new_user.are_fields_correct_set()
+    if new_user_check_result > 0:
+        user = check_access_token(db, access_token, with_uuid=True)
+        user = update_user(db, user, new_user, new_user_check_result)
+        return s_user.ResGetUser(**user.as_dict(True))
+    else:
+        raise HTTPException(status_code=400, detail="No attributes to update or incorrect attribute combination")
 
 
 @users_router.delete("/me", response_model=dict[str, str])
@@ -62,19 +66,22 @@ def delete_me(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends
 # ======================= Calendar ======================= #
 # ======================================================== #
 
-@users_router.post("/me/calendar", response_model=s_calendar.ResUserCalendar)
+@users_router.post("/calendar", response_model=s_calendar.ResUserCalendar)
 def add_user_calendar(
-    new_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate,
+    new_calendar: s_calendar.CalendarCustomCreate | s_calendar.NativeCalenderIdentifier,
     access_token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ):
     user = check_access_token(db, access_token, with_uuid=True)
     return update_user_calendar(db, user, new_calendar)
 
-@users_router.get("/me/calendar", response_model=s_calendar.ResUserCalendar)
+@users_router.get("/calendar", response_model=s_calendar.ResUserCalendar)
 def get_user_calendars(access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user = check_access_token(db, access_token)
     calendar = get_calendar(db, user.user_id, with_university=True, with_data=True)
+
+    if not calendar:
+        raise HTTPException(status_code=404, detail="Calendar not found")
 
     res_calendar = s_calendar.ResUserCalendar(
         university_name=calendar.university.university_name,
@@ -87,9 +94,18 @@ def get_user_calendars(access_token: str = Depends(oauth2_scheme), db: Session =
 
     return res_calendar
 
-@users_router.get("/me/calendar/hash", response_model=str)
+@users_router.get("/calendar/hash", response_model=str)
 def get_user_calendar_hash(access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user = check_access_token(db, access_token)
     calendar = get_calendar(db, user.user_id)
 
     return calendar.hash
+
+
+@users_router.delete("/calendar", response_model=dict[str, str])
+def delete_user_calendar(access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    user = check_access_token(db, access_token)
+    user_calendar = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user.user_id).first()
+    db.delete(user_calendar)
+    db.commit()
+    return {"message": "Calendar removed"}

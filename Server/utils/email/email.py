@@ -1,4 +1,5 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from fastapi import BackgroundTasks
 from pydantic import EmailStr, BaseModel
 from typing import Dict, Any
 from pathlib import Path
@@ -33,7 +34,7 @@ def init_mailer(mail_from_name: str, ssl: bool = False):
     return FastMail(conf)
 
 
-async def send_with_template(email: EmailSchema):
+async def async_send_mail_with_template(email: EmailSchema):
     email_template = ""
     email_subject = ""
     email_ssl = False
@@ -73,3 +74,7 @@ async def send_with_template(email: EmailSchema):
 
     fm = init_mailer("TheShopMaster-Service", email_ssl)
     await fm.send_message(message, template_name=email_template)
+
+
+def send_mail_with_template(background_tasks: BackgroundTasks , email: EmailSchema):
+    background_tasks.add_task(async_send_mail_with_template, email)

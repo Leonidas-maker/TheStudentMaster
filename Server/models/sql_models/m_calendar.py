@@ -8,10 +8,11 @@ from sqlalchemy import (
     ForeignKey,
     CheckConstraint,
     Uuid,
-    UniqueConstraint,
+    UniqueConstraint
 )
 from config.database import Base
 from sqlalchemy.orm import validates, relationship
+from sqlalchemy.sql import func
 import json
 import uuid
 
@@ -33,7 +34,7 @@ class CalendarCustom(Base):
     last_updated = Column(TIMESTAMP, nullable=False)
 
     verified = Column(BOOLEAN, default=False)  # True if the data is from a verified source (not used yet will be implemented later in the project)
-    last_modified = Column(TIMESTAMP, nullable=False)
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
@@ -67,7 +68,7 @@ class CalendarNative(Base):
     data = Column(JSON, nullable=False)
     hash = Column(String(255), nullable=False)
 
-    last_modified = Column(TIMESTAMP, nullable=False)
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)
@@ -85,7 +86,7 @@ class University(Base):
     rooms = Column(JSON, nullable=True)
     domains = Column(JSON, nullable=True)
 
-    last_modified = Column(TIMESTAMP, nullable=False)
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
     address = relationship("Address", uselist=False)
 
 
@@ -93,7 +94,7 @@ class CalendarBackend(Base):
     __tablename__ = "calendar_backend"
     calendar_backend_id = Column(Integer, primary_key=True, index=True)
     backend_name = Column(String(255), nullable=False, unique=True)
-    last_modified = Column(TIMESTAMP, nullable=False)
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
 
 class UserCalendar(Base):
@@ -104,7 +105,7 @@ class UserCalendar(Base):
     custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.calendar_custom_id"), nullable=True)
     native_calendar_id = Column(Integer, ForeignKey("calendar_native.calendar_native_id"), nullable=True)
 
-    last_modified = Column(TIMESTAMP, nullable=False)
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     __table_args__ = (
         CheckConstraint(

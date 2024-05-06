@@ -217,6 +217,7 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
                 custom_calendar.last_updated + datetime.timedelta(minutes=custom_calendar.refresh_interval)
                 > current_time
             ):
+                progress.update(task_id, advance=1)
                 continue
 
             progress.update(
@@ -238,20 +239,6 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
         )
     except Exception as e:
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
-        print(e)
-
-
-def clean_custom_calendars(db: Session):
-    query_options = [defer(m_calendar.CalendarCustom.data)]
-    try:
-        # Delete all custom calendars that are not used by any user
-        db.query(m_calendar.CalendarCustom).options(*query_options).outerjoin(
-            m_calendar.UserCalendar,
-            m_calendar.CalendarCustom.calendar_custom_id == m_calendar.UserCalendar.custom_calendar_id,
-        ).filter(m_calendar.UserCalendar.calendar_users_id == None).delete(synchronize_session=False)
-
-        db.commit()
-    except Exception as e:
         print(e)
 
 
@@ -317,7 +304,7 @@ def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: 
         .filter(m_calendar.CalendarBackend.backend_name == new_custom_calendar.source_backend)
         .first()
     )
-
+    print(backend.calendar_backend_id)
     if backend:
         # Check if custom calendar already exists
         custom_calendar = (
@@ -343,7 +330,7 @@ def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: 
                 source_url=new_custom_calendar.source_url,
                 data=custom_calendar_data.get("data"),
                 hash=custom_calendar_data.get("hash"),
-                refresh_interval=new_custom_calendar.refresh_interval,
+                refresh_interval=15, # TODO: Implement refresh interval (out of scope for now)
                 last_updated=datetime.datetime.now(),
                 verified=False,
                 last_modified=datetime.datetime.now(),
@@ -369,14 +356,13 @@ def get_calendar(
 ) -> m_calendar.CalendarCustom | m_calendar.CalendarNative | None:
     query_options = []
 
-    if with_university:
-        query_options += [joinedload(m_calendar.CalendarNative.university)]
-
     user_calendar = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user_id).first()
 
     # Check if user has a calendar
     if user_calendar:
         if user_calendar.native_calendar_id:
+            if with_university:
+                query_options += [joinedload(m_calendar.CalendarNative.university)]
             if not with_data:
                 query_options += [defer(m_calendar.CalendarNative.data)]
 
@@ -388,6 +374,8 @@ def get_calendar(
                 .first()
             )
         else:
+            if with_university:
+                query_options += [joinedload(m_calendar.CalendarCustom.university)]
             if not with_data:
                 query_options += [defer(m_calendar.CalendarCustom.data)]
             # Get custom calendar
@@ -406,15 +394,21 @@ def get_calendar(
 # ======================================================== #
 # ========================= Utils ======================== #
 # ======================================================== #
-def clean_custom_calendars(db: Session) -> None:
+def clean_custom_calendars(db: Session) -> int:
     query_options = [defer(m_calendar.CalendarCustom.data)]
     try:
-        # Delete all custom calendars that are not used by any user
-        db.query(m_calendar.CalendarCustom).options(*query_options).outerjoin(
+        # Define a subquery for custom calendars that are not used by any user
+        subquery = db.query(m_calendar.CalendarCustom.calendar_custom_id).options(query_options).outerjoin(
             m_calendar.UserCalendar,
-            m_calendar.CalendarCustom.calendar_custom_id == m_calendar.UserCalendar.custom_calendar_id,
-        ).filter(m_calendar.UserCalendar.calendar_users_id == None).delete(synchronize_session=False)
+            m_calendar.CalendarCustom.calendar_custom_id == m_calendar.UserCalendar.custom_calendar_id
+        ).filter(m_calendar.UserCalendar.calendar_users_id == None).subquery()
 
+        # Delete all entries that match the subquery
+        delete_query = db.query(m_calendar.CalendarCustom).options(query_options).filter(
+            m_calendar.CalendarCustom.calendar_custom_id.in_(subquery)
+        )
+        delete_count = delete_query.delete(synchronize_session=False)
         db.commit()
+        return delete_count
     except Exception as e:
         print(e)

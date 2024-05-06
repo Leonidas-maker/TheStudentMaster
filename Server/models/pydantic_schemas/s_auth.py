@@ -6,6 +6,12 @@ from datetime import datetime
 from .s_user import UserBase
 
 
+class Application(BaseModel):
+    application_id: UUID4
+    application_name: str
+    application_type: str
+    current_location: Optional[str] = None
+
 # ======================================================== #
 # ======================= Requests ======================= #
 # ======================================================== #
@@ -20,11 +26,12 @@ class UserLogin(BaseModel):
     ident: str | EmailStr
     _2fa_code: Optional[str] = None
     password: str
-    application_id: Optional[str] = None
+    new_application: Optional[Application] = None
 
 
 class OTP(BaseModel):
     otp_code: str
+    new_application: Optional[Application] = None
     # timestamp: Optional[str] # TODO: Mabye use later for time correction
 
 

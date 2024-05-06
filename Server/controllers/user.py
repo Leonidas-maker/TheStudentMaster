@@ -1,6 +1,10 @@
 import bcrypt
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
+import datetime
+
+# ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
+from config import security
 
 # ~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user
@@ -10,13 +14,15 @@ from models.pydantic_schemas import s_user, s_calendar
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.general import create_address
-from middleware.auth import check_password
+from middleware.auth import check_password, change_password
 from middleware.calendar import add_native_calendar_to_user, add_custom_calendar_to_user
+from middleware.user import get_user_security
 
 
 # ======================================================== #
 # ======================= Register ======================= #
 # ======================================================== #
+
 
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
@@ -54,13 +60,7 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 # ====================== Update User ===================== #
 # ======================================================== #
 
-def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
-    if (new_user.username or new_user.email) and not new_user.new_password:
-        if not check_password(new_user.old_password):
-            raise HTTPException(status_code=401, detail="Invalid credentials")
-    else:
-        raise HTTPException(status_code=403, detail="Forbidden")
-
+def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     if new_user.address:
         address = create_address(db, new_user.address)
         user.address_id = address.address_id
@@ -68,17 +68,59 @@ def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     if new_user.avatar:
         user.avatar = new_user.avatar
 
-    db.commit() 
+    db.flush()
+
+def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
+    user_security = get_user_security(db, user_id=user.user_id)
+    min_update_time = user_security.last_modified + datetime.timedelta(hours=security.MAX_SECURITY_CHANGE_HOURS)
+    if min_update_time > datetime.datetime.now():
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    if check_password(db, new_user.old_password, user_security=user_security):
+        if new_user.new_password:
+            change_password(db, user_security, new_user.new_password)
+        elif new_user.username:
+            user.username = new_user.username
+            user_security.last_modified = datetime.datetime.now()
+        elif new_user.email:
+            user.email = new_user.email
+            user_security.last_modified = datetime.datetime.now()
+        db.flush()
+    else:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, check_result: int):
+    # Because of the are_fields_correct_set function used in the route, we can assume that the fields are correct 
+    if check_result == 1:
+        update_user_normal(db, user, new_user)
+    elif check_result == 2:
+        update_user_with_auth(db, user, new_user)
+    elif check_result == 3:
+        update_user_with_auth(db, user, new_user)
+        update_user_normal(db, user, new_user)
+    else:
+        raise ValueError("Invalid check_result value")
+    
+    db.commit()
     db.refresh(user)
     return user
 
-def update_user_calendar(db: Session, user: m_user.User, new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate):
-    # Add new calendar to user
+
+def update_user_calendar(
+    db: Session,
+    user: m_user.User,
+    new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate,
+):
+    # Add new calendar to userYou need to enable JavaScript to run this app.
     if isinstance(new_user_calendar, s_calendar.NativeCalenderIdentifier):
-        calendar = add_native_calendar_to_user(db, user.user_id, new_user_calendar.course_name, new_user_calendar.university_uuid)
+        calendar = add_native_calendar_to_user(
+            db, user.user_id, new_user_calendar.course_name, new_user_calendar.university_uuid
+        )
     else:
-        calendar =  add_custom_calendar_to_user(db, user.user_id, new_user_calendar)
-        
+        calendar = add_custom_calendar_to_user(db, user.user_id, new_user_calendar)
+
+    if not calendar:
+        raise HTTPException(status_code=404, detail="Not Found")
     # Return response
     res_calendar = s_calendar.ResUserCalendar(
         university_name=calendar.university.university_name,
@@ -86,6 +128,6 @@ def update_user_calendar(db: Session, user: m_user.User, new_user_calendar: s_ca
         course_name=calendar.course_name,
         data=calendar.data,
         hash=calendar.hash,
-        last_modified=calendar.last_modified
+        last_modified=calendar.last_modified,
     )
     return res_calendar

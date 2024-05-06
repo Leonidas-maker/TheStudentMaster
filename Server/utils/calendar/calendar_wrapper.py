@@ -25,7 +25,6 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         self.backend = backend
         self.type = type
         self.source = source
-        self.check_required = check_required
 
         self.exam_keywords = [
             "klausur",

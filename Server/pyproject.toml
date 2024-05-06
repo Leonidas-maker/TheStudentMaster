@@ -1,0 +1,2 @@
+[tool.licensecheck]
+using = "requirements:requirements.txt"

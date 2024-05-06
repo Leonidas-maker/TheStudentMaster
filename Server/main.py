@@ -12,26 +12,27 @@ from config.database import engine
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db, get_db
 
-# from middleware.general import create_address
+from middleware.general import clean_address
 from middleware.calendar import (
     prepareCalendarTables,
     update_active_native_calendars,
     update_all_native_calendars,
     update_custom_calendars,
+    clean_custom_calendars,
 )
 from middleware.canteen import create_canteens, update_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_calendar
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user, m_general, m_canteen
+from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
 from routes import user, auth, canteen, calendar
 
 m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
+m_auth.Base.metadata.create_all(bind=engine)
 m_calendar.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
 
@@ -64,21 +65,26 @@ async def repeated_task():
                 TimeRemainingColumn(),
             ) as progress:
                 tasks = []
-               
 
                 # Native Calendar updates only between 6:00 and 18:00
-                if current_time.hour > 6 and current_time.hour < 18:
+                if current_time.hour > 6 and current_time.hour < 18 or True: #! Remove the or True to enable the time restriction
                     progress_id_update_calendar_dhbw_mannheim = progress.add_task(
                         "[bold green]Native-Calendar-DHBWMannheim[/bold green] Updating...", total=None
                     )
 
-                    # Update every 1 hours all calendars, otherwise only the active ones (user has subscribed to it) 
+                    # Update every 1 hours all calendars, otherwise only the active ones (user has subscribed to it)
                     if native_calender_loops % 4 == 0:
                         native_calender_loops = 0
-                        tasks.append(create_task(update_all_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim))
+                        tasks.append(
+                            create_task(
+                                update_all_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
+                            )
+                        )
                     else:
                         tasks.append(
-                            create_task(update_active_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim)
+                            create_task(
+                                update_active_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
+                            )
                         )
                 else:
                     native_calender_loops = 0
@@ -88,7 +94,8 @@ async def repeated_task():
                     progress_ids_update_custom.append(
                         (
                             progress.add_task(
-                                f"[bold green]CalendarCustom-{backend.backend_name}[/bold green] Updating...", total=None
+                                f"[bold green]CalendarCustom-{backend.backend_name}[/bold green] Updating...",
+                                total=None,
                             ),
                             backend,
                         )
@@ -157,18 +164,7 @@ app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag
 # ======================================================== #
 @app.get("/")
 async def root(db: Session = Depends(get_db)):
-    with Progress(
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TextColumn("[bold green]{task.completed}/{task.total}[reset]"),
-        TimeRemainingColumn(),
-    ) as progress:
-
-        progress_id_ical_Update_Mannheim = progress.add_task(
-            "[bold green]iCal-DHBWMannheim[/bold green] Update iCal...", total=None
-        )
-        update_all_native_calendars(db, progress, progress_id_ical_Update_Mannheim)
-
+    clean_address(db)
     return {"message": "Hello World"}
 
 

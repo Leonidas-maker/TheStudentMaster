@@ -15,7 +15,7 @@ class CalendarNative(BaseModel):
 
 class CalendarCustomBase(BaseModel):
     course_name: str
-    refresh_interval: int
+    
 
 class CalendarCustomCreate(CalendarCustomBase):
     university_uuid: Optional[UUID4] = None
@@ -26,6 +26,7 @@ class CalendarCustom(CalendarCustomBase):
     university_name: str
     data: dict
     hash: str
+    refresh_interval: int
     verified: bool
     last_modified: datetime
 

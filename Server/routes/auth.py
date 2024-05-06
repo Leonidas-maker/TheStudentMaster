@@ -20,6 +20,7 @@ from controllers.auth import (
     verify_first_2fa,
     verify_2fa,
     verify_2fa_backup,
+    remove_2fa,
 )
 
 
@@ -43,7 +44,7 @@ def user_register(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
-    return register(db, user, background_tasks)
+    return register(db, background_tasks, user)
 
 
 @auth_router.post("/verify-account/{user_uuid}")
@@ -73,7 +74,7 @@ def user_reset_password():
 
 @auth_router.post("/login", response_model=Union[s_auth.UserTokens, s_auth.UserSecurityToken])
 def user_login(user_login: s_auth.UserLogin, db: Session = Depends(get_db)):
-    return login(db, user_login.ident, user_login.password, user_login.application_id)
+    return login(db, user_login.ident, user_login.password, user_login.new_application)
 
 
 @auth_router.delete("/logout/")
@@ -90,7 +91,7 @@ def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Dep
     return refresh_tokens(db, refresh_token)
 
 
-@auth_router.post("/register-application") #! May not needed 
+@auth_router.post("/register-application")  #! May not needed
 def register_application():
     return {"Hello": "World"}
 
@@ -103,21 +104,26 @@ def register_application():
 # ~~~~~~~~~~~~~~~~~~ TOTP ~~~~~~~~~~~~~~~~~ #
 @auth_router.post("/add-2fa/", response_model=s_auth.UserResActivate2FA)
 def user_add_2fa(
-    req: s_auth.UserReqActivate2FA,
-    access_token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
+    req: s_auth.UserReqActivate2FA, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
-    return add_2fa(req, access_token, db)
+    return add_2fa(db, req, access_token)
 
 
-@auth_router.delete("/remove-2fa/{user_uuid}")
-def user_remove_2fa():
-    return {"Hello": "World"}  # TODO: Implement
+@auth_router.delete("/remove-2fa/")
+def user_remove_2fa(
+    otp: s_auth.OTP, background_tasks: BackgroundTasks, access_token: str = Path(...), db: Session = Depends(get_db)
+):
+    return remove_2fa(db, background_tasks, access_token, otp)
 
 
 @auth_router.post("/verify-first-2fa/", response_model=s_auth.UserResVerifyFirst2FA)
-def user_verify_first_2fa(otp: s_auth.OTP, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    return verify_first_2fa(db, access_token, otp.otp_code)
+def user_verify_first_2fa(
+    otp: s_auth.OTP,
+    background_tasks: BackgroundTasks,
+    access_token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+):
+    return verify_first_2fa(db, background_tasks, access_token, otp.otp_code)
 
 
 @auth_router.post("/verify-2fa/", response_model=s_auth.UserTokens)

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload, defer
 import uuid
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user
+from models.sql_models import m_user, m_auth
 
 ###########################################################################
 ############################## Get functions ##############################
@@ -41,10 +41,7 @@ def get_user(
     elif email:
         user = query.filter(m_user.User.email == email).first()
     
-    if user:
-        return user
-    else:
-        raise HTTPException(status_code=404, detail="Not Found")
+    return user
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
@@ -55,16 +52,16 @@ def get_user_security(
     db: Session,
     user_uuid: uuid.UUID = None,
     user_id: str = None,
+    with_user: bool = False,
     with_tokens: bool = False,
     with_2fa: bool = False,
-) -> m_user.UserSecurity:
+) -> m_auth.UserSecurity:
     query_options = []
-    if with_tokens:
-        query_options.append(joinedload(m_user.UserSecurity.user_tokens))
-    if with_2fa:
-        query_options.append(joinedload(m_user.UserSecurity.user_2fa))
+    query_options += [joinedload(m_auth.UserSecurity.user)] if with_user else [] 
+    query_options += [joinedload(m_auth.UserSecurity.user_tokens)] if with_tokens else []
+    query_options += [joinedload(m_auth.UserSecurity.user_2fa)] if with_2fa else []
 
-    query = db.query(m_user.UserSecurity).options(*query_options)
+    query = db.query(m_auth.UserSecurity).options(*query_options)
     user_security = None
 
     if user_id:
@@ -75,7 +72,7 @@ def get_user_security(
             user_uuid = uuid.UUID(user_uuid)
 
         user_security = (
-            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserSecurity.user_id)
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_auth.UserSecurity.user_id)
             .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
@@ -86,8 +83,8 @@ def get_user_security(
         raise HTTPException(status_code=400, detail="Invalid Parameters")
 
 
-def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_user.UserTokens:
-    query = db.query(m_user.UserTokens)
+def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.UserTokens:
+    query = db.query(m_auth.UserTokens)
     user_tokens = None
 
     if user_id:
@@ -96,7 +93,7 @@ def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = Non
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
         user_tokens = (
-            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.UserTokens.user_id)
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_auth.UserTokens.user_id)
             .filter(m_user.UserUUID.user_uuid == user_uuid)
             .all()
         )
@@ -107,8 +104,8 @@ def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = Non
         raise HTTPException(status_code=400, detail="Invalid Parameters")
 
 
-def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_user.User2FA:
-    query = db.query(m_user.User2FA)
+def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.User2FA:
+    query = db.query(m_auth.User2FA)
     user_2fa = None
 
     if user_id:
@@ -117,7 +114,7 @@ def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) 
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
         user_2fa = (
-            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_user.User2FA.user_id)
+            query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_auth.User2FA.user_id)
             .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
