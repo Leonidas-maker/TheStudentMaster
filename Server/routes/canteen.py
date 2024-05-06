@@ -103,12 +103,8 @@ def canteen_read_menu_day(
     for menu in db.query(m_canteen.Menu).filter_by(serving_date=day).all():
         menu_row = dict()
         menu_row["canteen_name"] = menu.canteen.canteen_name
-        menu_row["canteen_short_name"] = (
-            menu.canteen.canteen_short_name if menu.canteen.canteen_short_name else None
-        )
-        menu_row["image_url"] = (
-            menu.canteen.image_url if menu.canteen.image_url else None
-        )
+        menu_row["canteen_short_name"] = menu.canteen.canteen_short_name if menu.canteen.canteen_short_name else None
+        menu_row["image_url"] = menu.canteen.image_url if menu.canteen.image_url else None
         menu_row["menu"] = {
             "dish_type": menu.dish_type,
             "dish": menu.dish.description,
