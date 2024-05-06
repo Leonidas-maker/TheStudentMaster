@@ -10,9 +10,19 @@ def fetch_menu(
 ) -> dict:
     match canteen_short_name:
         case "dhbw_eppelheim":
-            return fetch_menu_dhbw_eppel(week_offset)
+            try:
+                return fetch_menu_dhbw_eppel(week_offset)
+            except Exception as e:
+                print("Error fetching DHBW Eppelheim Menu")
+                print(e)
+                return {}
         case _:
-            return fetch_menu_general(canteen_short_name, week_offset)
+            try:
+                return fetch_menu_general(canteen_short_name, week_offset)
+            except Exception as e:
+                # print("Error fetching Menu, general")
+                # print(e)
+                return {}
 
 
 def fetch_menu_dhbw_eppel(
@@ -93,6 +103,8 @@ def fetch_menu_general(
     week_offset: int,
 ) -> dict:
 
+    # * check input
+    # check week_offset
     if not isinstance(week_offset, int):
         raise ValueError("week_offset must be an integer")
     if week_offset < 0:
@@ -100,12 +112,17 @@ def fetch_menu_general(
     if week_offset > 4:
         raise ValueError("week_offset must be less than 4")
 
+    # check canteen_short_name
     if not canteen_short_name:
-        raise ValueError("canteen_id is required")
+        raise ValueError("canteen_short_name is required")
     if not isinstance(canteen_short_name, str):
-        raise ValueError("canteen_id must be a string")
+        raise ValueError("canteen_short_name must be a string")
 
+    # get dates
     date = datetime.now().day + 7 * week_offset
+    day = f"0{date}" if date < 10 else f"{date}"
+    month = f"0{datetime.now().month}" if datetime.now().month < 10 else f"{datetime.now().month}"
+    year = f"{datetime.now().year}"
 
     # get dates for the week
     current_date = datetime.now().date() + timedelta(days=7 * week_offset)
@@ -121,28 +138,29 @@ def fetch_menu_general(
     # get url for canteen_id
     match canteen_short_name:
         case "schlossmensa":
-            url = f"https://www.stw-ma.de/men%C3%BCplan_schlossmensa-date-2024%25252d03%25252d{date}-view-week.html"
+            url = (
+                f"https://www.stw-ma.de/men%C3%BCplan_schlossmensa-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            )
         case "greens":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/greenes%C2%B2-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/greenes%C2%B2-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensawagon":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/mensawagon-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/mensawagon-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "hochschule_mannheim":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Hochschule+Mannheim-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Hochschule+Mannheim-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "cafeteria_musikhochschule":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Cafeteria+Musikhochschule-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Cafeteria+Musikhochschule-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "popakademie":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/CAFE+33-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/CAFE+33-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensaria_metropol":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensaria_wohlgelegen":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-2024%25252d03%25252d{date}-view-week.html"
-        # case "dhbw_eppelheim":
-        #     url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Speisenausgabe+DHBW+Eppelheim-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case _:
             raise ValueError("Invalid canteen_id").add_note(
                 "canteen_id must be one of the following: schlossmensa, greens, mensawagon, hochschule_mannheim, cafeteria_musikhochschule, popakademie, mensaria_metropol, mensaria_wohlgelegen, dhbw_eppelheim"
             )
 
+    # fetch menu from url
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
     rows = soup.find_all("tr")
@@ -178,21 +196,34 @@ def fetch_menu_general(
         raw_price_list = re.split(r"[\n\t]+", raw_price_list.text)
         raw_price_list = remove_empty_strings(raw_price_list)
         menu_prices = ["Montag"]
-        for i in range(0, len(raw_price_list), 2):
-            menu_prices.append(f"{raw_price_list[i+1]}: {raw_price_list[i]}")
+        for j in range(0, len(raw_price_list), 2):
+            # catch errors from the website regarding price
+            if not re.match(r"(Portion|Glas|pro 100g): \d+,\d{2} €", f"{raw_price_list[j+1]}: {raw_price_list[j]}"):
+                # if quantity is missing, add it
+                if re.match(r"\d+,\d{2} €", raw_price_list[j]):
+                    price = raw_price_list[j]
+                    raw_price_list[j] = "Portion"
+                    raw_price_list.insert(j, price)
+                # if price is missing, add it
+                if re.match(r"(Portion|Glas|pro 100g)", raw_price_list[j]):
+                    raw_price_list.insert(j, "-,-- €")
 
+            menu_prices.append(f"{raw_price_list[j+1]}: {raw_price_list[j]}")
+
+        # check if menu items and prices match
         if not len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names):
             print("Error: Length of menu items and prices do not match")
             return
 
+        # create menu dictionary
         list_items_prices = list()
-        for i in range(len(menu_items)):
+        for j in range(len(menu_items)):
 
             list_items_prices.append(
                 {
-                    "dish_type": menu_names[i],
-                    "description": menu_items[i],
-                    "price": menu_prices[i],
+                    "dish_type": menu_names[j],
+                    "description": menu_items[j],
+                    "price": menu_prices[j],
                     "serving_date": serving_date,
                 }
             )
