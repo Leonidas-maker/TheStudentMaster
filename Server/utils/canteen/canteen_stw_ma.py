@@ -115,6 +115,9 @@ def fetch_menu_general(
         raise ValueError("canteen_short_name must be a string")
 
     date = datetime.now().day + 7 * week_offset
+    day = f"0{date}" if date < 10 else f"{date}"
+    month = f"0{datetime.now().month}" if datetime.now().month < 10 else f"{datetime.now().month}"
+    year = f"{datetime.now().year}"
 
     # get dates for the week
     current_date = datetime.now().date() + timedelta(days=7 * week_offset)
@@ -130,21 +133,21 @@ def fetch_menu_general(
     # get url for canteen_id
     match canteen_short_name:
         case "schlossmensa":
-            url = f"https://www.stw-ma.de/men%C3%BCplan_schlossmensa-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/men%C3%BCplan_schlossmensa-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "greens":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/greenes%C2%B2-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/greenes%C2%B2-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensawagon":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/mensawagon-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/mensawagon-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "hochschule_mannheim":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Hochschule+Mannheim-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Hochschule+Mannheim-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "cafeteria_musikhochschule":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Cafeteria+Musikhochschule-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Cafeteria+Musikhochschule-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "popakademie":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/CAFE+33-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/CAFE+33-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensaria_metropol":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case "mensaria_wohlgelegen":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-2024%25252d03%25252d{date}-view-week.html"
+            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-{year}%25252d{month}%25252d{day}-view-week.html"
         case _:
             raise ValueError("Invalid canteen_id").add_note(
                 "canteen_id must be one of the following: schlossmensa, greens, mensawagon, hochschule_mannheim, cafeteria_musikhochschule, popakademie, mensaria_metropol, mensaria_wohlgelegen, dhbw_eppelheim"
