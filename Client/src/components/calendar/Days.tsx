@@ -187,10 +187,10 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
           return (
             <View
               key={index}
-              className="flex-1 items-center pt-2 border-l border-gray-200 z-10"
+              className="flex-1 items-center pt-2 border-l border-light_secondary dark:border-dark_secondary z-10"
             >
-              <Text className="text-lg text-white">{format(day, "eee")}</Text>
-              <Text className="text-sm text-white">
+              <Text className="text-lg text-black dark:text-white">{format(day, "eee")}</Text>
+              <Text className="text-sm text-black dark:text-white">
                 {format(day, "d")}. {format(day, "LLL")}
               </Text>
               {eventsForDay.map((event, eventIndex) => (

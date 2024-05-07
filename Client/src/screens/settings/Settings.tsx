@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import { useColorScheme } from "nativewind";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type SchemeType = "light" | "dark" | "system";
 
@@ -10,19 +11,15 @@ const Settings: React.FC = () => {
   const { colorScheme, setColorScheme } = useColorScheme();
   const [selectedScheme, setSelectedScheme] = useState<SchemeType>("system");
 
-  useEffect(() => {
-    // Aktualisiert das Farbschema basierend auf der Auswahl des Benutzers
-    if (selectedScheme === "system") {
-      // Hier könnte Logik implementiert werden, um auf Systemänderungen zu reagieren
-      // Für den Moment wird das Systemthema nicht direkt gesetzt
-    } else {
-      setColorScheme(selectedScheme);
-    }
-  }, [selectedScheme, setColorScheme]);
+  const { theme, setTheme } = useTheme();
 
   const setScheme = (scheme: SchemeType) => {
-    setSelectedScheme(scheme);
+    setTheme(scheme);
   };
+
+  useEffect(() => {
+    setColorScheme(theme);
+  }, [theme, setColorScheme]);
 
   const RadioOption = ({
     label,
@@ -77,17 +74,17 @@ const Settings: React.FC = () => {
         <RadioOption
           label="Light Mode"
           onPress={() => setScheme("light")}
-          checked={selectedScheme === "light"}
+          checked={theme === "light"}
         />
         <RadioOption
           label="Dark Mode"
           onPress={() => setScheme("dark")}
-          checked={selectedScheme === "dark"}
+          checked={theme === "dark"}
         />
         <RadioOption
           label="System Mode"
           onPress={() => setScheme("system")}
-          checked={selectedScheme === "system"}
+          checked={theme === "system"}
         />
       </View>
     </ScrollView>
