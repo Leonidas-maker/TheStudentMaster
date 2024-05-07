@@ -1,6 +1,11 @@
 /* @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}", "./src/**/**/*.{js,jsx,ts,tsx}", "./src/components/**/*.{js,jsx,ts,tsx}", "./src/provider/**/*.{js,jsx,ts,tsx}"],
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./src/**/**/*.{js,jsx,ts,tsx}",
+    "./src/components/**/*.{js,jsx,ts,tsx}",
+    "./src/provider/**/*.{js,jsx,ts,tsx}",
+  ],
   darkMode: "class",
   presets: [require("nativewind/preset")],
   theme: {
@@ -21,4 +26,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};
