@@ -26,7 +26,10 @@ const Navigator: React.FC<NavigatorProps> = ({
       <View className="bg-secondary rounded-lg shadow-md p-4 border border-gray-700">
         {texts.map((text, index) => (
           <View key={index}>
-            <Pressable onPress={onPressFunctions[index]} className="active:opacity-50">
+            <Pressable
+              onPress={onPressFunctions[index]}
+              className="active:opacity-50"
+            >
               <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center">
                   <Icon name={iconNames[index]} size={20} color="#E0E0E2" />

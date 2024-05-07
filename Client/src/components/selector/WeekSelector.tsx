@@ -48,7 +48,11 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
 
       return (
         <View className="flex-row justify-between px-5 py-3">
-          <Pressable onPress={onBackPress} disabled={isBackDisabled} className="active:opacity-50">
+          <Pressable
+            onPress={onBackPress}
+            disabled={isBackDisabled}
+            className="active:opacity-50"
+          >
             <Icon
               name="arrow-back-ios"
               size={30}
