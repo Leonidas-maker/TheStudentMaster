@@ -46,8 +46,12 @@ const Hours: React.FC<HoursProps> = ({
   return (
     <View className="w-14">
       <View className="items-center p-2 border-light_secondary dark:border-dark_secondary">
-        <Text className="text-lg text-light_primary dark:text-dark_primary">-</Text>
-        <Text className="text-sm text-light_primary dark:text-dark_primary">-</Text>
+        <Text className="text-lg text-light_primary dark:text-dark_primary">
+          -
+        </Text>
+        <Text className="text-sm text-light_primary dark:text-dark_primary">
+          -
+        </Text>
       </View>
       <View
         className="flex-1 flex-col justify-between h-full"
@@ -57,7 +61,10 @@ const Hours: React.FC<HoursProps> = ({
           <Text className="text-xs text-center text-black dark:text-white">{`${startHour}:00`}</Text>
         </View>
         {hours.map((hour) => (
-          <View key={hour} className="border-t border-light_secondary dark:border-dark_secondary justify-top">
+          <View
+            key={hour}
+            className="border-t border-light_secondary dark:border-dark_secondary justify-top"
+          >
             <Text className="text-xs text-center text-black dark:text-white">{`${hour}:00`}</Text>
           </View>
         ))}
