@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useColorScheme } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -20,6 +21,22 @@ import OverviewStack from "./OverviewStack";
 const Tab = createBottomTabNavigator();
 
 const HomeBottomTabs: React.FC = () => {
+  const colorScheme = useColorScheme()
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
+
+  const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
+  const headerTintColor = isLight ? "#171717" : "#E0E2DB";
+  const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#AA180E";
+  const tabBarInactiveTintColor = isLight ? "#B71515" : "#800F0F";
+
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" />
@@ -28,12 +45,12 @@ const HomeBottomTabs: React.FC = () => {
         screenOptions={{
           headerShown: true,
           headerStyle: {
-            backgroundColor: "#171717",
+            backgroundColor: backgroundColor,
           },
-          tabBarStyle: { backgroundColor: "#171717" },
-          headerTintColor: "#f5f5f5",
-          tabBarActiveTintColor: "#780000",
-          tabBarInactiveTintColor: "#c1121f",
+          tabBarStyle: { backgroundColor: backgroundColor },
+          headerTintColor: headerTintColor,
+          tabBarActiveTintColor: tabBarActiveTintColor,
+          tabBarInactiveTintColor: tabBarInactiveTintColor,
         }}
       >
         <Tab.Screen
