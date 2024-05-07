@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Pressable } from "react-native";
 import { useColorScheme } from "nativewind";
 
 type SchemeType = "light" | "dark" | "system";
@@ -33,13 +33,14 @@ const Settings: React.FC = () => {
     onPress: () => void;
     checked: boolean;
   }) => (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       style={{
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 10,
       }}
+      className="active:opacity-50"
     >
       <View
         style={{
@@ -64,7 +65,7 @@ const Settings: React.FC = () => {
         ) : null}
       </View>
       <Text style={{ marginLeft: 10 }}>{label}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (

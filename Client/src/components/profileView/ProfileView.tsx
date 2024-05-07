@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { useTranslation } from "react-i18next";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -17,7 +17,7 @@ const ProfileView: React.FC = () => {
     <View className="m-4">
       <Text className="text-font_primary text-xl font-bold mb-2">Profil</Text>
       <View className="bg-secondary rounded-lg shadow-md p-4 border border-gray-700">
-        <TouchableOpacity onPress={handleProfilePress}>
+        <Pressable onPress={handleProfilePress} className="active:opacity-50">
           <View className="flex-row justify-between items-center">
             <Icon name="person" size={40} color="#E0E0E2" />
             <View className="ml-2">
@@ -35,7 +35,7 @@ const ProfileView: React.FC = () => {
               style={{ marginLeft: "auto" }}
             />
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
