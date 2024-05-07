@@ -1,6 +1,13 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
-import { View, Text, Modal, Platform, Pressable, useColorScheme } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  Platform,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import "nativewind";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
@@ -52,7 +59,7 @@ const Event: React.FC<EventProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [isWeb, setIsWeb] = useState(false);
 
-  const colorScheme = useColorScheme()
+  const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
 
   useEffect(() => {
@@ -148,10 +155,11 @@ const Event: React.FC<EventProps> = ({
     <View className="absolute w-full">
       <Pressable
         onPress={handleEventPress}
-        className={`${isLight
+        className={`${
+          isLight
             ? "bg-light_event rounded-lg shadow-sm active:bg-light_event_active"
             : "bg-dark_event rounded-lg shadow-sm active:bg-dark_event_active"
-          }`}
+        }`}
         style={{
           position: "absolute",
           top: topPosition,
