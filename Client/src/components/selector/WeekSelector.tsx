@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React from "react";
-import { View, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -30,6 +30,17 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
   currentDate,
   mode,
 }) => {
+  const colorScheme = useColorScheme()
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
+
   // ~~~~~~~~~~~~ Default values ~~~~~~~~~~~ //
   // If no date is passed, the current date is used (this will happen if mode is calendar)
   const today = new Date();
@@ -56,7 +67,7 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
             <Icon
               name="arrow-back-ios"
               size={30}
-              color={isBackDisabled ? "#A0A0A2" : "#E0E0E2"}
+              color={isBackDisabled ? (isLight ? "#7A7A7A" : "#7A7A7A") : (isLight ? "#7493BE" : "#E0E2DB")}
             />
           </Pressable>
           <Pressable
@@ -67,7 +78,7 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
             <Icon
               name="arrow-forward-ios"
               size={30}
-              color={isForwardDisabled ? "#A0A0A2" : "#E0E0E2"}
+              color={isForwardDisabled ? (isLight ? "#7A7A7A" : "#7A7A7A") : (isLight ? "#7493BE" : "#E0E2DB")}
             />
           </Pressable>
         </View>
@@ -76,13 +87,13 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
       return (
         <View className="flex-row justify-between px-5 py-3">
           <Pressable onPress={onBackPress} className="active:opacity-50">
-            <Icon name="arrow-back-ios" size={30} color="#ACBED8" />
+            <Icon name="arrow-back-ios" size={30} color={isLight ? "#7493BE" : "#E0E2DB"} />
           </Pressable>
           <Pressable onPress={onTodayPress} className="active:opacity-50">
-            <Icon name="today" size={30} color="#ACBED8" />
+            <Icon name="today" size={30} color={isLight ? "#7493BE" : "#E0E2DB"} />
           </Pressable>
           <Pressable onPress={onForwardPress} className="active:opacity-50">
-            <Icon name="arrow-forward-ios" size={30} color="#ACBED8" />
+            <Icon name="arrow-forward-ios" size={30} color={isLight ? "#7493BE" : "#E0E2DB"} />
           </Pressable>
         </View>
       );
