@@ -21,7 +21,7 @@ import OverviewStack from "./OverviewStack";
 const Tab = createBottomTabNavigator();
 
 const HomeBottomTabs: React.FC = () => {
-  const colorScheme = useColorScheme()
+  const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
 
   useEffect(() => {
