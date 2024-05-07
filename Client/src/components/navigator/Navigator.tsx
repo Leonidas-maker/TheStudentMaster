@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 interface NavigatorProps {
@@ -26,7 +26,7 @@ const Navigator: React.FC<NavigatorProps> = ({
       <View className="bg-secondary rounded-lg shadow-md p-4 border border-gray-700">
         {texts.map((text, index) => (
           <View key={index}>
-            <TouchableOpacity onPress={onPressFunctions[index]}>
+            <Pressable onPress={onPressFunctions[index]} className="active:opacity-50">
               <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center">
                   <Icon name={iconNames[index]} size={20} color="#E0E0E2" />
@@ -44,7 +44,7 @@ const Navigator: React.FC<NavigatorProps> = ({
                   color="#E0E0E2"
                 />
               </View>
-            </TouchableOpacity>
+            </Pressable>
             {index < texts.length - 1 && (
               <View className="border-b border-gray-700 my-2" />
             )}

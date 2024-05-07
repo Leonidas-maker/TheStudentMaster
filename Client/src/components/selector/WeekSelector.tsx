@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, Pressable } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -48,37 +48,38 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
 
       return (
         <View className="flex-row justify-between px-5 py-3">
-          <TouchableOpacity onPress={onBackPress} disabled={isBackDisabled}>
+          <Pressable onPress={onBackPress} disabled={isBackDisabled} className="active:opacity-50">
             <Icon
               name="arrow-back-ios"
               size={30}
               color={isBackDisabled ? "#A0A0A2" : "#E0E0E2"}
             />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             onPress={onForwardPress}
             disabled={isForwardDisabled}
+            className="active:opacity-50"
           >
             <Icon
               name="arrow-forward-ios"
               size={30}
               color={isForwardDisabled ? "#A0A0A2" : "#E0E0E2"}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       );
     case "calendar":
       return (
         <View className="flex-row justify-between px-5 py-3">
-          <TouchableOpacity onPress={onBackPress}>
+          <Pressable onPress={onBackPress} className="active:opacity-50">
             <Icon name="arrow-back-ios" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onTodayPress}>
+          </Pressable>
+          <Pressable onPress={onTodayPress} className="active:opacity-50">
             <Icon name="today" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onForwardPress}>
+          </Pressable>
+          <Pressable onPress={onForwardPress} className="active:opacity-50">
             <Icon name="arrow-forward-ios" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       );
     default:
