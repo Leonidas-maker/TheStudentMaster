@@ -62,7 +62,7 @@ const TimeMarker: React.FC<TimeMarkerProps> = ({
     <View className="absolute w-full">
       {showTimeMarker && (
         <View
-          className="bg-red-500 rounded-lg shadow-sm"
+          className="bg-light_action dark:bg-dark_action rounded-lg shadow-sm"
           style={{
             position: "absolute",
             top: markerPosition,

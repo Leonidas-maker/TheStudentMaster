@@ -13,7 +13,7 @@ const AddMfa: React.FC = () => {
   const { t } = useTranslation();
 
   const sampleQRData =
-    "https://gitlab.com/themastercollection/thestudentmaster";
+    "otpauth://totp/TheShopMaster.com:schuetzeandreas.1%40web.de?secret=NIKBTQZM3AFR3Z3FCWSHOPGY53KJQ6YT&issuer=TheShopMaster.com";
 
   return (
     <ScrollView className="h-screen bg-primary">

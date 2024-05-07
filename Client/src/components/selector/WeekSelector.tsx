@@ -76,13 +76,13 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
       return (
         <View className="flex-row justify-between px-5 py-3">
           <Pressable onPress={onBackPress} className="active:opacity-50">
-            <Icon name="arrow-back-ios" size={30} color="#E0E0E2" />
+            <Icon name="arrow-back-ios" size={30} color="#ACBED8" />
           </Pressable>
           <Pressable onPress={onTodayPress} className="active:opacity-50">
-            <Icon name="today" size={30} color="#E0E0E2" />
+            <Icon name="today" size={30} color="#ACBED8" />
           </Pressable>
           <Pressable onPress={onForwardPress} className="active:opacity-50">
-            <Icon name="arrow-forward-ios" size={30} color="#E0E0E2" />
+            <Icon name="arrow-forward-ios" size={30} color="#ACBED8" />
           </Pressable>
         </View>
       );

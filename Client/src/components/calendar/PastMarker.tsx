@@ -51,7 +51,7 @@ const PastMarker: React.FC<PastMarkerProps> = ({
     <View className="absolute w-full">
       {!isToday && (
         <View
-          className="bg-gray-400 opacity-30"
+          className="bg-gray-900 dark:bg-gray-400 opacity-30"
           style={{
             position: "absolute",
             top: dayHeight,
@@ -62,7 +62,7 @@ const PastMarker: React.FC<PastMarkerProps> = ({
       )}
       {isToday && (
         <View
-          className="bg-gray-400 opacity-30"
+          className="bg-gray-900 dark:bg-gray-400 opacity-30"
           style={{
             position: "absolute",
             top: dayHeight,
