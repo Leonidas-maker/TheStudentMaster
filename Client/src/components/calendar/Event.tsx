@@ -155,10 +155,11 @@ const Event: React.FC<EventProps> = ({
     <View className="absolute w-full">
       <Pressable
         onPress={handleEventPress}
-        className={`rounded-lg shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px] ${isLight
+        className={`rounded-lg shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px] ${
+          isLight
             ? "bg-light_event active:bg-light_event_active"
             : "bg-dark_event active:bg-dark_event_active"
-          }`}
+        }`}
         style={{
           position: "absolute",
           top: topPosition,
