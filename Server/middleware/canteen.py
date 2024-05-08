@@ -63,8 +63,8 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
                     description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
                 )
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
+                db.commit()
                 progress.update(task_id, advance=1)
-        db.commit()
     except Exception as e:
         print(e)
         db.rollback()
@@ -221,7 +221,6 @@ def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
 # ======================================================== #
 # ========================= Menu ========================= #
 # ======================================================== #
-# TODO: Still bullshit for getting
 def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving_date: str) -> m_canteen.Menu:
 
     if not (canteen_id and dish_id and dish_type and serving_date):
@@ -257,8 +256,6 @@ def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving
             print("Error while creating menu")
             print(e)
             return False
-        # raise ReferenceError("Menu not found")
-
     return menu
 
 
