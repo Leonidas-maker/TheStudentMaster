@@ -17,8 +17,6 @@ from models.pydantic_schemas import s_general
 # ======================================================== #
 # ======================== Update ======================== #
 # ======================================================== #
-
-
 def create_canteens(db: Session):
     try:
         with open("./utils/canteen/canteen_addresses.json", "r") as file:
@@ -63,8 +61,8 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
                     description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
                 )
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
+                db.commit()
                 progress.update(task_id, advance=1)
-        db.commit()
     except Exception as e:
         print(e)
         db.rollback()
@@ -139,11 +137,6 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
     return new_canteen
 
 
-def update_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
-    # TODO: Implement update_canteen
-    pass
-
-
 # ======================================================== #
 # ========================= Dish ========================= #
 # ======================================================== #
@@ -213,15 +206,9 @@ def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     return new_dish
 
 
-def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
-    # TODO: Implement update_dish
-    pass
-
-
 # ======================================================== #
 # ========================= Menu ========================= #
 # ======================================================== #
-# TODO: Still bullshit for getting
 def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving_date: str) -> m_canteen.Menu:
 
     if not (canteen_id and dish_id and dish_type and serving_date):
@@ -257,8 +244,6 @@ def get_menu(db: Session, canteen_id: int, dish_id: int, dish_type: str, serving
             print("Error while creating menu")
             print(e)
             return False
-        # raise ReferenceError("Menu not found")
-
     return menu
 
 
@@ -323,11 +308,6 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
         return False
 
     return new_menu
-
-
-def update_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
-    # TODO: Implement update_menu
-    pass
 
 
 # ======================================================== #
