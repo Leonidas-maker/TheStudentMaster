@@ -39,7 +39,7 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
       delayLongPress={delayLongPress}
       unstable_pressDelay={unstable_pressDelay}
     >
-      <Text className="text-black">{text}</Text>
+      <Text className="text-white dark:text-black">{text}</Text>
     </Pressable>
   );
 };
