@@ -205,7 +205,9 @@ const Event: React.FC<EventProps> = ({
             className="bg-light_secondary dark:bg-dark_secondary p-5 rounded-2xl items-center shadow-md"
             onStartShouldSetResponder={() => true}
           >
-            <Text className="item-center pb-3 text-black dark:text-white">{event.summary}</Text>
+            <Text className="item-center pb-3 text-black dark:text-white">
+              {event.summary}
+            </Text>
             <Text className="item-center font-bold text-black dark:text-white">{`Startzeit: ${startTimeString}`}</Text>
             <Text className="item-center font-bold text-black dark:text-white">{`Endzeit: ${endTimeString}`}</Text>
             <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>

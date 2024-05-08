@@ -101,7 +101,10 @@ const DishView: React.FC<DishProps> = ({
     <ScrollView className="flex-1 active:opacity-50" ref={scrollViewRef}>
       {dishes.length > 0 ? (
         dishes.map((dish, index) => (
-          <Pressable className="flex-1 active:opacity-50" onPress={handleDishPress}>
+          <Pressable
+            className="flex-1 active:opacity-50"
+            onPress={handleDishPress}
+          >
             <View
               key={index}
               className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
@@ -110,7 +113,9 @@ const DishView: React.FC<DishProps> = ({
                 {dish.dish_type}: {dish.dish}
               </Text>
               <Text className="text-black dark:text-white">{dish.price}</Text>
-              <Text className="text-black dark:text-white">{dish.serving_date}</Text>
+              <Text className="text-black dark:text-white">
+                {dish.serving_date}
+              </Text>
             </View>
           </Pressable>
         ))

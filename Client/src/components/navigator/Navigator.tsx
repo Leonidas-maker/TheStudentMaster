@@ -35,7 +35,9 @@ const Navigator: React.FC<NavigatorProps> = ({
 
   return (
     <View className="m-4">
-      <Text className="text-black dark:text-white text-xl font-bold mb-2">{title}</Text>
+      <Text className="text-black dark:text-white text-xl font-bold mb-2">
+        {title}
+      </Text>
       <View className="bg-light_secondary dark:bg-dark_secondary rounded-lg shadow-md p-4">
         {texts.map((text, index) => (
           <View key={index}>
