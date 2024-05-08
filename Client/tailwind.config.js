@@ -16,7 +16,7 @@ module.exports = {
         light_action: "#DE1A1A",
         dark_primary: "#1E1E24",
         dark_secondary: "#E0E2DB",
-        dark_action: "#AA180E",
+        dark_action: "#ED2A1D",
 
         light_event: "#8344C2",
         light_event_active: "#7037A9",
