@@ -8,7 +8,7 @@ const MealPlan: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <View className="flex-1 bg-primary">
+    <View className="flex-1 bg-light_primary dark:bg-dark_primary">
       <MenuPlan />
     </View>
   );

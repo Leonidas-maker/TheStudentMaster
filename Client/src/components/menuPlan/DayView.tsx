@@ -41,12 +41,12 @@ const DayView: React.FC<DayViewProps> = ({
                 onPress={() => setSelectedDate(day)}
               >
                 <Text
-                  className={`text-lg text-white ${isSelectedDay ? "font-bold" : ""}`}
+                  className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
                 >
                   {format(day, "eee")}
                 </Text>
                 <Text
-                  className={`text-lg text-white ${isSelectedDay ? "font-bold" : ""}`}
+                  className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
                 >
                   {format(day, "d")}. {format(day, "LLL")}
                 </Text>
@@ -54,16 +54,16 @@ const DayView: React.FC<DayViewProps> = ({
             ) : (
               <Pressable
                 key={index}
-                className="items-center pt-2 border-l border-gray-200 z-10"
+                className="items-center pt-2 border-l border-light_secondary dark:border-dark_secondary z-10"
                 onPress={() => setSelectedDate(day)}
               >
                 <Text
-                  className={`text-lg text-white ${isSelectedDay ? "font-bold" : ""}`}
+                  className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
                 >
                   {format(day, "eee")}
                 </Text>
                 <Text
-                  className={`text-lg text-white ${isSelectedDay ? "font-bold" : ""}`}
+                  className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
                 >
                   {format(day, "d")}. {format(day, "LLL")}
                 </Text>

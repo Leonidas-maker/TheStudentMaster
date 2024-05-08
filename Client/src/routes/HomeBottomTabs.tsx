@@ -34,8 +34,8 @@ const HomeBottomTabs: React.FC = () => {
 
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
-  const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#AA180E";
-  const tabBarInactiveTintColor = isLight ? "#B71515" : "#800F0F";
+  const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
+  const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
 
   return (
     <SafeAreaProvider>
