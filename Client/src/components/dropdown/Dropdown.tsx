@@ -38,14 +38,14 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   const boxStyles = isLight
     ? { backgroundColor: "#ACBED8", borderColor: "#ACBED8" }
-    : { backgroundColor: "#E0E2DB", borderColor: "#E0E2DB" };
+    : { backgroundColor: "#56718A", borderColor: "#56718A" };
   const dropdownStyles = isLight
     ? { backgroundColor: "#ACBED8", borderColor: "#ACBED8" }
-    : { backgroundColor: "#E0E2DB", borderColor: "#E0E2DB" };
+    : { backgroundColor: "#56718A", borderColor: "#56718A" };
   const dropdownTextStyles = isLight
     ? { color: "#000000" }
-    : { color: "#000000" };
-  const inputStyles = isLight ? { color: "#000000" } : { color: "#000000" };
+    : { color: "#FFFFFF" };
+  const inputStyles = isLight ? { color: "#000000" } : { color: "#FFFFFF" };
 
   return (
     <View className="p-2 shadow-[rgba(0,0,0,0.5)_0px_1px_4px_0px]">

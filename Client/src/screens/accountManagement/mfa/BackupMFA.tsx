@@ -11,7 +11,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton";
 // TODO Implement save Backup-Codes as Screenshot
 const BackupMFA: React.FC = () => {
   return (
-    <View className="h-screen bg-primary">
+    <View className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Geschafft!" />
       <Subheading text="MFA wurde erfolgreich aktiviert" />
       <DefaultText text="Bitte speichere deine Backup-Codes an einem sicheren Ort" />

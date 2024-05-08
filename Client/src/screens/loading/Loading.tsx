@@ -23,7 +23,7 @@ const Loading: React.FC = (props: any) => {
   }, []);
 
   return (
-    <View className="flex h-screen items-center justify-center bg-primary">
+    <View className="flex h-screen items-center justify-center bg-light_primary dark:bg-dark_primary">
       <ActivityIndicator size="large" />
       <DefaultText text="Loading..." />
     </View>

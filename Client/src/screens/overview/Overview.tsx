@@ -230,7 +230,7 @@ const Overview: React.FC = () => {
   ];
 
   return (
-    <ScrollView className="h-screen bg-white dark:bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <ProfileView />
       <Navigator
         title={moduleTitle}

@@ -10,7 +10,7 @@ const VerifyLogin: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <ScrollView className="h-screen bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center p-3">
         <Heading text="Bitte bestätige deine Anmeldung" />
         <Subheading text="Gib den Code deiner Authentication App ein" />

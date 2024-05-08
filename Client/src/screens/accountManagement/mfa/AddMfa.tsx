@@ -13,10 +13,10 @@ const AddMfa: React.FC = () => {
   const { t } = useTranslation();
 
   const sampleQRData =
-    "otpauth://totp/TheShopMaster.com:schuetzeandreas.1%40web.de?secret=NIKBTQZM3AFR3Z3FCWSHOPGY53KJQ6YT&issuer=TheShopMaster.com";
+    "https://example.com";
 
   return (
-    <ScrollView className="h-screen bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center">
         <Heading text="MFA aktivieren" />
         <Subheading text="Scanne den QR-Code in deiner Authenticator App" />

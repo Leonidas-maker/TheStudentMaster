@@ -14,7 +14,7 @@ const NewPassword: React.FC = () => {
 
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="p-3 justify-center items-center">
           <Heading text="Gib dein neues Passwort ein" />
           <TextFieldInput

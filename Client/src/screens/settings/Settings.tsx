@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
+import DefaultText from "../../components/textFields/DefaultText";
 
 type SchemeType = "light" | "dark" | "system";
 
@@ -65,11 +66,9 @@ const Settings: React.FC = () => {
   );
 
   return (
-    <ScrollView className="h-screen bg-primary dark:bg-white">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View style={{ padding: 20 }}>
-        <Text className="text-font_primary dark:text-fuchsia-600">
-          Welcome to the Settings page
-        </Text>
+        <DefaultText text="Welcome to the Settings page" />
         <RadioOption
           label="Light Mode"
           onPress={() => setScheme("light")}

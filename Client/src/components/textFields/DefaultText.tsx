@@ -6,7 +6,7 @@ interface DefaultTextProps {
 }
 
 const DefaultText: React.FC<DefaultTextProps> = ({ text }) => {
-  return <Text className="text-font_primary">{text}</Text>;
+  return <Text className="text-black dark:text-white">{text}</Text>;
 };
 
 export default DefaultText;

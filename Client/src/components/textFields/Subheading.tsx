@@ -7,7 +7,7 @@ interface SubheadingProps {
 
 const Subheading: React.FC<SubheadingProps> = ({ text }) => {
   return (
-    <Text className="text-font_secondary text-2xl text-center">{text}</Text>
+    <Text className="text-light_subheading dark:text-dark_subheading text-2xl text-center">{text}</Text>
   );
 };
 

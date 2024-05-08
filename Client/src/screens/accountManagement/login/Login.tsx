@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="pt-10 justify-center items-center">
           <Heading text="Willkommen" />
           <TextFieldInput
