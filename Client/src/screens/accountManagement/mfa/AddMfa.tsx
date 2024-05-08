@@ -12,8 +12,7 @@ import QRCode from "react-native-qrcode-svg";
 const AddMfa: React.FC = () => {
   const { t } = useTranslation();
 
-  const sampleQRData =
-    "https://example.com";
+  const sampleQRData = "https://example.com";
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">

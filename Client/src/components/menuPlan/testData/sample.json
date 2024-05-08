@@ -3,299 +3,299 @@
   "canteen_short_name": "mensaria_metropol",
   "image_url": null,
   "menu": [
-      {
-          "dish_type": "Menü 1",
-          "dish": "paniertes Schnitzel vom Schwein (S), Pilzrahmsoße (Sl,GlW,Gl,Mi,So,Veg), Salzkartoffeln (Vga), frische Kräuter (Vga), Beilagensalat (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Menü vegan",
-          "dish": "tunesisches Ratatouille mit Peperoni und Couscous (5,9,Sl,GlW,Gl,ScM,Vga), Falafel-Bällchen (Sl,GlW,Gl,Sf,Vga), frische Kräuter (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Focaccia Italia",
-          "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
-          "price": "Portion: 3,20 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Brownie",
-          "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Blondie",
-          "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Lassi",
-          "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Smoothie",
-          "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Dessert",
-          "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
-          "price": "Glas: 1,20 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Frühlings Bowl",
-          "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Plantbased Flammkuchen",
-          "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
-          "price": "Portion: 1,80 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Quinoa Bowl",
-          "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Spring Ciabatta",
-          "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Se,Vga), gepickelte rote Paprika (3,Sw,Vga), Chinakohl (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-06T00:00:00"
-      },
-      {
-          "dish_type": "Menü 1",
-          "dish": "Bolognese (1,3,Sw,Sl,GlW,Gl,R), Spaghetti (GlW,Gl,Vga), geriebener Mozzarella (Mi,Veg), Rucola (Vga), grüner Bohnensalat (3,Sw,Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Menü vegan",
-          "dish": "Sellerieschnitzel (Sl,GlW,Gl,Vga), Kerbelrahmsoße (9,Vga), Brokkoligemüse (Vga), Salzkartoffeln (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Focaccia Italia",
-          "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
-          "price": "Portion: 3,20 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Brownie",
-          "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Blondie",
-          "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Lassi",
-          "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Smoothie",
-          "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Dessert",
-          "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
-          "price": "Glas: 1,20 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Frühlings Bowl",
-          "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Plantbased Flammkuchen",
-          "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
-          "price": "Portion: 1,80 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Quinoa Bowl",
-          "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Spring Ciabatta",
-          "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      },
-      {
-          "dish_type": "Menü 1",
-          "dish": "Rinderhacksteak griechische Art (GlW,Gl,Mi,So,Ei,R), Paprikasoße (1,3,Sw,Sl,GlW,Gl,GIG,R), weiße Bohnen (Vga), Langkornreis (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Menü vegan",
-          "dish": "vegane Frikadelle (9,GlW,Gl,Sf,Vga), gemischtes Gemüse (Sl,Vga), weiße Soße (9,Vga), Süßkartoffel-Gnocchi (9,Vga), frische Kräuter (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Focaccia Italia",
-          "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
-          "price": "Portion: 3,20 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Brownie",
-          "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Blondie",
-          "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Lassi",
-          "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Smoothie",
-          "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Dessert",
-          "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
-          "price": "Glas: 1,20 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Frühlings Bowl",
-          "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Plantbased Flammkuchen",
-          "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
-          "price": "Portion: 1,80 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Quinoa Bowl",
-          "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Spring Ciabatta",
-          "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-08T00:00:00"
-      },
-      {
-          "dish_type": "Menü 1",
-          "dish": "bunter Wurstsalat (2,3,Sw,Sl,S), Pommes frites (Vga), gekochte Eier (Ei,Veg), gepickelte rote Zwiebeln (3,Sw,Vga), frische Kräuter (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Menü vegan",
-          "dish": "Asia-Nudeln (1,2,4,GlW,Gl,So,Vga), Asia-Gemüse (1,2,4,GlW,Gl,So,Vga), Süß-Sauer-Soße (3,12,Sw,Vga), veganes Schnitzel (Sl,GlW,Gl,Sf,So,Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Focaccia Italia",
-          "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
-          "price": "Portion: 3,20 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Brownie",
-          "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Blondie",
-          "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
-          "price": "Portion: 2,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Lassi",
-          "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Smoothie",
-          "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
-          "price": "Glas: 2,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Dessert",
-          "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
-          "price": "Glas: 1,20 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Frühlings Bowl",
-          "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Plantbased Flammkuchen",
-          "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
-          "price": "Portion: 1,80 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Quinoa Bowl",
-          "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
-          "price": "Portion: 3,50 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Spring Ciabatta",
-          "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-10T00:00:00"
-      },
-      {
-          "dish_type": "Menü 1",
-          "dish": "Bolognese (1,3,Sw,Sl,GlW,Gl,R), Spaghetti (GlW,Gl,Vga), geriebener Mozzarella (Mi,Veg), Rucola (Vga), Beilagensalat (Vga)",
-          "price": "Portion: 3,00 €",
-          "serving_date": "2024-05-07T00:00:00"
-      }
+    {
+      "dish_type": "Menü 1",
+      "dish": "paniertes Schnitzel vom Schwein (S), Pilzrahmsoße (Sl,GlW,Gl,Mi,So,Veg), Salzkartoffeln (Vga), frische Kräuter (Vga), Beilagensalat (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "tunesisches Ratatouille mit Peperoni und Couscous (5,9,Sl,GlW,Gl,ScM,Vga), Falafel-Bällchen (Sl,GlW,Gl,Sf,Vga), frische Kräuter (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Focaccia Italia",
+      "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
+      "price": "Portion: 3,20 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Brownie",
+      "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Blondie",
+      "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Lassi",
+      "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Smoothie",
+      "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Frühlings Bowl",
+      "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Plantbased Flammkuchen",
+      "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
+      "price": "Portion: 1,80 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Quinoa Bowl",
+      "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Spring Ciabatta",
+      "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Se,Vga), gepickelte rote Paprika (3,Sw,Vga), Chinakohl (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-06T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "Bolognese (1,3,Sw,Sl,GlW,Gl,R), Spaghetti (GlW,Gl,Vga), geriebener Mozzarella (Mi,Veg), Rucola (Vga), grüner Bohnensalat (3,Sw,Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "Sellerieschnitzel (Sl,GlW,Gl,Vga), Kerbelrahmsoße (9,Vga), Brokkoligemüse (Vga), Salzkartoffeln (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Focaccia Italia",
+      "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
+      "price": "Portion: 3,20 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Brownie",
+      "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Blondie",
+      "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Lassi",
+      "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Smoothie",
+      "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Frühlings Bowl",
+      "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Plantbased Flammkuchen",
+      "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
+      "price": "Portion: 1,80 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Quinoa Bowl",
+      "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Spring Ciabatta",
+      "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "Rinderhacksteak griechische Art (GlW,Gl,Mi,So,Ei,R), Paprikasoße (1,3,Sw,Sl,GlW,Gl,GIG,R), weiße Bohnen (Vga), Langkornreis (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "vegane Frikadelle (9,GlW,Gl,Sf,Vga), gemischtes Gemüse (Sl,Vga), weiße Soße (9,Vga), Süßkartoffel-Gnocchi (9,Vga), frische Kräuter (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Focaccia Italia",
+      "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
+      "price": "Portion: 3,20 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Brownie",
+      "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Blondie",
+      "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Lassi",
+      "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Smoothie",
+      "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Frühlings Bowl",
+      "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Plantbased Flammkuchen",
+      "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
+      "price": "Portion: 1,80 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Quinoa Bowl",
+      "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Spring Ciabatta",
+      "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-08T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "bunter Wurstsalat (2,3,Sw,Sl,S), Pommes frites (Vga), gekochte Eier (Ei,Veg), gepickelte rote Zwiebeln (3,Sw,Vga), frische Kräuter (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Menü vegan",
+      "dish": "Asia-Nudeln (1,2,4,GlW,Gl,So,Vga), Asia-Gemüse (1,2,4,GlW,Gl,So,Vga), Süß-Sauer-Soße (3,12,Sw,Vga), veganes Schnitzel (Sl,GlW,Gl,Sf,So,Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Focaccia Italia",
+      "dish": "mediterranes Focaccia (GlW,Gl,Vga), Pesto Rosso-Mayonnaise (Mi,Ei,ScM,Veg), Mozzarella (Mi,Veg), Tomaten (Vga), Rucola (Vga)",
+      "price": "Portion: 3,20 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Brownie",
+      "dish": "Brownie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Blondie",
+      "dish": "Blondie (GlW,Gl,GlH,Vga), Nuss-Krokant (ScH,ScM,ScW,Vga)",
+      "price": "Portion: 2,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Lassi",
+      "dish": "Erdbeeren (Vga), Joghurt (Mi,Veg), Bananen (Vga), Milch (Mi,Vga), Vanille (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Smoothie",
+      "dish": "Rhabarber (9,Vga), Bananen (Vga), Apfelsaft (Vga), Minze (Vga)",
+      "price": "Glas: 2,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Dessert",
+      "dish": "Stracciatellamousse (Mi,Veg), Vanillecreme mit Aprikosen (Mi,Veg), Schokopudding (Mi,Veg)",
+      "price": "Glas: 1,20 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Frühlings Bowl",
+      "dish": "Vollkorn-Fusilli (GlW), gebratene Vegosstreifen (So,Vga), Sour Cream vegan (9,Gl,GlH,Vga), Lauch (Vga), Mais (Vga), Karotten",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Plantbased Flammkuchen",
+      "dish": "Roggen-Baguette (GlW,Gl,So,GIG,GlR,Vga), Kräuter-Frischkäse (9,Gl,GlH,Vga), Bärlauch (Vga), Paprikawürfel (Vga), Frühlingszwiebeln (Vga)",
+      "price": "Portion: 1,80 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Quinoa Bowl",
+      "dish": "Odenwälder Quinoa (Vga), Tomaten-Zucchini-Chutney (Sw,Vga), marinierter Fetakäse (Mi,Veg), Minze (Vga), Blattpetersilie (Vga)",
+      "price": "Portion: 3,50 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Spring Ciabatta",
+      "dish": "Ciabatta-Brötchen (GlW,Veg), Erbsen-Hummus (Vga), gepickelte rote Paprika (Vga), Chinakohl (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-10T00:00:00"
+    },
+    {
+      "dish_type": "Menü 1",
+      "dish": "Bolognese (1,3,Sw,Sl,GlW,Gl,R), Spaghetti (GlW,Gl,Vga), geriebener Mozzarella (Mi,Veg), Rucola (Vga), Beilagensalat (Vga)",
+      "price": "Portion: 3,00 €",
+      "serving_date": "2024-05-07T00:00:00"
+    }
   ]
 }
