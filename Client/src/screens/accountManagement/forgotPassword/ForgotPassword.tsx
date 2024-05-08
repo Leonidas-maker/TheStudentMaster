@@ -15,7 +15,7 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="p-3 justify-center items-center">
           <Heading text="Du hast dein Passwort vergessen?" />
           <Subheading text="Setze dein Passwort hier zurück indem du deine EMail Adresse eingibst." />

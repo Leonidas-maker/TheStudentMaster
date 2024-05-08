@@ -95,7 +95,7 @@ const Registration: React.FC = () => {
   // Checkbox for Email Notifications
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="justify-center items-center">
           <Heading text="Account erstellen" />
           <TextFieldInput

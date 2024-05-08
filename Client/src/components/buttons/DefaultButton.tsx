@@ -28,8 +28,8 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
     <Pressable
       className={
         isCancel
-          ? "bg-red-500 w-3/4 h-10 rounded-xl border-2 border-red-500 focus:border-white justify-center items-center active:bg-red-600"
-          : "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 justify-center items-center active:bg-gray-300"
+          ? "bg-neutral-300 w-3/4 h-10 rounded-xl justify-center items-center active:bg-neutral-600"
+          : "bg-light_action dark:bg-dark_action w-3/4 h-10 rounded-xl justify-center items-center active:bg-light_action_active dark:active:bg-dark_action_active"
       }
       onPress={onPress}
       onPressIn={onPressIn}

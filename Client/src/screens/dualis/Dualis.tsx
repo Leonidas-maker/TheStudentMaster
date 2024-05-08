@@ -7,7 +7,7 @@ const Dualis: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <ScrollView className="h-screen bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View>
         <DefaultText text="Welcome to the Dualis page" />
       </View>

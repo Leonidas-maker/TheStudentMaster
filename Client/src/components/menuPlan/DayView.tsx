@@ -37,7 +37,7 @@ const DayView: React.FC<DayViewProps> = ({
             {isFirstDay ? (
               <Pressable
                 key={index}
-                className="items-center pt-2 z-10"
+                className="items-center pt-2 z-10 active:opacity-50"
                 onPress={() => setSelectedDate(day)}
               >
                 <Text
@@ -54,7 +54,7 @@ const DayView: React.FC<DayViewProps> = ({
             ) : (
               <Pressable
                 key={index}
-                className="items-center pt-2 border-l border-light_secondary dark:border-dark_secondary z-10"
+                className="items-center pt-2 border-l border-light_secondary dark:border-dark_secondary z-10 active:opacity-50"
                 onPress={() => setSelectedDate(day)}
               >
                 <Text

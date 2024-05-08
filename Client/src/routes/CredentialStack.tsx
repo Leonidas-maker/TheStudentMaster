@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar } from "react-native";
+import { StatusBar, useColorScheme } from "react-native";
 import Registration from "../screens/accountManagement/registration/Registration";
 
 const Stack = createStackNavigator();
 
 const CredentialStack: React.FC = () => {
+  const colorScheme = useColorScheme();
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
+
+  const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
+  const headerTintColor = isLight ? "#171717" : "#E0E2DB";
+  const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
+  const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
+
   return (
     <>
       <StatusBar barStyle="light-content" />
@@ -13,9 +29,9 @@ const CredentialStack: React.FC = () => {
         initialRouteName="Registration"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#171717",
+            backgroundColor: backgroundColor,
           },
-          headerTintColor: "#E0E0E2",
+          headerTintColor: headerTintColor,
         }}
       >
         <Stack.Screen

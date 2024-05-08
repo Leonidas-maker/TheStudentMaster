@@ -70,10 +70,10 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
               color={
                 isBackDisabled
                   ? isLight
-                    ? "#7A7A7A"
+                    ? "#D5DFEB"
                     : "#7A7A7A"
                   : isLight
-                    ? "#7493BE"
+                    ? "#ACBED8"
                     : "#E0E2DB"
               }
             />
@@ -89,10 +89,10 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
               color={
                 isForwardDisabled
                   ? isLight
-                    ? "#7A7A7A"
+                    ? "#D5DFEB"
                     : "#7A7A7A"
                   : isLight
-                    ? "#7493BE"
+                    ? "#ACBED8"
                     : "#E0E2DB"
               }
             />
@@ -106,21 +106,21 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
             <Icon
               name="arrow-back-ios"
               size={30}
-              color={isLight ? "#7493BE" : "#E0E2DB"}
+              color={isLight ? "#ACBED8" : "#56718A"}
             />
           </Pressable>
           <Pressable onPress={onTodayPress} className="active:opacity-50">
             <Icon
               name="today"
               size={30}
-              color={isLight ? "#7493BE" : "#E0E2DB"}
+              color={isLight ? "#ACBED8" : "#56718A"}
             />
           </Pressable>
           <Pressable onPress={onForwardPress} className="active:opacity-50">
             <Icon
               name="arrow-forward-ios"
               size={30}
-              color={isLight ? "#7493BE" : "#E0E2DB"}
+              color={isLight ? "#ACBED8" : "#56718A"}
             />
           </Pressable>
         </View>

@@ -67,7 +67,7 @@ const DishView: React.FC<DishProps> = ({
   // Filters the dishes based on the selected date and canteen
   //! Needs to be changed for other canteens
   useEffect(() => {
-    if (selectedCanteen === "Mensaria am Schloss") {
+    if (selectedCanteen === "Mensaria Metropol (DHBW Coblitzallee)") {
       const filteredDishes = menu.menu.filter(
         (dish) =>
           format(parseISO(dish.serving_date), "yyyy-MM-dd") ===
@@ -98,25 +98,25 @@ const DishView: React.FC<DishProps> = ({
   //TODO Add pop-up for dish details
   //! menu.canteen_name only returns "Mensaria am Schloss" for now because we only have this data at the moment
   return (
-    <ScrollView className="flex-1" ref={scrollViewRef}>
+    <ScrollView className="flex-1 active:opacity-50" ref={scrollViewRef}>
       {dishes.length > 0 ? (
         dishes.map((dish, index) => (
-          <Pressable className="flex-1" onPress={handleDishPress}>
+          <Pressable className="flex-1 active:opacity-50" onPress={handleDishPress}>
             <View
               key={index}
-              className="m-2 p-2 bg-gray-400 active:bg-gray-500"
+              className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
             >
-              <Text>
+              <Text className="text-black dark:text-white">
                 {dish.dish_type}: {dish.dish}
               </Text>
-              <Text>{dish.price}</Text>
-              <Text>{dish.serving_date}</Text>
+              <Text className="text-black dark:text-white">{dish.price}</Text>
+              <Text className="text-black dark:text-white">{dish.serving_date}</Text>
             </View>
           </Pressable>
         ))
       ) : (
-        <View className="m-2 p-2 bg-gray-400">
-          <Text>
+        <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary">
+          <Text className="text-black dark:text-white">
             Keine Daten verfügbar für {menu.canteen_name} am{" "}
             {selectedDate.toLocaleDateString("de-DE")}.
           </Text>
