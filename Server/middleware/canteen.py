@@ -17,8 +17,6 @@ from models.pydantic_schemas import s_general
 # ======================================================== #
 # ======================== Update ======================== #
 # ======================================================== #
-
-
 def create_canteens(db: Session):
     try:
         with open("./utils/canteen/canteen_addresses.json", "r") as file:
@@ -139,11 +137,6 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
     return new_canteen
 
 
-def update_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
-    # TODO: Implement update_canteen
-    pass
-
-
 # ======================================================== #
 # ========================= Dish ========================= #
 # ======================================================== #
@@ -211,11 +204,6 @@ def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
         return False
 
     return new_dish
-
-
-def update_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
-    # TODO: Implement update_dish
-    pass
 
 
 # ======================================================== #
@@ -320,11 +308,6 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
         return False
 
     return new_menu
-
-
-def update_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
-    # TODO: Implement update_menu
-    pass
 
 
 # ======================================================== #
