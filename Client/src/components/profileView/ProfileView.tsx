@@ -28,7 +28,9 @@ const ProfileView: React.FC = () => {
 
   return (
     <View className="m-4">
-      <Text className="text-black dark:text-white text-xl font-bold mb-2">Profil</Text>
+      <Text className="text-black dark:text-white text-xl font-bold mb-2">
+        Profil
+      </Text>
       <View className="bg-light_secondary dark:bg-dark_secondary rounded-lg shadow-md p-4">
         <Pressable onPress={handleProfilePress} className="active:opacity-50">
           <View className="flex-row justify-between items-center">
