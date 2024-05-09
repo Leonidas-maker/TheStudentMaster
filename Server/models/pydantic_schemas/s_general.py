@@ -9,13 +9,13 @@ from datetime import datetime
 class AddressBase(BaseModel):
     address1: str
     address2: Optional[str] = None
-    district: str
-    postal_code: str
 
 
 class AddressCreate(AddressBase):
     city: str
     country: str
+    district: str
+    postal_code: str
 
 
 class Address(AddressBase):
@@ -28,19 +28,66 @@ class Address(AddressBase):
 
 
 # ======================================================== #
+# ====================== PostalCode ====================== #
+# ======================================================== #
+
+
+class PostalCodeBase(BaseModel):
+    postal_code: str
+
+
+class PostalCodeCreate(PostalCodeBase):
+    city: str
+    country: str
+    district: str
+
+
+class PostalCode(PostalCodeBase):
+    city_id: int
+    postal_code_id: int
+    last_modified: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ======================================================== #
 # ========================= City ========================= #
 # ======================================================== #
 class CityBase(BaseModel):
     city: str
-    country_id: int
 
 
 class CityCreate(CityBase):
-    pass
+    district: str
+    country: str
 
 
 class City(CityBase):
     city_id: int
+    district_id: int
+    last_modified: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ======================================================== #
+# ======================= District ======================= #
+# ======================================================== #
+
+
+class DistrictBase(BaseModel):
+    district: str
+
+
+class DistrictCreate(DistrictBase):
+    country: str
+
+
+class District(DistrictBase):
+    district_id: int
+    country_id: int
     last_modified: datetime
 
     class Config:
@@ -50,12 +97,10 @@ class City(CityBase):
 # ======================================================== #
 # ======================== Country ======================= #
 # ======================================================== #
+
+
 class CountryBase(BaseModel):
     country: str
-
-
-class CountryCreate(CountryBase):
-    pass
 
 
 class Country(CountryBase):
@@ -86,3 +131,7 @@ class CompleteAdress(BaseModel):
     postal_code: str
     city: str
     country: str
+
+
+class BasicMessage(BaseModel):
+    message: str
