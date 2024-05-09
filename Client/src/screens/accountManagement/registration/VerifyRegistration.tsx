@@ -7,7 +7,6 @@ import Heading from "../../../components/textFields/Heading";
 import Subheading from "../../../components/textFields/Subheading";
 
 const VerifyRegistration: React.FC = () => {
-
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center p-3">

@@ -7,7 +7,6 @@ import TextButton from "../../../components/buttons/TextButton";
 import DefaultText from "../../../components/textFields/DefaultText";
 
 const Login: React.FC = () => {
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };

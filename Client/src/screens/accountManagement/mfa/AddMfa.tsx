@@ -9,7 +9,6 @@ import QRCode from "react-native-qrcode-svg";
 // TODO Implement get QR-Code
 // TODO Implement copy code to clipboard
 const AddMfa: React.FC = () => {
-
   const sampleQRData = "https://example.com";
 
   return (

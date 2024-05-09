@@ -3,7 +3,6 @@ import { View, ScrollView } from "react-native";
 import DefaultText from "../../components/textFields/DefaultText";
 
 const Credits: React.FC = () => {
-
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View>

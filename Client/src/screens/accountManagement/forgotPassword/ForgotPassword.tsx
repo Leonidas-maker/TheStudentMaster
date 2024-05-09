@@ -6,7 +6,6 @@ import Heading from "../../../components/textFields/Heading";
 import Subheading from "../../../components/textFields/Subheading";
 
 const ForgotPassword: React.FC = () => {
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
