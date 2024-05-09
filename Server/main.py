@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import asyncio
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
 import datetime
+from fastapi_cdn_host import monkey_patch
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_calendar
@@ -157,6 +158,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"})
+monkey_patch(app)
 
 
 # ======================================================== #

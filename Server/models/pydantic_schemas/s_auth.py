@@ -39,6 +39,11 @@ class BackupOTP(BaseModel):
     backup_codes: List[str]
     # timestamp: Optional[str] # TODO: Mabye for audit log and user response email
 
+class UserForgotPassword(BaseModel):
+    email: EmailStr
+class UserResetPassword(BaseModel):
+    new_password: str
+    otp_code: str
 
 # ======================================================== #
 # ======================= Responses ====================== #
@@ -51,21 +56,13 @@ class UserResRegister(UserBase):
 
 # ~~~~~~~~~~~~~~~~~~ 2FA ~~~~~~~~~~~~~~~~~~ #
 class UserResActivate2FA(BaseModel):
-    provisioning_uri: str = None
-    _2fa_secret: str = None
-
-    @validator("provisioning_uri", always=True)
-    def check_exclusivity(cls, v, values, **kwargs):
-        if v is not None and values.get("_2fa_secret") is not None:
-            raise ValueError("Only _2fa_secret or provisioning_uri may be set, not both.")
-        if v is None and values.get("_2fa_secret") is None:
-            raise ValueError("One of _2fa_secret or provisioning_uri must be set.")
-        return v
-
+    secret_2fa: str
+    provisioning_uri: Optional[str] = None
+    
 
 class UserResVerifyFirst2FA(BaseModel):
     backup_codes: List[str]
-    timestamp: str = datetime.now()
+    timestamp: datetime = datetime.now()
 
 
 # ~~~~~~~~~~~~~~~~~ Tokens ~~~~~~~~~~~~~~~~ #
@@ -77,3 +74,9 @@ class UserTokens(BaseModel):
 
 class UserSecurityToken(BaseModel):
     secret_token: str
+
+# ~~~~~~~~~~~~ Forgot Password ~~~~~~~~~~~~ #
+
+class UserResForgotPassword(BaseModel):
+    message: str
+    user_uuid: UUID4

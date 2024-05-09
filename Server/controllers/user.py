@@ -7,7 +7,7 @@ import datetime
 from config import security
 
 # ~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user
+from models.sql_models import m_user, m_auth
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user, s_calendar
@@ -45,7 +45,7 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
     db.flush()
 
     # Create new user_security
-    new_user_security = m_user.UserSecurity(
+    new_user_security = m_auth.UserSecurity(
         user_id=new_user.user_id,
         password=bcrypt.hashpw(user.security.password.encode("utf-8"), bcrypt.gensalt()),
     )
@@ -122,9 +122,8 @@ def update_user_calendar(
     if not calendar:
         raise HTTPException(status_code=404, detail="Not Found")
     # Return response
-    res_calendar = s_calendar.ResUserCalendar(
-        university_name=calendar.university.university_name,
-        university_uuid=calendar.university.university_uuid,
+    res_calendar = s_calendar.ResCalendar(
+        university_name=calendar.university.university_name if calendar.university else None,
         course_name=calendar.course_name,
         data=calendar.data,
         hash=calendar.hash,

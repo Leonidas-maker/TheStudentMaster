@@ -119,3 +119,7 @@ class CompleteAdress(BaseModel):
     postal_code: str
     city: str
     country: str
+
+
+class BasicMessage(BaseModel):
+    message: str

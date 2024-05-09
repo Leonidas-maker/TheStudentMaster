@@ -71,9 +71,8 @@ class ResAvailableNativeCalendars(BaseModel):
     course_names: List[str]
 
 
-class ResUserCalendar(BaseModel):
-    university_name: str
-    university_uuid: UUID4
+class ResCalendar(BaseModel):
+    university_name: Optional[str] = None
     course_name: str
     data: dict
     hash: str

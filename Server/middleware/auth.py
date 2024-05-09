@@ -151,7 +151,7 @@ def get_tokens_private(
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
     if not (folder_path / "refresh_private_key.pem").exists() and not (folder_path / "access_private_key.pem").exists():
         generate_keys()
-        
+
     # Get the refresh private key
     refresh_private_key = load_key("refresh_private_key.pem")
 
@@ -216,46 +216,94 @@ def get_security_token_public(
 # ======================== Verify ======================== #
 # ======================================================== #
 
+
 # TODO Application ID
 def check_jti(
     db: Session,
     jti: uuid.UUID,
+    check_value: str,
     user_id: str = None,
     user_uuid: str = None,
     user_security: m_auth.UserSecurity = None,
-    application_id: str = "webapplication",
 ) -> bool:
+    try:
+        application_id = uuid.UUID(check_value)
+        token_value = None
+    except:
+        application_id = None
+        token_value = check_value
+    
+    token_exists = False
+
+    # ~~~~~~~~~~~~~~~~ User ID ~~~~~~~~~~~~~~~~ #
     if user_id:
-        token_exists = (
-            db.query(m_auth.UserTokens)
-            .filter(
-                m_auth.UserTokens.user_id == user_id,
-                m_auth.UserTokens.token_jti == jti,
-                m_auth.UserTokens.token_value == application_id,
+        if application_id:
+            token_exists = (
+                db.query(m_auth.UserTokens)
+                .join(
+                    m_auth.UserRegisteredApplications,
+                    m_auth.UserRegisteredApplications.app_id == m_auth.UserTokens.app_id,
+                )
+                .filter(
+                    m_auth.UserTokens.user_id == user_id,
+                    m_auth.UserTokens.token_jti == jti,
+                    m_auth.UserRegisteredApplications.app_id == application_id,
+                )
+                .first()
+            ) is not None
+        else:
+            token_exists = (
+                db.query(m_auth.UserTokens)
+                .filter(
+                    m_auth.UserTokens.user_id == user_id,
+                    m_auth.UserTokens.token_jti == jti,
+                    m_auth.UserTokens.token_value == token_value,
+                )
+                .first()
+                is not None
             )
-            .first()
-            is not None
-        )
+
+    # ~~~~~~~~~~~~~~~~ User UUID ~~~~~~~~~~~~~~~ #
     elif user_uuid:
         user_uuid = uuid.UUID(user_uuid)
-        token_exists = (
-            db.query(m_auth.UserTokens)
-            .join(m_user.UserUUID, m_user.UserUUID.user_uuid == user_uuid)
-            .filter(
-                m_auth.UserTokens.token_jti == jti,
-                m_auth.UserTokens.token_value == application_id
+        if application_id:
+            token_exists = (
+                db.query(m_auth.UserTokens)
+                .join(m_user.UserUUID, m_user.UserUUID.user_id == m_auth.UserTokens.user_id)
+                .join(
+                    m_auth.UserRegisteredApplications,
+                    m_auth.UserRegisteredApplications.app_id == m_auth.UserTokens.app_id,
+                )
+                .filter(
+                    m_user.UserUUID.user_uuid == user_uuid,
+                    m_auth.UserTokens.token_jti == jti,
+                    m_auth.UserRegisteredApplications.app_id == application_id,
+                )
+                .first()
+            ) is not None
+        else:
+            token_exists = (
+                db.query(m_auth.UserTokens)
+                .join(m_user.UserUUID, m_user.UserUUID.user_uuid == user_uuid)
+                .filter(m_auth.UserTokens.token_jti == jti, m_auth.UserTokens.token_value == token_value)
+                .first()
+                is not None
             )
-            .first()
-            is not None
-        )
+
+    # ~~~~~~~~~~~~~~~~ User Security ~~~~~~~~~~~~~~~ #
     elif user_security:
         tokens: List[m_auth.UserTokens] = user_security.user_tokens
-        for token in tokens:
-            if token.token_jti == jti and token.token_value == application_id:
-                token_exists = True
-                break
+
+        if application_id:
+            for token in tokens:
+                if token.token_jti == jti and token.app_id == application_id:
+                    token_exists = True
+                    break
         else:
-            token_exists = False
+            for token in tokens:
+                if token.token_jti == jti and token.token_value == token_value:
+                    token_exists = True
+                    break
 
     return token_exists
 
@@ -271,7 +319,7 @@ def verify_refresh_token(db: Session, token: str):
             db=db,
             jti=uuid.UUID(payload["jti"]),
             user_uuid=payload["sub"],
-            application_id=payload["aud"],
+            check_value=payload["aud"],
         ):
             return False
 
@@ -294,7 +342,7 @@ def verify_access_token(db: Session, token: str):
             db=db,
             jti=uuid.UUID(payload["jti"]),
             user_uuid=payload["sub"],
-            application_id=payload["aud"],
+            check_value=payload["aud"],
         ):
             return False
         return payload
@@ -315,9 +363,9 @@ def verify_security_token(db: Session, token: str, is_2fa: bool = False):
         # Check if the jti is valid
         if not check_jti(
             db=db,
-            jti=payload["jti"],
+            jti=uuid.UUID(payload["jti"]),
             user_security=user_security,
-            application_id=payload["aud"],
+            check_value=payload["aud"],
         ):
             return False, None
 
@@ -343,21 +391,26 @@ def check_refresh_token(db: Session, token: str) -> m_user.User:
         if user:
             return user
         else:
-            raise HTTPException(status_code=404, detail="User not found") 
+            raise HTTPException(status_code=404, detail="User not found")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-def check_access_token(db: Session, token: str, with_uuid: bool = False, with_address: bool = False, with_avatar: bool = False ) -> m_user.User:
+def check_access_token(
+    db: Session, token: str, with_uuid: bool = False, with_address: bool = False, with_avatar: bool = False
+) -> m_user.User:
     jwt_payload = verify_access_token(db, token)
     if jwt_payload:
-        user = get_user(db, user_uuid=jwt_payload["sub"], with_uuid=with_uuid, with_address=with_address, with_avatar=with_avatar)
+        user = get_user(
+            db, user_uuid=jwt_payload["sub"], with_uuid=with_uuid, with_address=with_address, with_avatar=with_avatar
+        )
         if user:
             return user
         else:
-            raise HTTPException(status_code=404, detail="User not found") 
+            raise HTTPException(status_code=404, detail="User not found")
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
 
 # ======================================================== #
 # ==================== Tokens-Rotation =================== #
@@ -369,6 +422,14 @@ def create_tokens(
     old_jti: uuid.UUID = None,
     application_id: uuid.UUID = None,
 ) -> Tuple[str, str]:
+    
+    # Check if the application_id is a valid UUID (this is needed because python does not check the type of the variable)
+    if application_id:
+        try:
+            application_id = uuid.UUID(application_id)
+        except:
+            pass    
+
     user_id = user_security.user_id
 
     # Check if the user is locked
@@ -388,7 +449,7 @@ def create_tokens(
     # Get the private keys and create the jti
     refresh_private_key, access_private_key = get_tokens_private()
     refresh_jti = uuid.uuid4()
-    access_jti =uuid.uuid4()
+    access_jti = uuid.uuid4()
 
     # ~~~~~~~~ Create the refresh token ~~~~~~~ #
 
@@ -452,7 +513,7 @@ def create_tokens(
     if application_id and isinstance(application_id, uuid.UUID):
         new_access_token = m_auth.UserTokens(
             user_id=user_id,
-            token_type="Application",
+            token_type="Access",
             token_jti=access_jti,
             app_id=application_id,
             creation_time=current_timestamp,
@@ -481,7 +542,7 @@ def create_security_token(
     user_uuid: str,  # TODO Maybe use relationship between user_security and user_uuid
     reason: str,
 ) -> Tuple[str, str]:
-    new_jti =uuid.uuid4()
+    new_jti = uuid.uuid4()
     current_timestamp = unix_timestamp()
     token_exp = unix_timestamp(minutes=5)
     payload = {
@@ -578,15 +639,17 @@ def verify_totp(db: Session, otp: str, user_uuid: str = None, user_2fa: m_auth.U
         otp
     ):  # * short-circuit evaluation to prevent efficient timing attacks
         user_2fa._2fa_last_used = otp
-        db.commit()
+        db.flush()
         return True
     else:
         return False
 
 
 def create_totp(db: Session, user_id: str) -> str:
-    totp_secret = pyotp.random_base32()
+    if db.query(m_auth.User2FA).filter(m_auth.User2FA.user_id == user_id).first() is not None:
+        raise HTTPException(status_code=400, detail="2FA-TOTP already in creation process")
 
+    totp_secret = pyotp.random_base32()
     user_2fa = m_auth.User2FA(
         user_id=user_id,
         _2fa_secret=totp_secret,
@@ -600,24 +663,19 @@ def create_totp(db: Session, user_id: str) -> str:
 def create_backup_codes(db: Session, user_uuid: str) -> List[str]:
     user_security = get_user_security(db, user_uuid=user_uuid, with_2fa=True)
     if not user_security._2fa_enabled:
-        user_2fa: m_auth.User2FA = user_security.user_2fa
+        user_2fa = user_security.user_2fa
         backup_codes = []
         for _ in range(6):
             tmp_number = secrets.randbelow(1000000)
             backup_codes.append(f"{tmp_number:06}")
-        user_2fa._2fa_backup = ";".join(backup_codes)
+        backup_codes_str = ";".join(backup_codes)
+        print(user_2fa._2fa_id)
+        user_2fa._2fa_backup = backup_codes_str
         user_security._2fa_enabled = True
-        db.commit()
+        db.flush()
         return backup_codes
     else:
         raise HTTPException(status_code=400, detail="2FA already enabled")
-
-
-def remove_2fa(db: Session, users_security: m_auth.UserSecurity):
-    users_security.user_2fa.delete(synchronize_session=False)
-    users_security._2fa_enabled = False
-    db.commit()
-
 
 # ======================================================== #
 # ====================== Simple-OTP ====================== #
@@ -667,27 +725,32 @@ def check_password(
         return True
     else:
         return False
-    
+
+
 def change_password(db: Session, user_security: m_auth.UserSecurity, new_password: str):
     user_security.password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
-    db.flush()
+    db.commit()
+
 
 # ======================================================== #
 # ====================== Application ===================== #
 # ======================================================== #
 
+
 def register_application(db: Session, user_security: m_auth.UserSecurity, application: s_auth.Application) -> uuid.UUID:
     application_uuid = application.application_id
 
-    new_application = db.query(m_auth.UserRegisteredApplications).filter(
-        m_auth.UserRegisteredApplications.app_id == application_uuid
-    ).first()
+    new_application = (
+        db.query(m_auth.UserRegisteredApplications)
+        .filter(m_auth.UserRegisteredApplications.app_id == application_uuid)
+        .first()
+    )
 
     if new_application:
         raise HTTPException(status_code=400, detail="Application already registered")
 
     new_application = m_auth.UserRegisteredApplications(
-        app_id= application_uuid,
+        app_id=application_uuid,
         users_id=user_security.user_id,
         app_name=application.application_name,
         app_type=application.application_type,
@@ -697,11 +760,12 @@ def register_application(db: Session, user_security: m_auth.UserSecurity, applic
     db.add(new_application)
     db.flush()
     return application_uuid
-    
+
 
 ###########################################################################
 ############################## Token Cleaners #############################
 ###########################################################################
+
 
 def remove_old_tokens(
     db: Session,
@@ -720,7 +784,7 @@ def remove_old_tokens(
 
     expired_tokens = []
 
-    if application_tokens: 
+    if application_tokens:
         # Remove expired application tokens
         for token in application_tokens:
             if token.expiration_time < current_timestamp or token.token_jti == old_jti:

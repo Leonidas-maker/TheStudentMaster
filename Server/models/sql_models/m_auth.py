@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, Uuid, CheckConstraint, UniqueConstraint
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, Uuid, CheckConstraint, UniqueConstraint, or_
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER as INT
 from sqlalchemy.sql import func
@@ -12,11 +12,8 @@ from config.database import Base
 class UserSecurity(Base):
     __tablename__ = "users_security"
 
-    security_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.user_id"), primary_key=True, nullable=False)
     password = Column(String(255), nullable=False)
-
-    forgot_password = Column(String(255))
 
     # ~~~~~~~~~~~~~~~~ Security ~~~~~~~~~~~~~~~ #
     secutity_warns = Column(Integer, default=0)  # * Number of times suspicious activity has been detected max. 10
@@ -36,7 +33,7 @@ class UserSecurity(Base):
         order_by="UserTokens.creation_time",
         collection_class=ordering_list("creation_time"),
     )  # * Performance improved by ordering tokens by creation_time
-    user_2fa = relationship("User2FA", back_populates="user_security", cascade="save-update, delete")
+    user_2fa = relationship("User2FA", back_populates="user_security", cascade="save-update, delete", uselist=False)
     registered_applications = relationship("UserRegisteredApplications", back_populates="user_security", cascade="save-update, delete")
 
 
@@ -44,7 +41,7 @@ class User2FA(Base):
     __tablename__ = "users_2fa"
 
     _2fa_id = Column(Integer, primary_key=True, index=True)
-    users_id = Column(Integer, ForeignKey("users_security.user_id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users_security.user_id"), nullable=False)
     _2fa_secret = Column(String(255))
     _2fa_last_used = Column(INT(11))
     _2fa_backup = Column(String(255))

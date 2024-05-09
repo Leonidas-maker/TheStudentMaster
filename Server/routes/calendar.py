@@ -7,7 +7,7 @@ import uuid
 from models.sql_models import m_calendar
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_calendar
+from models.pydantic_schemas import s_calendar, s_general
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_db
@@ -46,13 +46,11 @@ def get_available_calendars(db: Session = Depends(get_db)):
 
     return response
   
-@calendar_router.get("/calendar/{university_uuid}/{course_name}", response_model=s_calendar.CalendarNative)
+@calendar_router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar)
 def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)):
-    query_options = [joinedload(m_calendar.CalendarNative.university)]
-
     course_name = course_name.replace("_", " ")
 
-    calendar = db.query(m_calendar.CalendarNative).options(*query_options).filter(
+    calendar = db.query(m_calendar.CalendarNative).join(m_calendar.University).filter(
         m_calendar.University.university_uuid == university_uuid,
         m_calendar.CalendarNative.course_name == course_name
     ).first()
@@ -66,15 +64,13 @@ def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Dep
     )
     return res_calendar
 
-@calendar_router.get("/calendar/{university_uuid}/{course_name}/hash", response_model=str)
+@calendar_router.get("/{university_uuid}/{course_name}/hash", response_model=s_general.BasicMessage)
 def get_calendar_hash(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)):
-    query_options = [joinedload(m_calendar.CalendarNative.university)]
-
     course_name = course_name.replace("_", " ")
 
-    calendar = db.query(m_calendar.CalendarNative).options(*query_options).filter(
+    calendar = db.query(m_calendar.CalendarNative).join(m_calendar.University).filter(
         m_calendar.University.university_uuid == university_uuid,
         m_calendar.CalendarNative.course_name == course_name
     ).first()
 
-    return calendar.hash
+    return {"message": calendar.hash}

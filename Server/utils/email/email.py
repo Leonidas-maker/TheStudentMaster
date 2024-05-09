@@ -64,6 +64,8 @@ async def async_send_mail_with_template(email: EmailSchema):
         case "deactivate-2fa":
             email_template = "mail_deactivate_2fa.html"
             email_subject = "2FA deactivated"
+        case _:
+            raise ValueError("Invalid email type")
 
     message = MessageSchema(
         subject=email_subject,
