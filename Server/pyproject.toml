@@ -1,0 +1,7 @@
+[tool.licensecheck]
+using = "requirements:requirements.txt"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "test"
+]
