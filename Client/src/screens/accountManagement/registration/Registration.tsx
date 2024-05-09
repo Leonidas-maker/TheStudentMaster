@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView, Keyboard, Pressable } from "react-native";
 
 import universityData from "../testData/courseData.json";
@@ -21,7 +20,6 @@ interface UniversityDropdownItem {
 }
 
 const Registration: React.FC = () => {
-  const { t } = useTranslation();
   const [isNotification, setIsNotification] = useState(false);
   const [is2FA, setIs2FA] = useState(false);
 

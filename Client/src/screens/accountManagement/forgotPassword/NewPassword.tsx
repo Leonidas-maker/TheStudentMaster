@@ -1,12 +1,10 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView, Keyboard, Pressable } from "react-native";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
 
 const NewPassword: React.FC = () => {
-  const { t } = useTranslation();
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();

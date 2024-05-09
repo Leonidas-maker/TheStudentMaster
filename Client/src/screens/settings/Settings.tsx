@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
@@ -8,7 +7,6 @@ import DefaultText from "../../components/textFields/DefaultText";
 type SchemeType = "light" | "dark" | "system";
 
 const Settings: React.FC = () => {
-  const { t } = useTranslation();
   const { colorScheme, setColorScheme } = useColorScheme();
 
   const { theme, setTheme } = useTheme();
