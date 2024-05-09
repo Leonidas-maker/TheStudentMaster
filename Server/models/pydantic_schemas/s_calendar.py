@@ -2,6 +2,7 @@ from pydantic import BaseModel, UUID4
 from typing import Optional, List
 from datetime import datetime
 
+
 class CalendarNative(BaseModel):
     university_name: str
     course_name: str
@@ -15,13 +16,14 @@ class CalendarNative(BaseModel):
 
 class CalendarCustomBase(BaseModel):
     course_name: str
-    
+
 
 class CalendarCustomCreate(CalendarCustomBase):
     university_uuid: Optional[UUID4] = None
     source_backend: str
     source_url: str
-    
+
+
 class CalendarCustom(CalendarCustomBase):
     university_name: str
     data: dict
@@ -58,9 +60,11 @@ class CalendarBackend(BaseModel):
 # ======================= Requests ======================= #
 # ======================================================== #
 
+
 class NativeCalenderIdentifier(BaseModel):
     university_uuid: UUID4
     course_name: str
+
 
 # ======================================================== #
 # ======================= Responses ====================== #

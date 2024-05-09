@@ -14,17 +14,19 @@ from models.sql_models import m_general, m_user, m_calendar, m_canteen
 ########################## Basic logic functions ##########################
 ###########################################################################
 
+
 def xor(*args) -> bool:
     return reduce(xor_, map(bool, args))
+
 
 def only_one(*args) -> bool:
     return sum(map(bool, args)) == 1
 
 
-
 ###########################################################################
 ####################### Database specific functions #######################
 ###########################################################################
+
 
 def create_address(db: Session, new_address: s_general.AddressCreate) -> s_general.Address:
     if not new_address:
@@ -46,7 +48,6 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         return address_exists
 
     # Check if request.address.postal_code exists
-    
 
     postal_code_exists = (
         db.query(m_general.PostalCode)
@@ -57,8 +58,6 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         )
         .first()
     )
-
-
 
     if not postal_code_exists:
         # Check if request.address.city exists
@@ -128,6 +127,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
 
     return new_address
 
+
 def clean_address(db: Session) -> int:
     # Addresses used by University Table (calendar)
     native_address_1_subquery = (
@@ -144,20 +144,22 @@ def clean_address(db: Session) -> int:
     )
 
     # Addresses used by User Table
-    user_address_subquery = ( 
+    user_address_subquery = (
         db.query(m_general.Address.address_id)
         .join(m_user.User)
         .filter(m_user.User.address_id == m_general.Address.address_id)
     )
 
     # Combine all subqueries
-    all_subquery = union(
-        native_address_1_subquery,
-        native_address_2_subquery,
-        user_address_subquery
-    ).alias('all_addresses')
-    
+    all_subquery = union(native_address_1_subquery, native_address_2_subquery, user_address_subquery).alias(
+        "all_addresses"
+    )
+
     # Delete all addresses that are not in any of the subqueries
-    delete_count = db.query(m_general.Address).filter(m_general.Address.address_id.notin_(all_subquery.element)).delete(synchronize_session=False)
+    delete_count = (
+        db.query(m_general.Address)
+        .filter(m_general.Address.address_id.notin_(all_subquery.element))
+        .delete(synchronize_session=False)
+    )
     db.commit()
     return delete_count

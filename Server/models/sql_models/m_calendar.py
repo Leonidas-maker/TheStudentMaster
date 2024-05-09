@@ -8,7 +8,7 @@ from sqlalchemy import (
     ForeignKey,
     CheckConstraint,
     Uuid,
-    UniqueConstraint
+    UniqueConstraint,
 )
 from config.database import Base
 from sqlalchemy.orm import validates, relationship
@@ -33,7 +33,9 @@ class CalendarCustom(Base):
     refresh_interval = Column(Integer, nullable=False, default=15)  # In minutes
     last_updated = Column(TIMESTAMP, nullable=False)
 
-    verified = Column(BOOLEAN, default=False)  # True if the data is from a verified source (not used yet will be implemented later in the project)
+    verified = Column(
+        BOOLEAN, default=False
+    )  # True if the data is from a verified source (not used yet will be implemented later in the project)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", cascade="save-update", uselist=False)

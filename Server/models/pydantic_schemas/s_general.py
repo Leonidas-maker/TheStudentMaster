@@ -10,6 +10,7 @@ class AddressBase(BaseModel):
     address1: str
     address2: Optional[str] = None
 
+
 class AddressCreate(AddressBase):
     city: str
     country: str
@@ -25,18 +26,21 @@ class Address(AddressBase):
     class Config:
         from_attributes = True
 
+
 # ======================================================== #
 # ====================== PostalCode ====================== #
 # ======================================================== #
 
+
 class PostalCodeBase(BaseModel):
     postal_code: str
-    
+
 
 class PostalCodeCreate(PostalCodeBase):
     city: str
     country: str
     district: str
+
 
 class PostalCode(PostalCodeBase):
     city_id: int
@@ -53,9 +57,11 @@ class PostalCode(PostalCodeBase):
 class CityBase(BaseModel):
     city: str
 
+
 class CityCreate(CityBase):
     district: str
     country: str
+
 
 class City(CityBase):
     city_id: int
@@ -70,11 +76,14 @@ class City(CityBase):
 # ======================= District ======================= #
 # ======================================================== #
 
+
 class DistrictBase(BaseModel):
     district: str
 
+
 class DistrictCreate(DistrictBase):
     country: str
+
 
 class District(DistrictBase):
     district_id: int
@@ -84,12 +93,15 @@ class District(DistrictBase):
     class Config:
         from_attributes = True
 
+
 # ======================================================== #
 # ======================== Country ======================= #
 # ======================================================== #
 
+
 class CountryBase(BaseModel):
     country: str
+
 
 class Country(CountryBase):
     country_id: int

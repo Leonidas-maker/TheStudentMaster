@@ -32,7 +32,7 @@ from middleware.auth import (
     raise_security_warns,
     check_access_token,
     register_application,
-    change_password
+    change_password,
 )
 
 # ~~~~~~~~~~~~~~~~~~ Util ~~~~~~~~~~~~~~~~~ #
@@ -175,12 +175,10 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
                 provisioning_uri=pyotp.totp.TOTP(_2fa_secret).provisioning_uri(
                     name=user.email, issuer_name="TheStudentMaster.com"
                 ),
-                secret_2fa=_2fa_secret
+                secret_2fa=_2fa_secret,
             )
         else:
-            return s_auth.UserResActivate2FA(
-                secret_2fa=_2fa_secret
-            )
+            return s_auth.UserResActivate2FA(secret_2fa=_2fa_secret)
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -243,7 +241,7 @@ def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
         if count_correct == len(otp.backup_codes):
             revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
 
-            #* Duplicate code from remove_2fa but okay for now
+            # * Duplicate code from remove_2fa but okay for now
             # ~~~~~~~~~~~~~~~ Remove 2FA ~~~~~~~~~~~~~~ #
             db.delete(user_security.user_2fa)
             user_security._2fa_enabled = False
@@ -271,7 +269,7 @@ def remove_2fa(db: Session, background_tasks: BackgroundTasks, access_token: str
         if not user_security._2fa_enabled:
             raise HTTPException(status_code=400, detail="2FA not enabled")
         if verify_totp(db, otp, user_2fa=user_security.user_2fa):
-            #* Duplicate code from remove_2fa but okay for now
+            # * Duplicate code from remove_2fa but okay for now
             # ~~~~~~~~~~~~~~~ Remove 2FA ~~~~~~~~~~~~~~ #
             db.delete(user_security.user_2fa)
             user_security._2fa_enabled = False
@@ -292,9 +290,11 @@ def remove_2fa(db: Session, background_tasks: BackgroundTasks, access_token: str
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
+
 ###########################################################################
 ############################# Forgot password #############################
 ###########################################################################
+
 
 # TODO Optimize the two db queries to only one
 def forgot_password(db: Session, background_tasks: BackgroundTasks, email: str):
@@ -315,9 +315,13 @@ def forgot_password(db: Session, background_tasks: BackgroundTasks, email: str):
                     type="forgot-password",
                 ),
             )
-            return {"message": "Email sent", "user_uuid": str(user.user_uuid.user_uuid)} # TODO: Maybe remove user_uuid --> Security risk?
+            return {
+                "message": "Email sent",
+                "user_uuid": str(user.user_uuid.user_uuid),
+            }  # TODO: Maybe remove user_uuid --> Security risk?
     raise HTTPException(status_code=401, detail="Invalid credentials")
-    
+
+
 def reset_password(db: Session, background_tasks: BackgroundTasks, user_uuid: str, verify_code: str, new_password: str):
     user_security = get_user_security(db, user_uuid=user_uuid)
 
@@ -329,4 +333,3 @@ def reset_password(db: Session, background_tasks: BackgroundTasks, user_uuid: st
         return {"message": "Password reset successfully"}
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
-     

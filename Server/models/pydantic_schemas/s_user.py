@@ -97,14 +97,18 @@ class UserUpdate(UserBase):
     avatar: Optional[bytes] = None
 
     def are_fields_correct_set(self) -> int:
-        # Because the security fields are optional, but can be set with non-security fields, 
+        # Because the security fields are optional, but can be set with non-security fields,
         # we store the status of the security fields in a variable to avoid duplicate code
         any_security_fields = any([self.username, self.email, self.new_password])
-        correct_security_fields = only_one(self.username, self.email, self.new_password) and any_security_fields and self.old_password is not None
+        correct_security_fields = (
+            only_one(self.username, self.email, self.new_password)
+            and any_security_fields
+            and self.old_password is not None
+        )
 
         # ~~~~~~~~~~ Main checking logic ~~~~~~~~~~ #
         # Check if address or avatar is set
-        if any([self.address is not None,self.avatar is not None]):
+        if any([self.address is not None, self.avatar is not None]):
             # Check if any of the security fields are set if not return True --> no need for password authentication
             if not any_security_fields:
                 return 1
@@ -113,14 +117,14 @@ class UserUpdate(UserBase):
                 return 3
             # If any of the security fields are set but they are not correct
             else:
-                return 0 
+                return 0
         # Check if any of the security fields are set correctly
         elif correct_security_fields and any_security_fields:
             return 2
         # No fields are set
         else:
             return 0
-        
+
         # ~~~~~~~~~~ Return values ~~~~~~~~~~ #
         # 0: No attributes to update
         # 1: Only non-security fields are set

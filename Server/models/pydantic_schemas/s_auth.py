@@ -12,6 +12,7 @@ class Application(BaseModel):
     application_type: str
     current_location: Optional[str] = None
 
+
 # ======================================================== #
 # ======================= Requests ======================= #
 # ======================================================== #
@@ -39,11 +40,15 @@ class BackupOTP(BaseModel):
     backup_codes: List[str]
     # timestamp: Optional[str] # TODO: Mabye for audit log and user response email
 
+
 class UserForgotPassword(BaseModel):
     email: EmailStr
+
+
 class UserResetPassword(BaseModel):
     new_password: str
     otp_code: str
+
 
 # ======================================================== #
 # ======================= Responses ====================== #
@@ -58,7 +63,7 @@ class UserResRegister(UserBase):
 class UserResActivate2FA(BaseModel):
     secret_2fa: str
     provisioning_uri: Optional[str] = None
-    
+
 
 class UserResVerifyFirst2FA(BaseModel):
     backup_codes: List[str]
@@ -75,7 +80,9 @@ class UserTokens(BaseModel):
 class UserSecurityToken(BaseModel):
     secret_token: str
 
+
 # ~~~~~~~~~~~~ Forgot Password ~~~~~~~~~~~~ #
+
 
 class UserResForgotPassword(BaseModel):
     message: str

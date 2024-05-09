@@ -361,6 +361,7 @@ def test_remove_2fa():
     pytest._2fa_backup_codes = None
     pytest._2fa_secret = None
 
+
 # ======================================================== #
 # ====================== Public API ====================== #
 # ======================================================== #
@@ -399,6 +400,7 @@ def test_calendar():
     assert response.status_code == 200
     assert response.json() == {"message": calendar_hash}
 
+
 # TODO Canteen test is not fully implemented yet (reason API is not consistent) --> @AmateReysu pls update the test when the API is consistent
 @pytest.mark.dependency(name="PUB_CANTEEN")
 def test_canteen():
@@ -429,14 +431,13 @@ def test_canteen():
     assert isinstance(response_menu, list)
 
     # TODO Check if the canteen scrapping is working (DB query) @AmateReysu
-    assert len(response_menu) > 0 #! Verfiy if the canteen scrapping is working 
-    
+    assert len(response_menu) > 0  #! Verfiy if the canteen scrapping is working
+
     for data in response_menu:
         assert data.get("dish_type") is not None
         assert data.get("dish") is not None
         assert data.get("price") is not None
         assert data.get("serving_date") is not None
-
 
     check_service_date = random.choice(response_menu).get("serving_date")
     response = client.get(f"/canteen/menu/{check_service_date}")
@@ -456,7 +457,7 @@ def test_canteen():
             assert menu.get("dish") is not None
             assert menu.get("price") is not None
             assert menu.get("serving_date") == check_service_date
-    
+
 
 # ======================================================== #
 # ==================== User-Operations1 ================== #
@@ -517,6 +518,7 @@ def test_update_user():
     # * Should be 401 because the username was changed before (2h wait time)
     assert response.status_code == 401
 
+
 # ======================================================== #
 # ==================== Forgot Password =================== #
 # ======================================================== #
@@ -529,17 +531,19 @@ def test_forgot_password(suspend_capture):
 
     # Check response message is correct
     user_uuid = response.json().get("user_uuid")
-    
+
     assert user_uuid is not None
     assert response.json().get("message") == "Email sent"
-    
 
     # TODO Automate OTP verification @AmateReysu
     with suspend_capture:
         verfiy_otp = input("\n[Forgot Password] Enter OTP: ")
 
     # ~~~~~~~~~~~~~ Reset password ~~~~~~~~~~~~ #
-    response = client.put(f"/auth/reset-password/{user_uuid}", json={"new_password": update_data_password["new_password"], "otp_code": verfiy_otp})
+    response = client.put(
+        f"/auth/reset-password/{user_uuid}",
+        json={"new_password": update_data_password["new_password"], "otp_code": verfiy_otp},
+    )
 
     assert response.status_code == 200
     assert response.json() == {"message": "Password reset successfully"}
@@ -547,9 +551,11 @@ def test_forgot_password(suspend_capture):
     login_data["password"] = update_data_password["new_password"]
     test_login()
 
+
 # ======================================================== #
 # ==================== User-Operations2 ================== #
 # ======================================================== #
+
 
 @pytest.mark.dependency(depends=["LOGIN", "PUB_CALENDAR"])
 def test_add_remove_calendar_native():
@@ -638,13 +644,19 @@ def test_add_remove_calendar_custom():
     assert response.status_code == 404
     assert response.json() == {"detail": "Calendar not found"}
 
+
 # ======================================================== #
+
 
 @pytest.mark.dependency(depends=["LOGIN", "PUB_CANTEEN"])
 def test_add_remove_canteen():
     # ~~~~ Add Canteen to the user ~~~~ #
     selected_canteen = random.choice(pytest.canteens)
-    response = client.put("/user/canteen", headers={"Authorization": f"Bearer {pytest.access_token}"}, params={"canteen_short_name": selected_canteen["canteen_short_name"]})
+    response = client.put(
+        "/user/canteen",
+        headers={"Authorization": f"Bearer {pytest.access_token}"},
+        params={"canteen_short_name": selected_canteen["canteen_short_name"]},
+    )
 
     assert response.status_code == 200
     assert response.json().get("canteen_short_name") == selected_canteen["canteen_short_name"]
@@ -669,7 +681,9 @@ def test_add_remove_canteen():
     assert response.status_code == 404
     assert response.json() == {"detail": "No canteen assigned to user"}
 
+
 # ======================================================== #
+
 
 @pytest.mark.dependency(depends=["LOGIN"])
 def test_delete_user():

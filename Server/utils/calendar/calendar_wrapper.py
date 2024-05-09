@@ -9,6 +9,7 @@ import re
 import datetime
 from bs4 import BeautifulSoup
 
+
 # TODO Max size of source
 class calendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
     def __init__(
@@ -51,7 +52,6 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         dhash.update(encoded)
         return dhash.hexdigest()
 
-
     def set_type(self, type: str):
         if type not in ["custom", "dhbw-mannheim"]:
             raise ValueError("Invalid type")
@@ -62,9 +62,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
             raise ValueError("Invalid backend")
         self.backend = backend
 
-    def get_data(
-        self, source: Dict[str, str] | str = None
-    ):
+    def get_data(self, source: Dict[str, str] | str = None):
         if source is None:
             if self.source is None:
                 raise ValueError("No source provided!")
@@ -80,9 +78,9 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         else:
             if self.backend == "iCalender":
                 return self.__ical_get_data_single(self.source)
-            else: # rapla
+            else:  # rapla
                 return self.__rapla_get_data_single(self.source)
-            
+
     # ======================================================== #
     # ======================= ICalendar ====================== #
     # ======================================================== #
@@ -99,7 +97,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         return source_url
 
     def __ical_convert_to_json(self, ical) -> Dict[str, Any]:
-        #* str(event.get()) because they return vText
+        # * str(event.get()) because they return vText
 
         cal = Calendar.from_ical(ical)
         jsonIcal = {}
@@ -139,7 +137,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
     def __ical_get_data_single(self, source: str) -> Dict[str, any]:
         source_url = self.__ical_get_source_url(source)
         data = requests.get(source_url, stream=True).content.decode("utf-8")
-             
+
         if data:
 
             json_data = self.__ical_convert_to_json(data)
@@ -271,14 +269,14 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
             last_calendar_week = calendar_week
         return event_json
-    
+
     def __rapla_get_data_single(self, source: str) -> Dict[str, any]:
         data = self.__rapla_scrape_source(source)
         if data:
             return {"data": data, "hash": self.__dict_hash(data)}
         else:
             return None
-    
+
     def __rapla_get_data_multiple(self, rapla_sources: Dict[str, str]) -> Dict[str, any]:
         rapla_data = {}
 
@@ -289,7 +287,8 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
             if not lecture_data:
                 download_error.append(lecture_name)
         return rapla_data, download_error
-    
+
+
 # ~~~~~~~~~~~~~~~~ Example ~~~~~~~~~~~~~~~~ #
 # ---------- Input --------- #
 # {

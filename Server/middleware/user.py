@@ -9,6 +9,7 @@ from models.sql_models import m_user, m_auth
 ############################## Get functions ##############################
 ###########################################################################
 
+
 def get_user(
     db: Session,
     user_uuid: uuid.UUID = None,
@@ -40,7 +41,7 @@ def get_user(
         user = query.filter(m_user.User.username == username).first()
     elif email:
         user = query.filter(m_user.User.email == email).first()
-    
+
     return user
 
 
@@ -57,7 +58,7 @@ def get_user_security(
     with_2fa: bool = False,
 ) -> m_auth.UserSecurity:
     query_options = []
-    query_options += [joinedload(m_auth.UserSecurity.user)] if with_user else [] 
+    query_options += [joinedload(m_auth.UserSecurity.user)] if with_user else []
     query_options += [joinedload(m_auth.UserSecurity.user_tokens)] if with_tokens else []
     query_options += [joinedload(m_auth.UserSecurity.user_2fa)] if with_2fa else []
 

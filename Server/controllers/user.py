@@ -24,7 +24,6 @@ from middleware.user import get_user_security
 # ======================================================== #
 
 
-
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
         new_address = create_address(db, user.address)
@@ -61,6 +60,7 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 # ====================== Update User ===================== #
 # ======================================================== #
 
+
 def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     if new_user.address:
         address = create_address(db, new_user.address)
@@ -70,6 +70,7 @@ def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpda
         user.avatar = new_user.avatar
 
     db.flush()
+
 
 def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     user_security = get_user_security(db, user_id=user.user_id)
@@ -90,8 +91,9 @@ def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserU
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
+
 def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, check_result: int):
-    # Because of the are_fields_correct_set function used in the route, we can assume that the fields are correct 
+    # Because of the are_fields_correct_set function used in the route, we can assume that the fields are correct
     if check_result == 1:
         update_user_normal(db, user, new_user)
     elif check_result == 2:
@@ -101,7 +103,7 @@ def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, che
         update_user_normal(db, user, new_user)
     else:
         raise ValueError("Invalid check_result value")
-    
+
     db.commit()
     db.refresh(user)
     return user

@@ -68,7 +68,9 @@ async def repeated_task():
                 tasks = []
 
                 # Native Calendar updates only between 6:00 and 18:00
-                if current_time.hour > 6 and current_time.hour < 18 or True: #! Remove the or True to enable the time restriction
+                if (
+                    current_time.hour > 6 and current_time.hour < 18 or True
+                ):  #! Remove the or True to enable the time restriction
                     progress_id_update_calendar_dhbw_mannheim = progress.add_task(
                         "[bold green]Native-Calendar-DHBWMannheim[/bold green] Updating...", total=None
                     )
@@ -117,7 +119,7 @@ async def repeated_task():
                 )
                 tasks.append(create_task(update_canteen_menus, progress, progress_id_canteen_menu))
                 native_calender_loops += 1
-                #await asyncio.gather(*tasks, return_exceptions=True)
+                # await asyncio.gather(*tasks, return_exceptions=True)
                 progress.stop()
             await asyncio.sleep(60 * 15)  # 15 minutes wait
     except asyncio.CancelledError:

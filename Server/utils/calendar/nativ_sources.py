@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 
+
 def get_source_dhbw_ma() -> dict[str, str]:
     url = "https://vorlesungsplan.dhbw-mannheim.de/ical.php"
     response = requests.get(url)
@@ -11,13 +12,14 @@ def get_source_dhbw_ma() -> dict[str, str]:
         if ical_info.get("value", "") and ical_info.get("label", "") != ical_info.get("value", ""):
             icals[ical_info["label"]] = ical_info["value"]
     return icals
-    
-#TODO Validate if this is necessary
+
+
+# TODO Validate if this is necessary
 # def get_available_courses_dhbw_stug(base_url: str = "https://www.dhbw-stuttgart.de/studierendenportal/"):
 #     page = requests.get(base_url)
 #     soup = BeautifulSoup(page.content, "html.parser")
 #     groups = soup.find_all("ul", class_="dhbw-link-list")
-    
+
 #     courses = {}
 #     for group in groups:
 #         raw_courses = group.find_all("li")

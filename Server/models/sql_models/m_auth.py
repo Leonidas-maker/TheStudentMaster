@@ -1,4 +1,15 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, Uuid, CheckConstraint, UniqueConstraint, or_
+from sqlalchemy import (
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    String,
+    TIMESTAMP,
+    Uuid,
+    CheckConstraint,
+    UniqueConstraint,
+    or_,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import INTEGER as INT
 from sqlalchemy.sql import func
@@ -34,7 +45,9 @@ class UserSecurity(Base):
         collection_class=ordering_list("creation_time"),
     )  # * Performance improved by ordering tokens by creation_time
     user_2fa = relationship("User2FA", back_populates="user_security", cascade="save-update, delete", uselist=False)
-    registered_applications = relationship("UserRegisteredApplications", back_populates="user_security", cascade="save-update, delete")
+    registered_applications = relationship(
+        "UserRegisteredApplications", back_populates="user_security", cascade="save-update, delete"
+    )
 
 
 class User2FA(Base):
@@ -71,8 +84,7 @@ class UserTokens(Base):
 
     __table_args__ = (
         CheckConstraint(
-            "(token_value IS NOT NULL AND app_id IS NULL) OR "
-            "(token_value IS NULL AND app_id IS NOT NULL)",
+            "(token_value IS NOT NULL AND app_id IS NULL) OR " "(token_value IS NULL AND app_id IS NOT NULL)",
             name="chk_token_type_or_app_id",
         ),
     )
@@ -85,7 +97,7 @@ class UserRegisteredApplications(Base):
     users_id = Column(Integer, ForeignKey("users_security.user_id"), nullable=False)
 
     app_name = Column(String(255), nullable=False)
-    last_location = Column(String(255)) # TODO Nullable for now, because ip to location is needed
+    last_location = Column(String(255))  # TODO Nullable for now, because ip to location is needed
     last_used = Column(TIMESTAMP, nullable=False)
     app_type = Column(String(12), nullable=False)
 
@@ -94,4 +106,7 @@ class UserRegisteredApplications(Base):
     user_security = relationship("UserSecurity", back_populates="registered_applications", uselist=False)
     user_tokens = relationship("UserTokens", back_populates="registered_application", cascade="save-update, delete")
 
-    __table_args__ = (CheckConstraint(app_type.in_(['webbrowser', 'native_app']), name='check_app_type'), UniqueConstraint('users_id', 'app_name', name='uix_users_id_app_name'))
+    __table_args__ = (
+        CheckConstraint(app_type.in_(["webbrowser", "native_app"]), name="check_app_type"),
+        UniqueConstraint("users_id", "app_name", name="uix_users_id_app_name"),
+    )

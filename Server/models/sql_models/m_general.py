@@ -11,7 +11,6 @@ class Address(Base):
     address1 = Column(String(255), nullable=False)
     address2 = Column(String(255))
 
-
     postal_code_id = Column(Integer, ForeignKey("postal_codes.postal_code_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
@@ -26,6 +25,7 @@ class Address(Base):
             "district": self.postal_code.city.district.district,
             "country": self.postal_code.city.district.country.country,
         }
+
 
 class PostalCode(Base):
     __tablename__ = "postal_codes"
@@ -66,6 +66,7 @@ class City(Base):
             "country": self.district.country.country,
         }
 
+
 class District(Base):
     __tablename__ = "districts"
 
@@ -77,12 +78,13 @@ class District(Base):
     country = relationship("Country", back_populates="districts")
     cities = relationship("City", cascade="save-update", back_populates="district")
 
-
     def as_dict_complete(self):
         return {
             "district": self.district,
             "country": self.country.country,
         }
+
+
 class Country(Base):
     __tablename__ = "countries"
 
@@ -96,4 +98,3 @@ class Country(Base):
         return {
             "country": self.country,
         }
-

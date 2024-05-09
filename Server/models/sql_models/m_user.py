@@ -18,7 +18,7 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     username = Column(String(255), unique=True, index=True, nullable=False)
     email = Column(String(255), unique=True, index=True, nullable=False)
-    avatar = Column(MEDIUMBLOB) # TODO Will be implemented later 
+    avatar = Column(MEDIUMBLOB)  # TODO Will be implemented later
 
     address_id = Column(Integer, ForeignKey("addresses.address_id"))
     canteen_id = Column(Integer, ForeignKey("canteens.canteen_id"))
@@ -63,5 +63,3 @@ class UserUUID(Base):
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     user = relationship("User", back_populates="user_uuid", uselist=False, cascade="save-update")
-
-

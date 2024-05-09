@@ -78,5 +78,5 @@ async def async_send_mail_with_template(email: EmailSchema):
     await fm.send_message(message, template_name=email_template)
 
 
-def send_mail_with_template(background_tasks: BackgroundTasks , email: EmailSchema):
+def send_mail_with_template(background_tasks: BackgroundTasks, email: EmailSchema):
     background_tasks.add_task(async_send_mail_with_template, email)

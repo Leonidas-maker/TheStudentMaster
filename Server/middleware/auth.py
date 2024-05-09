@@ -232,7 +232,7 @@ def check_jti(
     except:
         application_id = None
         token_value = check_value
-    
+
     token_exists = False
 
     # ~~~~~~~~~~~~~~~~ User ID ~~~~~~~~~~~~~~~~ #
@@ -422,13 +422,13 @@ def create_tokens(
     old_jti: uuid.UUID = None,
     application_id: uuid.UUID = None,
 ) -> Tuple[str, str]:
-    
+
     # Check if the application_id is a valid UUID (this is needed because python does not check the type of the variable)
     if application_id:
         try:
             application_id = uuid.UUID(application_id)
         except:
-            pass    
+            pass
 
     user_id = user_security.user_id
 
@@ -676,6 +676,7 @@ def create_backup_codes(db: Session, user_uuid: str) -> List[str]:
         return backup_codes
     else:
         raise HTTPException(status_code=400, detail="2FA already enabled")
+
 
 # ======================================================== #
 # ====================== Simple-OTP ====================== #
