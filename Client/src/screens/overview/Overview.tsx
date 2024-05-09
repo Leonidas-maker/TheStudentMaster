@@ -9,7 +9,6 @@ import Navigator from "../../components/navigator/Navigator";
 import DefaultText from "../../components/textFields/DefaultText";
 
 const Overview: React.FC = () => {
-
   const navigation = useNavigation<any>();
 
   // ====================================================== //

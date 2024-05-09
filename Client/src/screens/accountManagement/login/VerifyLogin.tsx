@@ -6,7 +6,6 @@ import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 
 const VerifyLogin: React.FC = () => {
-
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center p-3">

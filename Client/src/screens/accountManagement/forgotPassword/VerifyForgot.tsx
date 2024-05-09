@@ -5,7 +5,6 @@ import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
 
 const VerifyForgot: React.FC = () => {
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
