@@ -33,9 +33,7 @@ class User(Base):
         cascade="save-update, delete",
         single_parent=True,
     )
-    user_uuid = relationship(
-        "UserUUID", back_populates="user", uselist=False, cascade="save-update, delete"
-    )
+    user_uuid = relationship("UserUUID", back_populates="user", uselist=False, cascade="save-update, delete")
     address = relationship("Address", uselist=False)
     canteen = relationship("Canteen", uselist=False)
 

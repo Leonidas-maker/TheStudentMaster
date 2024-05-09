@@ -24,6 +24,7 @@ from middleware.user import get_user_security
 # ======================================================== #
 
 
+
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
         new_address = create_address(db, user.address)

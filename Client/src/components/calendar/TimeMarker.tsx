@@ -8,7 +8,6 @@ import {
   calculateMarkerPosition,
   calculateDayHeight,
 } from "./CalendarCalculations";
-import { set } from "lodash";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface TimeMarkerProps {

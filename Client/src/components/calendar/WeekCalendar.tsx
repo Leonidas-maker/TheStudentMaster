@@ -7,7 +7,7 @@ import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
-import Weeks from "./Weeks";
+import WeekSelector from "../selector/WeekSelector";
 
 // Import TestData
 import testData from "./testData/tinf22cs1.json";
@@ -89,7 +89,8 @@ const WeekCalendar: React.FC = () => {
         }}
       >
         <View className="h-full flex-1">
-          <Weeks
+          <WeekSelector
+            mode="calendar"
             onBackPress={handleBackPress}
             onForwardPress={handleForwardPress}
             onTodayPress={handleTodayPress}
