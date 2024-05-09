@@ -102,6 +102,7 @@ const DishView: React.FC<DishProps> = ({
       {dishes.length > 0 ? (
         dishes.map((dish, index) => (
           <Pressable
+            key={`${dish.dish_type}-${format(parseISO(dish.serving_date), "yyyy-MM-dd")}-${index}`}
             className="flex-1 active:opacity-50"
             onPress={handleDishPress}
           >

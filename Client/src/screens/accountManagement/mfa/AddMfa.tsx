@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView } from "react-native";
 import DefaultText from "../../../components/textFields/DefaultText";
 import Subheading from "../../../components/textFields/Subheading";
@@ -10,7 +9,6 @@ import QRCode from "react-native-qrcode-svg";
 // TODO Implement get QR-Code
 // TODO Implement copy code to clipboard
 const AddMfa: React.FC = () => {
-  const { t } = useTranslation();
 
   const sampleQRData = "https://example.com";
 

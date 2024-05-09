@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, useColorScheme } from "react-native";
-import { useTranslation } from "react-i18next";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -23,8 +22,6 @@ const ProfileView: React.FC = () => {
   const handleProfilePress = () => {
     navigation.navigate("OverviewStack", { screen: "Profile" });
   };
-
-  const { t } = useTranslation();
 
   return (
     <View className="m-4">
