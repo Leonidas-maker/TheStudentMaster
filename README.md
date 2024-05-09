@@ -35,7 +35,7 @@ TheStudentMaster is a project being developed to facilitate the daily lives of s
 
 ### Getting started
 
-This is the quick start guide for the front end of TheStudentMaster. 
+This is the quick start guide for the front end of TheStudentMaster.
 
 ⚠️ Please note that you must already have `Node version >= 21.7.0` installed on your computer to run the program. You also need either an iOS/Android emulator or a corresponding device. This device should also already have Expo installed from the Apple App Store or Google Play Store.
 

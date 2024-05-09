@@ -1,97 +1,96 @@
 [
-    {
-        "name": "Mensaria am Schloss",
-        "short_name": "schlossmensa",
-        "address1": "Bismarkstr. 10",
-        "address2": "Eingang A",
-        "postal_code": "68161",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "greens^2",
-        "short_name": "greens",
-        "address1": "Bismarkstr. 10",
-        "address2": "Eingang A",
-        "postal_code": "68161",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "MensaWagon",
-        "short_name": "mensawagon",
-        "address1": "Bismarkstr.",
-        "postal_code": "68161",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Cafe Soleil",
-        "address1": "A 5",
-        "address2": "Gebaeude B",
-        "postal_code": "68161",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Cafeteria Musikhochschule",
-        "short_name": "cafeteria_musikhochschule",
-        "address1": "N 7, 17",
-        "address2": "Eingang Rotunde",
-        "postal_code": "68161",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "CAFE 33 (Popakademie)",
-        "short_name": "popakademie",
-        "address1": "Hafenstrasse 33",
-        "postal_code": "68159",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Mensa Hochschule Mannheim",
-        "short_name": "hochschule_mannheim",
-        "address1": "Paul-Wittsack-Strasse 10",
-        "address2": "Bau J",
-        "postal_code": "68163",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Mensaria Metropol (DHBW Coblitzallee)",
-        "short_name": "mensaria_metropol",
-        "address1": "Hans-Thoma-Str. 40",
-        "postal_code": "68163",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Mensaria Wohlgelegen (DHBW Kaefertaler Strasse)",
-        "short_name": "mensaria_wohlgelegen",
-        "address1": "Kaefertaler Strasse 258",
-        "postal_code": "68167",
-        "city": "Mannheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    },
-    {
-        "name": "Speisenausgabe DHBW Eppelheim",
-        "short_name": "dhbw_eppelheim",
-        "address1": "Handelsstrasse 13",
-        "postal_code": "69214",
-        "city": "Eppelheim",
-        "district": "Baden-Wuerttemberg",
-        "country": "Germany"
-    }
-    
+  {
+    "name": "Mensaria am Schloss",
+    "short_name": "schlossmensa",
+    "address1": "Bismarkstr. 10",
+    "address2": "Eingang A",
+    "postal_code": "68161",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "greens^2",
+    "short_name": "greens",
+    "address1": "Bismarkstr. 10",
+    "address2": "Eingang A",
+    "postal_code": "68161",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "MensaWagon",
+    "short_name": "mensawagon",
+    "address1": "Bismarkstr.",
+    "postal_code": "68161",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Cafe Soleil",
+    "address1": "A 5",
+    "address2": "Gebaeude B",
+    "postal_code": "68161",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Cafeteria Musikhochschule",
+    "short_name": "cafeteria_musikhochschule",
+    "address1": "N 7, 17",
+    "address2": "Eingang Rotunde",
+    "postal_code": "68161",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "CAFE 33 (Popakademie)",
+    "short_name": "popakademie",
+    "address1": "Hafenstrasse 33",
+    "postal_code": "68159",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Hochschule Mannheim",
+    "short_name": "hochschule_mannheim",
+    "address1": "Paul-Wittsack-Strasse 10",
+    "address2": "Bau J",
+    "postal_code": "68163",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensaria Metropol (DHBW Coblitzallee)",
+    "short_name": "mensaria_metropol",
+    "address1": "Hans-Thoma-Str. 40",
+    "postal_code": "68163",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensaria Wohlgelegen (DHBW Kaefertaler Strasse)",
+    "short_name": "mensaria_wohlgelegen",
+    "address1": "Kaefertaler Strasse 258",
+    "postal_code": "68167",
+    "city": "Mannheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Speisenausgabe DHBW Eppelheim",
+    "short_name": "dhbw_eppelheim",
+    "address1": "Handelsstrasse 13",
+    "postal_code": "69214",
+    "city": "Eppelheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  }
 ]
