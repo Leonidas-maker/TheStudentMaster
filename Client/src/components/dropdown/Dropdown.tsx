@@ -48,7 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const inputStyles = isLight ? { color: "#000000" } : { color: "#FFFFFF" };
 
   return (
-    <View className="p-2 shadow-[rgba(0,0,0,0.5)_0px_1px_4px_0px]">
+    <View className="p-2 m-2 shadow-[rgba(0,0,0,0.5)_0px_1px_4px_0px]">
       <SelectList
         setSelected={setSelected}
         data={values.map(({ key, value }) => ({ key: key, value: value }))}

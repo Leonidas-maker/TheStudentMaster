@@ -29,7 +29,7 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
       className={
         isCancel
           ? "bg-neutral-300 w-3/4 h-10 rounded-xl justify-center items-center active:bg-neutral-600"
-          : "bg-light_action dark:bg-dark_action w-3/4 h-10 rounded-xl justify-center items-center active:bg-light_action_active dark:active:bg-dark_action_active"
+          : "bg-light_action dark:bg-dark_action w-3/4 h-10 rounded-xl justify-center items-center active:bg-light_action_active dark:active:bg-dark_action_active m-2"
       }
       onPress={onPress}
       onPressIn={onPressIn}
