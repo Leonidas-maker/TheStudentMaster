@@ -83,7 +83,7 @@ async def repeated_task():
                                 update_all_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
                             )
                         )
-                        
+
                         # Update Canteen Menus every hour as well
                         progress_id_canteen_menu = progress.add_task(
                             "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
