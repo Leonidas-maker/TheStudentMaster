@@ -1,31 +1,31 @@
 {
-    "greeting": "Hallo",
-    "welcome_message": "Willkommen zu unserer Anwendung",
-    "home": "Startseite",
-    "profile": "Profil",
-    "settings": "Einstellungen",
-    "logout": "Abmelden",
-    "login": "Anmelden",
-    "signup": "Registrieren",
-    "about": "Über uns",
-    "contact": "Kontakt",
-    "privacy_policy": "Datenschutzerklärung",
-    "terms_of_service": "Nutzungsbedingungen",
-    "loading": "Laden...",
-    "save": "Speichern",
-    "cancel": "Abbrechen",
-    "delete": "Löschen",
-    "edit": "Bearbeiten",
-    "confirm": "Bestätigen",
-    "yes": "Ja",
-    "no": "Nein",
-    "submit": "Absenden",
-    "error": {
-        "page_not_found": "Seite nicht gefunden",
-        "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
-    },
-    "success": {
-        "data_saved": "Daten erfolgreich gespeichert",
-        "account_created": "Konto erfolgreich erstellt"
-    }
+  "greeting": "Hallo",
+  "welcome_message": "Willkommen zu unserer Anwendung",
+  "home": "Startseite",
+  "profile": "Profil",
+  "settings": "Einstellungen",
+  "logout": "Abmelden",
+  "login": "Anmelden",
+  "signup": "Registrieren",
+  "about": "Über uns",
+  "contact": "Kontakt",
+  "privacy_policy": "Datenschutzerklärung",
+  "terms_of_service": "Nutzungsbedingungen",
+  "loading": "Laden...",
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "edit": "Bearbeiten",
+  "confirm": "Bestätigen",
+  "yes": "Ja",
+  "no": "Nein",
+  "submit": "Absenden",
+  "error": {
+    "page_not_found": "Seite nicht gefunden",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten"
+  },
+  "success": {
+    "data_saved": "Daten erfolgreich gespeichert",
+    "account_created": "Konto erfolgreich erstellt"
+  }
 }

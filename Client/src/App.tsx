@@ -6,7 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import "../global.css";
 
 // Import i18next for localisation
-import './translations/TranslationConfig'
+import "./translations/TranslationConfig";
 
 export default function App() {
   return (
