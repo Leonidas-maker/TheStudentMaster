@@ -1,3 +1,4 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 import json
 
@@ -306,6 +307,46 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
         return False
 
     return new_menu
+
+
+def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> list[m_canteen.Menu]:
+    
+    if not db:
+        raise ValueError("Parameter db is required")
+    elif not canteen_short_name:
+        raise ValueError("Parameter canteen_short_name is required")
+    elif not isinstance(canteen_short_name, str):
+        raise ValueError("Parameter canteen_short_name must be a string")
+    
+    if current_week_only:
+        current_week = datetime.now().isocalendar()[1]
+    else:
+        current_week = 0
+        
+    try:
+        canteen_id = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().canteen_id
+    except AttributeError as e:
+        print("Error while fetching canteen_id")
+        print(e)
+        return False
+        
+    try:
+        menu = db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
+    except AttributeError as e:
+        print("Error while fetching menu")
+        print(e)
+        return False
+    
+    canteen_menu = list()
+    
+    if current_week_only:
+        for m in menu:
+            if m.serving_date.isocalendar()[1] == current_week:
+                canteen_menu.append(m)
+        return canteen_menu
+    else:
+        return menu
+        
 
 
 # ======================================================== #
