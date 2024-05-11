@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 import json
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
-from utils.canteen.canteen_stw_ma import fetch_menu
+from utils.canteen.canteen_scraper import fetch_menu
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.general import create_address
