@@ -345,8 +345,6 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
     )
     return_value["image_url"] = menus[0].canteen.image_url if menus[0].canteen.image_url else None
     return_value["menu"] = list()
-    
-    
 
     if current_week_only:
         for m in menus:
@@ -361,16 +359,17 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
                 )
     else:
         return_value["menu"] = [
-                    {
-                        "dish_type": m.dish_type,
-                        "dish": m.dish.description,
-                        "price": m.dish.price,
-                        "serving_date": m.serving_date,
-                    }
-                    for m in menus
-                ]
-    
+            {
+                "dish_type": m.dish_type,
+                "dish": m.dish.description,
+                "price": m.dish.price,
+                "serving_date": m.serving_date,
+            }
+            for m in menus
+        ]
+
     return return_value
+
 
 # ======================================================== #
 # ========================= Main ========================= #

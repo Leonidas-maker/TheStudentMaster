@@ -88,5 +88,3 @@ def canteen_read_menu_day(
         }
         return_value.append(menu_row)
     return return_value
-
-
