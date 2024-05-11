@@ -13,6 +13,7 @@ from models.sql_models import m_canteen, m_general
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_general
+from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 
 
 # ======================================================== #
@@ -309,7 +310,7 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
     return new_menu
 
 
-def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> list[m_canteen.Menu]:
+def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> ResGetCanteenMenu:
 
     if not db:
         raise ValueError("Parameter db is required")
@@ -331,22 +332,45 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
         return False
 
     try:
-        menu = db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
+        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
     except AttributeError as e:
         print("Error while fetching menu")
         print(e)
         return False
 
-    canteen_menu = list()
+    return_value = dict()
+    return_value["canteen_name"] = menus[0].canteen.canteen_name if menus[0].canteen.canteen_name else None
+    return_value["canteen_short_name"] = (
+        menus[0].canteen.canteen_short_name if menus[0].canteen.canteen_short_name else None
+    )
+    return_value["image_url"] = menus[0].canteen.image_url if menus[0].canteen.image_url else None
+    return_value["menu"] = list()
+    
+    
 
     if current_week_only:
-        for m in menu:
+        for m in menus:
             if m.serving_date.isocalendar()[1] == current_week:
-                canteen_menu.append(m)
-        return canteen_menu
+                return_value["menu"].append(
+                    {
+                        "dish_type": m.dish_type,
+                        "dish": m.dish.description,
+                        "price": m.dish.price,
+                        "serving_date": m.serving_date,
+                    }
+                )
     else:
-        return menu
-
+        return_value["menu"] = [
+                    {
+                        "dish_type": m.dish_type,
+                        "dish": m.dish.description,
+                        "price": m.dish.price,
+                        "serving_date": m.serving_date,
+                    }
+                    for m in menus
+                ]
+    
+    return return_value
 
 # ======================================================== #
 # ========================= Main ========================= #
