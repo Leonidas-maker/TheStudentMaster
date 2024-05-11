@@ -18,7 +18,7 @@ def fetch_menu(
                 return {}
         case _:
             try:
-                return fetch_menu_general(canteen_short_name, week_offset)
+                return fetch_menu_stw_ma(canteen_short_name, week_offset)
             except Exception as e:
                 # print("Error fetching Menu, general")
                 # print(e)
@@ -98,7 +98,7 @@ def fetch_menu_dhbw_eppel(
     return menu
 
 
-def fetch_menu_general(
+def fetch_menu_stw_ma(
     canteen_short_name: str,
     week_offset: int,
 ) -> dict:

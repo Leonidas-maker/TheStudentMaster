@@ -1,8 +1,9 @@
+from datetime import datetime
 from sqlalchemy.orm import Session
 import json
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
-from utils.canteen.canteen_stw_ma import fetch_menu
+from utils.canteen.canteen_scraper import fetch_menu
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.general import create_address
@@ -12,6 +13,7 @@ from models.sql_models import m_canteen, m_general
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_general
+from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 
 
 # ======================================================== #
@@ -22,7 +24,6 @@ def create_canteens(db: Session):
         with open("./utils/canteen/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
-            # print(canteen_obj)
             address_new = s_general.AddressCreate(
                 address1=canteen_obj["address1"],
                 address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
@@ -32,7 +33,6 @@ def create_canteens(db: Session):
                 country=canteen_obj["country"],
             )
             address_new = create_address(db, address_new)
-            # print(address_new.address_id)
 
             # create canteen
             canteen_new = m_canteen.Canteen(
@@ -310,6 +310,67 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
     return new_menu
 
 
+def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> ResGetCanteenMenu:
+
+    if not db:
+        raise ValueError("Parameter db is required")
+    elif not canteen_short_name:
+        raise ValueError("Parameter canteen_short_name is required")
+    elif not isinstance(canteen_short_name, str):
+        raise ValueError("Parameter canteen_short_name must be a string")
+
+    if current_week_only:
+        current_week = datetime.now().isocalendar()[1]
+    else:
+        current_week = 0
+
+    try:
+        canteen_id = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().canteen_id
+    except AttributeError as e:
+        print("Error while fetching canteen_id")
+        print(e)
+        return False
+
+    try:
+        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
+    except AttributeError as e:
+        print("Error while fetching menu")
+        print(e)
+        return False
+
+    return_value = dict()
+    return_value["canteen_name"] = menus[0].canteen.canteen_name if menus[0].canteen.canteen_name else None
+    return_value["canteen_short_name"] = (
+        menus[0].canteen.canteen_short_name if menus[0].canteen.canteen_short_name else None
+    )
+    return_value["image_url"] = menus[0].canteen.image_url if menus[0].canteen.image_url else None
+    return_value["menu"] = list()
+
+    if current_week_only:
+        for m in menus:
+            if m.serving_date.isocalendar()[1] == current_week:
+                return_value["menu"].append(
+                    {
+                        "dish_type": m.dish_type,
+                        "dish": m.dish.description,
+                        "price": m.dish.price,
+                        "serving_date": m.serving_date,
+                    }
+                )
+    else:
+        return_value["menu"] = [
+            {
+                "dish_type": m.dish_type,
+                "dish": m.dish.description,
+                "price": m.dish.price,
+                "serving_date": m.serving_date,
+            }
+            for m in menus
+        ]
+
+    return return_value
+
+
 # ======================================================== #
 # ========================= Main ========================= #
 # ======================================================== #
@@ -344,7 +405,7 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
 
     try:
         # get menu for week
-        complete_menu = fetch_menu(canteen_short_name=canteen_short_name, week_offset=0)
+        complete_menu = fetch_menu(canteen_short_name=canteen_short_name, week_offset=week_offset)
     except ValueError as e:
         print("Error while fetching menu, function canteen_menu_to_db")
         print(e)

@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user, m_calendar
+from models.sql_models import m_user, m_calendar, m_canteen
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_user, s_calendar, s_general, s_canteen
@@ -13,7 +13,7 @@ from models.pydantic_schemas import s_user, s_calendar, s_general, s_canteen
 from middleware.database import get_db
 from middleware.auth import check_access_token, check_password
 from middleware.calendar import get_calendar
-from middleware.canteen import get_canteen
+from middleware.canteen import get_canteen, get_menu_for_canteen
 
 # ~~~~~~~~~~~~~~ Controllers ~~~~~~~~~~~~~~ #
 from controllers.user import update_user, update_user_calendar
@@ -138,7 +138,9 @@ def add_user_canteen(
     user.canteen_id = canteen.canteen_id
     db.commit()
 
-    # TODO Get canteen menus @xxchillkroetexx
+    # TODO @Schuetze1000: Implement function as needed
+    # canteen_menu = get_menu_for_canteen(db=db, canteen_short_name=canteen.canteen_short_name)
+
     return s_canteen.ResGetCanteen(**canteen.as_dict())
 
 
