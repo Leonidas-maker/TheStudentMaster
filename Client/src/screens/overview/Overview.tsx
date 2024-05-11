@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView } from "react-native";
 import { expo } from "../../../app.json";
 import { Linking } from "react-native";
@@ -10,8 +9,6 @@ import Navigator from "../../components/navigator/Navigator";
 import DefaultText from "../../components/textFields/DefaultText";
 
 const Overview: React.FC = () => {
-  const { t } = useTranslation();
-
   const navigation = useNavigation<any>();
 
   // ====================================================== //
@@ -230,7 +227,7 @@ const Overview: React.FC = () => {
   ];
 
   return (
-    <ScrollView className="h-screen bg-white dark:bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <ProfileView />
       <Navigator
         title={moduleTitle}

@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Pressable } from "react-native";
 import { useColorScheme } from "nativewind";
+import { useTheme } from "../../provider/ThemeProvider";
+import DefaultText from "../../components/textFields/DefaultText";
 
 type SchemeType = "light" | "dark" | "system";
 
 const Settings: React.FC = () => {
-  const { t } = useTranslation();
   const { colorScheme, setColorScheme } = useColorScheme();
-  const [selectedScheme, setSelectedScheme] = useState<SchemeType>("system");
 
-  useEffect(() => {
-    // Aktualisiert das Farbschema basierend auf der Auswahl des Benutzers
-    if (selectedScheme === "system") {
-      // Hier könnte Logik implementiert werden, um auf Systemänderungen zu reagieren
-      // Für den Moment wird das Systemthema nicht direkt gesetzt
-    } else {
-      setColorScheme(selectedScheme);
-    }
-  }, [selectedScheme, setColorScheme]);
+  const { theme, setTheme } = useTheme();
 
   const setScheme = (scheme: SchemeType) => {
-    setSelectedScheme(scheme);
+    setTheme(scheme);
   };
+
+  useEffect(() => {
+    setColorScheme(theme);
+  }, [theme, setColorScheme]);
 
   const RadioOption = ({
     label,
@@ -33,13 +28,14 @@ const Settings: React.FC = () => {
     onPress: () => void;
     checked: boolean;
   }) => (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
       style={{
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 10,
       }}
+      className="active:opacity-50"
     >
       <View
         style={{
@@ -64,29 +60,27 @@ const Settings: React.FC = () => {
         ) : null}
       </View>
       <Text style={{ marginLeft: 10 }}>{label}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
-    <ScrollView className="h-screen bg-primary dark:bg-white">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View style={{ padding: 20 }}>
-        <Text className="text-font_primary dark:text-fuchsia-600">
-          Welcome to the Settings page
-        </Text>
+        <DefaultText text="Welcome to the Settings page" />
         <RadioOption
           label="Light Mode"
           onPress={() => setScheme("light")}
-          checked={selectedScheme === "light"}
+          checked={theme === "light"}
         />
         <RadioOption
           label="Dark Mode"
           onPress={() => setScheme("dark")}
-          checked={selectedScheme === "dark"}
+          checked={theme === "dark"}
         />
         <RadioOption
           label="System Mode"
           onPress={() => setScheme("system")}
-          checked={selectedScheme === "system"}
+          checked={theme === "system"}
         />
       </View>
     </ScrollView>

@@ -1,10 +1,11 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import {
   TextInput,
   TextInputProps,
   NativeSyntheticEvent,
   TextInputChangeEventData,
   TextInputKeyPressEventData,
+  useColorScheme,
 } from "react-native";
 
 interface TextFieldInputProps {
@@ -116,6 +117,16 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
     ref,
   ) => {
     const [value, setValue] = useState(initialValue);
+    const colorScheme = useColorScheme();
+    const [isLight, setIsLight] = useState(false);
+
+    useEffect(() => {
+      if (colorScheme === "light") {
+        setIsLight(true);
+      } else {
+        setIsLight(false);
+      }
+    }, [colorScheme]);
 
     const handleOnChange = (
       e: NativeSyntheticEvent<TextInputChangeEventData>,
@@ -130,13 +141,15 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
       if (onChangeText) onChangeText(text);
     };
 
+    const placeholderTextColor = isLight ? "#000000" : "#FFFFFF";
+
     return (
       <TextInput
         style={isOTP ? { width: 40, height: 40 } : {}}
         className={
           isOTP
-            ? "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 text-center m-1"
-            : "bg-white w-3/4 h-10 rounded-xl border-2 border-white focus:border-red-500 opacity-50 p-2"
+            ? "bg-light_secondary dark:bg-dark_secondary text-black dark:text-white border-2 border-light_secondary dark:border-dark_secondary focus:border-light_action dark:focus:border-dark_action rounded-xl opacity-75 focus:opacity-100 text-center m-2"
+            : "bg-light_secondary dark:bg-dark_secondary text-black dark:text-white border-2 border-light_secondary dark:border-dark_secondary focus:border-light_action dark:focus:border-dark_action w-3/4 h-10 opacity-75 focus:opacity-100 rounded-xl p-2 m-2"
         }
         ref={ref}
         autoCapitalize={autoCapitalize}
@@ -155,6 +168,7 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
         onFocus={onFocus}
         onKeyPress={onKeyPress}
         placeholder={placeholder}
+        placeholderTextColor={placeholderTextColor}
         secureTextEntry={secureTextEntry}
         selectTextOnFocus={selectTextOnFocus}
         textAlign={textAlign}
