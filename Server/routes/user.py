@@ -140,7 +140,7 @@ def add_user_canteen(
 
     # TODO @Schuetze1000: Implement function as needed
     # canteen_menu = get_menu_for_canteen(db=db, canteen_short_name=canteen.canteen_short_name)
-    
+
     return s_canteen.ResGetCanteen(**canteen.as_dict())
 
 
