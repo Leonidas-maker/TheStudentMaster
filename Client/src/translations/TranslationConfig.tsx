@@ -7,6 +7,8 @@ import HttpBackend from "i18next-http-backend";
 import LanguageDetector from "i18next-browser-languagedetector";
 // In the future i18next-multiload-backend-adapter could be added in order to support multiple languages and namespaces in one backend call
 
+import "intl-pluralrules";
+
 const fallbackLng = "de";
 const supportedLngs = ["de", "en"];
 
