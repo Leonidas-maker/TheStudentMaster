@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView, Keyboard, Pressable } from "react-native";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
@@ -8,8 +7,6 @@ import TextButton from "../../../components/buttons/TextButton";
 import DefaultText from "../../../components/textFields/DefaultText";
 
 const Login: React.FC = () => {
-  const { t } = useTranslation();
-
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -20,7 +17,7 @@ const Login: React.FC = () => {
 
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="pt-10 justify-center items-center">
           <Heading text="Willkommen" />
           <TextFieldInput

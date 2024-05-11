@@ -12,7 +12,7 @@ const TextButton: React.FC<TextButtonProps> = ({
 }) => {
   return (
     <Text
-      className="text-font_primary underline active:text-font_secondary"
+      className="text-black dark:text-white underline active:text-light_subheading dark:active:text-dark_subheading"
       onPress={onPress}
     >
       {text}

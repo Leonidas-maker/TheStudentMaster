@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView, Keyboard, Pressable } from "react-native";
 
 import universityData from "../testData/courseData.json";
@@ -21,7 +20,6 @@ interface UniversityDropdownItem {
 }
 
 const Registration: React.FC = () => {
-  const { t } = useTranslation();
   const [isNotification, setIsNotification] = useState(false);
   const [is2FA, setIs2FA] = useState(false);
 
@@ -95,7 +93,7 @@ const Registration: React.FC = () => {
   // Checkbox for Email Notifications
   return (
     <Pressable onPress={dismissKeyboard}>
-      <ScrollView className="h-screen bg-primary">
+      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="justify-center items-center">
           <Heading text="Account erstellen" />
           <TextFieldInput

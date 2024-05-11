@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -30,6 +30,17 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
   currentDate,
   mode,
 }) => {
+  const colorScheme = useColorScheme();
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
+
   // ~~~~~~~~~~~~ Default values ~~~~~~~~~~~ //
   // If no date is passed, the current date is used (this will happen if mode is calendar)
   const today = new Date();
@@ -48,37 +59,70 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
 
       return (
         <View className="flex-row justify-between px-5 py-3">
-          <TouchableOpacity onPress={onBackPress} disabled={isBackDisabled}>
+          <Pressable
+            onPress={onBackPress}
+            disabled={isBackDisabled}
+            className="active:opacity-50"
+          >
             <Icon
               name="arrow-back-ios"
               size={30}
-              color={isBackDisabled ? "#A0A0A2" : "#E0E0E2"}
+              color={
+                isBackDisabled
+                  ? isLight
+                    ? "#D5DFEB"
+                    : "#7A7A7A"
+                  : isLight
+                    ? "#ACBED8"
+                    : "#E0E2DB"
+              }
             />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             onPress={onForwardPress}
             disabled={isForwardDisabled}
+            className="active:opacity-50"
           >
             <Icon
               name="arrow-forward-ios"
               size={30}
-              color={isForwardDisabled ? "#A0A0A2" : "#E0E0E2"}
+              color={
+                isForwardDisabled
+                  ? isLight
+                    ? "#D5DFEB"
+                    : "#7A7A7A"
+                  : isLight
+                    ? "#ACBED8"
+                    : "#E0E2DB"
+              }
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       );
     case "calendar":
       return (
         <View className="flex-row justify-between px-5 py-3">
-          <TouchableOpacity onPress={onBackPress}>
-            <Icon name="arrow-back-ios" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onTodayPress}>
-            <Icon name="today" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onForwardPress}>
-            <Icon name="arrow-forward-ios" size={30} color="#E0E0E2" />
-          </TouchableOpacity>
+          <Pressable onPress={onBackPress} className="active:opacity-50">
+            <Icon
+              name="arrow-back-ios"
+              size={30}
+              color={isLight ? "#ACBED8" : "#56718A"}
+            />
+          </Pressable>
+          <Pressable onPress={onTodayPress} className="active:opacity-50">
+            <Icon
+              name="today"
+              size={30}
+              color={isLight ? "#ACBED8" : "#56718A"}
+            />
+          </Pressable>
+          <Pressable onPress={onForwardPress} className="active:opacity-50">
+            <Icon
+              name="arrow-forward-ios"
+              size={30}
+              color={isLight ? "#ACBED8" : "#56718A"}
+            />
+          </Pressable>
         </View>
       );
     default:
