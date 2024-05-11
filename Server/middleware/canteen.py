@@ -22,7 +22,6 @@ def create_canteens(db: Session):
         with open("./utils/canteen/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
-            # print(canteen_obj)
             address_new = s_general.AddressCreate(
                 address1=canteen_obj["address1"],
                 address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
@@ -32,7 +31,6 @@ def create_canteens(db: Session):
                 country=canteen_obj["country"],
             )
             address_new = create_address(db, address_new)
-            # print(address_new.address_id)
 
             # create canteen
             canteen_new = m_canteen.Canteen(
@@ -344,7 +342,7 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
 
     try:
         # get menu for week
-        complete_menu = fetch_menu(canteen_short_name=canteen_short_name, week_offset=0)
+        complete_menu = fetch_menu(canteen_short_name=canteen_short_name, week_offset=week_offset)
     except ValueError as e:
         print("Error while fetching menu, function canteen_menu_to_db")
         print(e)
