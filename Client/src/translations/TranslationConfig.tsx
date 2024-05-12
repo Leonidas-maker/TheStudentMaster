@@ -2,9 +2,11 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import ChainedBackend from "i18next-chained-backend";
-import AsyncStorageBackend from "i18next-async-storage-backend2";
+//! Not compatible with our React Native version
+//! Maybe we should search for a different solution
+//import AsyncStorageBackend from "i18next-async-storage-backend2";
 import HttpBackend from "i18next-http-backend";
-import LanguageDetector from "i18next-browser-languagedetector";
+//import LanguageDetector from "i18next-browser-languagedetector";
 // In the future i18next-multiload-backend-adapter could be added in order to support multiple languages and namespaces in one backend call
 
 import "intl-pluralrules";
@@ -14,7 +16,7 @@ const supportedLngs = ["de", "en"];
 
 i18n
   .use(ChainedBackend)
-  .use(LanguageDetector)
+  //.use(LanguageDetector)
   .use(initReactI18next)
   .init({
     fallbackLng,
@@ -27,7 +29,7 @@ i18n
     },
     backend: {
       backends: [
-        AsyncStorageBackend, // primary backend using async storage
+        //AsyncStorageBackend, // primary backend using async storage
         HttpBackend, // fallback backend using http
       ],
       backendOptions: [
