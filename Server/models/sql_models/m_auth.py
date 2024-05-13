@@ -27,7 +27,7 @@ class UserSecurity(Base):
     password = Column(String(255), nullable=False)
 
     # ~~~~~~~~~~~~~~~~ Security ~~~~~~~~~~~~~~~ #
-    secutity_warns = Column(Integer, default=0)  # * Number of times suspicious activity has been detected max. 10
+    security_warns = Column(Integer, default=0)  # * Number of times suspicious activity has been detected max. 10
     locked = Column(Boolean, default=False)
 
     # ~~~~~~~~~~~~~~ Verification ~~~~~~~~~~~~~ #
