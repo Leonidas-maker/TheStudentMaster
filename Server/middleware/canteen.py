@@ -340,9 +340,7 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
 
     return_value = dict()
     return_value["canteen_name"] = canteen.canteen_name
-    return_value["canteen_short_name"] = (
-        canteen.canteen_short_name if canteen.canteen_short_name else None
-    )
+    return_value["canteen_short_name"] = canteen.canteen_short_name if canteen.canteen_short_name else None
     return_value["image_url"] = canteen.image_url if canteen.image_url else None
     return_value["menu"] = list()
 

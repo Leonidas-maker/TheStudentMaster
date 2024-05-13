@@ -451,10 +451,10 @@ def test_canteen():
     for data in response_data:
         assert data.get("canteen_name") is not None
         assert data.get("canteen_short_name") is not None
-        
+
         menu_data = data.get("menu")
         assert isinstance(menu_data, dict)
-        
+
         assert menu_data.get("dish_type") is not None
         assert menu_data.get("dish") is not None
         assert menu_data.get("price") is not None
