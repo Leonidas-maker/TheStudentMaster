@@ -160,7 +160,7 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
     access_payload = verify_access_token(db, access_token)
     if access_payload:
         user_security = get_user_security(db, user_uuid=access_payload["sub"], with_user=True)
-        
+
         if user_security._2fa_enabled:
             raise HTTPException(status_code=400, detail="2FA already enabled")
 
