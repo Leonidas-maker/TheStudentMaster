@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar, useColorScheme } from "react-native";
 import Registration from "../screens/accountManagement/registration/Registration";
-import Login from '../screens/accountManagement/login/Login';
+import Login from "../screens/accountManagement/login/Login";
 import HomeBottomTabs from "./HomeBottomTabs";
 
 const Stack = createStackNavigator();

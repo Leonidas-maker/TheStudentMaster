@@ -20,7 +20,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
 
   useEffect(() => {
     const otpString = otp.join("");
-    onOtpChange(otpString); 
+    onOtpChange(otpString);
   }, [otp, otpLength, onOtpChange]);
 
   useEffect(() => {

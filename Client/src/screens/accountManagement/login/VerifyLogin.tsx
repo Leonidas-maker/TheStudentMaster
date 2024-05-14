@@ -6,7 +6,7 @@ import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 //! Not able to get repsonse from server
 const VerifyLogin: React.FC = () => {
@@ -15,7 +15,7 @@ const VerifyLogin: React.FC = () => {
 
   useEffect(() => {
     const fetchSecretToken = async () => {
-      const secretToken = await SecureStore.getItemAsync('secret_token');
+      const secretToken = await SecureStore.getItemAsync("secret_token");
       console.log("Secret Token:", secretToken);
     };
 
@@ -28,7 +28,7 @@ const VerifyLogin: React.FC = () => {
 
   const handleVerifyPress = async () => {
     try {
-      const secretToken = await SecureStore.getItemAsync('secret_token');
+      const secretToken = await SecureStore.getItemAsync("secret_token");
 
       if (!secretToken) {
         throw new Error("Secret token not found");
@@ -43,24 +43,24 @@ const VerifyLogin: React.FC = () => {
           headers: {
             Authorization: `Bearer ${secretToken}`,
           },
-        }
+        },
       );
 
       if (response.data.access_token && response.data.refresh_token) {
-        await SecureStore.setItemAsync('access_token', response.data.access_token);
-        await SecureStore.setItemAsync('refresh_token', response.data.refresh_token);
-        Alert.alert(
-          "2FA erfolgreich",
-          "Sie sind jetzt eingeloggt",
+        await SecureStore.setItemAsync(
+          "access_token",
+          response.data.access_token,
         );
-        navigation.navigate('HomeBottomTabs');
+        await SecureStore.setItemAsync(
+          "refresh_token",
+          response.data.refresh_token,
+        );
+        Alert.alert("2FA erfolgreich", "Sie sind jetzt eingeloggt");
+        navigation.navigate("HomeBottomTabs");
       }
     } catch (error) {
       console.error("2FA error: ", error);
-      Alert.alert(
-        "2FA fehlgeschlagen",
-        "Überprüfen Sie Ihren Code.",
-      );
+      Alert.alert("2FA fehlgeschlagen", "Überprüfen Sie Ihren Code.");
     }
   };
 

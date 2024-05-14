@@ -7,24 +7,24 @@ import TextButton from "../../../components/buttons/TextButton";
 import DefaultText from "../../../components/textFields/DefaultText";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 const storeTokens = async (accessToken: string, refreshToken: string) => {
   try {
-    await SecureStore.setItemAsync('access_token', accessToken);
-    await SecureStore.setItemAsync('refresh_token', refreshToken);
+    await SecureStore.setItemAsync("access_token", accessToken);
+    await SecureStore.setItemAsync("refresh_token", refreshToken);
   } catch (e) {
-    console.error('Error saving tokens: ', e);
+    console.error("Error saving tokens: ", e);
   }
 };
 
 const getTokens = async () => {
   try {
-    const accessToken = await SecureStore.getItemAsync('access_token');
-    const refreshToken = await SecureStore.getItemAsync('refresh_token');
+    const accessToken = await SecureStore.getItemAsync("access_token");
+    const refreshToken = await SecureStore.getItemAsync("refresh_token");
     return { accessToken, refreshToken };
   } catch (e) {
-    console.error('Error getting tokens: ', e);
+    console.error("Error getting tokens: ", e);
     return { accessToken: null, refreshToken: null };
   }
 };
@@ -32,10 +32,10 @@ const getTokens = async () => {
 const logTokens = async () => {
   try {
     const { accessToken, refreshToken } = await getTokens();
-    console.log('Access Token:', accessToken);
-    console.log('Refresh Token:', refreshToken);
+    console.log("Access Token:", accessToken);
+    console.log("Refresh Token:", refreshToken);
   } catch (e) {
-    console.error('Error logging tokens: ', e);
+    console.error("Error logging tokens: ", e);
   }
 };
 
@@ -63,16 +63,19 @@ const Login: React.FC = () => {
       );
 
       if (response.data.secret_token) {
-        await SecureStore.setItemAsync('secret_token', response.data.secret_token);
-        navigation.navigate('VerifyLogin');
-      } else if (response.data.access_token && response.data.refresh_token) {
-        await storeTokens(response.data.access_token, response.data.refresh_token);
-        Alert.alert(
-          "Login erfolgreich",
-          "Sie sind jetzt eingeloggt",
+        await SecureStore.setItemAsync(
+          "secret_token",
+          response.data.secret_token,
         );
+        navigation.navigate("VerifyLogin");
+      } else if (response.data.access_token && response.data.refresh_token) {
+        await storeTokens(
+          response.data.access_token,
+          response.data.refresh_token,
+        );
+        Alert.alert("Login erfolgreich", "Sie sind jetzt eingeloggt");
         await logTokens();
-        navigation.navigate('HomeBottomTabs');
+        navigation.navigate("HomeBottomTabs");
       }
     } catch (error) {
       console.error("Login error: ", error);
