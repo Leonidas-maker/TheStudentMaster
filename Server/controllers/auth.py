@@ -232,14 +232,15 @@ def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_tok
     if secret_payload:
         user_uuid = secret_payload["sub"]
         user_2fa: m_auth.User2FA = user_security.user_2fa
+        user_2fa_backup_codes = user_2fa.backup_codes.split(";")
         count_correct = 0
-        for backup_code in otp.backup_codes:
-            if not backup_code in user_2fa._2fa_backup:
+        for backup_code in user_2fa_backup_codes:
+            if not backup_code in otp.backup_codes:
                 raise_security_warns(db, user_security, "2FA Backup Codes")
             else:
                 count_correct += 1
 
-        if count_correct == len(otp.backup_codes):
+        if count_correct == (len(user_2fa_backup_codes) // 2):
             revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
 
             # * Duplicate code from remove_2fa but okay for now
