@@ -160,12 +160,13 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
     access_payload = verify_access_token(db, access_token)
     if access_payload:
         user_security = get_user_security(db, user_uuid=access_payload["sub"], with_user=True)
+        
+        if user_security._2fa_enabled:
+            raise HTTPException(status_code=400, detail="2FA already enabled")
+
         user_id = user_security.user_id
         if not check_password(db, user_add_2fa_req.password, user_security=user_security):
             raise HTTPException(status_code=401, detail="Invalid credentials")
-
-        if user_security._2fa_enabled:
-            raise HTTPException(status_code=400, detail="2FA already enabled")
 
         _2fa_secret = create_totp(db, user_id)
 
@@ -226,7 +227,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
+def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_token: str, otp: s_auth.BackupOTP):
     secret_payload, user_security = verify_security_token(db, secret_token, is_2fa=True)
     if secret_payload:
         user_uuid = secret_payload["sub"]
@@ -246,6 +247,16 @@ def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
             db.delete(user_security.user_2fa)
             user_security._2fa_enabled = False
             db.commit()
+
+            # TODO Await email response
+            send_mail_with_template(
+                background_tasks,
+                EmailSchema(
+                    email=user_security.user.email,
+                    body={"username": user_security.user.username, "user_uuid": user_uuid},
+                    type="deactivate-2fa",
+                ),
+            )
 
             aud_split = secret_payload["aud"].split("::")
             application_id = aud_split[1] if len(aud_split) > 1 else None
