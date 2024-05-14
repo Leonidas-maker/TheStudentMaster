@@ -20,6 +20,7 @@
     "date-fns": "^3.4.0",
     "expo": "^51.0.5",
     "expo-constants": "~16.0.1",
+    "expo-secure-store": "^13.0.1",
     "expo-status-bar": "~1.12.1",
     "i18next-chained-backend": "^4.6.2",
     "i18next-http-backend": "^2.5.0",

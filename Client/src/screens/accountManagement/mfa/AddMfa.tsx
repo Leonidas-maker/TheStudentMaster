@@ -11,7 +11,7 @@ import QRCode from "react-native-qrcode-svg";
 //TODO: Resize logo in image
 const AddMfa: React.FC = () => {
   const sampleQRData =
-    "otpauth://totp/TheShopMaster.com:schuetzeandreas.1%40web.de?secret=NIKBTQZM3AFR3Z3FCWSHOPGY53KJQ6YT&issuer=TheShopMaster.com";
+    "otpauth://totp/TheStudentMaster.com:example%40mail.de?secret=JFK76X4OXQPEKCERBMOY6R2HJZJLWCE6&issuer=TheStudentMaster.com";
   let logo = require("../../../../public/logo/TheStudentMaster.png");
 
   return (

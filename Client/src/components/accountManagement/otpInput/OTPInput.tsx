@@ -9,13 +9,19 @@ import TextFieldInput from "../../textInputs/TextFieldInput";
 
 interface OTPInputProps {
   otpLength?: number;
+  onOtpChange: (otp: string) => void;
 }
 
 // TODO Implement paste functionality
 // TODO Block non-numeric characters
-const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6 }) => {
+const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
   const [otp, setOtp] = useState<string[]>(Array(otpLength).fill(""));
   const inputRefs = useRef<(TextInput | null)[]>(Array(otpLength).fill(null));
+
+  useEffect(() => {
+    const otpString = otp.join("");
+    onOtpChange(otpString); 
+  }, [otp, otpLength, onOtpChange]);
 
   useEffect(() => {
     otp.forEach((value, index) => {
