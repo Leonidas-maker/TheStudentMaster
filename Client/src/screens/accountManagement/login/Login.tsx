@@ -22,19 +22,28 @@ const Login: React.FC = () => {
 
   const handleLoginPress = async () => {
     try {
-      const response = await axios.post("https://thestudentmaster.de/auth/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "https://thestudentmaster.de/auth/login",
+        {
+          username,
+          password,
+        },
+      );
 
       if (response.data.access_token) {
-        Alert.alert("Login erfolgreich", "Access Token: " + response.data.access_token);
+        Alert.alert(
+          "Login erfolgreich",
+          "Access Token: " + response.data.access_token,
+        );
       }
     } catch (error) {
       console.error("Login error: ", error);
-      Alert.alert("Login fehlgeschlagen", "Überprüfen Sie Ihre Anmeldeinformationen.");
+      Alert.alert(
+        "Login fehlgeschlagen",
+        "Überprüfen Sie Ihre Anmeldeinformationen.",
+      );
     }
-  }
+  };
 
   return (
     <Pressable onPress={dismissKeyboard}>
