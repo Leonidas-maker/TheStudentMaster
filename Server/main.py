@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends, BackgroundTasks
+# ~~~~~~~~~~~~ External Modules ~~~~~~~~~~~ #
+from fastapi import FastAPI, Depends
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
@@ -7,7 +8,6 @@ import datetime
 from fastapi_cdn_host import monkey_patch
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_calendar
 from config.database import engine
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
@@ -83,6 +83,12 @@ async def repeated_task():
                                 update_all_native_calendars, progress, progress_id_update_calendar_dhbw_mannheim
                             )
                         )
+
+                        # Update Canteen Menus every hour as well
+                        progress_id_canteen_menu = progress.add_task(
+                            "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
+                        )
+                        tasks.append(create_task(update_canteen_menus, progress, progress_id_canteen_menu))
                     else:
                         tasks.append(
                             create_task(
@@ -113,11 +119,6 @@ async def repeated_task():
                         )
                     )
 
-                # TODO @xxchillkroetexx: Update every 15 minutes necessary?
-                progress_id_canteen_menu = progress.add_task(
-                    "[bold green]Canteen[/bold green] Update Canteen Menus...", total=None
-                )
-                tasks.append(create_task(update_canteen_menus, progress, progress_id_canteen_menu))
                 native_calender_loops += 1
                 # await asyncio.gather(*tasks, return_exceptions=True)
                 progress.stop()

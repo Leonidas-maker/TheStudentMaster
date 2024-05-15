@@ -4,12 +4,18 @@ import "react-native-gesture-handler";
 import LoadingStack from "./routes/LoadingStack";
 import { NavigationContainer } from "@react-navigation/native";
 import "../global.css";
+import { ThemeProvider } from "./provider/ThemeProvider";
+
+// Import i18next for localisation
+import "./translations/TranslationConfig";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <LoadingStack />
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <LoadingStack />
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 

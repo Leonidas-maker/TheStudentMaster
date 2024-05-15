@@ -1,6 +1,5 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import {
   View,
   ScrollView,
@@ -54,7 +53,6 @@ const MenuPlan: React.FC = () => {
   // ====================================================== //
   // ====================== Constants ===================== //
   // ====================================================== //
-  const { t } = useTranslation();
   const scrollViewRef = useRef<ScrollView>(null);
   const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });
   const startOfMenuDate = startOfWeek(todaysDate, { weekStartsOn: 1 });

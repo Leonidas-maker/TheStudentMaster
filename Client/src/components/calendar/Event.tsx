@@ -1,6 +1,13 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
-import { View, Text, Modal, Platform, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Modal,
+  Platform,
+  Pressable,
+  useColorScheme,
+} from "react-native";
 import "nativewind";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
@@ -51,6 +58,17 @@ const Event: React.FC<EventProps> = ({
   // ====================================================== //
   const [modalVisible, setModalVisible] = useState(false);
   const [isWeb, setIsWeb] = useState(false);
+
+  const colorScheme = useColorScheme();
+  const [isLight, setIsLight] = useState(false);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
 
   // Checks if the platform is web
   useEffect(() => {
@@ -137,7 +155,11 @@ const Event: React.FC<EventProps> = ({
     <View className="absolute w-full">
       <Pressable
         onPress={handleEventPress}
-        className="bg-blue-500 rounded-lg shadow-sm active:bg-blue-600"
+        className={`rounded-lg shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px] ${
+          isLight
+            ? "bg-light_event active:bg-light_event_active"
+            : "bg-dark_event active:bg-dark_event_active"
+        }`}
         style={{
           position: "absolute",
           top: topPosition,
@@ -180,13 +202,15 @@ const Event: React.FC<EventProps> = ({
           onPressOut={handleClosePress}
         >
           <View
-            className="bg-white p-5 rounded-2xl items-center shadow-md"
+            className="bg-light_secondary dark:bg-dark_secondary p-5 rounded-2xl items-center shadow-md"
             onStartShouldSetResponder={() => true}
           >
-            <Text className="item-center pb-3">{event.summary}</Text>
-            <Text className="item-center font-bold">{`Startzeit: ${startTimeString}`}</Text>
-            <Text className="item-center font-bold">{`Endzeit: ${endTimeString}`}</Text>
-            <Text className="item-center font-bold">{`Ort: ${event.location}`}</Text>
+            <Text className="item-center pb-3 text-black dark:text-white">
+              {event.summary}
+            </Text>
+            <Text className="item-center font-bold text-black dark:text-white">{`Startzeit: ${startTimeString}`}</Text>
+            <Text className="item-center font-bold text-black dark:text-white">{`Endzeit: ${endTimeString}`}</Text>
+            <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>
             {isWeb && (
               <>
                 <DefaultButton text="Schließen" />

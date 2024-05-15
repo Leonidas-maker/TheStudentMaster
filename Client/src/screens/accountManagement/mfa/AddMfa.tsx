@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { View, ScrollView } from "react-native";
 import DefaultText from "../../../components/textFields/DefaultText";
 import Subheading from "../../../components/textFields/Subheading";
@@ -9,20 +8,22 @@ import QRCode from "react-native-qrcode-svg";
 
 // TODO Implement get QR-Code
 // TODO Implement copy code to clipboard
+//TODO: Resize logo in image
 const AddMfa: React.FC = () => {
-  const { t } = useTranslation();
-
   const sampleQRData =
-    "https://gitlab.com/themastercollection/thestudentmaster";
+    "otpauth://totp/TheShopMaster.com:schuetzeandreas.1%40web.de?secret=NIKBTQZM3AFR3Z3FCWSHOPGY53KJQ6YT&issuer=TheShopMaster.com";
+  let logo = require("../../../../public/logo/TheStudentMaster.png");
 
   return (
-    <ScrollView className="h-screen bg-primary">
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center">
         <Heading text="MFA aktivieren" />
         <Subheading text="Scanne den QR-Code in deiner Authenticator App" />
         <QRCode
           value={sampleQRData}
           size={200}
+          logo={logo}
+          logoSize={50}
           color="black"
           backgroundColor="white"
         />

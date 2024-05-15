@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { View, ActivityIndicator } from "react-native";
 import DefaultText from "../../components/textFields/DefaultText";
 
 const Loading: React.FC = (props: any) => {
   const { navigation } = props;
-
-  const { t } = useTranslation();
 
   const navigateAndReset = () => {
     navigation.reset({
@@ -23,7 +20,7 @@ const Loading: React.FC = (props: any) => {
   }, []);
 
   return (
-    <View className="flex h-screen items-center justify-center bg-primary">
+    <View className="flex h-screen items-center justify-center bg-light_primary dark:bg-dark_primary">
       <ActivityIndicator size="large" />
       <DefaultText text="Loading..." />
     </View>
