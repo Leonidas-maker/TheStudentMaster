@@ -654,6 +654,7 @@ def test_add_remove_calendar_custom():
 def test_add_remove_canteen():
     # ~~~~ Add Canteen to the user ~~~~ #
     selected_canteen = random.choice(pytest.canteens)
+
     response = client.put(
         "/user/canteen",
         headers={"Authorization": f"Bearer {pytest.access_token}"},

@@ -73,15 +73,14 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
 # ======================================================== #
 def get_canteen(db: Session, short_name: str = "", canteen_id: int = "") -> m_canteen.Canteen:
 
-    if not (short_name and canteen_id):
+    if not (short_name or canteen_id):
         raise ValueError("Parameter short_name or canteen_id is required")
 
     try:
-        canteen = (
-            db.query(m_canteen.Canteen)
-            .filter(m_canteen.Canteen.canteen_short_name == short_name or m_canteen.Canteen.canteen_id == canteen_id)
-            .first()
-        )
+        if short_name:
+            canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=short_name).first()
+        elif canteen_id:
+            canteen = db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first()
     except AttributeError as e:
         print("Error while fetching canteen")
         print(e)
