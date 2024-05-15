@@ -20,8 +20,8 @@ def fetch_menu(
             try:
                 return fetch_menu_stw_ma(canteen_short_name, week_offset)
             except Exception as e:
-                # print("Error fetching Menu, general")
-                # print(e)
+                print("Error fetching Menu, fetch_menu_stw_ma")
+                print(e)
                 return {}
 
 
