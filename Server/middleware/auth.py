@@ -35,8 +35,8 @@ from middleware.user import get_user_security, get_user_2fa, get_user
 ############################## Security Warns #############################
 ###########################################################################
 def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error: str) -> None:
-    security_warns = user_security.secutity_warns + 1
-    user_security.secutity_warns = security_warns
+    security_warns = user_security.security_warns + 1
+    user_security.security_warns = security_warns
     user_security.verified = False
     db.commit()
     raise HTTPException(
@@ -46,7 +46,7 @@ def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error:
 
 
 def check_security_warns(user_security: m_auth.UserSecurity) -> None:
-    if user_security.secutity_warns >= MAX_WARNS:
+    if user_security.security_warns >= MAX_WARNS:
         raise HTTPException(status_code=403, detail="Account locked please try again later")
 
 
