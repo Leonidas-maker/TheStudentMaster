@@ -124,7 +124,7 @@ def get_user_canteen(access_token: str = Depends(oauth2_scheme), db: Session = D
     user = check_access_token(db, access_token)
     if not user.canteen_id:
         raise HTTPException(status_code=404, detail="No canteen assigned to user")
-    canteen = get_canteen(db, user.canteen_id)
+    canteen = get_canteen(db, canteen_id=user.canteen_id)
     return s_canteen.ResGetCanteen(**canteen.as_dict())
 
 
@@ -132,6 +132,9 @@ def get_user_canteen(access_token: str = Depends(oauth2_scheme), db: Session = D
 def add_user_canteen(
     canteen_short_name: str, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
+    if not canteen_short_name:
+        raise HTTPException(status_code=400, detail="No canteen short name provided")
+
     user = check_access_token(db, access_token)
     canteen = get_canteen(db, canteen_short_name)
 

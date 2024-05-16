@@ -29,15 +29,6 @@
     "country": "Germany"
   },
   {
-    "name": "Cafe Soleil",
-    "address1": "A 5",
-    "address2": "Gebaeude B",
-    "postal_code": "68161",
-    "city": "Mannheim",
-    "district": "Baden-Wuerttemberg",
-    "country": "Germany"
-  },
-  {
     "name": "Cafeteria Musikhochschule",
     "short_name": "cafeteria_musikhochschule",
     "address1": "N 7, 17",

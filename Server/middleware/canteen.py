@@ -73,15 +73,14 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
 # ======================================================== #
 def get_canteen(db: Session, short_name: str = "", canteen_id: int = "") -> m_canteen.Canteen:
 
-    if not (short_name and canteen_id):
+    if not (short_name or canteen_id):
         raise ValueError("Parameter short_name or canteen_id is required")
 
     try:
-        canteen = (
-            db.query(m_canteen.Canteen)
-            .filter(m_canteen.Canteen.canteen_short_name == short_name or m_canteen.Canteen.canteen_id == canteen_id)
-            .first()
-        )
+        if short_name:
+            canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=short_name).first()
+        elif canteen_id:
+            canteen = db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first()
     except AttributeError as e:
         print("Error while fetching canteen")
         print(e)
@@ -325,25 +324,23 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
         current_week = 0
 
     try:
-        canteen_id = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().canteen_id
+        canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
     except AttributeError as e:
         print("Error while fetching canteen_id")
         print(e)
         return False
 
     try:
-        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen_id).all()
+        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all()
     except AttributeError as e:
         print("Error while fetching menu")
         print(e)
         return False
 
     return_value = dict()
-    return_value["canteen_name"] = menus[0].canteen.canteen_name if menus[0].canteen.canteen_name else None
-    return_value["canteen_short_name"] = (
-        menus[0].canteen.canteen_short_name if menus[0].canteen.canteen_short_name else None
-    )
-    return_value["image_url"] = menus[0].canteen.image_url if menus[0].canteen.image_url else None
+    return_value["canteen_name"] = canteen.canteen_name
+    return_value["canteen_short_name"] = canteen.canteen_short_name if canteen.canteen_short_name else None
+    return_value["image_url"] = canteen.image_url if canteen.image_url else None
     return_value["menu"] = list()
 
     if current_week_only:
