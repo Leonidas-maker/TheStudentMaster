@@ -4,7 +4,7 @@ import Heading from "../../../components/textFields/Heading";
 import Subheading from "../../../components/textFields/Subheading";
 import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 
@@ -43,7 +43,7 @@ const VerifyLogin: React.FC = () => {
           headers: {
             Authorization: `Bearer ${secretToken}`,
           },
-        },
+        }
       );
 
       if (response.data.access_token && response.data.refresh_token) {

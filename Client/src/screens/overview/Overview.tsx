@@ -54,6 +54,10 @@ const Overview: React.FC = () => {
     navigation.navigate("OverviewStack", { screen: "BackupMFA" });
   };
 
+  const handleDeletePress = () => {
+    console.log("Delete Account Pressed");
+  };
+
   const accountTitle = "Account Management Screens";
 
   const onPressAccountFunctions = [
@@ -67,6 +71,7 @@ const Overview: React.FC = () => {
     handleVerifyLoginPress,
     handleVerifyRegistrationPress,
     handleBackupPress,
+    handleDeletePress,
   ];
 
   const accountTexts = [
@@ -80,9 +85,11 @@ const Overview: React.FC = () => {
     "Verify Login",
     "Verify Registration",
     "Backup MFA",
+    "Delete Storage",
   ];
 
   const accountIconNames = [
+    "apps",
     "apps",
     "apps",
     "apps",

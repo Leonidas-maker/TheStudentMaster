@@ -8,6 +8,7 @@ import DefaultText from "../../../components/textFields/DefaultText";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
+import OptionSwitch from "../../../components/switch/OptionSwitch";
 
 const storeTokens = async (accessToken: string, refreshToken: string) => {
   try {
@@ -46,6 +47,10 @@ const Login: React.FC = () => {
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
+  };
+
+  const toggleStayLoggedIn = () => {
+    console.log("Stay logged in toggled");
   };
 
   const handleForgotPress = () => {
@@ -113,6 +118,11 @@ const Login: React.FC = () => {
               onPress={handleForgotPress}
             />
           </View>
+        </View>
+        <View className="p-2">
+          <OptionSwitch title="Login Optionen" texts={["Angemeldet bleiben?"]} iconNames={["update"]} onValueChanges={[toggleStayLoggedIn]} values={[true]} />
+        </View>
+        <View className="pt-2 justify-center items-center">
           <DefaultButton text="Anmelden" onPress={handleLoginPress} />
         </View>
         <View className="h-full justify-center items-center">
