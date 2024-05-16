@@ -120,7 +120,13 @@ const Login: React.FC = () => {
           </View>
         </View>
         <View className="p-2">
-          <OptionSwitch title="Login Optionen" texts={["Angemeldet bleiben?"]} iconNames={["update"]} onValueChanges={[toggleStayLoggedIn]} values={[true]} />
+          <OptionSwitch
+            title="Login Optionen"
+            texts={["Angemeldet bleiben?"]}
+            iconNames={["update"]}
+            onValueChanges={[toggleStayLoggedIn]}
+            values={[true]}
+          />
         </View>
         <View className="pt-2 justify-center items-center">
           <DefaultButton text="Anmelden" onPress={handleLoginPress} />

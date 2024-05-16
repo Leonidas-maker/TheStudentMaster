@@ -43,7 +43,7 @@ const VerifyLogin: React.FC = () => {
           headers: {
             Authorization: `Bearer ${secretToken}`,
           },
-        }
+        },
       );
 
       if (response.data.access_token && response.data.refresh_token) {

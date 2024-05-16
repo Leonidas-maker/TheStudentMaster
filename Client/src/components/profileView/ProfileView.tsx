@@ -36,26 +36,29 @@ const ProfileView: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await SecureStore.getItemAsync('access_token');
-        const refreshToken = await SecureStore.getItemAsync('refresh_token');
+        const token = await SecureStore.getItemAsync("access_token");
+        const refreshToken = await SecureStore.getItemAsync("refresh_token");
 
         if (!token || !refreshToken) {
           setIsLoggedIn(false);
           return;
         }
 
-        const response = await axios.get('https://thestudentmaster.de/user/me?avatar=true', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const response = await axios.get(
+          "https://thestudentmaster.de/user/me?avatar=true",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
         const { user_uuid, username } = response.data;
         setUsername(username);
         setUuid(user_uuid);
 
-        await SecureStore.setItemAsync('username', username);
-        await SecureStore.setItemAsync('uuid', user_uuid);
+        await SecureStore.setItemAsync("username", username);
+        await SecureStore.setItemAsync("uuid", user_uuid);
 
         setIsLoggedIn(true);
       } catch (error) {
@@ -103,26 +106,24 @@ const ProfileView: React.FC = () => {
               />
             </View>
           </Pressable>
-        )
-          :
-          (
-            <Pressable onPress={handleLoginPress} className="active:opacity-50">
-              <View className="flex-row justify-between items-center">
-                <Icon name="person" size={40} color={iconColor} />
-                <View className="ml-2">
-                  <Text className="text-black dark:text-white font-bold text-3xl">
-                    Anmelden
-                  </Text>
-                </View>
-                <Icon
-                  name="arrow-forward-ios"
-                  size={30}
-                  color={iconColor}
-                  style={{ marginLeft: "auto" }}
-                />
+        ) : (
+          <Pressable onPress={handleLoginPress} className="active:opacity-50">
+            <View className="flex-row justify-between items-center">
+              <Icon name="person" size={40} color={iconColor} />
+              <View className="ml-2">
+                <Text className="text-black dark:text-white font-bold text-3xl">
+                  Anmelden
+                </Text>
               </View>
-            </Pressable>
-          )}
+              <Icon
+                name="arrow-forward-ios"
+                size={30}
+                color={iconColor}
+                style={{ marginLeft: "auto" }}
+              />
+            </View>
+          </Pressable>
+        )}
       </View>
     </View>
   );
