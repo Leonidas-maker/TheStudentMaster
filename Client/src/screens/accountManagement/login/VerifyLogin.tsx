@@ -13,15 +13,6 @@ const VerifyLogin: React.FC = () => {
   const [otpCode, setOtpCode] = useState("");
   const navigation = useNavigation<any>();
 
-  useEffect(() => {
-    const fetchSecretToken = async () => {
-      const secretToken = await SecureStore.getItemAsync("secret_token");
-      console.log("Secret Token:", secretToken);
-    };
-
-    fetchSecretToken();
-  }, []);
-
   const handleOtpChange = (code: string) => {
     setOtpCode(code);
   };
@@ -29,6 +20,8 @@ const VerifyLogin: React.FC = () => {
   const handleVerifyPress = async () => {
     try {
       const secretToken = await SecureStore.getItemAsync("secret_token");
+
+      console.log("Secret Token:", secretToken);
 
       if (!secretToken) {
         throw new Error("Secret token not found");
