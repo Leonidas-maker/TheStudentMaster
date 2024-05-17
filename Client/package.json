@@ -19,7 +19,7 @@
     "axios": "^1.6.8",
     "axios-jwt": "^4.0.2",
     "date-fns": "^3.4.0",
-    "expo": "^51.0.5",
+    "expo": "~51.0.8",
     "expo-constants": "~16.0.1",
     "expo-secure-store": "^13.0.1",
     "expo-status-bar": "~1.12.1",

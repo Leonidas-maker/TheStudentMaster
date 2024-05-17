@@ -17,6 +17,7 @@ import { axiosInstance } from "../../../services/api";
 const Login: React.FC = () => {
   const [ident, setIdent] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [stayLoggedIn, setStayLoggedIn] = React.useState(true);
   const navigation = useNavigation<any>();
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const Login: React.FC = () => {
 
   const toggleStayLoggedIn = () => {
     console.log("Stay logged in toggled");
+    setStayLoggedIn(!stayLoggedIn);
   };
 
   const handleForgotPress = () => {
@@ -111,7 +113,7 @@ const Login: React.FC = () => {
             texts={["Angemeldet bleiben?"]}
             iconNames={["update"]}
             onValueChanges={[toggleStayLoggedIn]}
-            values={[true]}
+            values={[stayLoggedIn]}
           />
         </View>
         <View className="pt-2 justify-center items-center">

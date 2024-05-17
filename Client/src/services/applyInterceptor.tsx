@@ -6,9 +6,9 @@ import { getAuthToken } from "./authService";
 const applyInterceptor = () => {
   axiosInstance.interceptors.request.use(
     async (config) => {
-      const token = await getAuthToken(); // getAuthToken ist asynchron, also await verwenden
+      const token = await getAuthToken();
       if (token) {
-        config.headers = config.headers || {}; // Initialisiere headers, falls sie undefined sind
+        config.headers = config.headers || {};
         config.headers["Authorization"] = `Bearer ${token}`;
       }
       return config;
