@@ -13,7 +13,7 @@ import applyInterceptor from "./services/applyInterceptor";
 
 export default function App() {
   applyInterceptor();
-  
+
   return (
     <ThemeProvider>
       <NavigationContainer>

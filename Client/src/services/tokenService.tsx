@@ -1,17 +1,19 @@
-import axios from 'axios';
-import { setTokens, clearTokens } from './authService';
-import * as SecureStore from 'expo-secure-store';
-import { BASE_URL } from './api';
+import axios from "axios";
+import { setTokens, clearTokens } from "./authService";
+import * as SecureStore from "expo-secure-store";
+import { BASE_URL } from "./api";
 
 const refreshAuthLogic = async () => {
   try {
-    const refreshToken = await SecureStore.getItemAsync('refresh_token');
-    
+    const refreshToken = await SecureStore.getItemAsync("refresh_token");
+
     if (!refreshToken) {
-      throw new Error('No refresh token available');
+      throw new Error("No refresh token available");
     }
 
-    const response = await axios.post(`${BASE_URL}/auth/refresh-token`, { token: refreshToken });
+    const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
+      token: refreshToken,
+    });
     const { access, refresh, secret } = response.data;
     await setTokens({ access, refresh, secret });
     return access;
