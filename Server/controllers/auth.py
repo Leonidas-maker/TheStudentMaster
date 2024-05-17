@@ -215,7 +215,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
             else:
                 application_uuid = None
 
-            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
+            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], uuid.UUID(secret_payload["jti"]))
 
             refresh_token, access_token = create_tokens(
                 db, user_security, user_uuid, secret_payload["jti"], application_uuid
