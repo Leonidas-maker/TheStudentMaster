@@ -52,7 +52,7 @@ const getAuthToken = async (): Promise<string | null> => {
 
 const isLoggedIn = async (): Promise<boolean> => {
   const token = await getAuthToken();
-  return (token !== null && isTokenValid(token) === true);
+  return token !== null && isTokenValid(token) === true;
 };
 
 export { setTokens, clearTokens, getAuthToken, isTokenValid, isLoggedIn };
