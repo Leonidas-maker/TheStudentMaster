@@ -5,8 +5,8 @@ import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { axiosInstance } from "../../services/api";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
@@ -48,20 +48,28 @@ const WeekCalendar: React.FC = () => {
   // Fetch events function with 15 minutes check and AsyncStorage usage
   const fetchEvents = async () => {
     try {
-      const selectedUniversity = await AsyncStorage.getItem('selectedUniversity');
-      const selectedCourse = await AsyncStorage.getItem('selectedCourse');
-      const lastFetchTime = await AsyncStorage.getItem('lastFetchTime');
+      const selectedUniversity =
+        await AsyncStorage.getItem("selectedUniversity");
+      const selectedCourse = await AsyncStorage.getItem("selectedCourse");
+      const lastFetchTime = await AsyncStorage.getItem("lastFetchTime");
       const currentTime = new Date().getTime();
 
-      if (lastFetchTime && currentTime - parseInt(lastFetchTime) < 15 * 60 * 1000) {
-        console.log("Fetching data skipped, less than 15 minutes since last fetch");
+      if (
+        lastFetchTime &&
+        currentTime - parseInt(lastFetchTime) < 15 * 60 * 1000
+      ) {
+        console.log(
+          "Fetching data skipped, less than 15 minutes since last fetch",
+        );
         return;
       }
 
       if (selectedUniversity && selectedCourse) {
         const { uuid } = JSON.parse(selectedUniversity);
-        const response = await axiosInstance.get(`/calendar/${uuid}/${selectedCourse}`);
-        const data = response.data.data; 
+        const response = await axiosInstance.get(
+          `/calendar/${uuid}/${selectedCourse}`,
+        );
+        const data = response.data.data;
 
         if (data && Array.isArray(data.events)) {
           const formattedEvents = data.events.map((event: Event) => ({
@@ -71,8 +79,8 @@ const WeekCalendar: React.FC = () => {
           }));
 
           setEvents(formattedEvents);
-          await AsyncStorage.setItem('events', JSON.stringify(formattedEvents));
-          await AsyncStorage.setItem('lastFetchTime', currentTime.toString());
+          await AsyncStorage.setItem("events", JSON.stringify(formattedEvents));
+          await AsyncStorage.setItem("lastFetchTime", currentTime.toString());
         } else {
           console.error("Unexpected response format:", data);
         }
@@ -85,7 +93,7 @@ const WeekCalendar: React.FC = () => {
   // Load events from AsyncStorage
   const loadEventsFromStorage = async () => {
     try {
-      const storedEvents = await AsyncStorage.getItem('events');
+      const storedEvents = await AsyncStorage.getItem("events");
       if (storedEvents) {
         const parsedEvents = JSON.parse(storedEvents).map((event: Event) => ({
           ...event,
@@ -103,7 +111,7 @@ const WeekCalendar: React.FC = () => {
     useCallback(() => {
       loadEventsFromStorage();
       fetchEvents();
-    }, [])
+    }, []),
   );
 
   // ====================================================== //
