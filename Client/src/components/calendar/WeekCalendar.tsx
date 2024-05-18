@@ -1,17 +1,22 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, LayoutAnimation, UIManager, Platform } from "react-native";
 import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
+import { axiosInstance } from "../../services/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
-// Import TestData
-import testData from "./testData/tinf22cs1.json";
-//TODO Get JSON Data from Backend
+interface Event {
+  start: string | Date;
+  end: string | Date;
+  [key: string]: any;
+}
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {
@@ -29,6 +34,7 @@ const WeekCalendar: React.FC = () => {
   // ====================================================== //
   // Gets the current date
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState<Event[]>([]);
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -37,6 +43,68 @@ const WeekCalendar: React.FC = () => {
   const animateTransition = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
+
+  //TODO Add loading spinner
+  // Fetch events function with 15 minutes check and AsyncStorage usage
+  const fetchEvents = async () => {
+    try {
+      const selectedUniversity = await AsyncStorage.getItem('selectedUniversity');
+      const selectedCourse = await AsyncStorage.getItem('selectedCourse');
+      const lastFetchTime = await AsyncStorage.getItem('lastFetchTime');
+      const currentTime = new Date().getTime();
+
+      if (lastFetchTime && currentTime - parseInt(lastFetchTime) < 15 * 60 * 1000) {
+        console.log("Fetching data skipped, less than 15 minutes since last fetch");
+        return;
+      }
+
+      if (selectedUniversity && selectedCourse) {
+        const { uuid } = JSON.parse(selectedUniversity);
+        const response = await axiosInstance.get(`/calendar/${uuid}/${selectedCourse}`);
+        const data = response.data.data; 
+
+        if (data && Array.isArray(data.events)) {
+          const formattedEvents = data.events.map((event: Event) => ({
+            ...event,
+            start: new Date(event.start),
+            end: new Date(event.end),
+          }));
+
+          setEvents(formattedEvents);
+          await AsyncStorage.setItem('events', JSON.stringify(formattedEvents));
+          await AsyncStorage.setItem('lastFetchTime', currentTime.toString());
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
+
+  // Load events from AsyncStorage
+  const loadEventsFromStorage = async () => {
+    try {
+      const storedEvents = await AsyncStorage.getItem('events');
+      if (storedEvents) {
+        const parsedEvents = JSON.parse(storedEvents).map((event: Event) => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+        }));
+        setEvents(parsedEvents);
+      }
+    } catch (error) {
+      console.error("Error loading events from storage:", error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      loadEventsFromStorage();
+      fetchEvents();
+    }, [])
+  );
 
   // ====================================================== //
   // =================== Press handlers =================== //
@@ -58,17 +126,6 @@ const WeekCalendar: React.FC = () => {
     animateTransition();
     setCurrentDate(new Date());
   };
-
-  // ====================================================== //
-  // =================== JSON convertion ================== //
-  // ====================================================== //
-  // Maps the events from the JSON data to the events array
-  // Converts the start and end date to a Date object
-  const events = testData.events.map((event) => ({
-    ...event,
-    start: new Date(event.start),
-    end: new Date(event.end),
-  }));
 
   //TODO Add scrolling in web version
   // ====================================================== //
