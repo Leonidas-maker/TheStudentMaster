@@ -51,8 +51,6 @@ const WeekCalendar: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [missingUniversity, setMissingUniversity] = useState(false);
-  const [missingCourse, setMissingCourse] = useState(false);
   const navigation = useNavigation<any>();
 
   // ====================================================== //
@@ -104,7 +102,7 @@ const WeekCalendar: React.FC = () => {
                 style: "cancel",
               },
               {
-                text: "Einstellungen",
+                text: "Zur Auswahl",
                 onPress: () => {
                   navigation.navigate("OverviewStack", { screen: "Settings" });
                 },

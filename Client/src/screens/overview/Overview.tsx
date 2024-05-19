@@ -61,6 +61,7 @@ const Overview: React.FC = () => {
     AsyncStorage.removeItem("lastFetchTime");
     AsyncStorage.removeItem("selectedUniversity");
     AsyncStorage.removeItem("selectedCourse");
+    AsyncStorage.removeItem("lastFetchHash");
 
     SecureStore.deleteItemAsync("access_token");
     SecureStore.deleteItemAsync("refresh_token");

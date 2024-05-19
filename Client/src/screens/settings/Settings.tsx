@@ -10,6 +10,7 @@ import {
   fetchCalendars,
   getSelectedUniversity,
   getSelectedCourse,
+  fetchInitialHash,
 } from "../../services/calendarService";
 
 type SchemeType = "light" | "dark" | "system";
@@ -96,6 +97,11 @@ const Settings: React.FC = () => {
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
     setPlaceholderCourse(selectedValue);
+    const selectedUni = await AsyncStorage.getItem("selectedUniversity");
+    if (selectedUni) {
+      const { uuid } = JSON.parse(selectedUni);
+      await fetchInitialHash(uuid, selectedValue);
+    }
     fetchEventsWithoutWait(setEvents);
   };
 

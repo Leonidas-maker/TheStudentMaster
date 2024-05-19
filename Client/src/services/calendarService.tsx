@@ -59,4 +59,19 @@ const getSelectedCourse = async (
   }
 };
 
-export { fetchCalendars, getSelectedUniversity, getSelectedCourse };
+const fetchInitialHash = async (universityUuid: string, courseName: string) => {
+    try {
+      const hashResponse = await axiosInstance.get(
+        `/calendar/${universityUuid}/${courseName}/hash`,
+      );
+      const currentHash = hashResponse.data.message;
+  
+      if (currentHash) {
+        await AsyncStorage.setItem("lastFetchHash", currentHash);
+      }
+    } catch (error) {
+      console.error("Error fetching initial hash:", error);
+    }
+  };
+
+export { fetchCalendars, getSelectedUniversity, getSelectedCourse, fetchInitialHash };
