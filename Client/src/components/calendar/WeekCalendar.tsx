@@ -1,17 +1,36 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState } from "react";
-import { View, LayoutAnimation, UIManager, Platform } from "react-native";
+import React, { useState, useCallback } from "react";
+import {
+  View,
+  LayoutAnimation,
+  UIManager,
+  Platform,
+  Alert,
+} from "react-native";
 import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  fetchEvents,
+  loadEventsFromStorage,
+} from "../../services/eventService";
+import {
+  getSelectedUniversity,
+  getSelectedCourse,
+} from "../../services/calendarService";
+import * as Progress from "react-native-progress";
+import { useNavigation } from "@react-navigation/native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
-// Import TestData
-import testData from "./testData/tinf22cs1.json";
-//TODO Get JSON Data from Backend
+interface Event {
+  start: string | Date;
+  end: string | Date;
+  [key: string]: any;
+}
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {
@@ -29,6 +48,10 @@ const WeekCalendar: React.FC = () => {
   // ====================================================== //
   // Gets the current date
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const navigation = useNavigation<any>();
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -37,6 +60,64 @@ const WeekCalendar: React.FC = () => {
   const animateTransition = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadEvents = async () => {
+        setLoading(true);
+        setProgress(0.3);
+        await loadEventsFromStorage(setEvents);
+        setProgress(0.6);
+        await fetchEvents(setEvents);
+        setProgress(1);
+        setLoading(false);
+      };
+
+      const checkSelections = async () => {
+        let missingUniversity = false;
+        let missingCourse = false;
+
+        await getSelectedUniversity(
+          () => {},
+          () => {},
+          (missing) => {
+            missingUniversity = missing;
+          },
+        );
+        await getSelectedCourse(
+          () => {},
+          () => {},
+          (missing) => {
+            missingCourse = missing;
+          },
+        );
+
+        if (missingUniversity || missingCourse) {
+          Alert.alert(
+            "Auswahl erforderlich",
+            "Bitte wählen Sie eine Universität und einen Kurs aus.",
+            [
+              {
+                text: "Zurück",
+                style: "cancel",
+              },
+              {
+                text: "Zur Auswahl",
+                onPress: () => {
+                  navigation.navigate("OverviewStack", { screen: "Settings" });
+                },
+                style: "default",
+              },
+            ],
+            { cancelable: false },
+          );
+        }
+      };
+
+      loadEvents();
+      checkSelections();
+    }, [navigation]), // Fügen Sie alertShown zu den Abhängigkeiten hinzu
+  );
 
   // ====================================================== //
   // =================== Press handlers =================== //
@@ -58,17 +139,6 @@ const WeekCalendar: React.FC = () => {
     animateTransition();
     setCurrentDate(new Date());
   };
-
-  // ====================================================== //
-  // =================== JSON convertion ================== //
-  // ====================================================== //
-  // Maps the events from the JSON data to the events array
-  // Converts the start and end date to a Date object
-  const events = testData.events.map((event) => ({
-    ...event,
-    start: new Date(event.start),
-    end: new Date(event.end),
-  }));
 
   //TODO Add scrolling in web version
   // ====================================================== //
@@ -95,6 +165,7 @@ const WeekCalendar: React.FC = () => {
             onForwardPress={handleForwardPress}
             onTodayPress={handleTodayPress}
           />
+          {loading && <Progress.Bar progress={progress} width={null} />}
           <Days currentDate={currentDate} events={events} />
         </View>
       </FlingGestureHandler>
