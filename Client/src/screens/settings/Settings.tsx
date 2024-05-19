@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
 import DefaultText from "../../components/textFields/DefaultText";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { fetchEventsWithoutWait } from "../../services/eventService";
-import { fetchCalendars, getSelectedUniversity, getSelectedCourse } from "../../services/calendarService";
+import {
+  fetchCalendars,
+  getSelectedUniversity,
+  getSelectedCourse,
+} from "../../services/calendarService";
 
 type SchemeType = "light" | "dark" | "system";
 

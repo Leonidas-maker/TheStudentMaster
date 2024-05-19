@@ -17,8 +17,10 @@ const fetchCalendars = async (setCalendars: (events: Calendar[]) => void) => {
 };
 
 const getSelectedUniversity = async (
-  setSelectedUniversity: (university: { name: string; uuid: string } | null) => void,
-  setPlaceholderUniversity: (name: string) => void
+  setSelectedUniversity: (
+    university: { name: string; uuid: string } | null,
+  ) => void,
+  setPlaceholderUniversity: (name: string) => void,
 ) => {
   try {
     const storedUniversity = await AsyncStorage.getItem("selectedUniversity");
@@ -34,7 +36,7 @@ const getSelectedUniversity = async (
 
 const getSelectedCourse = async (
   setSelectedCourse: (course: string) => void,
-  setPlaceholderCourse: (course: string) => void
+  setPlaceholderCourse: (course: string) => void,
 ) => {
   try {
     const storedCourse = await AsyncStorage.getItem("selectedCourse");

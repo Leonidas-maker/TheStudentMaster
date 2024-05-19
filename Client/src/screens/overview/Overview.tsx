@@ -59,7 +59,6 @@ const Overview: React.FC = () => {
   const handleDeletePress = () => {
     AsyncStorage.removeItem("events");
     AsyncStorage.removeItem("lastFetchTime");
-    
   };
 
   const accountTitle = "Account Management Screens";

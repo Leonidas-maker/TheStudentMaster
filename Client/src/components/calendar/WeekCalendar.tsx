@@ -1,12 +1,21 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useCallback } from "react";
-import { View, LayoutAnimation, UIManager, Platform, ActivityIndicator } from "react-native";
+import {
+  View,
+  LayoutAnimation,
+  UIManager,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
 import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
-import { fetchEvents, loadEventsFromStorage } from "../../services/eventService";
-import * as Progress from 'react-native-progress';
+import {
+  fetchEvents,
+  loadEventsFromStorage,
+} from "../../services/eventService";
+import * as Progress from "react-native-progress";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
@@ -58,7 +67,7 @@ const WeekCalendar: React.FC = () => {
         setLoading(false);
       };
       loadEvents();
-    }, [])
+    }, []),
   );
 
   // ====================================================== //
@@ -108,9 +117,7 @@ const WeekCalendar: React.FC = () => {
             onTodayPress={handleTodayPress}
           />
           <View className="w-full justify-center items-center">
-            {loading &&
-              <Progress.Bar progress={progress} />
-            }
+            {loading && <Progress.Bar progress={progress} />}
           </View>
           <Days currentDate={currentDate} events={events} />
         </View>
