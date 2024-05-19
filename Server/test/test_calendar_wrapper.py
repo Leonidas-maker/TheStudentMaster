@@ -29,7 +29,7 @@ RAPLA_URLS = [
     "https://rapla.dhbw-karlsruhe.de/rapla?page=calendar&user=eisenbiegler&file=TINF22B4",
     "https://rapla.dhbw-karlsruhe.de/rapla?page=calendar&user=eisenbiegler&file=TINF21B4",
     "https://rapla.dhbw-karlsruhe.de/rapla?page=calendar&user=vollmer&file=tinf21b3",
-    "https://rapla.dhbw-karlsruhe.de/rapla?page=calendar&user=freudenmann&file=TINF23B1"
+    "https://rapla.dhbw-karlsruhe.de/rapla?page=calendar&user=freudenmann&file=TINF23B1",
 ]
 
 ###########################################################################
