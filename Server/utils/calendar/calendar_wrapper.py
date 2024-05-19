@@ -11,14 +11,14 @@ from bs4 import BeautifulSoup
 
 
 # TODO Max size of source
-class calendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
+class CalendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
     def __init__(
         self,
         backend: str,
         type: str = "custom",
         source: Dict[str, str] | str = None,
     ):
-        if backend not in ["iCalender", "Rapla"]:
+        if backend not in ["iCalendar", "Rapla"]:
             raise ValueError("Invalid backend")
         if type not in ["custom", "dhbw-mannheim"]:
             raise ValueError("Invalid type")
@@ -58,7 +58,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
         self.type = type
 
     def set_backend(self, backend: str):
-        if backend not in ["iCalender", "Rapla"]:
+        if backend not in ["iCalendar", "Rapla"]:
             raise ValueError("Invalid backend")
         self.backend = backend
 
@@ -70,13 +70,13 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
             self.source = source
 
         if isinstance(self.source, dict):
-            if self.backend == "iCalender":
+            if self.backend == "iCalendar":
                 return self.__ical_get_data_multiple(self.source)
             else:  # rapla
                 return self.__rapla_get_data_multiple(self.source)
 
         else:
-            if self.backend == "iCalender":
+            if self.backend == "iCalendar":
                 return self.__ical_get_data_single(self.source)
             else:  # rapla
                 return self.__rapla_get_data_single(self.source)
@@ -182,10 +182,12 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
             calendar_week = int(cols[0].findChild("th", class_="week_number").get_text().split(" ")[1])
             if calendar_week < last_calendar_week:
                 current_year += 1
-
             for col in cols:
                 rows = col.findChildren("td")
                 day_offset = 0
+
+                is_normal_spacer_before = False
+
                 for row in rows:
                     match row.get("class")[0]:
                         case "week_header":
@@ -214,14 +216,16 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
                                 lecture_description["tags"].append("exam")
 
                             # ---------------- Lecture Time ---------------- #
-                            # Counting spacers in the calendar for every day there are 2 spacers
-                            real_offset = day_offset // 2
-                            lecture_start = datetime.datetime.strptime(
-                                f"{days[real_offset]} {lecture_time[0]}", "%d.%m.%Y %H:%M"
-                            )
-                            lecture_end = datetime.datetime.strptime(
-                                f"{days[real_offset]} {lecture_time[1]}", "%d.%m.%Y %H:%M"
-                            )
+                            try:
+                                lecture_start = datetime.datetime.strptime(
+                                    f"{days[day_offset]} {lecture_time[0]}", "%d.%m.%Y %H:%M"
+                                )
+                                lecture_end = datetime.datetime.strptime(
+                                    f"{days[day_offset]} {lecture_time[1]}", "%d.%m.%Y %H:%M"
+                                )
+                            except IndexError:
+                                print(f"[ERROR] Day offset error for {course_name}->{lecture_name}! Skipping...")
+                                continue
 
                             tmp = row.findChild("span", class_="person")
                             if tmp:
@@ -259,19 +263,29 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
                         # Spacer cells
                         case "week_smallseparatorcell_black":
-                            day_offset += 1
-                        case "week_separatorcell_black":
-                            day_offset += 1
-                        case "week_separatorcell":
-                            day_offset += 1
+                            if is_normal_spacer_before:
+                                day_offset += 1
+                                is_normal_spacer_before = False
                         case "week_smallseparatorcell":
-                            day_offset += 1
+                            if is_normal_spacer_before:
+                                day_offset += 1
+                                is_normal_spacer_before = False
+                        case "week_separatorcell_black":
+                            is_normal_spacer_before = True
+                        case "week_separatorcell":
+                            is_normal_spacer_before = True
 
             last_calendar_week = calendar_week
         return event_json
 
     def __rapla_get_data_single(self, source: str) -> Dict[str, any]:
-        data = self.__rapla_scrape_source(source)
+        try:
+            data = self.__rapla_scrape_source(source)
+        except Exception as e:
+            print(f"[ERROR] Could not download {source}!")
+            print(e)
+            return None
+
         if data:
             return {"data": data, "hash": self.__dict_hash(data)}
         else:
@@ -290,6 +304,7 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 
 
 # ~~~~~~~~~~~~~~~~ Example ~~~~~~~~~~~~~~~~ #
+# calendar_wrapper = CalendarWrapper("iCalendar" or "Rapla", "dhbw-mannheim" or "custom")
 # ---------- Input --------- #
 # {
 #     "Lecture 1": "Source 1",
@@ -298,7 +313,6 @@ class calendarWrapper:  # * source_model could be provided (only for threading a
 #
 # --------- Output --------- #
 # {
-#     "name": "Course name",
 #     "data": {
 #         "X-WR-TIMEZONE": "Europe/Berlin",
 #         "events": [

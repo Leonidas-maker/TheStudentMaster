@@ -1,10 +1,16 @@
 from fastapi.testclient import TestClient
-from ..main import app
 import pytest
 import pyotp
 import time
 import random
+#! Also needed: pytest_dependency
 
+# ~~~~~~~~~~~~~~~ Test-Asset ~~~~~~~~~~~~~~ #
+from ..main import app
+
+###########################################################################
+################################### Init ##################################
+###########################################################################
 client = TestClient(app)
 
 pytest.refresh_token = None

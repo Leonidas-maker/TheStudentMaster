@@ -26,8 +26,3 @@ def get_source_dhbw_ma() -> dict[str, str]:
 #         for course in raw_courses:
 #             courses[course.get_text()] = f"www.dhbw-stuttgart.de{course.find("a").get("href")}"
 #     return courses
-
-
-if __name__ == "__main__":
-    print(get_source_dhbw_ma())
-    # print(get_available_courses_dhbw_stug())
