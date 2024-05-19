@@ -1,12 +1,12 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState, useEffect, useCallback } from "react";
-import { View, LayoutAnimation, UIManager, Platform } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, LayoutAnimation, UIManager, Platform, ActivityIndicator } from "react-native";
 import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
-import { axiosInstance } from "../../services/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import { fetchEvents, loadEventsFromStorage } from "../../services/eventService";
+import * as Progress from 'react-native-progress';
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
@@ -35,6 +35,8 @@ const WeekCalendar: React.FC = () => {
   // Gets the current date
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -44,74 +46,19 @@ const WeekCalendar: React.FC = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
-  //TODO Add loading spinner
-  // Fetch events function with 15 minutes check and AsyncStorage usage
-  const fetchEvents = async () => {
-    try {
-      const selectedUniversity =
-        await AsyncStorage.getItem("selectedUniversity");
-      const selectedCourse = await AsyncStorage.getItem("selectedCourse");
-      const lastFetchTime = await AsyncStorage.getItem("lastFetchTime");
-      const currentTime = new Date().getTime();
-
-      if (
-        lastFetchTime &&
-        currentTime - parseInt(lastFetchTime) < 15 * 60 * 1000
-      ) {
-        console.log(
-          "Fetching data skipped, less than 15 minutes since last fetch",
-        );
-        return;
-      }
-
-      if (selectedUniversity && selectedCourse) {
-        const { uuid } = JSON.parse(selectedUniversity);
-        const response = await axiosInstance.get(
-          `/calendar/${uuid}/${selectedCourse}`,
-        );
-        const data = response.data.data;
-
-        if (data && Array.isArray(data.events)) {
-          const formattedEvents = data.events.map((event: Event) => ({
-            ...event,
-            start: new Date(event.start),
-            end: new Date(event.end),
-          }));
-
-          setEvents(formattedEvents);
-          await AsyncStorage.setItem("events", JSON.stringify(formattedEvents));
-          await AsyncStorage.setItem("lastFetchTime", currentTime.toString());
-        } else {
-          console.error("Unexpected response format:", data);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-
-  // Load events from AsyncStorage
-  const loadEventsFromStorage = async () => {
-    try {
-      const storedEvents = await AsyncStorage.getItem("events");
-      if (storedEvents) {
-        const parsedEvents = JSON.parse(storedEvents).map((event: Event) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-        }));
-        setEvents(parsedEvents);
-      }
-    } catch (error) {
-      console.error("Error loading events from storage:", error);
-    }
-  };
-
   useFocusEffect(
     useCallback(() => {
-      loadEventsFromStorage();
-      fetchEvents();
-    }, []),
+      const loadEvents = async () => {
+        setLoading(true);
+        setProgress(0.3);
+        await loadEventsFromStorage(setEvents);
+        setProgress(0.6);
+        await fetchEvents(setEvents);
+        setProgress(1);
+        setLoading(false);
+      };
+      loadEvents();
+    }, [])
   );
 
   // ====================================================== //
@@ -160,6 +107,11 @@ const WeekCalendar: React.FC = () => {
             onForwardPress={handleForwardPress}
             onTodayPress={handleTodayPress}
           />
+          <View className="w-full justify-center items-center">
+            {loading &&
+              <Progress.Bar progress={progress} />
+            }
+          </View>
           <Days currentDate={currentDate} events={events} />
         </View>
       </FlingGestureHandler>

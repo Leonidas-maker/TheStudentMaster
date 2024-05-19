@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
 import DefaultText from "../../components/textFields/DefaultText";
 import Dropdown from "../../components/dropdown/Dropdown";
-import { axiosInstance } from "../../services/api";
-import { useFocusEffect } from "@react-navigation/native";
+import { fetchEventsWithoutWait } from "../../services/eventService";
+import { fetchCalendars, getSelectedUniversity, getSelectedCourse } from "../../services/calendarService";
 
 type SchemeType = "light" | "dark" | "system";
 
@@ -17,10 +17,9 @@ interface Calendar {
 }
 
 interface Event {
-  id: string;
-  title: string;
-  start: string;
-  end: string;
+  start: string | Date;
+  end: string | Date;
+  [key: string]: any;
 }
 
 const Settings: React.FC = () => {
@@ -48,103 +47,10 @@ const Settings: React.FC = () => {
   }, [theme, setColorScheme]);
 
   useEffect(() => {
-    const fetchCalendars = async () => {
-      try {
-        const response = await axiosInstance.get(
-          "/calendar/available_calendars",
-        );
-        setCalendars(response.data);
-      } catch (err) {
-        console.log("Failed to load calendars");
-      }
-    };
-
-    const getSelectedData = async () => {
-      try {
-        const storedUniversity =
-          await AsyncStorage.getItem("selectedUniversity");
-        if (storedUniversity) {
-          const parsedUniversity = JSON.parse(storedUniversity);
-          setSelectedUniversity(parsedUniversity);
-          setPlaceholderUniversity(parsedUniversity.name);
-        }
-
-        const storedCourse = await AsyncStorage.getItem("selectedCourse");
-        if (storedCourse) {
-          setSelectedCourse(storedCourse);
-          setPlaceholderCourse(storedCourse);
-        }
-      } catch (err) {
-        console.log("Failed to load selected data from storage");
-      }
-    };
-
-    fetchCalendars();
-    getSelectedData();
+    fetchCalendars(setCalendars);
+    getSelectedUniversity(setSelectedUniversity, setPlaceholderUniversity);
+    getSelectedCourse(setSelectedCourse, setPlaceholderCourse);
   }, []);
-
-  //TODO Make own service for fetching events
-  const fetchEvents = async () => {
-    try {
-      const selectedUniversity =
-        await AsyncStorage.getItem("selectedUniversity");
-      const selectedCourse = await AsyncStorage.getItem("selectedCourse");
-      const currentTime = new Date().getTime();
-
-      if (selectedUniversity && selectedCourse) {
-        const { uuid } = JSON.parse(selectedUniversity);
-        const response = await axiosInstance.get(
-          `/calendar/${uuid}/${selectedCourse}`,
-        );
-        const data = response.data.data;
-
-        if (data && Array.isArray(data.events)) {
-          const formattedEvents = data.events.map((event: any) => ({
-            ...event,
-            start: new Date(event.start),
-            end: new Date(event.end),
-          }));
-
-          setEvents(formattedEvents);
-          await AsyncStorage.setItem("events", JSON.stringify(formattedEvents));
-          await AsyncStorage.setItem("lastFetchTime", currentTime.toString());
-        } else {
-          console.error("Unexpected response format:", data);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
-  };
-
-  const loadEventsFromStorage = async () => {
-    try {
-      const storedEvents = await AsyncStorage.getItem("events");
-      if (storedEvents) {
-        const parsedEvents = JSON.parse(storedEvents).map((event: any) => ({
-          ...event,
-          start: new Date(event.start),
-          end: new Date(event.end),
-        }));
-        setEvents(parsedEvents);
-      }
-    } catch (error) {
-      console.error("Error loading events from storage:", error);
-    }
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      loadEventsFromStorage();
-      fetchEvents();
-    }, []),
-  );
-
-  useEffect(() => {
-    if (selectedUniversity && selectedCourse) {
-      fetchEvents();
-    }
-  }, [selectedUniversity, selectedCourse]);
 
   const dropdownUniversityValues = calendars.map((calendar: any) => ({
     key: calendar.university_uuid,
@@ -168,7 +74,7 @@ const Settings: React.FC = () => {
       setPlaceholderUniversity(selectedUni.university_name);
       setSelectedCourse(null);
       setPlaceholderCourse("Select a Course");
-      fetchEvents(); // Fetch events when university changes
+      fetchEventsWithoutWait(setEvents);
     }
   };
 
@@ -176,7 +82,7 @@ const Settings: React.FC = () => {
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
     setPlaceholderCourse(selectedValue);
-    fetchEvents(); // Fetch events when course changes
+    fetchEventsWithoutWait(setEvents);
   };
 
   const RadioOption = ({
