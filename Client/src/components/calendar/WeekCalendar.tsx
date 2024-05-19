@@ -82,12 +82,16 @@ const WeekCalendar: React.FC = () => {
         await getSelectedUniversity(
           () => {},
           () => {},
-          (missing) => { missingUniversity = missing; }
+          (missing) => {
+            missingUniversity = missing;
+          },
         );
         await getSelectedCourse(
           () => {},
           () => {},
-          (missing) => { missingCourse = missing; }
+          (missing) => {
+            missingCourse = missing;
+          },
         );
 
         if (missingUniversity || missingCourse) {
@@ -107,7 +111,7 @@ const WeekCalendar: React.FC = () => {
                 style: "default",
               },
             ],
-            { cancelable: false }
+            { cancelable: false },
           );
         }
       };

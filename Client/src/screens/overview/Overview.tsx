@@ -65,7 +65,7 @@ const Overview: React.FC = () => {
     SecureStore.deleteItemAsync("access_token");
     SecureStore.deleteItemAsync("refresh_token");
     SecureStore.deleteItemAsync("secret_token");
-    
+
     console.log("Storage cleared");
   };
 

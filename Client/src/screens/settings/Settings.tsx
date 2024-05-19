@@ -54,8 +54,16 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     fetchCalendars(setCalendars);
-    getSelectedUniversity(setSelectedUniversity, setPlaceholderUniversity, setMissingUniversity);
-    getSelectedCourse(setSelectedCourse, setPlaceholderCourse, setMissingCourse);
+    getSelectedUniversity(
+      setSelectedUniversity,
+      setPlaceholderUniversity,
+      setMissingUniversity,
+    );
+    getSelectedCourse(
+      setSelectedCourse,
+      setPlaceholderCourse,
+      setMissingCourse,
+    );
   }, []);
 
   const dropdownUniversityValues = calendars.map((calendar: any) => ({
@@ -139,13 +147,13 @@ const Settings: React.FC = () => {
 
   const courseDropdownValues = selectedUniversity
     ? calendars
-      .find(
-        (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-      )
-      ?.course_names.map((course: string) => ({
-        key: course,
-        value: course,
-      })) || []
+        .find(
+          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+        )
+        ?.course_names.map((course: string) => ({
+          key: course,
+          value: course,
+        })) || []
     : [];
 
   return (
