@@ -59,6 +59,14 @@ const Overview: React.FC = () => {
   const handleDeletePress = () => {
     AsyncStorage.removeItem("events");
     AsyncStorage.removeItem("lastFetchTime");
+    AsyncStorage.removeItem("selectedUniversity");
+    AsyncStorage.removeItem("selectedCourse");
+
+    SecureStore.deleteItemAsync("access_token");
+    SecureStore.deleteItemAsync("refresh_token");
+    SecureStore.deleteItemAsync("secret_token");
+    
+    console.log("Storage cleared");
   };
 
   const accountTitle = "Account Management Screens";

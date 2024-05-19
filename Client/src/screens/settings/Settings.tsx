@@ -39,6 +39,8 @@ const Settings: React.FC = () => {
   );
   const [placeholderCourse, setPlaceholderCourse] = useState("Select a Course");
   const [events, setEvents] = useState<Event[]>([]);
+  const [missingUniversity, setMissingUniversity] = useState(false);
+  const [missingCourse, setMissingCourse] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
@@ -52,8 +54,8 @@ const Settings: React.FC = () => {
 
   useEffect(() => {
     fetchCalendars(setCalendars);
-    getSelectedUniversity(setSelectedUniversity, setPlaceholderUniversity);
-    getSelectedCourse(setSelectedCourse, setPlaceholderCourse);
+    getSelectedUniversity(setSelectedUniversity, setPlaceholderUniversity, setMissingUniversity);
+    getSelectedCourse(setSelectedCourse, setPlaceholderCourse, setMissingCourse);
   }, []);
 
   const dropdownUniversityValues = calendars.map((calendar: any) => ({
@@ -137,13 +139,13 @@ const Settings: React.FC = () => {
 
   const courseDropdownValues = selectedUniversity
     ? calendars
-        .find(
-          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-        )
-        ?.course_names.map((course: string) => ({
-          key: course,
-          value: course,
-        })) || []
+      .find(
+        (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+      )
+      ?.course_names.map((course: string) => ({
+        key: course,
+        value: course,
+      })) || []
     : [];
 
   return (

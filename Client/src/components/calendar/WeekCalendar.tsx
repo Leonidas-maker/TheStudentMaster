@@ -5,7 +5,7 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
-  ActivityIndicator,
+  Alert,
 } from "react-native";
 import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
@@ -15,7 +15,12 @@ import {
   fetchEvents,
   loadEventsFromStorage,
 } from "../../services/eventService";
+import {
+  getSelectedUniversity,
+  getSelectedCourse,
+} from "../../services/calendarService";
 import * as Progress from "react-native-progress";
+import { useNavigation } from "@react-navigation/native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
@@ -46,6 +51,9 @@ const WeekCalendar: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [missingUniversity, setMissingUniversity] = useState(false);
+  const [missingCourse, setMissingCourse] = useState(false);
+  const navigation = useNavigation<any>();
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -66,8 +74,47 @@ const WeekCalendar: React.FC = () => {
         setProgress(1);
         setLoading(false);
       };
+
+      const checkSelections = async () => {
+        let missingUniversity = false;
+        let missingCourse = false;
+
+        await getSelectedUniversity(
+          () => {},
+          () => {},
+          (missing) => { missingUniversity = missing; }
+        );
+        await getSelectedCourse(
+          () => {},
+          () => {},
+          (missing) => { missingCourse = missing; }
+        );
+
+        if (missingUniversity || missingCourse) {
+          Alert.alert(
+            "Auswahl erforderlich",
+            "Bitte wählen Sie eine Universität und einen Kurs aus.",
+            [
+              {
+                text: "Zurück",
+                style: "cancel",
+              },
+              {
+                text: "Einstellungen",
+                onPress: () => {
+                  navigation.navigate("OverviewStack", { screen: "Settings" });
+                },
+                style: "default",
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      };
+
       loadEvents();
-    }, []),
+      checkSelections();
+    }, [navigation]), // Fügen Sie alertShown zu den Abhängigkeiten hinzu
   );
 
   // ====================================================== //
@@ -116,9 +163,7 @@ const WeekCalendar: React.FC = () => {
             onForwardPress={handleForwardPress}
             onTodayPress={handleTodayPress}
           />
-          <View className="w-full justify-center items-center">
-            {loading && <Progress.Bar progress={progress} />}
-          </View>
+          {loading && <Progress.Bar progress={progress} width={null} />}
           <Days currentDate={currentDate} events={events} />
         </View>
       </FlingGestureHandler>
