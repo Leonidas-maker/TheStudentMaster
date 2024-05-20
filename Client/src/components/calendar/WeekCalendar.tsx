@@ -116,7 +116,7 @@ const WeekCalendar: React.FC = () => {
 
       loadEvents();
       checkSelections();
-    }, [navigation]), // Fügen Sie alertShown zu den Abhängigkeiten hinzu
+    }, [navigation]),
   );
 
   // ====================================================== //
