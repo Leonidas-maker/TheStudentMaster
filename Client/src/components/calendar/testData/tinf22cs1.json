@@ -49,7 +49,9 @@
     {
       "summary": "Diverse Wiederholungsklausuren Informatik",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-03-30 13:00:00",
@@ -1453,7 +1455,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-09-25 09:00:00",
@@ -1462,7 +1466,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 136.1B",
       "start": "2023-09-26 09:00:00",
@@ -1471,7 +1477,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-09-26 11:00:00",
@@ -1480,7 +1488,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-09-27 09:00:00",
@@ -1489,7 +1499,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 136.1B",
       "start": "2023-09-28 09:00:00",
@@ -1498,7 +1510,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-09-28 11:00:00",
@@ -1507,7 +1521,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 136.1B",
       "start": "2023-09-29 09:00:00",
@@ -1516,7 +1532,9 @@
     {
       "summary": "Wiederholungs/Nachklausuren",
       "description": {
-        "tags": ["exam"]
+        "tags": [
+          "exam"
+        ]
       },
       "location": "Raum 139B",
       "start": "2023-09-29 11:00:00",
@@ -2598,9 +2616,9 @@
       "description": {
         "tags": []
       },
-      "location": "Raum 269C",
-      "start": "2024-05-08 13:30:00",
-      "end": "2024-05-08 16:30:00"
+      "location": "",
+      "start": "2024-05-08 12:30:00",
+      "end": "2024-05-08 15:30:00"
     },
     {
       "summary": "Betriebssysteme",
@@ -2801,6 +2819,15 @@
       "end": "2024-05-06 16:00:00"
     },
     {
+      "summary": "Klausureinsicht Klausuren 3. Semester",
+      "description": {
+        "tags": []
+      },
+      "location": "Raum 269C",
+      "start": "2024-05-13 10:30:00",
+      "end": "2024-05-13 11:30:00"
+    },
+    {
       "summary": "Mathematik II",
       "description": {
         "tags": []
@@ -2837,22 +2864,22 @@
       "end": "2024-06-10 16:00:00"
     },
     {
-      "summary": "Rechnerarchitekturen (Techn. Inf II)",
+      "summary": "Mathematik II Online",
       "description": {
         "tags": []
       },
-      "location": "Raum 161C",
+      "location": "",
       "start": "2024-05-03 09:00:00",
-      "end": "2024-05-03 12:15:00"
+      "end": "2024-05-03 11:30:00"
     },
     {
-      "summary": "Mathematik II",
+      "summary": "Entf\u00e4llt! Rechnerarchitekturen (Techn. Inf II)",
       "description": {
         "tags": []
       },
-      "location": "Raum 269C",
-      "start": "2024-05-03 13:00:00",
-      "end": "2024-05-03 15:30:00"
+      "location": "",
+      "start": "2024-05-03 09:00:00",
+      "end": "2024-05-03 12:15:00"
     },
     {
       "summary": "Klausureinsicht nicht bestandene Klausuren",
@@ -3033,6 +3060,24 @@
       "location": "Raum 269C",
       "start": "2024-04-17 14:00:00",
       "end": "2024-04-17 18:00:00"
+    },
+    {
+      "summary": "Klausur Technische Inf II ",
+      "description": {
+        "tags": []
+      },
+      "location": "Raum 269C",
+      "start": "2024-06-20 13:00:00",
+      "end": "2024-06-20 15:30:00"
+    },
+    {
+      "summary": "Klausur: Mathematik II",
+      "description": {
+        "tags": []
+      },
+      "location": "Raum 269C",
+      "start": "2024-06-17 13:30:00",
+      "end": "2024-06-17 15:00:00"
     }
   ]
 }

@@ -16,6 +16,7 @@ interface DropdownProps {
   dropdownTextStyles?: ViewStyle;
   inputStyles?: ViewStyle;
   notFound?: string;
+  save?: "value" | "key" | undefined;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -24,6 +25,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   placeholder = "Wählen Sie einen Wert",
   search = false,
   notFound = "Keine Ergebnisse gefunden",
+  save = "value"
 }) => {
   const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
@@ -52,7 +54,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <SelectList
         setSelected={setSelected}
         data={values.map(({ key, value }) => ({ key: key, value: value }))}
-        save="value"
+        save={save}
         search={search}
         placeholder={placeholder}
         boxStyles={boxStyles}
