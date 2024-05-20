@@ -22,7 +22,10 @@ import DayView from "./DayView";
 import DishView from "./DishView";
 import WeekSelector from "../selector/WeekSelector";
 import Dropdown from "../dropdown/Dropdown";
-import { fetchCanteens, fetchCanteenDishes } from "../../services/canteenService";
+import {
+  fetchCanteens,
+  fetchCanteenDishes,
+} from "../../services/canteenService";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface CanteenProps {
@@ -98,7 +101,9 @@ const MenuPlan: React.FC = () => {
   // Fetches the dishes for the selected canteen whenever it changes
   useEffect(() => {
     if (selectedCanteen && canteenNames.length > 0) {
-      const canteen = canteenNames.find((canteen) => canteen.key === selectedCanteen);
+      const canteen = canteenNames.find(
+        (canteen) => canteen.key === selectedCanteen,
+      );
       if (canteen) {
         fetchCanteenDishes(canteen.key, setMenu);
       }
