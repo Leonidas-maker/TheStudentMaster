@@ -46,7 +46,10 @@ const fetchCanteens = async (
       if (cachedCanteens) {
         setCanteenNames(JSON.parse(cachedCanteens));
       }
-      await AsyncStorage.setItem("lastFetchTimeCanteen", currentTime.toString());
+      await AsyncStorage.setItem(
+        "lastFetchTimeCanteen",
+        currentTime.toString(),
+      );
       return;
     }
 
