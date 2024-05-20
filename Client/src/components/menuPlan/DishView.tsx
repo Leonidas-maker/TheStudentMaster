@@ -112,9 +112,6 @@ const DishView: React.FC<DishProps> = ({
                   {dish.dish_type}: {dish.dish}
                 </Text>
                 <Text className="text-black dark:text-white">{dish.price}</Text>
-                <Text className="text-black dark:text-white">
-                  {format(parseISO(dish.serving_date), "dd.MM.yyyy")}
-                </Text>
               </View>
             </Pressable>
           ))
@@ -129,7 +126,7 @@ const DishView: React.FC<DishProps> = ({
       ) : (
         <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
           <Text className="text-black dark:text-white">
-            Bitte wählen Sie eine Mensa.
+            Bitte wähle eine Mensa aus.
           </Text>
         </View>
       )}

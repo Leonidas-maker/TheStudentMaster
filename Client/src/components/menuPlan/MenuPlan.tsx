@@ -26,6 +26,7 @@ import {
   fetchCanteens,
   fetchCanteenDishes,
 } from "../../services/canteenService";
+import * as Progress from "react-native-progress";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface CanteenProps {
@@ -63,6 +64,8 @@ const MenuPlan: React.FC = () => {
   );
   const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
   const [menu, setMenu] = useState<MenuData | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // ====================================================== //
   // ====================== Constants ===================== //
@@ -91,7 +94,11 @@ const MenuPlan: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       const loadCanteens = async () => {
+        setLoading(true);
+        setProgress(0.5);
         await fetchCanteens(setCanteenNames);
+        setProgress(1);
+        setLoading(false);
       };
 
       loadCanteens();
@@ -100,14 +107,23 @@ const MenuPlan: React.FC = () => {
 
   // Fetches the dishes for the selected canteen whenever it changes
   useEffect(() => {
-    if (selectedCanteen && canteenNames.length > 0) {
-      const canteen = canteenNames.find(
-        (canteen) => canteen.key === selectedCanteen,
-      );
-      if (canteen) {
-        fetchCanteenDishes(canteen.key, setMenu);
+    const loadCanteenDishes = async () => {
+      if (selectedCanteen && canteenNames.length > 0) {
+        setLoading(true);
+        setProgress(0.3);
+        const canteen = canteenNames.find(
+          (canteen) => canteen.key === selectedCanteen,
+        );
+        setProgress(0.6);
+        if (canteen) {
+          await fetchCanteenDishes(canteen.key, setMenu);
+        }
+        setProgress(1);
+        setLoading(false);
       }
-    }
+    };
+
+    loadCanteenDishes();
   }, [selectedCanteen, canteenNames]);
 
   // Scrolls to the top of the ScrollView when the selected date changes
@@ -183,6 +199,7 @@ const MenuPlan: React.FC = () => {
         startDate={startOfMenuDate}
         endDate={endOfMenuDate}
       />
+      {loading && <Progress.Bar progress={progress} width={null} />}
       <DayView
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}

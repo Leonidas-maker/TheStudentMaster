@@ -35,6 +35,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
 
       if (lastFetchHash && currentHash === lastFetchHash) {
         console.log("No changes in data, skipping fetch.");
+        await AsyncStorage.setItem("lastFetchTime", currentTime.toString());
         return;
       }
 
