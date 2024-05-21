@@ -60,8 +60,9 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
                     description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
                 )
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
-                db.commit()
+                db.flush()
                 progress.update(task_id, advance=1)
+        db.commit()
     except Exception as e:
         print(e)
         db.rollback()
