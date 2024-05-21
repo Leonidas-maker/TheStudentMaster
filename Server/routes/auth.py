@@ -59,7 +59,7 @@ def user_verify_account(verify_code: str, db: Session = Depends(get_db), user_uu
 # ======================================================== #
 
 
-@auth_router.post("/forgot-password/", response_model=s_auth.UserResForgotPassword)
+@auth_router.post("/forgot-password", response_model=s_auth.UserResForgotPassword)
 def user_forgot_password(
     req_forgot_password: s_auth.UserForgotPassword,
     background_tasks: BackgroundTasks = BackgroundTasks(),
@@ -88,7 +88,7 @@ def user_login(user_login: s_auth.UserLogin, db: Session = Depends(get_db)):
     return login(db, user_login.ident, user_login.password, user_login.new_application)
 
 
-@auth_router.delete("/logout/", response_model=s_general.BasicMessage)
+@auth_router.delete("/logout", response_model=s_general.BasicMessage)
 def user_logout(
     access_token: str,
     refresh_token: str = Depends(oauth2_scheme),
@@ -109,14 +109,14 @@ def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Dep
 
 
 # ~~~~~~~~~~~~~~~~~~ TOTP ~~~~~~~~~~~~~~~~~ #
-@auth_router.post("/add-2fa/", response_model=s_auth.UserResActivate2FA)
+@auth_router.post("/add-2fa", response_model=s_auth.UserResActivate2FA)
 def user_add_2fa(
     req: s_auth.UserReqActivate2FA, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
     return add_2fa(db, req, access_token)
 
 
-@auth_router.delete("/remove-2fa/", response_model=s_general.BasicMessage)
+@auth_router.delete("/remove-2fa", response_model=s_general.BasicMessage)
 def user_remove_2fa(
     otp_code: str,
     background_tasks: BackgroundTasks = BackgroundTasks(),
@@ -126,7 +126,7 @@ def user_remove_2fa(
     return remove_2fa(db, background_tasks, access_token, otp_code)
 
 
-@auth_router.post("/verify-first-2fa/", response_model=s_auth.UserResVerifyFirst2FA)
+@auth_router.post("/verify-first-2fa", response_model=s_auth.UserResVerifyFirst2FA)
 def user_verify_first_2fa(
     otp: s_auth.OTP,
     background_tasks: BackgroundTasks = BackgroundTasks(),
@@ -136,7 +136,7 @@ def user_verify_first_2fa(
     return verify_first_2fa(db, background_tasks, access_token, otp.otp_code)
 
 
-@auth_router.post("/verify-2fa/", response_model=s_auth.UserTokens)
+@auth_router.post("/verify-2fa", response_model=s_auth.UserTokens)
 def user_verify_2fa(otp: s_auth.OTP, security_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return verify_2fa(db, security_token, otp.otp_code)
 
@@ -144,7 +144,8 @@ def user_verify_2fa(otp: s_auth.OTP, security_token: str = Depends(oauth2_scheme
 @auth_router.post("/verify-2fa-backup/{user_uuid}", response_model=s_auth.UserTokens)
 def user_verify_2fa_backup(
     otp: s_auth.BackupOTP,
+    background_tasks: BackgroundTasks = BackgroundTasks(),
     security_token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db),
 ):
-    return verify_2fa_backup(db, security_token, otp)
+    return verify_2fa_backup(db, background_tasks, security_token, otp)

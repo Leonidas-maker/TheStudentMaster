@@ -160,12 +160,13 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
     access_payload = verify_access_token(db, access_token)
     if access_payload:
         user_security = get_user_security(db, user_uuid=access_payload["sub"], with_user=True)
-        user_id = user_security.user_id
-        if not check_password(db, user_add_2fa_req.password, user_security=user_security):
-            raise HTTPException(status_code=401, detail="Invalid credentials")
 
         if user_security._2fa_enabled:
             raise HTTPException(status_code=400, detail="2FA already enabled")
+
+        user_id = user_security.user_id
+        if not check_password(db, user_add_2fa_req.password, user_security=user_security):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
 
         _2fa_secret = create_totp(db, user_id)
 
@@ -214,7 +215,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
             else:
                 application_uuid = None
 
-            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
+            revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], uuid.UUID(secret_payload["jti"]))
 
             refresh_token, access_token = create_tokens(
                 db, user_security, user_uuid, secret_payload["jti"], application_uuid
@@ -226,19 +227,20 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
+def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_token: str, otp: s_auth.BackupOTP):
     secret_payload, user_security = verify_security_token(db, secret_token, is_2fa=True)
     if secret_payload:
         user_uuid = secret_payload["sub"]
         user_2fa: m_auth.User2FA = user_security.user_2fa
+        user_2fa_backup_codes = user_2fa.backup_codes.split(";")
         count_correct = 0
-        for backup_code in otp.backup_codes:
-            if not backup_code in user_2fa._2fa_backup:
+        for backup_code in user_2fa_backup_codes:
+            if not backup_code in otp.backup_codes:
                 raise_security_warns(db, user_security, "2FA Backup Codes")
             else:
                 count_correct += 1
 
-        if count_correct == len(otp.backup_codes):
+        if count_correct == (len(user_2fa_backup_codes) // 2):
             revoke_token(db, user_security.user_id, "Security", secret_payload["aud"], secret_payload["jti"])
 
             # * Duplicate code from remove_2fa but okay for now
@@ -246,6 +248,16 @@ def verify_2fa_backup(db: Session, secret_token: str, otp: s_auth.BackupOTP):
             db.delete(user_security.user_2fa)
             user_security._2fa_enabled = False
             db.commit()
+
+            # TODO Await email response
+            send_mail_with_template(
+                background_tasks,
+                EmailSchema(
+                    email=user_security.user.email,
+                    body={"username": user_security.user.username, "user_uuid": user_uuid},
+                    type="deactivate-2fa",
+                ),
+            )
 
             aud_split = secret_payload["aud"].split("::")
             application_id = aud_split[1] if len(aud_split) > 1 else None

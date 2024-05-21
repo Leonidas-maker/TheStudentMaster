@@ -74,7 +74,7 @@ async def async_send_mail_with_template(email: EmailSchema):
         subtype=MessageType.html,
     )
 
-    fm = init_mailer("TheShopMaster-Service", email_ssl)
+    fm = init_mailer("TheStudentMaster-Service", email_ssl)
     await fm.send_message(message, template_name=email_template)
 
 
