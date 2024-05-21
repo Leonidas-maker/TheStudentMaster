@@ -20,16 +20,16 @@ class Canteen(Base):
 
     address = relationship("Address", cascade="save-update")
 
-    def __init__(self, canteen_name, canteen_short_name, image_url, address_id):
+    def __init__(self, canteen_name, canteen_short_name, address_id, image_url=None):
         self.canteen_name = canteen_name
         self.canteen_short_name = canteen_short_name
         self.image_url = image_url
         self.address_id = address_id
-        self.hash = self.generate_sha1_hash(canteen_name, address_id)
+        self.hash = self.generate_sha1_hash(canteen_name, canteen_short_name, image_url, address_id)
 
     @staticmethod
     def generate_sha1_hash(canteen_name, canteen_short_name, image_url, address_id):
-        hash_input = f"{canteen_name}{canteen_short_name}{image_url}{address_id}"
+        hash_input = f"{canteen_name}{canteen_short_name}{image_url if image_url else ''}{address_id}"
         return hashlib.sha1(hash_input.encode()).hexdigest()
 
     def as_dict(self) -> dict:
@@ -58,6 +58,12 @@ class Canteen(Base):
                 "country": address["country"],
             },
         }
+    
+    def as_dict_hash(self) -> dict:
+        return {
+            "canteen_short_name": self.canteen_short_name,
+            "hash": self.hash,
+        }
 
 
 class Dish(Base):
@@ -70,14 +76,14 @@ class Dish(Base):
     hash = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    def __init__(self, description, image_url, price):
+    def __init__(self, description, price, image_url=None):
         self.description = description
         self.image_url = image_url
         self.price = price
         self.hash = self.generate_sha1_hash(description, price, image_url)
 
     @staticmethod
-    def generate_sha1_hash(description, price, image_url):
+    def generate_sha1_hash(description, price, image_url=None):
         hash_input = f"{description}{price}{image_url if image_url else ''}"
         return hashlib.sha1(hash_input.encode()).hexdigest()
 

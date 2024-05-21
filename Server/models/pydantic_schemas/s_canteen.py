@@ -72,3 +72,11 @@ class ResGetCanteenMenuDay(CanteenBase):
 
     class Config:
         from_attributes = True
+
+
+class ResGetCanteenHash(CanteenBase):
+    canteen_short_name: str
+    hash: str
+
+    class Config:
+        from_attributes = True
