@@ -90,9 +90,11 @@ def canteen_read_menu_day(
         return_value.append(menu_row)
     return return_value
 
+
 # ======================================================== #
 # ==================== Canteen Hashes ==================== #
 # ======================================================== #
+
 
 @canteen_router.get("/all/hash", response_model=list[ResGetCanteenHash])
 def canteen_read_all_hash(db: Session = Depends(get_db)) -> list[dict]:

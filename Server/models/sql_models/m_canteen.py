@@ -58,7 +58,7 @@ class Canteen(Base):
                 "country": address["country"],
             },
         }
-    
+
     def as_dict_hash(self) -> dict:
         return {
             "canteen_short_name": self.canteen_short_name,
