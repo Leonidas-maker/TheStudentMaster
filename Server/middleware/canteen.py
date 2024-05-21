@@ -21,7 +21,7 @@ from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 # ======================================================== #
 def create_canteens(db: Session):
     try:
-        with open("./utils/canteen/canteen_addresses.json", "r") as file:
+        with open("./data/address_lists/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
             address_new = s_general.AddressCreate(
