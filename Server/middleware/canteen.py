@@ -40,7 +40,6 @@ def create_canteens(db: Session):
                 canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
                 address_id=address_new.address_id,
             )
-            # print(canteen_new.address)
             create_canteen(db, canteen_new)
         db.commit()
     except Exception as e:
