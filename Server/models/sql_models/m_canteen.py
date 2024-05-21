@@ -31,7 +31,7 @@ class Canteen(Base):
     def generate_sha1_hash(canteen_name, canteen_short_name, image_url, address_id):
         hash_input = f"{canteen_name}{canteen_short_name}{image_url}{address_id}"
         return hashlib.sha1(hash_input.encode()).hexdigest()
-        
+
     def as_dict(self) -> dict:
         return {
             "canteen_id": self.canteen_id,
@@ -69,7 +69,7 @@ class Dish(Base):
     price = Column(String(255), nullable=False)
     hash = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
-    
+
     def __init__(self, description, image_url, price):
         self.description = description
         self.image_url = image_url
@@ -88,6 +88,7 @@ class Dish(Base):
             "image_url": self.image_url,
             "price": self.price,
         }
+
 
 class Menu(Base):
     __tablename__ = "canteen_menus"
