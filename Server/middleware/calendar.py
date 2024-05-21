@@ -16,7 +16,7 @@ from models.pydantic_schemas import s_general, s_calendar
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 import utils.calendar.nativ_sources as nativ_sources
-from utils.calendar.calendar_wrapper import calendarWrapper
+from utils.calendar.calendar_wrapper import CalendarWrapper
 
 
 ###########################################################################
@@ -28,7 +28,7 @@ from utils.calendar.calendar_wrapper import calendarWrapper
 # =================== Startup functions ================== #
 # ======================================================== #
 def prepareCalendarTables(db: Session):
-    backends = ["Rapla", "iCalender"]
+    backends = ["Rapla", "iCalendar"]
     for backend in backends:
         if not db.query(m_calendar.CalendarBackend).filter(m_calendar.CalendarBackend.backend_name == backend).first():
             db.add(m_calendar.CalendarBackend(backend_name=backend))
@@ -77,7 +77,7 @@ def update_active_native_calendars(db: Session, progress, task_id):
         defer(m_calendar.CalendarNative.data),
     ]
     try:
-        calendar_wrapper = calendarWrapper("iCalender", "dhbw-mannheim")
+        calendar_wrapper = CalendarWrapper("iCalendar", "dhbw-mannheim")
         dhbw_calendars = (
             db.query(m_calendar.CalendarNative)
             .join(
@@ -125,7 +125,7 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
         defer(m_calendar.CalendarNative.data),
     ]
     try:
-        calendar_wrapper = calendarWrapper("iCalender", "dhbw-mannheim")
+        calendar_wrapper = CalendarWrapper("iCalendar", "dhbw-mannheim")
         calendar_backends = get_backend_ids(db)
 
         dhbw_mannheim = (
@@ -172,7 +172,7 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
                 calendar = m_calendar.CalendarNative(
                     university_id=dhbw_mannheim.university_id,
                     course_name=name,
-                    source_backend_id=calendar_backends.get("iCalender"),
+                    source_backend_id=calendar_backends.get("iCalendar"),
                     source=source,
                     data=calendar_data.get("data"),
                     hash=calendar_data.get("hash"),
@@ -200,7 +200,7 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
     ]
 
     try:
-        calendar_wrapper = calendarWrapper(backend.backend_name)
+        calendar_wrapper = CalendarWrapper(backend.backend_name)
 
         custom_calendars = (
             db.query(m_calendar.CalendarCustom)
@@ -316,7 +316,7 @@ def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: 
         # Create new custom calendar if it does not exist
         if not custom_calendar:
 
-            custom_calendar_data = calendarWrapper(backend.backend_name).get_data(new_custom_calendar.source_url)
+            custom_calendar_data = CalendarWrapper(backend.backend_name).get_data(new_custom_calendar.source_url)
 
             if not custom_calendar_data:
                 raise HTTPException(status_code=400, detail="Invalid calendar source")

@@ -16,14 +16,14 @@ interface DishProps {
   menu: {
     canteen_name: string;
     canteen_short_name: string;
-    image_url: null;
+    image_url: string | null;
     menu: {
       dish_type: string;
       dish: string;
       price: string;
       serving_date: string;
     }[];
-  };
+  } | null; // Allow for menu to be null initially
   scrollViewRef: React.RefObject<ScrollView>;
   selectedCanteen: string;
   selectedDate: Date;
@@ -65,9 +65,8 @@ const DishView: React.FC<DishProps> = ({
   }, []);
 
   // Filters the dishes based on the selected date and canteen
-  //! Needs to be changed for other canteens
   useEffect(() => {
-    if (selectedCanteen === "Mensaria Metropol (DHBW Coblitzallee)") {
+    if (menu && menu.canteen_short_name === selectedCanteen) {
       const filteredDishes = menu.menu.filter(
         (dish) =>
           format(parseISO(dish.serving_date), "yyyy-MM-dd") ===
@@ -77,7 +76,7 @@ const DishView: React.FC<DishProps> = ({
     } else {
       setDishes([]);
     }
-  }, [selectedCanteen, selectedDate]);
+  }, [menu, selectedCanteen, selectedDate]);
 
   // ====================================================== //
   // =================== Press handlers =================== //
@@ -95,39 +94,52 @@ const DishView: React.FC<DishProps> = ({
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
-  //TODO Add pop-up for dish details
-  //! menu.canteen_name only returns "Mensaria am Schloss" for now because we only have this data at the moment
   return (
     <ScrollView className="flex-1 active:opacity-50" ref={scrollViewRef}>
-      {dishes.length > 0 ? (
-        dishes.map((dish, index) => (
-          <Pressable
-            key={`${dish.dish_type}-${format(parseISO(dish.serving_date), "yyyy-MM-dd")}-${index}`}
-            className="flex-1 active:opacity-50"
-            onPress={handleDishPress}
-          >
-            <View
-              key={index}
-              className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
+      {selectedCanteen ? (
+        dishes.length > 0 ? (
+          dishes.map((dish, index) => (
+            <Pressable
+              key={`${dish.dish_type}-${format(parseISO(dish.serving_date), "yyyy-MM-dd")}-${index}`}
+              className="flex-1 active:opacity-50"
+              onPress={handleDishPress}
             >
-              <Text className="text-black dark:text-white">
-                {dish.dish_type}: {dish.dish}
-              </Text>
-              <Text className="text-black dark:text-white">{dish.price}</Text>
-              <Text className="text-black dark:text-white">
-                {dish.serving_date}
-              </Text>
-            </View>
-          </Pressable>
-        ))
+              <View
+                key={index}
+                className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
+              >
+                <Text className="text-black dark:text-white">
+                  {dish.dish_type}: {dish.dish}
+                </Text>
+                <Text className="text-black dark:text-white">{dish.price}</Text>
+              </View>
+            </Pressable>
+          ))
+        ) : (
+          <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
+            <Text className="text-black dark:text-white">
+              Keine Daten verfügbar für {menu?.canteen_name} am{" "}
+              {selectedDate.toLocaleDateString("de-DE")}.
+            </Text>
+          </View>
+        )
       ) : (
         <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
           <Text className="text-black dark:text-white">
-            Keine Daten verfügbar für {menu.canteen_name} am{" "}
-            {selectedDate.toLocaleDateString("de-DE")}.
+            Bitte wähle eine Mensa aus.
           </Text>
         </View>
       )}
+      <Modal visible={modalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-center items-center bg-[rgba(0,0,0,0.5)]">
+          <View className="bg-white p-5 rounded-lg">
+            <Text className="mb-4">Dish Details</Text>
+            <Pressable onPress={handleClosePress}>
+              <Text className="text-blue-500">Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };

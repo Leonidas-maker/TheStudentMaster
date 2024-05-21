@@ -41,10 +41,11 @@ const OverviewStack: React.FC = () => {
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
   const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
   const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
+  const barStyle = isLight ? "dark-content" : "light-content";
 
   return (
     <>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle={barStyle} />
       <Stack.Navigator
         initialRouteName="Overview"
         screenOptions={{

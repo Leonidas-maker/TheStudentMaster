@@ -1,13 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
 import DefaultText from "../../components/textFields/DefaultText";
+import Dropdown from "../../components/dropdown/Dropdown";
+import { fetchEventsWithoutWait } from "../../services/eventService";
+import {
+  fetchCalendars,
+  getSelectedUniversity,
+  getSelectedCourse,
+  fetchInitialHash,
+} from "../../services/calendarService";
 
 type SchemeType = "light" | "dark" | "system";
 
+interface Calendar {
+  university_name: string;
+  university_uuid: string;
+  course_names: string[];
+}
+
+interface Event {
+  start: string | Date;
+  end: string | Date;
+  [key: string]: any;
+}
+
 const Settings: React.FC = () => {
   const { colorScheme, setColorScheme } = useColorScheme();
+  const [calendars, setCalendars] = useState<Calendar[]>([]);
+  const [selectedUniversity, setSelectedUniversity] = useState<{
+    name: string;
+    uuid: string;
+  } | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [placeholderUniversity, setPlaceholderUniversity] = useState(
+    "Select a University",
+  );
+  const [placeholderCourse, setPlaceholderCourse] = useState("Select a Course");
+  const [events, setEvents] = useState<Event[]>([]);
+  const [missingUniversity, setMissingUniversity] = useState(false);
+  const [missingCourse, setMissingCourse] = useState(false);
 
   const { theme, setTheme } = useTheme();
 
@@ -18,6 +52,58 @@ const Settings: React.FC = () => {
   useEffect(() => {
     setColorScheme(theme);
   }, [theme, setColorScheme]);
+
+  useEffect(() => {
+    fetchCalendars(setCalendars);
+    getSelectedUniversity(
+      setSelectedUniversity,
+      setPlaceholderUniversity,
+      setMissingUniversity,
+    );
+    getSelectedCourse(
+      setSelectedCourse,
+      setPlaceholderCourse,
+      setMissingCourse,
+    );
+  }, []);
+
+  const dropdownUniversityValues = calendars.map((calendar: any) => ({
+    key: calendar.university_uuid,
+    value: calendar.university_name,
+  }));
+
+  const handleUniversitySelect = async (selectedValue: string) => {
+    const selectedUni = calendars.find(
+      (calendar) => calendar.university_name === selectedValue,
+    );
+    if (selectedUni) {
+      const selectedUniData = {
+        name: selectedUni.university_name,
+        uuid: selectedUni.university_uuid,
+      };
+      setSelectedUniversity(selectedUniData);
+      await AsyncStorage.setItem(
+        "selectedUniversity",
+        JSON.stringify(selectedUniData),
+      );
+      setPlaceholderUniversity(selectedUni.university_name);
+      setSelectedCourse(null);
+      setPlaceholderCourse("Select a Course");
+      fetchEventsWithoutWait(setEvents);
+    }
+  };
+
+  const handleCourseSelect = async (selectedValue: string) => {
+    setSelectedCourse(selectedValue);
+    await AsyncStorage.setItem("selectedCourse", selectedValue);
+    setPlaceholderCourse(selectedValue);
+    const selectedUni = await AsyncStorage.getItem("selectedUniversity");
+    if (selectedUni) {
+      const { uuid } = JSON.parse(selectedUni);
+      await fetchInitialHash(uuid, selectedValue);
+    }
+    fetchEventsWithoutWait(setEvents);
+  };
 
   const RadioOption = ({
     label,
@@ -59,14 +145,40 @@ const Settings: React.FC = () => {
           />
         ) : null}
       </View>
-      <Text style={{ marginLeft: 10 }}>{label}</Text>
+      <View className="m-3">
+        <DefaultText text={label} />
+      </View>
     </Pressable>
   );
 
+  const courseDropdownValues = selectedUniversity
+    ? calendars
+        .find(
+          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+        )
+        ?.course_names.map((course: string) => ({
+          key: course,
+          value: course,
+        })) || []
+    : [];
+
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
-      <View style={{ padding: 20 }}>
+      <View className="p-4">
         <DefaultText text="Welcome to the Settings page" />
+        <Dropdown
+          setSelected={handleUniversitySelect}
+          values={dropdownUniversityValues}
+          placeholder={placeholderUniversity}
+        />
+        {selectedUniversity && (
+          <Dropdown
+            setSelected={handleCourseSelect}
+            values={courseDropdownValues}
+            placeholder={placeholderCourse}
+            search={true}
+          />
+        )}
         <RadioOption
           label="Light Mode"
           onPress={() => setScheme("light")}

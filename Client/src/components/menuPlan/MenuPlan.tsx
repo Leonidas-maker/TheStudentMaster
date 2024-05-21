@@ -1,5 +1,5 @@
-// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   ScrollView,
@@ -21,6 +21,12 @@ import {
 import DayView from "./DayView";
 import DishView from "./DishView";
 import WeekSelector from "../selector/WeekSelector";
+import Dropdown from "../dropdown/Dropdown";
+import {
+  fetchCanteens,
+  fetchCanteenDishes,
+} from "../../services/canteenService";
+import * as Progress from "react-native-progress";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 interface CanteenProps {
@@ -28,11 +34,19 @@ interface CanteenProps {
   value: string;
 }
 
-// TODO Implement a function to get the canteen name data from the backend
-// TODO Implement a function to get the menu data from the backend
-import canteenData from "./testData/canteenSample.json";
-import canteenSample from "./testData/sample.json";
-import Dropdown from "../dropdown/Dropdown";
+interface Dish {
+  dish_type: string;
+  dish: string;
+  price: string;
+  serving_date: string;
+}
+
+interface MenuData {
+  canteen_name: string;
+  canteen_short_name: string;
+  image_url: string | null;
+  menu: Dish[];
+}
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -49,6 +63,9 @@ const MenuPlan: React.FC = () => {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
+  const [menu, setMenu] = useState<MenuData | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // ====================================================== //
   // ====================== Constants ===================== //
@@ -74,15 +91,40 @@ const MenuPlan: React.FC = () => {
   }, []);
 
   // Sets the canteen names to the canteen name data
+  useFocusEffect(
+    useCallback(() => {
+      const loadCanteens = async () => {
+        setLoading(true);
+        setProgress(0.5);
+        await fetchCanteens(setCanteenNames);
+        setProgress(1);
+        setLoading(false);
+      };
+
+      loadCanteens();
+    }, []),
+  );
+
+  // Fetches the dishes for the selected canteen whenever it changes
   useEffect(() => {
-    const names: CanteenProps[] = canteenData.canteens.map(
-      (canteenName, index) => ({
-        key: String(index + 1),
-        value: canteenName,
-      }),
-    );
-    setCanteenNames(names);
-  }, []);
+    const loadCanteenDishes = async () => {
+      if (selectedCanteen && canteenNames.length > 0) {
+        setLoading(true);
+        setProgress(0.3);
+        const canteen = canteenNames.find(
+          (canteen) => canteen.key === selectedCanteen,
+        );
+        setProgress(0.6);
+        if (canteen) {
+          await fetchCanteenDishes(canteen.key, setMenu);
+        }
+        setProgress(1);
+        setLoading(false);
+      }
+    };
+
+    loadCanteenDishes();
+  }, [selectedCanteen, canteenNames]);
 
   // Scrolls to the top of the ScrollView when the selected date changes
   useEffect(() => {
@@ -157,13 +199,14 @@ const MenuPlan: React.FC = () => {
         startDate={startOfMenuDate}
         endDate={endOfMenuDate}
       />
+      {loading && <Progress.Bar progress={progress} width={null} />}
       <DayView
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         startOfWeekDate={startOfWeekDate}
       />
       <DishView
-        menu={canteenSample}
+        menu={menu}
         scrollViewRef={scrollViewRef}
         selectedCanteen={selectedCanteen}
         selectedDate={selectedDate}
@@ -172,6 +215,7 @@ const MenuPlan: React.FC = () => {
         setSelected={setSelectedCanteen}
         values={canteenNames}
         placeholder="Mensa auswählen"
+        save="key"
       />
     </View>
   );

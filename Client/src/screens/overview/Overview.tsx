@@ -3,6 +3,8 @@ import { View, ScrollView } from "react-native";
 import { expo } from "../../../app.json";
 import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 import ProfileView from "../../components/profileView/ProfileView";
 import Navigator from "../../components/navigator/Navigator";
@@ -54,6 +56,23 @@ const Overview: React.FC = () => {
     navigation.navigate("OverviewStack", { screen: "BackupMFA" });
   };
 
+  const handleDeletePress = () => {
+    AsyncStorage.removeItem("events");
+    AsyncStorage.removeItem("lastFetchTime");
+    AsyncStorage.removeItem("selectedUniversity");
+    AsyncStorage.removeItem("selectedCourse");
+    AsyncStorage.removeItem("lastFetchHash");
+    AsyncStorage.removeItem("canteens");
+    AsyncStorage.removeItem("menu");
+    AsyncStorage.removeItem("lastFetchTimeCanteen");
+
+    SecureStore.deleteItemAsync("access_token");
+    SecureStore.deleteItemAsync("refresh_token");
+    SecureStore.deleteItemAsync("secret_token");
+
+    console.log("Storage cleared");
+  };
+
   const accountTitle = "Account Management Screens";
 
   const onPressAccountFunctions = [
@@ -67,6 +86,7 @@ const Overview: React.FC = () => {
     handleVerifyLoginPress,
     handleVerifyRegistrationPress,
     handleBackupPress,
+    handleDeletePress,
   ];
 
   const accountTexts = [
@@ -80,9 +100,11 @@ const Overview: React.FC = () => {
     "Verify Login",
     "Verify Registration",
     "Backup MFA",
+    "Delete Storage",
   ];
 
   const accountIconNames = [
+    "apps",
     "apps",
     "apps",
     "apps",
