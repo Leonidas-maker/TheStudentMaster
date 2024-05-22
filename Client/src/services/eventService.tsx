@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { axiosInstance } from "./api";
+import axios from "axios";
 
 interface Event {
   start: string | Date;
@@ -27,8 +27,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
     if (selectedUniversity && selectedCourse) {
       const { uuid } = JSON.parse(selectedUniversity);
       let lastFetchHash = await AsyncStorage.getItem("lastFetchHash");
-
-      const hashResponse = await axiosInstance.get(
+      const hashResponse = await axios.get(
         `/calendar/${uuid}/${selectedCourse}/hash`,
       );
       const currentHash = hashResponse.data.message;
@@ -39,7 +38,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
         return;
       }
 
-      const response = await axiosInstance.get(
+      const response = await axios.get(
         `/calendar/${uuid}/${selectedCourse}`,
       );
       const data = response.data.data;
@@ -74,7 +73,7 @@ const fetchEventsWithoutWait = async (setEvents: (events: Event[]) => void) => {
 
     if (selectedUniversity && selectedCourse) {
       const { uuid } = JSON.parse(selectedUniversity);
-      const response = await axiosInstance.get(
+      const response = await axios.get(
         `/calendar/${uuid}/${selectedCourse}`,
       );
       const data = response.data.data;

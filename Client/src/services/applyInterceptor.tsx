@@ -10,8 +10,9 @@ const applyInterceptor = () => {
       if (token) {
         config.headers = config.headers || {};
         config.headers["Authorization"] = `Bearer ${token}`;
+        return config;
       }
-      return config;
+      throw new Error("Not authenticated!");
     },
     (error) => Promise.reject(error),
   );

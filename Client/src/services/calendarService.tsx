@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { axiosInstance } from "./api";
+import axios from "axios";
 
 interface Calendar {
   university_name: string;
@@ -9,7 +9,7 @@ interface Calendar {
 
 const fetchCalendars = async (setCalendars: (events: Calendar[]) => void) => {
   try {
-    const response = await axiosInstance.get("/calendar/available_calendars");
+    const response = await axios.get("/calendar/available_calendars");
     setCalendars(response.data);
   } catch (err) {
     console.log("Failed to load calendars", err);
@@ -61,7 +61,7 @@ const getSelectedCourse = async (
 
 const fetchInitialHash = async (universityUuid: string, courseName: string) => {
   try {
-    const hashResponse = await axiosInstance.get(
+    const hashResponse = await axios.get(
       `/calendar/${universityUuid}/${courseName}/hash`,
     );
     const currentHash = hashResponse.data.message;

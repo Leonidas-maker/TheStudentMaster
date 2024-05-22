@@ -52,6 +52,10 @@ const Overview: React.FC = () => {
     navigation.navigate("OverviewStack", { screen: "VerifyForgot" });
   };
 
+  const handleProflePress = () => {
+    navigation.navigate("OverviewStack", { screen: "Profile" });
+  };
+
   const handleBackupPress = () => {
     navigation.navigate("OverviewStack", { screen: "BackupMFA" });
   };
@@ -86,6 +90,7 @@ const Overview: React.FC = () => {
     handleVerifyLoginPress,
     handleVerifyRegistrationPress,
     handleBackupPress,
+    handleProflePress,
     handleDeletePress,
   ];
 
@@ -100,10 +105,12 @@ const Overview: React.FC = () => {
     "Verify Login",
     "Verify Registration",
     "Backup MFA",
+    "Profile",
     "Delete Storage",
   ];
 
   const accountIconNames = [
+    "apps",
     "apps",
     "apps",
     "apps",

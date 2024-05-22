@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { fetchUser } from "../../services/userService";
 
 // Placeholder for Login component
 const Login: React.FC = () => {
@@ -16,9 +17,24 @@ const Login: React.FC = () => {
   );
 };
 
+interface User {
+  username: string | "";
+  email: string | "";
+  uuid: string | "";
+  avatar: string  | "";
+  address: {
+      address1: string;
+      address2: string;
+      district: string;
+      postal_code: string;
+      city: string;
+      country: string;
+  } | "";
+}
+
 const ProfileView: React.FC = () => {
   const [username, setUsername] = useState("");
-  const [uuid, setUuid] = useState("");
+  const [userUuid, setUserUuid] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigation = useNavigation<any>();
 
@@ -38,27 +54,25 @@ const ProfileView: React.FC = () => {
       try {
         const token = await SecureStore.getItemAsync("access_token");
         const refreshToken = await SecureStore.getItemAsync("refresh_token");
+        const [user, setUser] = useState<User>({} as User);
+
 
         if (!token || !refreshToken) {
           setIsLoggedIn(false);
           return;
         }
+        
+        await fetchUser(setUser);
+      
+        //TODO Use the service
+        
 
-        const response = await axios.get(
-          "https://thestudentmaster.de/user/me?avatar=true",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        const { user_uuid, username } = response.data;
-        setUsername(username);
-        setUuid(user_uuid);
+        setUsername(user?.username);
+        setUserUuid(user?.uuid);
 
         await SecureStore.setItemAsync("username", username);
-        await SecureStore.setItemAsync("uuid", user_uuid);
+        await SecureStore.setItemAsync("uuid", userUuid);
+        
 
         setIsLoggedIn(true);
       } catch (error) {
@@ -95,7 +109,7 @@ const ProfileView: React.FC = () => {
                   {username}
                 </Text>
                 <Text className="text-black dark:text-white font-bold text-xs">
-                  @{uuid}
+                  @{userUuid}
                 </Text>
               </View>
               <Icon
