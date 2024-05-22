@@ -38,9 +38,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
         return;
       }
 
-      const response = await axios.get(
-        `/calendar/${uuid}/${selectedCourse}`,
-      );
+      const response = await axios.get(`/calendar/${uuid}/${selectedCourse}`);
       const data = response.data.data;
 
       if (data && Array.isArray(data.events)) {
@@ -73,9 +71,7 @@ const fetchEventsWithoutWait = async (setEvents: (events: Event[]) => void) => {
 
     if (selectedUniversity && selectedCourse) {
       const { uuid } = JSON.parse(selectedUniversity);
-      const response = await axios.get(
-        `/calendar/${uuid}/${selectedCourse}`,
-      );
+      const response = await axios.get(`/calendar/${uuid}/${selectedCourse}`);
       const data = response.data.data;
 
       if (data && Array.isArray(data.events)) {

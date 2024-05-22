@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -25,7 +25,6 @@ const EditButton: React.FC<EditButtonProps> = ({
   unstable_pressDelay = 1,
   isCancel = false,
 }) => {
-
   const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
 
@@ -54,11 +53,7 @@ const EditButton: React.FC<EditButtonProps> = ({
       delayLongPress={delayLongPress}
       unstable_pressDelay={unstable_pressDelay}
     >
-      <Icon
-        name={icon}
-        size={30}
-        color={iconColor}
-      />
+      <Icon name={icon} size={30} color={iconColor} />
     </Pressable>
   );
 };

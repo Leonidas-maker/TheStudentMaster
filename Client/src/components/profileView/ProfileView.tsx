@@ -21,15 +21,17 @@ interface User {
   username: string | "";
   email: string | "";
   uuid: string | "";
-  avatar: string  | "";
-  address: {
-      address1: string;
-      address2: string;
-      district: string;
-      postal_code: string;
-      city: string;
-      country: string;
-  } | "";
+  avatar: string | "";
+  address:
+    | {
+        address1: string;
+        address2: string;
+        district: string;
+        postal_code: string;
+        city: string;
+        country: string;
+      }
+    | "";
 }
 
 const ProfileView: React.FC = () => {
@@ -56,23 +58,20 @@ const ProfileView: React.FC = () => {
         const refreshToken = await SecureStore.getItemAsync("refresh_token");
         const [user, setUser] = useState<User>({} as User);
 
-
         if (!token || !refreshToken) {
           setIsLoggedIn(false);
           return;
         }
-        
+
         await fetchUser(setUser);
-      
+
         //TODO Use the service
-        
 
         setUsername(user?.username);
         setUserUuid(user?.uuid);
 
         await SecureStore.setItemAsync("username", username);
         await SecureStore.setItemAsync("uuid", userUuid);
-        
 
         setIsLoggedIn(true);
       } catch (error) {
