@@ -98,9 +98,9 @@ const CredentialStack: React.FC = () => {
           options={{ headerShown: true }}
         />
         <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
         />
         <Stack.Screen name="HomeBottomStack" component={HomeBottomTabs} />
       </Stack.Navigator>

@@ -46,11 +46,11 @@ const Profile: React.FC = () => {
       </View>
       <View className="border-b border-light_secondary dark:border-dark_secondary my-2" />
       <View className="justify-center items-center">
-        {!passwordEdit &&
+        {!passwordEdit && (
           <View>
             <Subheading text="Passwort ändern" />
           </View>
-        }
+        )}
         {passwordEdit ? (
           <View className="w-full">
             <Subheading text="Aktuelle Passwort" />
@@ -59,7 +59,10 @@ const Profile: React.FC = () => {
             <TextFieldInput />
             <Subheading text="Neues Passwort wiederholen" />
             <TextFieldInput />
-            <DefaultButton text="Passwort ändern" onPress={() => setPasswordEdit(false)} />
+            <DefaultButton
+              text="Passwort ändern"
+              onPress={() => setPasswordEdit(false)}
+            />
           </View>
         ) : (
           <View>

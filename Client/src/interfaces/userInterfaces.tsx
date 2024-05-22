@@ -16,20 +16,20 @@ interface User {
 }
 
 interface User {
-    username: string | "";
-    email: string | "";
-    uuid: string | "";
-    avatar: string | "";
-    address:
-      | {
-          address1: string;
-          address2: string;
-          district: string;
-          postal_code: string;
-          city: string;
-          country: string;
-        }
-      | "";
-  }
+  username: string | "";
+  email: string | "";
+  uuid: string | "";
+  avatar: string | "";
+  address:
+    | {
+        address1: string;
+        address2: string;
+        district: string;
+        postal_code: string;
+        city: string;
+        country: string;
+      }
+    | "";
+}
 
-  export { User };
+export { User };

@@ -42,7 +42,7 @@ const ProfileView: React.FC = () => {
       try {
         //TODO Fetch this data at the start of the app and use the stored data @leonidas-maker
         await fetchUser(setUser);
-        
+
         if (!user.user_uuid || !user.username) {
           setIsLoggedIn(false);
           return;
@@ -54,15 +54,13 @@ const ProfileView: React.FC = () => {
         await SecureStore.setItemAsync("username", username);
         await SecureStore.setItemAsync("uuid", userUuid);
         setIsLoggedIn(true);
-
       } catch (error) {
         console.log(error);
         setIsLoggedIn(false);
       }
     };
-    
+
     fetchData();
-    
   }, []);
 
   const iconColor = isLight ? "#000000" : "#FFFFFF";

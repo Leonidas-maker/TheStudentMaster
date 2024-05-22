@@ -12,7 +12,7 @@ const refreshAuthLogic = async () => {
     }
 
     const response = await axios.post(`/auth/refresh-token`, {
-      Headers: { "Authorization": `Bearer ${refreshToken}` },
+      Headers: { Authorization: `Bearer ${refreshToken}` },
     });
     const { access, refresh, secret } = response.data;
     await setTokens({ access, refresh, secret });

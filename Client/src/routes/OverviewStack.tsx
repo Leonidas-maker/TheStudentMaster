@@ -58,7 +58,7 @@ const OverviewStack: React.FC = () => {
         <Stack.Screen
           name="Overview"
           component={Overview}
-          options={{ headerShown: true, headerTitle: "Weiteres", }}
+          options={{ headerShown: true, headerTitle: "Weiteres" }}
         />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Loading" component={Loading} />
