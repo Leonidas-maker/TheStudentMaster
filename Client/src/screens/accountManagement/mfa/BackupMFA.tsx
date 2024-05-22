@@ -9,7 +9,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton";
 // TODO Implement save Backup-Codes
 // TODO Implement show Backup-Codes
 // TODO Implement save Backup-Codes as Screenshot
-const BackupMFA: React.FC = () => {
+const BackupMfa: React.FC = () => {
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Geschafft!" />
@@ -26,4 +26,4 @@ const BackupMFA: React.FC = () => {
   );
 };
 
-export default BackupMFA;
+export default BackupMfa;

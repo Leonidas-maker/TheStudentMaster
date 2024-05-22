@@ -1,6 +1,6 @@
 import axios from "axios";
 import { axiosInstance } from "./api";
-import refreshAuthLogic from "./tokenService";
+import { refreshAuthLogic } from "./tokenService";
 import { getAuthToken } from "./authService";
 
 const applyInterceptor = () => {

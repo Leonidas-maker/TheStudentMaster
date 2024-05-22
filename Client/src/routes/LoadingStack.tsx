@@ -5,6 +5,7 @@ import HomeBottomTabs from "./HomeBottomTabs";
 import OverviewStack from "./OverviewStack";
 import { StatusBar, useColorScheme } from "react-native";
 import CredentialStack from "./CredentialStack";
+import MiscStack from "./MiscStack";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,7 @@ const LoadingStack: React.FC = () => {
         <Stack.Screen name="HomeBottomTabs" component={HomeBottomTabs} />
         <Stack.Screen name="OverviewStack" component={OverviewStack} />
         <Stack.Screen name="CredentialStack" component={CredentialStack} />
+        <Stack.Screen name="MiscStack" component={MiscStack} />
       </Stack.Navigator>
     </>
   );

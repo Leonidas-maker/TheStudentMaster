@@ -1,5 +1,6 @@
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
+import { refreshAuthLogic } from "./tokenService";
 
 let accessToken: string | null = null;
 let refreshToken: string | null = null;
@@ -39,14 +40,20 @@ const isTokenValid = (token: string | null): boolean => {
 
 const getAuthToken = async (): Promise<string | null> => {
   if (secretToken === null) {
-    secretToken = await SecureStore.getItemAsync("secret_token");
+    secretToken = await SecureStore.getItemAsync("secret_token"); // returns null if token not valid
   }
   if (accessToken === null) {
-    accessToken = await SecureStore.getItemAsync("access_token");
+    accessToken = await SecureStore.getItemAsync("access_token"); // returns null if token not valid
   }
 
   if (secretToken && isTokenValid(secretToken)) return secretToken;
   if (accessToken && isTokenValid(accessToken)) return accessToken;
+
+  // Refresh the access token if it is expired
+  refreshAuthLogic();
+  accessToken = await SecureStore.getItemAsync("access_token"); // returns null if token not valid
+  if (accessToken && isTokenValid(accessToken)) return accessToken;
+
   return null;
 };
 

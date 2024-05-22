@@ -13,7 +13,7 @@ const VerifyMfa: React.FC = () => {
         <Heading text="Bitte bestätige dein MFA" />
         <Subheading text="Gib den Code deiner Authentication App ein" />
       </View>
-      <OTPInput />
+      <OTPInput onOtpChange={() => console.log("Change")} />
       <View className="justify-center items-center">
         <DefaultButton text="Verifizieren" />
       </View>

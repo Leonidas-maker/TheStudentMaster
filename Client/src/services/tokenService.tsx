@@ -11,8 +11,8 @@ const refreshAuthLogic = async () => {
       throw new Error("No refresh token available");
     }
 
-    const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
-      token: refreshToken,
+    const response = await axios.post(`/auth/refresh-token`, {
+      Headers: { "Authorization": `Bearer ${refreshToken}` },
     });
     const { access, refresh, secret } = response.data;
     await setTokens({ access, refresh, secret });
@@ -23,4 +23,4 @@ const refreshAuthLogic = async () => {
   }
 };
 
-export default refreshAuthLogic;
+export { refreshAuthLogic };

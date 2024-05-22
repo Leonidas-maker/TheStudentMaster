@@ -4,6 +4,16 @@ import { StatusBar, useColorScheme } from "react-native";
 import Registration from "../screens/accountManagement/registration/Registration";
 import Login from "../screens/accountManagement/login/Login";
 import HomeBottomTabs from "./HomeBottomTabs";
+import ForgotPassword from "../screens/accountManagement/forgotPassword/ForgotPassword";
+import NewPassword from "../screens/accountManagement/forgotPassword/NewPassword";
+import VerifyForgot from "../screens/accountManagement/forgotPassword/VerifyForgot";
+import VerifyLogin from "../screens/accountManagement/login/VerifyLogin";
+import AddMfa from "../screens/accountManagement/mfa/AddMfa";
+import BackupMfa from "../screens/accountManagement/mfa/BackupMfa";
+import VerifyMfa from "../screens/accountManagement/mfa/VerifyMfa";
+import VerifyRegistration from "../screens/accountManagement/registration/VerifyRegistration";
+import Profile from "../screens/profile/Profile";
+import { head } from "lodash";
 
 const Stack = createStackNavigator();
 
@@ -38,11 +48,60 @@ const CredentialStack: React.FC = () => {
         }}
       >
         <Stack.Screen
-          name="Settings"
+          name="Registration"
           component={Registration}
           options={{ headerShown: true }}
         />
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+        />
+        <Stack.Screen
+          name="ForgotPassword"
+          component={ForgotPassword}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="NewPassword"
+          component={NewPassword}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="VerifyForgot"
+          component={VerifyForgot}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="VerifyLogin"
+          component={VerifyLogin}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="AddMfa"
+          component={AddMfa}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="BackupMfa"
+          component={BackupMfa}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="VerifyMfa"
+          component={VerifyMfa}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="VerifyRegistration"
+          component={VerifyRegistration}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+        />
         <Stack.Screen name="HomeBottomStack" component={HomeBottomTabs} />
       </Stack.Navigator>
     </>

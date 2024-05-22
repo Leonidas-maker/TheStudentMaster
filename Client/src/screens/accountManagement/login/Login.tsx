@@ -12,7 +12,7 @@ import {
   isLoggedIn,
   setTokens,
 } from "../../../services/authService";
-import { axiosInstance } from "../../../services/api";
+import axios from "axios";
 
 const Login: React.FC = () => {
   const [ident, setIdent] = React.useState("");
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
   const login = async (ident: string, password: string) => {
     clearTokens();
     try {
-      const response = await axiosInstance.post("/auth/login", {
+      const response = await axios.post("/auth/login", {
         ident,
         password,
       });

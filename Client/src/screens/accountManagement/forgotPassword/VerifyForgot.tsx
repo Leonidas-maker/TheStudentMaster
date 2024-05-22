@@ -14,7 +14,7 @@ const VerifyForgot: React.FC = () => {
       <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
         <View className="p-3 justify-center items-center">
           <Heading text="Verifiziere dich um dein Passwort zurückzusetzen" />
-          <OTPInput />
+          <OTPInput onOtpChange={() => console.log("Change")} />
           <DefaultButton text="Verifizieren" />
         </View>
       </ScrollView>

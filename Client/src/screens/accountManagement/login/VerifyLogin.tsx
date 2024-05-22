@@ -21,14 +21,12 @@ const VerifyLogin: React.FC = () => {
     try {
       const secretToken = await SecureStore.getItemAsync("secret_token");
 
-      console.log("Secret Token:", secretToken);
-
       if (!secretToken) {
         throw new Error("Secret token not found");
       }
 
       const response = await axios.post(
-        "https://thestudentmaster.de/auth/verify-2fa",
+        "/auth/verify-2fa",
         {
           otp_code: otpCode,
         },

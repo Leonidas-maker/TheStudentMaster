@@ -60,6 +60,10 @@ const Overview: React.FC = () => {
     navigation.navigate("OverviewStack", { screen: "BackupMFA" });
   };
 
+  const handleLoadingPress = () => {
+    navigation.navigate("OverviewStack", { screen: "Loading" });
+  };
+
   const handleDeletePress = () => {
     AsyncStorage.removeItem("events");
     AsyncStorage.removeItem("lastFetchTime");
@@ -80,6 +84,7 @@ const Overview: React.FC = () => {
   const accountTitle = "Account Management Screens";
 
   const onPressAccountFunctions = [
+    handleLoadingPress,
     handleLoginPagePress,
     handleRegistrationPress,
     handleForgotPress,
@@ -95,6 +100,7 @@ const Overview: React.FC = () => {
   ];
 
   const accountTexts = [
+    "Loading",
     "Login",
     "Registration",
     "Forgot Password",
@@ -110,6 +116,7 @@ const Overview: React.FC = () => {
   ];
 
   const accountIconNames = [
+    "hourglass-empty",
     "apps",
     "apps",
     "apps",
@@ -157,39 +164,20 @@ const Overview: React.FC = () => {
   //! Placeholder for testing if logout can be set to invisble and visible
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
 
-  const handleLoadingPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Loading" });
-  };
-
   const handleSettingsPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Settings" });
+    navigation.navigate("MiscStack", { screen: "Settings" });
   };
 
   const handleImprintPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Imprint" });
+    navigation.navigate("MiscStack", { screen: "Imprint" });
   };
 
   const handleCreditsPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Credits" });
+    navigation.navigate("MiscStack", { screen: "Credits" });
   };
 
   const handleDisclosurePress = () => {
-    navigation.navigate("OverviewStack", { screen: "ResponsibleDisclosure" });
-  };
-
-  const handleRegisterPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Registration" });
-  };
-
-  const handleLogoutPress = () => {
-    //! Insert logic for logout
-    setIsUserLoggedIn(false);
-  };
-
-  const handleLoginPress = () => {
-    //! Insert logic for login
-    setIsUserLoggedIn(true);
-    navigation.navigate("OverviewStack", { screen: "Login" });
+    navigation.navigate("MiscStack", { screen: "ResponsibleDisclosure" });
   };
 
   const handleGitLabPress = () => {
@@ -207,63 +195,55 @@ const Overview: React.FC = () => {
   const overviewTitle = "Alle Seiten";
 
   const onPressOverviewFunctions = [
-    handleLoadingPress,
     handleSettingsPress,
-    handleRegisterPress,
-    handleImprintPress,
     handleDisclosurePress,
     handleCreditsPress,
     handleGitLabPress,
     handleGitHubPress,
     handleMasterCollectionPress,
+    handleImprintPress,
   ];
 
   const overviewTexts = [
-    "Loading",
     "Settings",
-    "Registrieren",
-    "Imprint",
     "Responsible Disclosure",
     "Credits",
     "GitLab",
     "GitHub",
     "TheMasterCollection",
+    "Imprint",
   ];
 
   //! Icons for GitLab, GitHub and TheMasterCollection need change
   const moduleIcons = [
-    "hourglass-empty",
     "settings",
-    "app-registration",
-    "article",
     "bug-report",
     "lightbulb",
     "lightbulb",
     "lightbulb",
     "lightbulb",
+    "article",
   ];
 
   const moduleIsExternalLink = [
     false,
     false,
     false,
-    false,
-    false,
-    false,
     true,
     true,
     true,
+    false,
   ];
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <ProfileView />
-      <Navigator
+      {/* <Navigator
         title={moduleTitle}
         onPressFunctions={onPressModuleFunctions}
         texts={moduleTexts}
         iconNames={moduleIconNames}
-      />
+      /> */}
       <Navigator
         title={accountTitle}
         onPressFunctions={onPressAccountFunctions}

@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { fetchUser } from "../../services/userService";
+import { User } from "../../interfaces/userInterfaces";
 
 // Placeholder for Login component
 const Login: React.FC = () => {
@@ -17,27 +18,12 @@ const Login: React.FC = () => {
   );
 };
 
-interface User {
-  username: string | "";
-  email: string | "";
-  uuid: string | "";
-  avatar: string | "";
-  address:
-    | {
-        address1: string;
-        address2: string;
-        district: string;
-        postal_code: string;
-        city: string;
-        country: string;
-      }
-    | "";
-}
-
 const ProfileView: React.FC = () => {
   const [username, setUsername] = useState("");
   const [userUuid, setUserUuid] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User>({} as User);
+
   const navigation = useNavigation<any>();
 
   const colorScheme = useColorScheme();
@@ -54,43 +40,39 @@ const ProfileView: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await SecureStore.getItemAsync("access_token");
-        const refreshToken = await SecureStore.getItemAsync("refresh_token");
-        const [user, setUser] = useState<User>({} as User);
-
-        if (!token || !refreshToken) {
+        //TODO Fetch this data at the start of the app and use the stored data @leonidas-maker
+        await fetchUser(setUser);
+        
+        if (!user.user_uuid || !user.username) {
           setIsLoggedIn(false);
           return;
         }
 
-        await fetchUser(setUser);
-
-        //TODO Use the service
-
-        setUsername(user?.username);
-        setUserUuid(user?.uuid);
+        setUsername(user.username);
+        setUserUuid(user.user_uuid);
 
         await SecureStore.setItemAsync("username", username);
         await SecureStore.setItemAsync("uuid", userUuid);
-
         setIsLoggedIn(true);
+
       } catch (error) {
-        console.error("Error fetching user data: ", error);
+        console.log(error);
         setIsLoggedIn(false);
       }
     };
-
+    
     fetchData();
+    
   }, []);
 
   const iconColor = isLight ? "#000000" : "#FFFFFF";
 
   const handleProfilePress = () => {
-    navigation.navigate("OverviewStack", { screen: "Profile" });
+    navigation.navigate("CredentialStack", { screen: "Profile" });
   };
 
   const handleLoginPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Login" });
+    navigation.navigate("CredentialStack", { screen: "Login" });
   };
 
   return (
