@@ -1,6 +1,7 @@
-from datetime import datetime
-from sqlalchemy.orm import Session
 import json
+from datetime import datetime
+from rich.progress import Progress, TaskID
+from sqlalchemy.orm import Session
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_scraper import fetch_menu
@@ -20,10 +21,17 @@ from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 # ======================== Update ======================== #
 # ======================================================== #
 def create_canteens(db: Session):
+    """function to add all canteens included in the canteen_addresses.json file to the database
+
+    Args:
+        db (Session): database session
+    """
     try:
+        # open canteen_addresses.json file
         with open("./utils/canteen/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
+            # create address for canteen
             address_new = s_general.AddressCreate(
                 address1=canteen_obj["address1"],
                 address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
@@ -40,26 +48,37 @@ def create_canteens(db: Session):
                 canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
                 address_id=address_new.address_id,
             )
-            # print(canteen_new.address)
             create_canteen(db, canteen_new)
         db.commit()
     except Exception as e:
+        # print error and rollback changes to database
         print(e)
         db.rollback()
 
 
-def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
+def update_canteen_menus(db: Session, progress:Progress, task_id:TaskID, week_offset: int = 0):
+    """This function updates the menu for all canteens in the database. This function is used by the repeated update task.
+
+    Args:
+        db (Session): database session
+        progress (Progress): progress bar
+        task_id (TaskID): task id
+        week_offset (int, optional): offset by x weeks to the future. maximum value = 3. Defaults to 0.
+    """
     try:
+        # get all canteens
         canteens = db.query(m_canteen.Canteen).all()
 
+        # update progress bar and loop through all canteens
         progress.update(task_id, total=(len(canteens) * (3 - week_offset)))
         for canteen_obj in canteens:
-
+            # for each canteen update the menu for the next 3 weeks
             for week in range(week_offset, 3):
                 progress.update(
                     task_id,
                     description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
                 )
+                # add canteen menu to database
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
                 db.commit()
                 progress.update(task_id, advance=1)
@@ -72,7 +91,22 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
 # ======================== Canteen ======================= #
 # ======================================================== #
 def get_canteen(db: Session, short_name: str = "", canteen_id: int = "") -> m_canteen.Canteen:
+    """get the canteen by short_name or canteen_id
 
+    Args:
+        db (Session): database session
+        short_name (str, optional): short canteen name. Defaults to "".
+        canteen_id (int, optional): canteen_id. Defaults to "".
+
+    Raises:
+        ValueError: required parameter is missing
+        ReferenceError: canteen not found
+
+    Returns:
+        m_canteen.Canteen: Canteen object
+    """
+
+    # check for required parameters
     if not (short_name or canteen_id):
         raise ValueError("Parameter short_name or canteen_id is required")
 
