@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, View, Text, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
-interface OptionSwitchProps {
-  title: string;
-  texts: string[];
-  iconNames: string[];
-  onValueChanges: ((value: boolean) => void)[];
-  values: boolean[];
-}
+import { OptionSwitchProps } from "../../interfaces/componentInterfaces";
 
 const OptionSwitch: React.FC<OptionSwitchProps> = ({
   title,

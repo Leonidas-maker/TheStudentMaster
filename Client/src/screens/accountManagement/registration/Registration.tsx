@@ -7,17 +7,10 @@ import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import OptionSwitch from "../../../components/switch/OptionSwitch";
 import Heading from "../../../components/textFields/Heading";
-
-interface University {
-  university_name: string;
-  university_uuid: string;
-  course_names: string[];
-}
-
-interface UniversityDropdownItem {
-  key: string;
-  value: string;
-}
+import {
+  UniversityProps,
+  UniversityDropdownItemProps,
+} from "../../../interfaces/userInterfaces";
 
 const Registration: React.FC = () => {
   const [isNotification, setIsNotification] = useState(false);
@@ -27,15 +20,15 @@ const Registration: React.FC = () => {
     setIsNotification((previousState) => !previousState);
   const toggle2FA = () => setIs2FA((previousState) => !previousState);
 
-  const [universities, setUniversities] = useState<UniversityDropdownItem[]>(
-    [],
-  );
+  const [universities, setUniversities] = useState<
+    UniversityDropdownItemProps[]
+  >([]);
   const [selectedUniversity, setSelectedUniversity] =
-    useState<University | null>(null);
-  const [courses, setCourses] = useState<UniversityDropdownItem[]>([]);
+    useState<UniversityProps | null>(null);
+  const [courses, setCourses] = useState<UniversityDropdownItemProps[]>([]);
 
   useEffect(() => {
-    const universityItems: UniversityDropdownItem[] = universityData.map(
+    const universityItems: UniversityDropdownItemProps[] = universityData.map(
       (uni, index) => ({
         key: String(index + 1),
         value: uni.university_name,
@@ -51,12 +44,11 @@ const Registration: React.FC = () => {
     const university = universityData[universityIndex];
     if (university) {
       setSelectedUniversity(university);
-      const courseItems: UniversityDropdownItem[] = university.course_names.map(
-        (course, index) => ({
+      const courseItems: UniversityDropdownItemProps[] =
+        university.course_names.map((course, index) => ({
           key: String(index + 1),
           value: course,
-        }),
-      );
+        }));
       setCourses(courseItems);
     }
   };

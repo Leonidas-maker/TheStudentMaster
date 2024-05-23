@@ -27,26 +27,7 @@ import {
   fetchCanteenDishes,
 } from "../../services/canteenService";
 import * as Progress from "react-native-progress";
-
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface CanteenProps {
-  key: string;
-  value: string;
-}
-
-interface Dish {
-  dish_type: string;
-  dish: string;
-  price: string;
-  serving_date: string;
-}
-
-interface MenuData {
-  canteen_name: string;
-  canteen_short_name: string;
-  image_url: string | null;
-  menu: Dish[];
-}
+import { CanteenProps, MenuDataProps } from "../../interfaces/canteenProps";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -63,7 +44,7 @@ const MenuPlan: React.FC = () => {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
-  const [menu, setMenu] = useState<MenuData | null>(null);
+  const [menu, setMenu] = useState<MenuDataProps | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
 

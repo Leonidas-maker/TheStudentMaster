@@ -6,11 +6,7 @@ import {
   TextInputKeyPressEventData,
 } from "react-native";
 import TextFieldInput from "../../textInputs/TextFieldInput";
-
-interface OTPInputProps {
-  otpLength?: number;
-  onOtpChange: (otp: string) => void;
-}
+import { OTPInputProps } from "../../../interfaces/authInterfaces";
 
 // TODO Implement paste functionality
 // TODO Block non-numeric characters

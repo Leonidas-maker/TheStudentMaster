@@ -25,12 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
-
-interface Event {
-  start: string | Date;
-  end: string | Date;
-  [key: string]: any;
-}
+import { EventTimeProps } from "../../interfaces/calendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {
@@ -48,7 +43,7 @@ const WeekCalendar: React.FC = () => {
   // ====================================================== //
   // Gets the current date
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const navigation = useNavigation<any>();

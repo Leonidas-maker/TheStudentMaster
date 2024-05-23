@@ -1,13 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { CalendarProps } from "../interfaces/calendarInterfaces";
 
-interface Calendar {
-  university_name: string;
-  university_uuid: string;
-  course_names: string[];
-}
-
-const fetchCalendars = async (setCalendars: (events: Calendar[]) => void) => {
+const fetchCalendars = async (
+  setCalendars: (events: CalendarProps[]) => void,
+) => {
   try {
     const response = await axios.get("/calendar/available_calendars");
     setCalendars(response.data);

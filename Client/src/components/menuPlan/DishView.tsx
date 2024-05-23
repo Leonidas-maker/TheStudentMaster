@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import "nativewind";
 import { format, parseISO } from "date-fns";
+import { DishMenuProps } from "../../interfaces/canteenProps";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
+// Cannot be exported to canteenInterfaces because of the RefObject<ScrollView>
 interface DishProps {
   menu: {
     canteen_name: string;
@@ -23,17 +24,10 @@ interface DishProps {
       price: string;
       serving_date: string;
     }[];
-  } | null; // Allow for menu to be null initially
+  } | null;
   scrollViewRef: React.RefObject<ScrollView>;
   selectedCanteen: string;
   selectedDate: Date;
-}
-
-interface DishMenuProps {
-  dish_type: string;
-  dish: string;
-  price: string;
-  serving_date: string;
 }
 
 // ====================================================== //

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { fetchUser } from "../../services/userService";
-import { User } from "../../interfaces/userInterfaces";
+import { UserProps } from "../../interfaces/userInterfaces";
 
 // Placeholder for Login component
 const Login: React.FC = () => {
@@ -22,7 +21,7 @@ const ProfileView: React.FC = () => {
   const [username, setUsername] = useState("");
   const [userUuid, setUserUuid] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<UserProps>({} as UserProps);
 
   const navigation = useNavigation<any>();
 

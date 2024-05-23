@@ -8,17 +8,7 @@ import {
   calculateMarkerPositionFilled,
   calculateDayHeight,
 } from "./CalendarCalculations";
-
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface PastMarkerProps {
-  hoursContainerHeight: number;
-  containerHeight: number;
-  calendar: {
-    startHour: number;
-    endHour: number;
-  };
-  isToday: boolean;
-}
+import { PastMarkerProps } from "../../interfaces/calendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

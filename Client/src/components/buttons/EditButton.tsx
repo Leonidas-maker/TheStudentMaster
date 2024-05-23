@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
-interface EditButtonProps {
-  icon?: string;
-  onPress?: () => void;
-  onPressIn?: () => void;
-  onPressOut?: () => void;
-  onLongPress?: () => void;
-  disabled?: boolean;
-  delayLongPress?: number;
-  unstable_pressDelay?: number;
-  isCancel?: boolean;
-}
+import { EditButtonProps } from "../../interfaces/componentInterfaces";
 
 const EditButton: React.FC<EditButtonProps> = ({
   icon = "edit",

@@ -3,17 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface WeekSelectProps {
-  onBackPress: () => void;
-  onForwardPress: () => void;
-  onTodayPress?: () => void;
-  startDate?: Date;
-  endDate?: Date;
-  currentDate?: Date;
-  mode: string;
-}
+import { WeekSelectProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
