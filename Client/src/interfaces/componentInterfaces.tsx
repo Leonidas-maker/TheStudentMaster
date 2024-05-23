@@ -1,83 +1,89 @@
-import { ViewStyle, TextInputProps, TextInputKeyPressEventData, TextInputChangeEventData, NativeSyntheticEvent } from "react-native";
+import {
+  ViewStyle,
+  TextInputProps,
+  TextInputKeyPressEventData,
+  TextInputChangeEventData,
+  NativeSyntheticEvent,
+} from "react-native";
 
 interface DefaultButtonProps {
-    text?: string;
-    onPress?: () => void;
-    onPressIn?: () => void;
-    onPressOut?: () => void;
-    onLongPress?: () => void;
-    disabled?: boolean;
-    delayLongPress?: number;
-    unstable_pressDelay?: number;
-    isCancel?: boolean;
+  text?: string;
+  onPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
+  onLongPress?: () => void;
+  disabled?: boolean;
+  delayLongPress?: number;
+  unstable_pressDelay?: number;
+  isCancel?: boolean;
 }
 
 interface EditButtonProps {
-    icon?: string;
-    onPress?: () => void;
-    onPressIn?: () => void;
-    onPressOut?: () => void;
-    onLongPress?: () => void;
-    disabled?: boolean;
-    delayLongPress?: number;
-    unstable_pressDelay?: number;
-    isCancel?: boolean;
+  icon?: string;
+  onPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
+  onLongPress?: () => void;
+  disabled?: boolean;
+  delayLongPress?: number;
+  unstable_pressDelay?: number;
+  isCancel?: boolean;
 }
 
 interface TextButtonProps {
-    text?: string;
-    onPress?: () => void;
+  text?: string;
+  onPress?: () => void;
 }
 
 interface DropdownProps {
-    setSelected: (value: string) => void;
-    values: {
-        key: string;
-        value: string;
-        disabled?: boolean;
-    }[];
-    placeholder?: string;
-    search?: boolean;
-    boxStyles?: ViewStyle;
-    dropdownStyles?: ViewStyle;
-    dropdownTextStyles?: ViewStyle;
-    inputStyles?: ViewStyle;
-    notFound?: string;
-    save?: "value" | "key" | undefined;
+  setSelected: (value: string) => void;
+  values: {
+    key: string;
+    value: string;
+    disabled?: boolean;
+  }[];
+  placeholder?: string;
+  search?: boolean;
+  boxStyles?: ViewStyle;
+  dropdownStyles?: ViewStyle;
+  dropdownTextStyles?: ViewStyle;
+  inputStyles?: ViewStyle;
+  notFound?: string;
+  save?: "value" | "key" | undefined;
 }
 interface NavigatorProps {
-    title: string;
-    onPressFunctions: (() => void)[];
-    texts: string[];
-    iconNames: string[];
-    isExternalLink?: boolean[];
+  title: string;
+  onPressFunctions: (() => void)[];
+  texts: string[];
+  iconNames: string[];
+  isExternalLink?: boolean[];
 }
 
 interface WeekSelectProps {
-    onBackPress: () => void;
-    onForwardPress: () => void;
-    onTodayPress?: () => void;
-    startDate?: Date;
-    endDate?: Date;
-    currentDate?: Date;
-    mode: string;
+  onBackPress: () => void;
+  onForwardPress: () => void;
+  onTodayPress?: () => void;
+  startDate?: Date;
+  endDate?: Date;
+  currentDate?: Date;
+  mode: string;
 }
 
 interface OptionSwitchProps {
-    title: string;
-    texts: string[];
-    iconNames: string[];
-    onValueChanges: ((value: boolean) => void)[];
-    values: boolean[];
+  title: string;
+  texts: string[];
+  iconNames: string[];
+  onValueChanges: ((value: boolean) => void)[];
+  values: boolean[];
 }
 
 interface TextProps {
-    text: string;
+  text: string;
 }
 
 interface TextFieldInputProps {
-    autoCapitalize?: "none" | "sentences" | "words" | "characters";
-    autoComplete?:
+  autoCapitalize?: "none" | "sentences" | "words" | "characters";
+  autoComplete?:
     | "additional-name"
     | "address-line1"
     | "address-line2"
@@ -135,25 +141,35 @@ interface TextFieldInputProps {
     | "tel-device"
     | "tel-national"
     | "username-new";
-    autoCorrect?: boolean;
-    autoFocus?: boolean;
-    blurOnSubmit?: boolean;
-    defaultValue?: string;
-    editable?: boolean;
-    enterKeyHint?: "enter" | "done" | "next" | "previous" | "search" | "send";
-    keyboardType?: TextInputProps["keyboardType"];
-    maxLength?: number;
-    multiline?: boolean;
-    onChange?: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
-    onChangeText?: (text: string) => void;
-    onFocus?: () => void;
-    onKeyPress?: (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
-    placeholder?: string;
-    secureTextEntry?: boolean;
-    selectTextOnFocus?: boolean;
-    textAlign?: "left" | "center" | "right";
-    value?: string;
-    isOTP?: boolean;
+  autoCorrect?: boolean;
+  autoFocus?: boolean;
+  blurOnSubmit?: boolean;
+  defaultValue?: string;
+  editable?: boolean;
+  enterKeyHint?: "enter" | "done" | "next" | "previous" | "search" | "send";
+  keyboardType?: TextInputProps["keyboardType"];
+  maxLength?: number;
+  multiline?: boolean;
+  onChange?: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
+  onChangeText?: (text: string) => void;
+  onFocus?: () => void;
+  onKeyPress?: (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
+  placeholder?: string;
+  secureTextEntry?: boolean;
+  selectTextOnFocus?: boolean;
+  textAlign?: "left" | "center" | "right";
+  value?: string;
+  isOTP?: boolean;
 }
 
-export { DefaultButtonProps, EditButtonProps, TextButtonProps, DropdownProps, NavigatorProps, WeekSelectProps, OptionSwitchProps, TextProps, TextFieldInputProps }
+export {
+  DefaultButtonProps,
+  EditButtonProps,
+  TextButtonProps,
+  DropdownProps,
+  NavigatorProps,
+  WeekSelectProps,
+  OptionSwitchProps,
+  TextProps,
+  TextFieldInputProps,
+};

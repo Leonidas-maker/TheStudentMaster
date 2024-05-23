@@ -1,4 +1,9 @@
-import { CalculationEventHeightProps, CalculationTopPositionProps, CalculationLeftPositionProps, CalculationMarkerPositionProps } from '../../interfaces/calendarInterfaces'
+import {
+  CalculationEventHeightProps,
+  CalculationTopPositionProps,
+  CalculationLeftPositionProps,
+  CalculationMarkerPositionProps,
+} from "../../interfaces/calendarInterfaces";
 
 // ====================================================== //
 // ================== Helper functions ================== //

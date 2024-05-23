@@ -15,16 +15,16 @@ import { DishMenuProps } from "../../interfaces/canteenProps";
 // Cannot be exported to canteenInterfaces because of the RefObject<ScrollView>
 interface DishProps {
   menu: {
-      canteen_name: string;
-      canteen_short_name: string;
-      image_url: string | null;
-      menu: {
-          dish_type: string;
-          dish: string;
-          price: string;
-          serving_date: string;
-      }[];
-  } | null; 
+    canteen_name: string;
+    canteen_short_name: string;
+    image_url: string | null;
+    menu: {
+      dish_type: string;
+      dish: string;
+      price: string;
+      serving_date: string;
+    }[];
+  } | null;
   scrollViewRef: React.RefObject<ScrollView>;
   selectedCanteen: string;
   selectedDate: Date;

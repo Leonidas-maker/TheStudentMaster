@@ -1,6 +1,6 @@
 interface OTPInputProps {
-    otpLength?: number;
-    onOtpChange: (otp: string) => void;
+  otpLength?: number;
+  onOtpChange: (otp: string) => void;
 }
 
-export { OTPInputProps }
+export { OTPInputProps };

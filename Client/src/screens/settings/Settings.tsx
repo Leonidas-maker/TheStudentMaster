@@ -12,7 +12,10 @@ import {
   getSelectedCourse,
   fetchInitialHash,
 } from "../../services/calendarService";
-import { EventTimeProps, CalendarProps } from "../../interfaces/calendarInterfaces";
+import {
+  EventTimeProps,
+  CalendarProps,
+} from "../../interfaces/calendarInterfaces";
 
 type SchemeType = "light" | "dark" | "system";
 

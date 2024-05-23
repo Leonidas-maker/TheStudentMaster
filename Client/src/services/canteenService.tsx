@@ -1,6 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { CanteenResponseProps, CanteenProps, MenuDataProps } from "../interfaces/canteenProps";
+import {
+  CanteenResponseProps,
+  CanteenProps,
+  MenuDataProps,
+} from "../interfaces/canteenProps";
 
 const fetchCanteens = async (
   setCanteenNames: (canteens: CanteenProps[]) => void,

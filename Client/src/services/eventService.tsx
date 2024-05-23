@@ -58,7 +58,9 @@ const fetchEvents = async (setEvents: (events: EventTimeProps[]) => void) => {
   }
 };
 
-const fetchEventsWithoutWait = async (setEvents: (events: EventTimeProps[]) => void) => {
+const fetchEventsWithoutWait = async (
+  setEvents: (events: EventTimeProps[]) => void,
+) => {
   try {
     const selectedUniversity = await AsyncStorage.getItem("selectedUniversity");
     const selectedCourse = await AsyncStorage.getItem("selectedCourse");
@@ -88,15 +90,19 @@ const fetchEventsWithoutWait = async (setEvents: (events: EventTimeProps[]) => v
   }
 };
 
-const loadEventsFromStorage = async (setEvents: (events: EventTimeProps[]) => void) => {
+const loadEventsFromStorage = async (
+  setEvents: (events: EventTimeProps[]) => void,
+) => {
   try {
     const storedEvents = await AsyncStorage.getItem("events");
     if (storedEvents) {
-      const parsedEvents = JSON.parse(storedEvents).map((event: EventTimeProps) => ({
-        ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
-      }));
+      const parsedEvents = JSON.parse(storedEvents).map(
+        (event: EventTimeProps) => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end),
+        }),
+      );
       setEvents(parsedEvents);
     }
   } catch (error) {
