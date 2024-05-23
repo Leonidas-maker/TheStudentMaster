@@ -8,6 +8,7 @@ from models.pydantic_schemas.s_canteen import (
     ResGetCanteenAddress,
     ResGetCanteenMenu,
     ResGetCanteenMenuDay,
+    ResGetCanteenHash,
 )
 from models.sql_models import m_canteen
 
@@ -88,3 +89,21 @@ def canteen_read_menu_day(
         }
         return_value.append(menu_row)
     return return_value
+
+
+# ======================================================== #
+# ==================== Canteen Hashes ==================== #
+# ======================================================== #
+
+
+@canteen_router.get("/all/hash", response_model=list[ResGetCanteenHash])
+def canteen_read_all_hash(db: Session = Depends(get_db)) -> list[dict]:
+    return [canteen.as_dict_hash() for canteen in db.query(m_canteen.Canteen).all()]
+
+
+@canteen_router.get("/{canteen_short_name}/hash", response_model=ResGetCanteenHash)
+def canteen_read_hash(
+    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
+    db: Session = Depends(get_db),
+):
+    return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict_hash()

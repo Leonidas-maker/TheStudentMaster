@@ -21,7 +21,7 @@ from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 # ======================================================== #
 def create_canteens(db: Session):
     try:
-        with open("./utils/canteen/canteen_addresses.json", "r") as file:
+        with open("./data/address_lists/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
             address_new = s_general.AddressCreate(
@@ -40,7 +40,6 @@ def create_canteens(db: Session):
                 canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
                 address_id=address_new.address_id,
             )
-            # print(canteen_new.address)
             create_canteen(db, canteen_new)
         db.commit()
     except Exception as e:
@@ -61,8 +60,9 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
                     description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
                 )
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
-                db.commit()
+                db.flush()
                 progress.update(task_id, advance=1)
+        db.commit()
     except Exception as e:
         print(e)
         db.rollback()
