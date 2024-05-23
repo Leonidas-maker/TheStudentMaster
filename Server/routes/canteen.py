@@ -105,6 +105,7 @@ def canteen_read_all_hash(db: Session = Depends(get_db)) -> list[dict]:
         print(e)
         return [{"canteen_short_name": "", "hash": ""}]
 
+
 @canteen_router.get("/{canteen_short_name}/hash", response_model=ResGetCanteenHash)
 def canteen_read_hash(
     canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
