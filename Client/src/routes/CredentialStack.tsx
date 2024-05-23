@@ -13,7 +13,6 @@ import BackupMfa from "../screens/accountManagement/mfa/BackupMfa";
 import VerifyMfa from "../screens/accountManagement/mfa/VerifyMfa";
 import VerifyRegistration from "../screens/accountManagement/registration/VerifyRegistration";
 import Profile from "../screens/profile/Profile";
-import { head } from "lodash";
 
 const Stack = createStackNavigator();
 

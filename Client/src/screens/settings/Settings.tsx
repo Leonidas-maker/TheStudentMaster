@@ -12,24 +12,13 @@ import {
   getSelectedCourse,
   fetchInitialHash,
 } from "../../services/calendarService";
+import { EventTimeProps, CalendarProps } from "../../interfaces/calendarInterfaces";
 
 type SchemeType = "light" | "dark" | "system";
 
-interface Calendar {
-  university_name: string;
-  university_uuid: string;
-  course_names: string[];
-}
-
-interface Event {
-  start: string | Date;
-  end: string | Date;
-  [key: string]: any;
-}
-
 const Settings: React.FC = () => {
   const { colorScheme, setColorScheme } = useColorScheme();
-  const [calendars, setCalendars] = useState<Calendar[]>([]);
+  const [calendars, setCalendars] = useState<CalendarProps[]>([]);
   const [selectedUniversity, setSelectedUniversity] = useState<{
     name: string;
     uuid: string;
@@ -39,7 +28,7 @@ const Settings: React.FC = () => {
     "Select a University",
   );
   const [placeholderCourse, setPlaceholderCourse] = useState("Select a Course");
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [missingUniversity, setMissingUniversity] = useState(false);
   const [missingCourse, setMissingCourse] = useState(false);
 

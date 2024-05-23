@@ -1,7 +1,7 @@
 import { axiosInstance } from "./api";
-import { User } from "../interfaces/userInterfaces";
+import { UserProps } from "../interfaces/userInterfaces";
 
-const fetchUser = async (setUser: (userdata: User) => void) => {
+const fetchUser = async (setUser: (userdata: UserProps) => void) => {
   try {
     const response = await axiosInstance.get("/user/me");
     setUser(response.data);

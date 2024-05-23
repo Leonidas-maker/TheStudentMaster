@@ -1,11 +1,8 @@
 import React from "react";
 import { Text } from "react-native";
+import { TextProps } from "../../interfaces/componentInterfaces";
 
-interface SubheadingProps {
-  text: string;
-}
-
-const Subheading: React.FC<SubheadingProps> = ({ text }) => {
+const Subheading: React.FC<TextProps> = ({ text }) => {
   return (
     <Text className="text-light_subheading dark:text-dark_subheading text-2xl text-center">
       {text}

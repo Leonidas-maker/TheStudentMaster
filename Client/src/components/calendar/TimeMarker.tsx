@@ -8,16 +8,7 @@ import {
   calculateMarkerPosition,
   calculateDayHeight,
 } from "./CalendarCalculations";
-
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface TimeMarkerProps {
-  hoursContainerHeight: number;
-  containerHeight: number;
-  calendar: {
-    startHour: number;
-    endHour: number;
-  };
-}
+import { TimeMarkerProps } from "../../interfaces/calendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

@@ -1,12 +1,7 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { format, addDays, isSameDay } from "date-fns";
-
-interface DayViewProps {
-  selectedDate: Date;
-  setSelectedDate: (date: Date) => void;
-  startOfWeekDate: Date;
-}
+import { DayViewProps } from "../../interfaces/canteenProps";
 
 const DayView: React.FC<DayViewProps> = ({
   selectedDate,

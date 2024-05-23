@@ -1,30 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
-interface CanteenProps {
-  key: string;
-  value: string;
-}
-
-interface CanteenResponse {
-  canteen_name: string;
-  canteen_short_name: string;
-  image_url: string;
-}
-
-interface Dish {
-  dish_type: string;
-  dish: string;
-  price: string;
-  serving_date: string;
-}
-
-interface MenuData {
-  canteen_name: string;
-  canteen_short_name: string;
-  image_url: string | null;
-  menu: Dish[];
-}
+import { CanteenResponseProps, CanteenProps, MenuDataProps } from "../interfaces/canteenProps";
 
 const fetchCanteens = async (
   setCanteenNames: (canteens: CanteenProps[]) => void,
@@ -53,8 +29,8 @@ const fetchCanteens = async (
       return;
     }
 
-    const response = await axios.get<CanteenResponse[]>("/canteen/all");
-    const canteenData = response.data.map((canteen: CanteenResponse) => ({
+    const response = await axios.get<CanteenResponseProps[]>("/canteen/all");
+    const canteenData = response.data.map((canteen: CanteenResponseProps) => ({
       key: canteen.canteen_short_name,
       value: canteen.canteen_name,
     }));
@@ -70,10 +46,10 @@ const fetchCanteens = async (
 
 const fetchCanteenDishes = async (
   canteenShortName: string,
-  setMenu: (menu: MenuData | null) => void,
+  setMenu: (menu: MenuDataProps | null) => void,
 ) => {
   try {
-    const response = await axios.get<MenuData>(
+    const response = await axios.get<MenuDataProps>(
       `/canteen/${canteenShortName}/menu/all`,
     );
     const menuData = response.data;

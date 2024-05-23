@@ -1,11 +1,8 @@
 import React from "react";
 import { Text } from "react-native";
+import { TextProps } from "../../interfaces/componentInterfaces";
 
-interface HeadingProps {
-  text: string;
-}
-
-const Heading: React.FC<HeadingProps> = ({ text }) => {
+const Heading: React.FC<TextProps> = ({ text }) => {
   return (
     <Text className="text-black dark:text-white text-4xl font-bold text-center">
       {text}

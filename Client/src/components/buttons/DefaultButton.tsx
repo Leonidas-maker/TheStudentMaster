@@ -1,17 +1,6 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
-
-interface DefaultButtonProps {
-  text?: string;
-  onPress?: () => void;
-  onPressIn?: () => void;
-  onPressOut?: () => void;
-  onLongPress?: () => void;
-  disabled?: boolean;
-  delayLongPress?: number;
-  unstable_pressDelay?: number;
-  isCancel?: boolean;
-}
+import { DefaultButtonProps } from "../../interfaces/componentInterfaces";
 
 const DefaultButton: React.FC<DefaultButtonProps> = ({
   text = "Drück mich",

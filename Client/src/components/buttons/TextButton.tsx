@@ -1,10 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-
-interface TextButtonProps {
-  text?: string;
-  onPress?: () => void;
-}
+import { TextButtonProps } from "../../interfaces/componentInterfaces"; 
 
 const TextButton: React.FC<TextButtonProps> = ({
   text = "Drück mich",

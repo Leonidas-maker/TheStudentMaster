@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, ViewStyle, useColorScheme } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-
-interface DropdownProps {
-  setSelected: (value: string) => void;
-  values: {
-    key: string;
-    value: string;
-    disabled?: boolean;
-  }[];
-  placeholder?: string;
-  search?: boolean;
-  boxStyles?: ViewStyle;
-  dropdownStyles?: ViewStyle;
-  dropdownTextStyles?: ViewStyle;
-  inputStyles?: ViewStyle;
-  notFound?: string;
-  save?: "value" | "key" | undefined;
-}
+import { DropdownProps } from "../../interfaces/componentInterfaces";
 
 const Dropdown: React.FC<DropdownProps> = ({
   setSelected,

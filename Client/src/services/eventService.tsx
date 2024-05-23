@@ -1,13 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { EventTimeProps } from "../interfaces/calendarInterfaces";
 
-interface Event {
-  start: string | Date;
-  end: string | Date;
-  [key: string]: any;
-}
-
-const fetchEvents = async (setEvents: (events: Event[]) => void) => {
+const fetchEvents = async (setEvents: (events: EventTimeProps[]) => void) => {
   try {
     const selectedUniversity = await AsyncStorage.getItem("selectedUniversity");
     const selectedCourse = await AsyncStorage.getItem("selectedCourse");
@@ -42,7 +37,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
       const data = response.data.data;
 
       if (data && Array.isArray(data.events)) {
-        const formattedEvents = data.events.map((event: Event) => ({
+        const formattedEvents = data.events.map((event: EventTimeProps) => ({
           ...event,
           start: new Date(event.start),
           end: new Date(event.end),
@@ -63,7 +58,7 @@ const fetchEvents = async (setEvents: (events: Event[]) => void) => {
   }
 };
 
-const fetchEventsWithoutWait = async (setEvents: (events: Event[]) => void) => {
+const fetchEventsWithoutWait = async (setEvents: (events: EventTimeProps[]) => void) => {
   try {
     const selectedUniversity = await AsyncStorage.getItem("selectedUniversity");
     const selectedCourse = await AsyncStorage.getItem("selectedCourse");
@@ -93,11 +88,11 @@ const fetchEventsWithoutWait = async (setEvents: (events: Event[]) => void) => {
   }
 };
 
-const loadEventsFromStorage = async (setEvents: (events: Event[]) => void) => {
+const loadEventsFromStorage = async (setEvents: (events: EventTimeProps[]) => void) => {
   try {
     const storedEvents = await AsyncStorage.getItem("events");
     if (storedEvents) {
-      const parsedEvents = JSON.parse(storedEvents).map((event: Event) => ({
+      const parsedEvents = JSON.parse(storedEvents).map((event: EventTimeProps) => ({
         ...event,
         start: new Date(event.start),
         end: new Date(event.end),

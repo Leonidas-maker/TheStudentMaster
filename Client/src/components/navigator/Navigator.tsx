@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-
-interface NavigatorProps {
-  title: string;
-  onPressFunctions: (() => void)[];
-  texts: string[];
-  iconNames: string[];
-  isExternalLink?: boolean[];
-}
+import { NavigatorProps } from "../../interfaces/componentInterfaces";
 
 const Navigator: React.FC<NavigatorProps> = ({
   title,
