@@ -44,23 +44,23 @@ m_canteen.Base.metadata.create_all(bind=engine)
 # ======================================================== #
 task_scheduler = TaskScheduler(verbose=True)
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # ~~~~~~~~~ Code to run on startup ~~~~~~~~ #
     async with get_async_db() as db:
-         await asyncio.to_thread(create_canteens, db)
+        await asyncio.to_thread(create_canteens, db)
 
     async with get_async_db() as db:
-         await asyncio.to_thread(prepareCalendarTables, db)
-
+        await asyncio.to_thread(prepareCalendarTables, db)
 
     async with get_async_db() as db:
-                backends = db.query(m_calendar.CalendarBackend).all()
+        backends = db.query(m_calendar.CalendarBackend).all()
 
     task_scheduler.add_task(
         "canteen",
         update_canteen_menus,
-        interval_seconds=60 * 15, # 15 minutes
+        interval_seconds=60 * 15,  # 15 minutes
         start_time=6,
         end_time=18,
         blocked_by=[],
@@ -70,7 +70,7 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "calendar_native_all",
         update_all_native_calendars,
-        interval_seconds=60 * 60 * 2, # 2 hour
+        interval_seconds=60 * 60 * 2,  # 2 hour
         start_time=6,
         end_time=18,
         blocked_by=[],
@@ -80,7 +80,7 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "calendar_native_active",
         update_active_native_calendars,
-        interval_seconds=60 * 15, # 15 minutes
+        interval_seconds=60 * 15,  # 15 minutes
         start_time=6,
         end_time=18,
         blocked_by=["calendar_native_all"],
@@ -90,7 +90,7 @@ async def lifespan(app: FastAPI):
         task_scheduler.add_task(
             f"calendar_custom_{backend.backend_name}",
             update_custom_calendars,
-            interval_seconds=60 * 15, # 15 minutes
+            interval_seconds=60 * 15,  # 15 minutes
             start_time=6,
             end_time=18,
             blocked_by=[],
@@ -102,7 +102,7 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "calendar_custom_clean",
         clean_custom_calendars,
-        interval_seconds=60 * 60 * 6, # 6 hours
+        interval_seconds=60 * 60 * 6,  # 6 hours
         start_time=6,
         end_time=18,
         blocked_by=[],
@@ -111,7 +111,7 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "address_clean",
         clean_address,
-        interval_seconds=60 * 60 * 6, # 6 hours
+        interval_seconds=60 * 60 * 6,  # 6 hours
         start_time=6,
         end_time=18,
         blocked_by=[],
@@ -119,12 +119,10 @@ async def lifespan(app: FastAPI):
 
     task_scheduler.start(run_startup_tasks=True)
 
-
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
     # ~~~~~~~~ Code to run on shutdown ~~~~~~~~ #
     task_scheduler.stop()
-  
 
     # ~~~~~~~~ End of code to run on shutdown ~~~~~~~~ #
 

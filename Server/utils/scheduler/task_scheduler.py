@@ -80,7 +80,11 @@ class TaskScheduler:
             interval_seconds = interval_seconds % 60
 
             trigger = CronTrigger(
-                hour= f"{start_time}-{end_time - 1}/{interval_hours}" if interval_hours > 0 else f"{start_time}-{end_time - 1}",
+                hour=(
+                    f"{start_time}-{end_time - 1}/{interval_hours}"
+                    if interval_hours > 0
+                    else f"{start_time}-{end_time - 1}"
+                ),
                 minute=f"*/{interval_minutes}" if interval_minutes > 0 else None,
                 second=f"*/{interval_seconds}" if interval_seconds > 0 else None,
             )
