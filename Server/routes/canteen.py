@@ -1,3 +1,4 @@
+from calendar import c
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -98,12 +99,19 @@ def canteen_read_menu_day(
 
 @canteen_router.get("/all/hash", response_model=list[ResGetCanteenHash])
 def canteen_read_all_hash(db: Session = Depends(get_db)) -> list[dict]:
-    return [canteen.as_dict_hash() for canteen in db.query(m_canteen.Canteen).all()]
-
+    try:
+        return [canteen.as_dict_hash() for canteen in db.query(m_canteen.Canteen).all()]
+    except Exception as e:
+        print(e)
+        return [{"canteen_short_name": "", "hash": ""}]
 
 @canteen_router.get("/{canteen_short_name}/hash", response_model=ResGetCanteenHash)
 def canteen_read_hash(
     canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
     db: Session = Depends(get_db),
 ):
-    return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict_hash()
+    try:
+        return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict_hash()
+    except Exception as e:
+        print(e)
+        return {"canteen_short_name": "", "hash": ""}
