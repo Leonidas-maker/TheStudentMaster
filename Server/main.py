@@ -106,6 +106,7 @@ async def lifespan(app: FastAPI):
         start_time=6,
         end_time=18,
         blocked_by=[],
+        with_progress=False,
     )
 
     task_scheduler.add_task(
@@ -115,6 +116,7 @@ async def lifespan(app: FastAPI):
         start_time=6,
         end_time=18,
         blocked_by=[],
+        with_progress=False,
     )
 
     task_scheduler.start(run_startup_tasks=True)

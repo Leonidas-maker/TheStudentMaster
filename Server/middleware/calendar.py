@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session, joinedload, defer
+from sqlalchemy import select
 from profanity_check import predict
 import json
 import datetime
@@ -413,14 +414,19 @@ def clean_custom_calendars(db: Session) -> int:
             .subquery()
         )
 
+        # Explicitly create a select() object from the subquery
+        subquery_select = select(subquery)
+
         # Delete all entries that match the subquery
         delete_query = (
             db.query(m_calendar.CalendarCustom)
             .options(query_options)
-            .filter(m_calendar.CalendarCustom.calendar_custom_id.in_(subquery))
+            .filter(m_calendar.CalendarCustom.calendar_custom_id.in_(subquery_select))
         )
         delete_count = delete_query.delete(synchronize_session=False)
         db.commit()
         return delete_count
     except Exception as e:
         print(e)
+        db.rollback()
+        return 0

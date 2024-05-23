@@ -26,18 +26,19 @@ class TaskScheduler:
         self,
         task_id: str,
         func: Callable,
-        start_time: Optional[datetime.datetime] | Optional[int] = None,
-        end_time: Optional[datetime.datetime] | Optional[int] = None,
+        start_time: datetime.datetime | int = None,
+        end_time: datetime.datetime | int = None,
         interval_seconds: int = 60,
-        blocked_by: Optional[List[str]] = None,
+        blocked_by: List[str] = None,
         on_startup: bool = False,
-        args: Optional[List] = [],
-        kwargs: Optional[dict] = {},
+        with_progress: bool = True,
+        args: List = [],
+        kwargs: dict = {},
     ):
 
         self.task_blocked_by[task_id] = blocked_by or []
 
-        async def task_wrapper():
+        async def task_wrapper(*args, **kwargs):
             block_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=self.MAX_BLOCK_TIME)
             block_time = block_time.timestamp()
 
@@ -56,17 +57,19 @@ class TaskScheduler:
 
             self.running_tasks.append(task_id)
             self.progress.start()
-
-            task = self.progress.add_task(f"[cyan][Scheduler] [yellow]Task {task_id} starting...", total=None)
-
+            if with_progress:
+                task = self.progress.add_task(f"[cyan][Scheduler] [yellow]Task {task_id} starting...", total=None)
+                kwargs["task_id"] = task
+                kwargs["progress"] = self.progress
             try:
                 async with get_async_db() as db:
                     if inspect.iscoroutinefunction(func):
-                        await func(db, task, self.progress, *args, **kwargs)
+                        await func(db, *args, **kwargs)
                     else:
-                        await asyncio.to_thread(func, db, self.progress, task, *args, **kwargs)
+                        await asyncio.to_thread(func, db, *args, **kwargs)
             finally:
-                self.progress.remove_task(task)
+                if with_progress:
+                    self.progress.remove_task(task)
                 if len(self.running_tasks) == 0:
                     self.progress.stop()
                 self.running_tasks.remove(task_id)
@@ -93,7 +96,7 @@ class TaskScheduler:
         else:
             trigger = IntervalTrigger(seconds=interval_seconds)
 
-        self.scheduler.add_job(task_wrapper, trigger=trigger, id=task_id)
+        self.scheduler.add_job(task_wrapper, trigger=trigger, id=task_id, args=args, kwargs=kwargs)
 
         if on_startup:
             self.startup_tasks.append(task_id)
