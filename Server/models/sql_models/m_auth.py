@@ -29,6 +29,7 @@ class UserSecurity(Base):
     # ~~~~~~~~~~~~~~~~ Security ~~~~~~~~~~~~~~~ #
     security_warns = Column(Integer, default=0)  # * Number of times suspicious activity has been detected max. 10
     locked = Column(Boolean, default=False)
+    locked_until = Column(TIMESTAMP)
 
     # ~~~~~~~~~~~~~~ Verification ~~~~~~~~~~~~~ #
     verified = Column(Boolean, default=False)

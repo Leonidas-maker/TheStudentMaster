@@ -51,9 +51,9 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
     )
 
     db.add(new_user_security)
-    db.commit()
+    db.flush()
 
-    return new_user, new_user_uuid.user_uuid
+    return new_user, new_user_uuid.user_uuid, new_user_security
 
 
 # ======================================================== #

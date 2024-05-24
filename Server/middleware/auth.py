@@ -36,8 +36,21 @@ from middleware.user import get_user_security, get_user_2fa, get_user
 ###########################################################################
 def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error: str) -> None:
     security_warns = user_security.security_warns + 1
+    if security_warns >= MAX_WARNS:
+        if user_security.locked_until:
+            user_security.locked_until = None
+            user_security.locked = True
+        else:
+            user_security.security_warns = security_warns
+            user_security.locked = True
+            user_security.locked_until = unix_timestamp(hours=2)
+            db.commit()
+            raise HTTPException(
+                status_code=403,
+                detail=f"{error}! Account is now locked for 2 hours",
+            )
+
     user_security.security_warns = security_warns
-    user_security.verified = False
     db.commit()
     raise HTTPException(
         status_code=403,
@@ -45,9 +58,19 @@ def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error:
     )
 
 
-def check_security_warns(user_security: m_auth.UserSecurity) -> None:
-    if user_security.security_warns >= MAX_WARNS:
-        raise HTTPException(status_code=403, detail="Account locked please try again later")
+def check_security_warns(db: Session, user_security: m_auth.UserSecurity) -> None:
+    if user_security.locked_until:
+        if user_security.locked and user_security.locked_until > unix_timestamp():
+            raise HTTPException(status_code=403, detail="Account locked please try again later")
+        elif user_security.locked and user_security.locked_until < unix_timestamp():
+            user_security.locked = False
+            user_security.security_warns = 0
+        elif user_security.locked_until + (2 * 24 * 60 * 60) < unix_timestamp(days=2):
+            user_security.locked_until = None
+        db.update(user_security)
+        db.flush()
+    elif user_security.locked:
+        raise HTTPException(status_code=403, detail="Account might be permanently locked. Please contact support")
 
 
 ###########################################################################
@@ -433,7 +456,7 @@ def create_tokens(
     user_id = user_security.user_id
 
     # Check if the user is locked
-    check_security_warns(user_security)
+    check_security_warns(db, user_security)
 
     current_timestamp = unix_timestamp()
 
@@ -531,7 +554,7 @@ def create_tokens(
 
     access_token = jwt.encode(payload, access_private_key, algorithm="ES256")
     db.add(new_access_token)
-    db.commit()
+    db.flush()
 
     return reftesh_token, access_token
 
@@ -565,7 +588,7 @@ def create_security_token(
     security_private_key = get_security_token_private()
     security_token = jwt.encode(payload, security_private_key, algorithm="ES256")
     db.add(new_security_token)
-    db.commit()
+    db.flush()
 
     return security_token
 
@@ -584,7 +607,7 @@ def revoke_token(db: Session, user_id: str, token_type: str, token_value: str, t
             m_auth.UserTokens.token_value == token_value,
             m_auth.UserTokens.token_jti == token_jti,
         ).delete(synchronize_session=False)
-        db.commit()
+        db.flush()
         return True
     except:
         return False
@@ -600,7 +623,7 @@ def revoke_all_tokens(db: Session, user_id: str, token_type: str = None, token_v
         query = query.filter(m_auth.UserTokens.token_value == token_value)
 
     query.delete(synchronize_session=False)
-    db.commit()
+    db.flush()
 
 
 def revoke_all_application_tokens(db: Session, user: s_user.User):
@@ -656,7 +679,7 @@ def create_totp(db: Session, user_id: str) -> str:
         _2fa_backup=None,
     )
     db.add(user_2fa)
-    db.commit()
+    db.flush()
     return totp_secret
 
 
@@ -699,7 +722,7 @@ def create_simple_otp(db: Session, user_security: m_auth.UserSecurity, expire_ti
     otp = secrets.randbelow(1000000)
     # Add the expire time: XXXXXX:XXXXXX and save it to the user_security
     user_security.verify_otp = f"{otp}:{unix_timestamp(minutes=expire_time)}"
-    db.commit()
+    db.flush()
     return otp
 
 
@@ -730,7 +753,7 @@ def check_password(
 
 def change_password(db: Session, user_security: m_auth.UserSecurity, new_password: str):
     user_security.password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
-    db.commit()
+    db.flush()
 
 
 # ======================================================== #
@@ -825,18 +848,18 @@ def remove_old_tokens(
             m_auth.UserTokens.user_id == user_security.user_id,
             m_auth.UserTokens.token_jti.in_(expired_tokens),
         ).delete(synchronize_session=False)
-        db.commit()
+        db.flush()
     return application_tokens, temporary_tokens, access_tokens
 
 
-def remove_older_security_token(db: Session, user_security: m_auth.UserSecurity, reason: str, max_tokens: int = 2):
+def remove_older_security_token(db: Session, user_security: m_auth.UserSecurity, reason: str):
     security_tokens: List[m_auth.UserTokens] = user_security.user_tokens
-    if len(security_tokens) >= max_tokens:
-        security_tokens = security_tokens[: len(security_tokens) - max_tokens + 1]  # Remove the oldest token
+    if len(security_tokens) >= MAX_SECURITY_TOKENS:
+        security_tokens = security_tokens[: len(security_tokens) - MAX_SECURITY_TOKENS + 1]  # Remove the oldest token
         db.query(m_auth.UserTokens).filter(
             m_auth.UserTokens.user_id == user_security.user_id,
             m_auth.UserTokens.token_type == "Security",
             m_auth.UserTokens.token_value == reason,
             m_auth.UserTokens.token_jti.in_([token.token_jti for token in security_tokens]),
         ).delete(synchronize_session=False)
-        db.commit()
+        db.flush()
