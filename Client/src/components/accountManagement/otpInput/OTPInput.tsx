@@ -6,7 +6,7 @@ import {
   TextInputKeyPressEventData,
 } from "react-native";
 import TextFieldInput from "../../textInputs/TextFieldInput";
-import { OTPInputProps } from "../../../interfaces/authInterfaces";
+import { OTPInputProps } from "../../../interfaces/AuthInterfaces";
 
 // TODO Implement paste functionality
 // TODO Block non-numeric characters

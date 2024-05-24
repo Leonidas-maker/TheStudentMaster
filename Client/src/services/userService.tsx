@@ -1,5 +1,5 @@
-import { axiosInstance } from "./api";
-import { UserProps } from "../interfaces/userInterfaces";
+import { axiosInstance } from "./Api";
+import { UserProps } from "../interfaces/UserInterfaces";
 
 const fetchUser = async (setUser: (userdata: UserProps) => void) => {
   try {

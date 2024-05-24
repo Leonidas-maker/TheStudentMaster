@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
-import { DefaultButtonProps } from "../../interfaces/componentInterfaces";
+import { DefaultButtonProps } from "../../interfaces/ComponentInterfaces";
 
 const DefaultButton: React.FC<DefaultButtonProps> = ({
   text = "Drück mich",

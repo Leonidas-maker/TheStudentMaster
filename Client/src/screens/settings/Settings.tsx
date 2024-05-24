@@ -5,17 +5,17 @@ import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
 import DefaultText from "../../components/textFields/DefaultText";
 import Dropdown from "../../components/dropdown/Dropdown";
-import { fetchEventsWithoutWait } from "../../services/eventService";
+import { fetchEventsWithoutWait } from "../../services/EventService";
 import {
   fetchCalendars,
   getSelectedUniversity,
   getSelectedCourse,
   fetchInitialHash,
-} from "../../services/calendarService";
+} from "../../services/CalendarService";
 import {
   EventTimeProps,
   CalendarProps,
-} from "../../interfaces/calendarInterfaces";
+} from "../../interfaces/CalendarInterfaces";
 
 type SchemeType = "light" | "dark" | "system";
 
@@ -145,13 +145,13 @@ const Settings: React.FC = () => {
 
   const courseDropdownValues = selectedUniversity
     ? calendars
-        .find(
-          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-        )
-        ?.course_names.map((course: string) => ({
-          key: course,
-          value: course,
-        })) || []
+      .find(
+        (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+      )
+      ?.course_names.map((course: string) => ({
+        key: course,
+        value: course,
+      })) || []
     : [];
 
   return (

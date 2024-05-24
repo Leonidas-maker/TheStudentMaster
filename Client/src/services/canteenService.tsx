@@ -4,7 +4,7 @@ import {
   CanteenResponseProps,
   CanteenProps,
   MenuDataProps,
-} from "../interfaces/canteenProps";
+} from "../interfaces/CanteenProps";
 
 const fetchCanteens = async (
   setCanteenNames: (canteens: CanteenProps[]) => void,

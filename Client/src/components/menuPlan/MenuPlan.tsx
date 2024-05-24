@@ -25,9 +25,9 @@ import Dropdown from "../dropdown/Dropdown";
 import {
   fetchCanteens,
   fetchCanteenDishes,
-} from "../../services/canteenService";
+} from "../../services/CanteenService";
 import * as Progress from "react-native-progress";
-import { CanteenProps, MenuDataProps } from "../../interfaces/canteenProps";
+import { CanteenProps, MenuDataProps } from "../../interfaces/CanteenProps";
 
 // ====================================================== //
 // ====================== Component ===================== //

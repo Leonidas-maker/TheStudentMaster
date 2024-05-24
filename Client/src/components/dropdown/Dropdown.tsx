@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, ViewStyle, useColorScheme } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
-import { DropdownProps } from "../../interfaces/componentInterfaces";
+import { DropdownProps } from "../../interfaces/ComponentInterfaces";
 
 const Dropdown: React.FC<DropdownProps> = ({
   setSelected,

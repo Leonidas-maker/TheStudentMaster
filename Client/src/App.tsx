@@ -9,7 +9,7 @@ import { ThemeProvider } from "./provider/ThemeProvider";
 // Import i18next for localisation
 import "./translations/TranslationConfig";
 
-import applyInterceptor from "./services/applyInterceptor";
+import applyInterceptor from "./services/ApplyInterceptor";
 
 export default function App() {
   applyInterceptor();
