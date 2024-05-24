@@ -19,6 +19,7 @@ class Canteen(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     address = relationship("Address", cascade="save-update")
+    menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="canteen")
 
     def __init__(self, canteen_name, canteen_short_name, address_id, image_url=None):
         self.canteen_name = canteen_name
@@ -76,6 +77,8 @@ class Dish(Base):
     hash = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
+    menu = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
+
     def __init__(self, description, price, image_url=None):
         self.description = description
         self.image_url = image_url
@@ -108,8 +111,8 @@ class Menu(Base):
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    canteen = relationship("Canteen")
-    dish = relationship("Dish")
+    canteen = relationship("Canteen", cascade="save-update", uselist=False, back_populates="menus")
+    dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menu")
 
     def __init__(self, canteen_id, dish_id, dish_type, serving_date):
         self.canteen_id = canteen_id

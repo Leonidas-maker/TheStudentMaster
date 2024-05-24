@@ -1,6 +1,7 @@
 from datetime import datetime
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 import json
+
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_scraper import fetch_menu
@@ -310,7 +311,10 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
 
 
 def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> ResGetCanteenMenu:
-
+    #! @xxchillkroetexx Pls use joinedloads for performance reasons
+    #* Your code requires a lot of queries to the database. You can use joinedloads to reduce the number of queries. 
+    #* This will improve the performance of your code from 1s to 0.2s.
+    query_options = [joinedload(m_canteen.Canteen.menus, m_canteen.Menu.dish)]
     if not db:
         raise ValueError("Parameter db is required")
     elif not canteen_short_name:
@@ -324,14 +328,17 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
         current_week = 0
 
     try:
-        canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
+        #* You can use the options parameter to load the menus and dishes of the canteen in one query.
+        canteen = db.query(m_canteen.Canteen).options(query_options).filter_by(canteen_short_name=canteen_short_name).first()
+        menus: list[m_canteen.Menu] = canteen.menus
     except AttributeError as e:
         print("Error while fetching canteen_id")
         print(e)
         return False
 
+    #! @xxchillkroetexx
     try:
-        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all()
+        pass#menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all()
     except AttributeError as e:
         print("Error while fetching menu")
         print(e)
