@@ -36,8 +36,6 @@ def get_user(
         if with_2fa:
             query_options += [joinedload(m_user.User.user_security).joinedload(m_auth.UserSecurity.user_2fa)]
 
-
-
     # Build Query
     query = db.query(m_user.User).options(*query_options)
     user = None
