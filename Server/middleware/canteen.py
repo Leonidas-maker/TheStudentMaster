@@ -4,7 +4,6 @@ import json
 
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
-from Server.models.pydantic_schemas.s_canteen import ResGetCanteenMenuDay
 from utils.canteen.canteen_scraper import fetch_menu
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
@@ -14,6 +13,7 @@ from middleware.general import create_address
 from models.sql_models import m_canteen, m_general
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
+from models.pydantic_schemas.s_canteen import ResGetCanteenMenuDay
 from models.pydantic_schemas import s_general
 
 
