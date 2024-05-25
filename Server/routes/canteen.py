@@ -1,4 +1,3 @@
-from calendar import c
 from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -14,7 +13,7 @@ from models.pydantic_schemas.s_canteen import (
 from models.sql_models import m_canteen
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
-from middleware.canteen import get_menu_for_canteen
+from middleware.canteen import get_menu_for_canteen, get_menu_for_day
 from middleware.database import get_db
 
 
@@ -75,21 +74,8 @@ def canteen_read_canteen_menu(
 def canteen_read_menu_day(
     day: Annotated[str, "The day to retrieve the menu for. (e.g. '2021-10-01')"],
     db: Session = Depends(get_db),
-) -> list[dict]:
-    return_value = []
-    for menu in db.query(m_canteen.Menu).filter_by(serving_date=day).all():
-        menu_row = dict()
-        menu_row["canteen_name"] = menu.canteen.canteen_name
-        menu_row["canteen_short_name"] = menu.canteen.canteen_short_name if menu.canteen.canteen_short_name else None
-        menu_row["image_url"] = menu.canteen.image_url if menu.canteen.image_url else None
-        menu_row["menu"] = {
-            "dish_type": menu.dish_type,
-            "dish": menu.dish.description,
-            "price": menu.dish.price,
-            "serving_date": menu.serving_date,
-        }
-        return_value.append(menu_row)
-    return return_value
+) -> list[ResGetCanteenMenuDay]:
+    return get_menu_for_day(db=db, day=day)
 
 
 # ======================================================== #
