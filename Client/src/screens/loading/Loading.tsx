@@ -15,15 +15,18 @@ const Loading: React.FC = (props: any) => {
 
   const checkOnboardingStatus = async () => {
     try {
-      const onboardingStatus = await AsyncStorage.getItem('onboarding');
-      if (onboardingStatus === 'true') {
+      const onboardingStatus = await AsyncStorage.getItem("onboarding");
+      if (onboardingStatus === "true") {
         navigateAndReset("HomeBottomTabs");
       } else {
         navigateAndReset("Onboarding");
       }
     } catch (error) {
-      console.error("Error reading onboarding status from AsyncStorage:", error);
-      navigateAndReset("Onboarding"); 
+      console.error(
+        "Error reading onboarding status from AsyncStorage:",
+        error,
+      );
+      navigateAndReset("Onboarding");
     }
   };
 
