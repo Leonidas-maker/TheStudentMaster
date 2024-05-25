@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Dimensions } from "react-native";
-import Animated, { useSharedValue, useAnimatedScrollHandler, useDerivedValue, useAnimatedStyle, interpolate, Extrapolate } from "react-native-reanimated";
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  useDerivedValue,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolate,
+} from "react-native-reanimated";
 import OnboardingPage from "./OnboardingPage";
 import { useNavigation } from "@react-navigation/native";
 import OnboardingButton from "../../components/buttons/OnboardingButton";
@@ -65,7 +72,7 @@ const Onboarding = () => {
               scrollX.value / width,
               [index - 1, index, index + 1],
               [1, 1.5, 1],
-              Extrapolate.CLAMP
+              Extrapolate.CLAMP,
             );
           });
 
@@ -74,7 +81,7 @@ const Onboarding = () => {
               scrollX.value / width,
               [index - 1, index, index + 1],
               [0.5, 1, 0.5],
-              Extrapolate.CLAMP
+              Extrapolate.CLAMP,
             );
           });
 
