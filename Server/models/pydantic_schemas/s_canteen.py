@@ -10,6 +10,7 @@ class CanteenBase(BaseModel):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
+    hash: str
 
     class Config:
         from_attributes = True
@@ -29,6 +30,7 @@ class ResGetCanteen(CanteenBase):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
+    hash: str
 
     class Config:
         from_attributes = True
@@ -39,6 +41,7 @@ class ResGetCanteenAddress(CanteenBase):
     canteen_short_name: Optional[str]
     image_url: Optional[str]
     address: CompleteAdress
+    hash: str
 
     class Config:
         from_attributes = True
@@ -57,6 +60,7 @@ class ResGetMenuDay(BaseModel):
 class ResGetCanteenMenu(CanteenBase):
     canteen_name: str
     canteen_short_name: Optional[str]
+    hash: str
     image_url: Optional[str]
     menu: list[ResGetMenuDay]
 
@@ -69,6 +73,7 @@ class ResGetCanteenMenuDay(CanteenBase):
     canteen_short_name: Optional[str]
     image_url: Optional[str]
     menu: ResGetMenuDay
+    hash: str
 
     class Config:
         from_attributes = True

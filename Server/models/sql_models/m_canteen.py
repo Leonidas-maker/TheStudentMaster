@@ -40,6 +40,7 @@ class Canteen(Base):
             "canteen_short_name": self.canteen_short_name,
             "image_url": self.image_url,
             "address_id": self.address_id,
+            "hash": self.hash,
         }
 
     def as_dict_complete(self) -> dict:
@@ -50,6 +51,7 @@ class Canteen(Base):
             "canteen_short_name": self.canteen_short_name,
             "image_url": self.image_url,
             "address_id": self.address_id,
+            "hash": self.hash,
             "address": {
                 "address1": address["address1"],
                 "address2": address["address2"],

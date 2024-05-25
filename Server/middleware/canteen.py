@@ -430,6 +430,7 @@ def get_menu_for_day(db: Session, day: str) -> list[ResGetCanteenMenuDay]:
         menu_row["canteen_name"] = menu.canteen.canteen_name
         menu_row["canteen_short_name"] = menu.canteen.canteen_short_name
         menu_row["image_url"] = menu.canteen.image_url if menu.canteen.image_url else None
+        menu_row["hash"] = menu.canteen.hash
         menu_row["menu"] = {
             "dish_type": menu.dish_type,
             "dish": menu.dish.description,
