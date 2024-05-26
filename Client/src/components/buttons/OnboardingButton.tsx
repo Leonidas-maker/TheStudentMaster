@@ -35,9 +35,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolate.CLAMP,
     );
 
-    const widthInterpolated = isSkipButton
-      ? interpolate(scale, [1, 1.5], [128, 100], Extrapolate.CLAMP)
-      : interpolate(scale, [1, 1.5], [128, 40], Extrapolate.CLAMP);
+    const widthInterpolated = interpolate(scale, [1, 1.5], [128, 40], Extrapolate.CLAMP);
 
     const heightInterpolated = interpolate(
       scale,
@@ -46,9 +44,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolate.CLAMP,
     );
 
-    const borderRadiusInterpolated = isSkipButton
-      ? 10
-      : interpolate(scale, [1, 1.5], [10, 20], Extrapolate.CLAMP);
+    const borderRadiusInterpolated = interpolate(scale, [1, 1.5], [10, 20], Extrapolate.CLAMP);
 
     return {
       transform: [{ scale }],
@@ -74,10 +70,10 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
     <Animated.View style={animatedStyle}>
       {isSkipButton ? (
         <Pressable
-          className="w-full h-full justify-center items-center active:opacity-50"
+          className="w-full h-full justify-center items-center bg-light_secondary dark:bg-dark_secondary rounded-full active:opacity-50"
           onPress={onPress}
         >
-          <Text className="text-blue-600 dark:text-blue-400">{text}</Text>
+          <Icon name="skip-next" size={30} color={iconColor} />
         </Pressable>
       ) : (
         <Pressable
