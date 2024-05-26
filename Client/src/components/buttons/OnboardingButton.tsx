@@ -35,7 +35,12 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolate.CLAMP,
     );
 
-    const widthInterpolated = interpolate(scale, [1, 1.5], [128, 40], Extrapolate.CLAMP);
+    const widthInterpolated = interpolate(
+      scale,
+      [1, 1.5],
+      [128, 40],
+      Extrapolate.CLAMP,
+    );
 
     const heightInterpolated = interpolate(
       scale,
@@ -44,7 +49,12 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolate.CLAMP,
     );
 
-    const borderRadiusInterpolated = interpolate(scale, [1, 1.5], [10, 20], Extrapolate.CLAMP);
+    const borderRadiusInterpolated = interpolate(
+      scale,
+      [1, 1.5],
+      [10, 20],
+      Extrapolate.CLAMP,
+    );
 
     return {
       transform: [{ scale }],
