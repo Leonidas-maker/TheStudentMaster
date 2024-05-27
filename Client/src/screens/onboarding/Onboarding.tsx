@@ -6,7 +6,7 @@ import Animated, {
   useDerivedValue,
   useAnimatedStyle,
   interpolate,
-  Extrapolate,
+  Extrapolation,
 } from "react-native-reanimated";
 import OnboardingPage from "./OnboardingPage";
 import { useNavigation } from "@react-navigation/native";
@@ -104,7 +104,7 @@ const Onboarding = () => {
               scrollX.value / width,
               [index - 1, index, index + 1],
               [1, 1.5, 1],
-              Extrapolate.CLAMP,
+              Extrapolation.CLAMP,
             );
           });
 
@@ -113,7 +113,7 @@ const Onboarding = () => {
               scrollX.value / width,
               [index - 1, index, index + 1],
               [0.5, 1, 0.5],
-              Extrapolate.CLAMP,
+              Extrapolation.CLAMP,
             );
           });
 

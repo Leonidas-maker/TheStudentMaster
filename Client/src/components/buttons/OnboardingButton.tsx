@@ -3,7 +3,8 @@ import { Pressable, Text, useColorScheme } from "react-native";
 import Animated, {
   useAnimatedStyle,
   interpolate,
-  Extrapolate,
+  Extrapolation,
+  SharedValue,
 } from "react-native-reanimated";
 import { DefaultButtonProps } from "../../interfaces/ComponentInterfaces";
 import { Dimensions } from "react-native";
@@ -13,7 +14,7 @@ const { width } = Dimensions.get("window");
 
 interface OnboardingButtonProps extends DefaultButtonProps {
   isSkipButton?: boolean;
-  scrollX: Animated.SharedValue<number>;
+  scrollX: SharedValue<number>;
   pageIndex: number;
 }
 
@@ -32,28 +33,28 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       scrollX.value,
       [(pageIndex - 1) * width, pageIndex * width, (pageIndex + 1) * width],
       [1, 1.5, 1],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const widthInterpolated = interpolate(
       scale,
       [1, 1.5],
       [128, 40],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const heightInterpolated = interpolate(
       scale,
       [1, 1.5],
       [40, 40],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     const borderRadiusInterpolated = interpolate(
       scale,
       [1, 1.5],
       [10, 20],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {

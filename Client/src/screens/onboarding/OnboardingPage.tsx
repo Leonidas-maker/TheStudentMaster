@@ -3,7 +3,8 @@ import { Dimensions, Image, ImageSourcePropType } from "react-native";
 import Animated, {
   useAnimatedStyle,
   interpolate,
-  Extrapolate,
+  Extrapolation,
+  SharedValue,
 } from "react-native-reanimated";
 import Heading from "../../components/textFields/Heading";
 import Subheading from "../../components/textFields/Subheading";
@@ -15,7 +16,7 @@ interface OnboardingPageProps {
   title: string;
   description: string;
   image: ImageSourcePropType;
-  scrollX: Animated.SharedValue<number>;
+  scrollX: SharedValue<number>;
 }
 
 const OnboardingPage: React.FC<OnboardingPageProps> = ({
@@ -32,13 +33,13 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({
       scrollX.value,
       inputRange,
       [width, 0, -width],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
     const opacity = interpolate(
       scrollX.value,
       inputRange,
       [0, 1, 0],
-      Extrapolate.CLAMP,
+      Extrapolation.CLAMP,
     );
 
     return {
