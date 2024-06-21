@@ -19,7 +19,7 @@ import Hours from "./Hours";
 import Event from "./Event";
 import TimeMarker from "./TimeMarker";
 import PastMarker from "./PastMarker";
-import { OverlapEventProps } from "../../interfaces/calendarInterfaces";
+import { OverlapEventProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

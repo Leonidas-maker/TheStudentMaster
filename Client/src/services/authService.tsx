@@ -1,6 +1,6 @@
 import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
-import { refreshAuthLogic } from "./tokenService";
+import { refreshAuthLogic } from "./TokenService";
 
 let accessToken: string | null = null;
 let refreshToken: string | null = null;

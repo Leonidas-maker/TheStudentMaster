@@ -37,22 +37,38 @@ const MiscStack: React.FC = () => {
         <Stack.Screen
           name="Settings"
           component={Settings}
-          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Einstellungen",
+          }}
         />
         <Stack.Screen
           name="Imprint"
           component={Imprint}
-          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Impressum",
+          }}
         />
         <Stack.Screen
           name="ResponsibleDisclosure"
           component={ResponsibleDisclosure}
-          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Responsible Disclosure",
+          }}
         />
         <Stack.Screen
           name="Credits"
           component={Credits}
-          options={{ headerShown: true, headerBackTitle: "Weiteres" }}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Credits",
+          }}
         />
       </Stack.Navigator>
     </>

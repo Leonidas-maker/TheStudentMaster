@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { format, addDays, isSameDay } from "date-fns";
-import { DayViewProps } from "../../interfaces/canteenProps";
+import { DayViewProps } from "../../interfaces/CanteenProps";
 
 const DayView: React.FC<DayViewProps> = ({
   selectedDate,

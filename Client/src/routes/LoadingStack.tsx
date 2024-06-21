@@ -6,6 +6,7 @@ import OverviewStack from "./OverviewStack";
 import { StatusBar, useColorScheme } from "react-native";
 import CredentialStack from "./CredentialStack";
 import MiscStack from "./MiscStack";
+import Onboarding from "../screens/onboarding/Onboarding";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const LoadingStack: React.FC = () => {
   }, [colorScheme]);
 
   const barStyle = isLight ? "dark-content" : "light-content";
+  const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
 
   return (
     <>
@@ -29,7 +31,7 @@ const LoadingStack: React.FC = () => {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          cardStyle: { backgroundColor: "#232D3F" },
+          cardStyle: { backgroundColor: backgroundColor },
         }}
       >
         <Stack.Screen name="Loading" component={Loading} />
@@ -37,6 +39,7 @@ const LoadingStack: React.FC = () => {
         <Stack.Screen name="OverviewStack" component={OverviewStack} />
         <Stack.Screen name="CredentialStack" component={CredentialStack} />
         <Stack.Screen name="MiscStack" component={MiscStack} />
+        <Stack.Screen name="Onboarding" component={Onboarding} />
       </Stack.Navigator>
     </>
   );

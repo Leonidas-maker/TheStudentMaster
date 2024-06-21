@@ -5,7 +5,7 @@ import {
   TextInputChangeEventData,
   useColorScheme,
 } from "react-native";
-import { TextFieldInputProps } from "../../interfaces/componentInterfaces";
+import { TextFieldInputProps } from "../../interfaces/ComponentInterfaces";
 
 const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
   (

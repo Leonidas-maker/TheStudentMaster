@@ -3,8 +3,8 @@ import { Text, View, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-import { fetchUser } from "../../services/userService";
-import { UserProps } from "../../interfaces/userInterfaces";
+import { fetchUser } from "../../services/UserService";
+import { UserProps } from "../../interfaces/UserInterfaces";
 
 // Placeholder for Login component
 const Login: React.FC = () => {

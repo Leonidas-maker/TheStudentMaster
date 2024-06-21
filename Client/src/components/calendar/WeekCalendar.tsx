@@ -14,18 +14,18 @@ import { useFocusEffect } from "@react-navigation/native";
 import {
   fetchEvents,
   loadEventsFromStorage,
-} from "../../services/eventService";
+} from "../../services/EventService";
 import {
   getSelectedUniversity,
   getSelectedCourse,
-} from "../../services/calendarService";
+} from "../../services/CalendarService";
 import * as Progress from "react-native-progress";
 import { useNavigation } from "@react-navigation/native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
-import { EventTimeProps } from "../../interfaces/calendarInterfaces";
+import { EventTimeProps } from "../../interfaces/CalendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {
@@ -99,7 +99,7 @@ const WeekCalendar: React.FC = () => {
               {
                 text: "Zur Auswahl",
                 onPress: () => {
-                  navigation.navigate("OverviewStack", { screen: "Settings" });
+                  navigation.navigate("MiscStack", { screen: "Settings" });
                 },
                 style: "default",
               },

@@ -8,7 +8,7 @@ import {
   calculateMarkerPositionFilled,
   calculateDayHeight,
 } from "./CalendarCalculations";
-import { PastMarkerProps } from "../../interfaces/calendarInterfaces";
+import { PastMarkerProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

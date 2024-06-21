@@ -2,7 +2,7 @@
 import React from "react";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import "nativewind";
-import { HoursProps } from "../../interfaces/calendarInterfaces";
+import { HoursProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
