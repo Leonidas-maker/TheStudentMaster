@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, Dimensions, Alert } from "react-native";
 import Animated, {
   useSharedValue,
@@ -11,39 +11,37 @@ import Animated, {
 import OnboardingPage from "./OnboardingPage";
 import { useNavigation } from "@react-navigation/native";
 import OnboardingButton from "../../components/buttons/OnboardingButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 
-//TODO: Navigate to settings page after onboarding and reset
-//TODO: Set local storage to true after onboarding
-//TODO: Add informations and images to onboarding pages
 const Onboarding = () => {
   const scrollX = useSharedValue(0);
   const navigation = useNavigation<any>();
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-
-  const navigateAndReset = (routeName: string) => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: routeName }],
-    });
-  };
+  const currentPageIndexRef = useRef(0);
+  const [buttonVisible, setButtonVisible] = useState(false);
 
   const pages = [
     {
-      title: "Welcome",
-      description: "This is the first page of the onboarding process.",
-      image: require("../../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG.tsx"),
+      title: "TheStudentMaster",
+      description: "Erfahre hier was dir TheStudentMaster bietet und welche Funktionen in der Zukunft geplant sind",
     },
     {
-      title: "Stay Connected",
-      description: "Stay connected with your friends and family.",
-      image: require("../../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG.tsx"),
+      title: "Aktueller Vorlesungsplan",
+      description: "Hier kannst du deinen aktuellen Vorlesungsplan einsehen und in den Einstellungen abändern",
     },
     {
-      title: "Get Started",
-      description: "Let's get started!",
-      image: require("../../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG.tsx"),
+      title: "Mensa Plan",
+      description: "In TheStudentMaster kannst du die aktuellen Speisepläne aller Mensen in Mannheim einsehen",
+    },
+    {
+      title: "Coming Soon",
+      description: "In naher Zukunft wird es möglich sein, deine Noten aus Dualis einsehen zu können, die Funktionen der App im Browser zu nutzen und vieles mehr",
+    },
+    {
+      title: "Leg los!",
+      description: "Drücke auf den grauen Pfeil unten links und wähle deinen Kursplan aus",
     },
   ];
 
@@ -52,13 +50,51 @@ const Onboarding = () => {
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollX.value = event.contentOffset.x;
+      const pageIndex = Math.round(event.contentOffset.x / width);
+      if (pageIndex !== currentPageIndexRef.current) {
+        currentPageIndexRef.current = pageIndex;
+      }
     },
   });
 
+  useEffect(() => {
+    const pageIndex = Math.round(scrollX.value / width);
+    if (pageIndex !== currentPageIndexRef.current) {
+      currentPageIndexRef.current = pageIndex;
+      setCurrentPageIndex(pageIndex);
+      if (currentPageIndexRef.current === totalPages - 1) {
+        setButtonVisible(true);
+      }
+    }
+  }, [scrollX.value, currentPageIndexRef.current]);
+
+  // const handleNextPress = () => {
+  //   if (currentPageIndexRef.current === totalPages - 1) {
+  //     navigation.reset({
+  //       index: 1,
+  //       routes: [
+  //         { name: "HomeBottomTabs" },
+  //         { name: "MiscStack", params: { screen: "Settings" } },
+  //       ],
+  //     });
+  //   }
+  // };
+
+  const handleNextPress = async () => {
+    await AsyncStorage.setItem("onboarding", "true");
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: "HomeBottomTabs" },
+        { name: "MiscStack", params: { screen: "Settings" } },
+      ],
+    });
+  }
+
   const handleSkipPress = () => {
     Alert.alert(
-      "Einführung überspringen",
-      "Möchtest du die Einführung überspringen und direkt zur Kalenderauswahl gelangen?",
+      "Einführung beenden",
+      "Möchtest du die Einführung beenden und zur Kalenderauswahl gelangen?",
       [
         {
           text: "Zurück",
@@ -67,7 +103,7 @@ const Onboarding = () => {
         {
           text: "Zur Auswahl",
           onPress: () => {
-            navigateAndReset("HomeBottomTabs");
+            handleNextPress();
           },
           style: "default",
         },
@@ -92,7 +128,6 @@ const Onboarding = () => {
             index={index}
             title={page.title}
             description={page.description}
-            image={page.image}
             scrollX={scrollX}
           />
         ))}
@@ -138,13 +173,15 @@ const Onboarding = () => {
           onPress={handleSkipPress}
           isSkipButton={true}
           scrollX={scrollX}
-          pageIndex={0}
-        />
-        <OnboardingButton
-          onPress={() => console.log("Scroll")}
-          scrollX={scrollX}
           pageIndex={totalPages - 1}
         />
+        {/* {buttonVisible &&
+          <OnboardingButton
+            onPress={handleNextPress}
+            scrollX={scrollX}
+            pageIndex={totalPages - 1}
+          />
+        } */}
       </View>
     </View>
   );

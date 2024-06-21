@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, Text, useColorScheme } from "react-native";
+import { Pressable, Text, useColorScheme, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   interpolate,
@@ -16,6 +16,7 @@ interface OnboardingButtonProps extends DefaultButtonProps {
   isSkipButton?: boolean;
   scrollX: SharedValue<number>;
   pageIndex: number;
+  visible?: boolean;
 }
 
 const OnboardingButton: React.FC<OnboardingButtonProps> = ({
@@ -24,6 +25,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   isSkipButton = false,
   scrollX,
   pageIndex,
+  visible = true,
 }) => {
   const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
@@ -76,6 +78,10 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   }, [colorScheme]);
 
   const iconColor = isLight ? "#000000" : "#FFFFFF";
+
+  if (!visible) {
+    return <View style={{ width: 128, height: 40 }} />;
+  }
 
   return (
     <Animated.View style={animatedStyle}>

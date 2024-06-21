@@ -99,7 +99,7 @@ const WeekCalendar: React.FC = () => {
               {
                 text: "Zur Auswahl",
                 onPress: () => {
-                  navigation.navigate("OverviewStack", { screen: "Settings" });
+                  navigation.navigate("MiscStack", { screen: "Settings" });
                 },
                 style: "default",
               },

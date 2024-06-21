@@ -15,7 +15,7 @@ interface OnboardingPageProps {
   index: number;
   title: string;
   description: string;
-  image: ImageSourcePropType;
+  image?: ImageSourcePropType;
   scrollX: SharedValue<number>;
 }
 

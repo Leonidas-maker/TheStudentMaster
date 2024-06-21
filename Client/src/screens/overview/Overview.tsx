@@ -73,6 +73,7 @@ const Overview: React.FC = () => {
     AsyncStorage.removeItem("canteens");
     AsyncStorage.removeItem("menu");
     AsyncStorage.removeItem("lastFetchTimeCanteen");
+    AsyncStorage.removeItem("onboarding");
 
     SecureStore.deleteItemAsync("access_token");
     SecureStore.deleteItemAsync("refresh_token");
@@ -192,7 +193,7 @@ const Overview: React.FC = () => {
     Linking.openURL("https://themastercollection.de");
   };
 
-  const overviewTitle = "Alle Seiten";
+  const overviewTitle = "Weitere Inhalte";
 
   const onPressOverviewFunctions = [
     handleSettingsPress,
@@ -200,18 +201,16 @@ const Overview: React.FC = () => {
     handleCreditsPress,
     handleGitLabPress,
     handleGitHubPress,
-    handleMasterCollectionPress,
     handleImprintPress,
   ];
 
   const overviewTexts = [
-    "Settings",
+    "Einstellungen",
     "Responsible Disclosure",
     "Credits",
     "GitLab",
     "GitHub",
-    "TheMasterCollection",
-    "Imprint",
+    "Impressum",
   ];
 
   //! Icons for GitLab, GitHub and TheMasterCollection need change
@@ -221,27 +220,26 @@ const Overview: React.FC = () => {
     "lightbulb",
     "lightbulb",
     "lightbulb",
-    "lightbulb",
     "article",
   ];
 
-  const moduleIsExternalLink = [false, false, false, true, true, true, false];
+  const moduleIsExternalLink = [false, false, false, true, true, false];
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
-      <ProfileView />
+      {/* <ProfileView /> */}
       {/* <Navigator
         title={moduleTitle}
         onPressFunctions={onPressModuleFunctions}
         texts={moduleTexts}
         iconNames={moduleIconNames}
       /> */}
-      <Navigator
+      {/* <Navigator
         title={accountTitle}
         onPressFunctions={onPressAccountFunctions}
         texts={accountTexts}
         iconNames={accountIconNames}
-      />
+      /> */}
       <Navigator
         title={overviewTitle}
         onPressFunctions={onPressOverviewFunctions}
