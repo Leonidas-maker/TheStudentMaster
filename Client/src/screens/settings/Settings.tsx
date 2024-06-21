@@ -5,17 +5,19 @@ import { useColorScheme } from "nativewind";
 import { useTheme } from "../../provider/ThemeProvider";
 import DefaultText from "../../components/textFields/DefaultText";
 import Dropdown from "../../components/dropdown/Dropdown";
-import { fetchEventsWithoutWait } from "../../services/eventService";
+import { fetchEventsWithoutWait } from "../../services/EventService";
 import {
   fetchCalendars,
   getSelectedUniversity,
   getSelectedCourse,
   fetchInitialHash,
-} from "../../services/calendarService";
+} from "../../services/CalendarService";
 import {
   EventTimeProps,
   CalendarProps,
-} from "../../interfaces/calendarInterfaces";
+} from "../../interfaces/CalendarInterfaces";
+import Subheading from "../../components/textFields/Subheading";
+import * as Progress from "react-native-progress";
 
 type SchemeType = "light" | "dark" | "system";
 
@@ -27,13 +29,15 @@ const Settings: React.FC = () => {
     uuid: string;
   } | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const [placeholderUniversity, setPlaceholderUniversity] = useState(
-    "Select a University",
-  );
-  const [placeholderCourse, setPlaceholderCourse] = useState("Select a Course");
+  const [placeholderUniversity, setPlaceholderUniversity] =
+    useState("Uni auswählen");
+  const [placeholderCourse, setPlaceholderCourse] = useState("Kurs auswählen");
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [missingUniversity, setMissingUniversity] = useState(false);
   const [missingCourse, setMissingCourse] = useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const { theme, setTheme } = useTheme();
 
@@ -46,17 +50,27 @@ const Settings: React.FC = () => {
   }, [theme, setColorScheme]);
 
   useEffect(() => {
-    fetchCalendars(setCalendars);
-    getSelectedUniversity(
-      setSelectedUniversity,
-      setPlaceholderUniversity,
-      setMissingUniversity,
-    );
-    getSelectedCourse(
-      setSelectedCourse,
-      setPlaceholderCourse,
-      setMissingCourse,
-    );
+    const fetchData = async () => {
+      setLoading(true);
+      setProgress(0.25);
+      await fetchCalendars(setCalendars);
+      setProgress(0.5);
+      await getSelectedUniversity(
+        setSelectedUniversity,
+        setPlaceholderUniversity,
+        setMissingUniversity,
+      );
+      setProgress(0.75);
+      await getSelectedCourse(
+        setSelectedCourse,
+        setPlaceholderCourse,
+        setMissingCourse,
+      );
+      setProgress(1);
+      setLoading(false);
+    };
+
+    fetchData();
   }, []);
 
   const dropdownUniversityValues = calendars.map((calendar: any) => ({
@@ -73,28 +87,39 @@ const Settings: React.FC = () => {
         name: selectedUni.university_name,
         uuid: selectedUni.university_uuid,
       };
+      setLoading(true);
+      setProgress(0.3);
       setSelectedUniversity(selectedUniData);
       await AsyncStorage.setItem(
         "selectedUniversity",
         JSON.stringify(selectedUniData),
       );
+      setProgress(0.6);
       setPlaceholderUniversity(selectedUni.university_name);
       setSelectedCourse(null);
       setPlaceholderCourse("Select a Course");
-      fetchEventsWithoutWait(setEvents);
+      await fetchEventsWithoutWait(setEvents);
+      setProgress(1);
+      setLoading(false);
     }
   };
 
   const handleCourseSelect = async (selectedValue: string) => {
+    setLoading(true);
+    setProgress(0.25);
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
+    setProgress(0.5);
     setPlaceholderCourse(selectedValue);
     const selectedUni = await AsyncStorage.getItem("selectedUniversity");
     if (selectedUni) {
       const { uuid } = JSON.parse(selectedUni);
       await fetchInitialHash(uuid, selectedValue);
     }
-    fetchEventsWithoutWait(setEvents);
+    setProgress(0.75);
+    await fetchEventsWithoutWait(setEvents);
+    setProgress(1);
+    setLoading(false);
   };
 
   const RadioOption = ({
@@ -156,8 +181,9 @@ const Settings: React.FC = () => {
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
+      {loading && <Progress.Bar progress={progress} width={null} />}
       <View className="p-4">
-        <DefaultText text="Welcome to the Settings page" />
+        <Subheading text="Kurs auswählen" />
         <Dropdown
           setSelected={handleUniversitySelect}
           values={dropdownUniversityValues}
@@ -171,6 +197,7 @@ const Settings: React.FC = () => {
             search={true}
           />
         )}
+        <Subheading text="Design auswählen" />
         <RadioOption
           label="Light Mode"
           onPress={() => setScheme("light")}

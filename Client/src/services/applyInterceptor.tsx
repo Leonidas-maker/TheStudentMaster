@@ -1,7 +1,7 @@
 import axios from "axios";
-import { axiosInstance } from "./api";
-import { refreshAuthLogic } from "./tokenService";
-import { getAuthToken } from "./authService";
+import { axiosInstance } from "./Api";
+import { refreshAuthLogic } from "./TokenService";
+import { getAuthToken } from "./AuthService";
 
 const applyInterceptor = () => {
   axiosInstance.interceptors.request.use(

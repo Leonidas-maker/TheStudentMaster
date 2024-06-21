@@ -11,7 +11,7 @@ import {
   clearTokens,
   isLoggedIn,
   setTokens,
-} from "../../../services/authService";
+} from "../../../services/AuthService";
 import axios from "axios";
 
 const Login: React.FC = () => {

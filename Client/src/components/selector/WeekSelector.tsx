@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { WeekSelectProps } from "../../interfaces/componentInterfaces";
+import { WeekSelectProps } from "../../interfaces/ComponentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

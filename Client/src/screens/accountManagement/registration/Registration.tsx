@@ -10,7 +10,7 @@ import Heading from "../../../components/textFields/Heading";
 import {
   UniversityProps,
   UniversityDropdownItemProps,
-} from "../../../interfaces/userInterfaces";
+} from "../../../interfaces/UserInterfaces";
 
 const Registration: React.FC = () => {
   const [isNotification, setIsNotification] = useState(false);

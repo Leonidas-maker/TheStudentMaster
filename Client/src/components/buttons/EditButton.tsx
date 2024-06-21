@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { EditButtonProps } from "../../interfaces/componentInterfaces";
+import { EditButtonProps } from "../../interfaces/ComponentInterfaces";
 
 const EditButton: React.FC<EditButtonProps> = ({
   icon = "edit",

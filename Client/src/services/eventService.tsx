@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { EventTimeProps } from "../interfaces/calendarInterfaces";
+import { EventTimeProps } from "../interfaces/CalendarInterfaces";
 
 const fetchEvents = async (setEvents: (events: EventTimeProps[]) => void) => {
   try {

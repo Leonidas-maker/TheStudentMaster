@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { NavigatorProps } from "../../interfaces/componentInterfaces";
+import { NavigatorProps } from "../../interfaces/ComponentInterfaces";
 
 const Navigator: React.FC<NavigatorProps> = ({
   title,

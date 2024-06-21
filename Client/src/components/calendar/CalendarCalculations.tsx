@@ -3,7 +3,7 @@ import {
   CalculationTopPositionProps,
   CalculationLeftPositionProps,
   CalculationMarkerPositionProps,
-} from "../../interfaces/calendarInterfaces";
+} from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ================== Helper functions ================== //

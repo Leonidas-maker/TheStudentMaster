@@ -1,7 +1,7 @@
 import axios from "axios";
-import { setTokens, clearTokens } from "./authService";
+import { setTokens, clearTokens } from "./AuthService";
 import * as SecureStore from "expo-secure-store";
-import { BASE_URL } from "./api";
+import { BASE_URL } from "./Api";
 
 const refreshAuthLogic = async () => {
   try {
