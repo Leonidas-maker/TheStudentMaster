@@ -25,23 +25,28 @@ const Onboarding = () => {
   const pages = [
     {
       title: "TheStudentMaster",
-      description: "Erfahre hier was dir TheStudentMaster bietet und welche Funktionen in der Zukunft geplant sind",
+      description:
+        "Erfahre hier was dir TheStudentMaster bietet und welche Funktionen in der Zukunft geplant sind",
     },
     {
       title: "Aktueller Vorlesungsplan",
-      description: "Hier kannst du deinen aktuellen Vorlesungsplan einsehen und in den Einstellungen abändern",
+      description:
+        "Hier kannst du deinen aktuellen Vorlesungsplan einsehen und in den Einstellungen abändern",
     },
     {
       title: "Mensa Plan",
-      description: "In TheStudentMaster kannst du die aktuellen Speisepläne aller Mensen in Mannheim einsehen",
+      description:
+        "In TheStudentMaster kannst du die aktuellen Speisepläne aller Mensen in Mannheim einsehen",
     },
     {
       title: "Coming Soon",
-      description: "In naher Zukunft wird es möglich sein, deine Noten aus Dualis einsehen zu können, die Funktionen der App im Browser zu nutzen und vieles mehr",
+      description:
+        "In naher Zukunft wird es möglich sein, deine Noten aus Dualis einsehen zu können, die Funktionen der App im Browser zu nutzen und vieles mehr",
     },
     {
       title: "Leg los!",
-      description: "Drücke auf den grauen Pfeil unten links und wähle deinen Kursplan aus",
+      description:
+        "Drücke auf den grauen Pfeil unten links und wähle deinen Kursplan aus",
     },
   ];
 
@@ -89,7 +94,7 @@ const Onboarding = () => {
         { name: "MiscStack", params: { screen: "Settings" } },
       ],
     });
-  }
+  };
 
   const handleSkipPress = () => {
     Alert.alert(
