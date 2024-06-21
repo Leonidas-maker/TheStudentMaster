@@ -217,7 +217,7 @@ const Overview: React.FC = () => {
   const moduleIcons = [
     "settings",
     "bug-report",
-    "lightbulb",
+    "attribution",
     "lightbulb",
     "lightbulb",
     "article",
