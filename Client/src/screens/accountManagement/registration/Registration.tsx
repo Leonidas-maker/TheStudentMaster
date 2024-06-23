@@ -1,25 +1,32 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, Keyboard, Pressable } from "react-native";
 
-import universityData from "../testData/courseData.json";
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import Dropdown from "../../../components/dropdown/Dropdown";
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import OptionSwitch from "../../../components/switch/OptionSwitch";
 import Heading from "../../../components/textFields/Heading";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import {
   UniversityProps,
   UniversityDropdownItemProps,
 } from "../../../interfaces/UserInterfaces";
 
+// Test Data
+import universityData from "../testData/courseData.json";
+
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Registration: React.FC = () => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isNotification, setIsNotification] = useState(false);
   const [is2FA, setIs2FA] = useState(false);
-
-  const toggleNotification = () =>
-    setIsNotification((previousState) => !previousState);
-  const toggle2FA = () => setIs2FA((previousState) => !previousState);
-
   const [universities, setUniversities] = useState<
     UniversityDropdownItemProps[]
   >([]);
@@ -27,6 +34,10 @@ const Registration: React.FC = () => {
     useState<UniversityProps | null>(null);
   const [courses, setCourses] = useState<UniversityDropdownItemProps[]>([]);
 
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Set the university dropdown items
   useEffect(() => {
     const universityItems: UniversityDropdownItemProps[] = universityData.map(
       (uni, index) => ({
@@ -37,6 +48,15 @@ const Registration: React.FC = () => {
     setUniversities(universityItems);
   }, []);
 
+  // ====================================================== //
+  // ====================== Functions ===================== //
+  // ====================================================== //
+  // Toggles the notification switch
+  const toggleNotification = () =>
+    setIsNotification((previousState) => !previousState);
+  const toggle2FA = () => setIs2FA((previousState) => !previousState);
+
+  // Handles the university change
   const handleUniversityChange = (selectedValue: string) => {
     const universityIndex = universities.findIndex(
       (u) => u.value === selectedValue,
@@ -53,10 +73,12 @@ const Registration: React.FC = () => {
     }
   };
 
+  // Sets the selected University
   const onSelectUniversity = (value: string) => {
     handleUniversityChange(value);
   };
 
+  // Sets the selected Course
   const onSelectCourse = (value: string) => {
     setCourses(courses.filter((c) => c.value === value));
   };
@@ -78,6 +100,9 @@ const Registration: React.FC = () => {
 
   const optionValues = [isNotification, is2FA];
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   // Username, Email, Password, Confirm Password, Register Button
   // Optional fields: Address, City, State, Zip Code, Country, Profile Picture
   // Checkbox for 2FA

@@ -7,6 +7,9 @@ import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const VerifyForgot: React.FC = () => {
   // ====================================================== //
   // ====================== Functions ===================== //

@@ -35,6 +35,8 @@ const MiscStack: React.FC = () => {
   }, [colorScheme]);
 
   // Set the colors based on the color scheme
+  const headerTintColor = isLight ? "#171717" : "#E0E2DB";
+  const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const barStyle = isLight ? "dark-content" : "light-content";
 
   // ====================================================== //
@@ -47,9 +49,9 @@ const MiscStack: React.FC = () => {
         initialRouteName="Settings"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#171717",
+            backgroundColor: backgroundColor,
           },
-          headerTintColor: "#E0E0E2",
+          headerTintColor: headerTintColor,
         }}
       >
         <Stack.Screen

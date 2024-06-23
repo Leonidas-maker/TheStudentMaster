@@ -35,6 +35,7 @@ const Settings: React.FC = () => {
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [missingUniversity, setMissingUniversity] = useState(false);
   const [missingCourse, setMissingCourse] = useState(false);
+  const [isLight, setIsLight] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -48,6 +49,16 @@ const Settings: React.FC = () => {
   useEffect(() => {
     setColorScheme(theme);
   }, [theme, setColorScheme]);
+
+  useEffect(() => {
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
+  }, [colorScheme]);
+
+  const radioColor = isLight ? "#171717" : "#E0E2DB";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -146,7 +157,7 @@ const Settings: React.FC = () => {
           width: 24,
           borderRadius: 12,
           borderWidth: 2,
-          borderColor: "#fff",
+          borderColor: radioColor,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -157,7 +168,7 @@ const Settings: React.FC = () => {
               height: 12,
               width: 12,
               borderRadius: 6,
-              backgroundColor: "#fff",
+              backgroundColor: radioColor,
             }}
           />
         ) : null}

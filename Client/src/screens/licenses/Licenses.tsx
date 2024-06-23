@@ -1,8 +1,18 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { View, ScrollView, Text } from "react-native";
+
+// Import the licenses.json file
 import creditsData from "./licenses.json";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Licenses: React.FC = () => {
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
+  // Display the licenses.json data with icon credits on top of the screen
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <View>

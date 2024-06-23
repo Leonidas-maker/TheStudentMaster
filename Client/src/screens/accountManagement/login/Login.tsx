@@ -1,8 +1,10 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect } from "react";
 import { View, ScrollView, Keyboard, Pressable, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
@@ -10,18 +12,31 @@ import TextButton from "../../../components/buttons/TextButton";
 import OptionSwitch from "../../../components/switch/OptionSwitch";
 import DefaultText from "../../../components/textFields/DefaultText";
 
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
   clearTokens,
   isLoggedIn,
   setTokens,
 } from "../../../services/AuthService";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Login: React.FC = () => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [ident, setIdent] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [stayLoggedIn, setStayLoggedIn] = React.useState(true);
+
+  // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
 
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Checks if the user is already logged in and redirects to the home screen
   useEffect(() => {
     const checkLoginStatus = async () => {
       const loggedIn = await isLoggedIn();
@@ -32,15 +47,20 @@ const Login: React.FC = () => {
     checkLoginStatus();
   }, []);
 
+  // ====================================================== //
+  // ====================== Functions ===================== //
+  // ====================================================== //
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
+  // Toggles the stay logged in switch
   const toggleStayLoggedIn = () => {
     console.log("Stay logged in toggled");
     setStayLoggedIn(!stayLoggedIn);
   };
 
+  // Login function that sends the login request to the backend
   const login = async (ident: string, password: string) => {
     clearTokens();
     try {
@@ -60,6 +80,10 @@ const Login: React.FC = () => {
     }
   };
 
+  // ====================================================== //
+  // =================== Press handlers =================== //
+  // ====================================================== //
+  // Handles the login button press and checks if the login was successful, if secret_token is returned
   const handleLoginPress = async () => {
     try {
       const response = await login(ident, password);
@@ -77,10 +101,14 @@ const Login: React.FC = () => {
     }
   };
 
+  // Handles the forgot password button press
   const handleForgotPress = () => {
     console.log("Forgot password pressed");
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <Pressable onPress={dismissKeyboard}>
       <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
