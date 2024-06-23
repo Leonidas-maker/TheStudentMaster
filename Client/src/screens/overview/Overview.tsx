@@ -193,10 +193,20 @@ const Overview: React.FC = () => {
     Linking.openURL("https://themastercollection.de");
   };
 
+  const handleSupportPress = () => {
+    navigation.navigate("MiscStack", { screen: "Support" });
+  };
+
+  const handleBugReportPress = () => {
+    navigation.navigate("MiscStack", { screen: "BugReport" });
+  };
+
   const overviewTitle = "Weitere Inhalte";
 
   const onPressOverviewFunctions = [
     handleSettingsPress,
+    handleSupportPress,
+    handleBugReportPress,
     handleDisclosurePress,
     handleCreditsPress,
     handleGitLabPress,
@@ -206,6 +216,8 @@ const Overview: React.FC = () => {
 
   const overviewTexts = [
     "Einstellungen",
+    "Support",
+    "Bug Report",
     "Responsible Disclosure",
     "Lizenzen",
     "GitLab",
@@ -216,6 +228,8 @@ const Overview: React.FC = () => {
   //! Icons for GitLab, GitHub and TheMasterCollection need change
   const moduleIcons = [
     "settings",
+    "support",
+    "bug-report",
     "bug-report",
     "attribution",
     "lightbulb",
@@ -223,7 +237,7 @@ const Overview: React.FC = () => {
     "article",
   ];
 
-  const moduleIsExternalLink = [false, false, false, true, true, false];
+  const moduleIsExternalLink = [false, false, false, false, false, true, true, false];
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">

@@ -8,6 +8,8 @@ import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
 import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
 import Credits from "../screens/licenses/Licenses";
+import Support from "../screens/support/Support";
+import BugReport from "../screens/bugReport/BugReport";
 
 // Create Stack
 const Stack = createStackNavigator();
@@ -88,6 +90,24 @@ const MiscStack: React.FC = () => {
             headerShown: true,
             headerBackTitle: "Weiteres",
             headerTitle: "Lizenzen",
+          }}
+        />
+        <Stack.Screen
+          name="Support"
+          component={Support}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Support",
+          }}
+        />
+        <Stack.Screen
+          name="BugReport"
+          component={BugReport}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Bug Report",
           }}
         />
       </Stack.Navigator>
