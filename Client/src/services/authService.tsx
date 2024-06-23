@@ -46,6 +46,7 @@ const getAuthToken = async (): Promise<string | null> => {
     accessToken = await SecureStore.getItemAsync("access_token"); // returns null if token not valid
   }
 
+  // Return the secret token if it is valid
   if (secretToken && isTokenValid(secretToken)) return secretToken;
   if (accessToken && isTokenValid(accessToken)) return accessToken;
 

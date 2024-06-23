@@ -7,6 +7,7 @@ const refreshAuthLogic = async () => {
   try {
     const refreshToken = await SecureStore.getItemAsync("refresh_token");
 
+    // If no refresh token is available, throw an error
     if (!refreshToken) {
       throw new Error("No refresh token available");
     }

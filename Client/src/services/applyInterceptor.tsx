@@ -3,7 +3,7 @@ import { axiosInstance } from "./Api";
 import { refreshAuthLogic } from "./TokenService";
 import { getAuthToken } from "./AuthService";
 
-const applyInterceptor = () => {
+const ApplyInterceptor = () => {
   axiosInstance.interceptors.request.use(
     async (config) => {
       const token = await getAuthToken();
@@ -40,4 +40,4 @@ const applyInterceptor = () => {
   );
 };
 
-export default applyInterceptor;
+export default ApplyInterceptor;

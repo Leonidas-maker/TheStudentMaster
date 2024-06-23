@@ -27,6 +27,7 @@ const fetchEvents = async (setEvents: (events: EventTimeProps[]) => void) => {
       );
       const currentHash = hashResponse.data.message;
 
+      // If the hash is the same as the last fetch, skip the fetch
       if (lastFetchHash && currentHash === lastFetchHash) {
         console.log("No changes in data, skipping fetch.");
         await AsyncStorage.setItem("lastFetchTime", currentTime.toString());

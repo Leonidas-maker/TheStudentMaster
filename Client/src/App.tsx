@@ -17,14 +17,14 @@ import LoadingStack from "./routes/LoadingStack";
 import { ThemeProvider } from "./provider/ThemeProvider";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
-import applyInterceptor from "./services/ApplyInterceptor";
+import ApplyInterceptor from "./services/ApplyInterceptor";
 
 // ====================================================== //
 // ===================== Export App ===================== //
 // ====================================================== //
 export default function App() {
   // Apply the interceptor
-  applyInterceptor();
+  ApplyInterceptor();
 
   // ====================================================== //
   // ================ Return App component ================ //

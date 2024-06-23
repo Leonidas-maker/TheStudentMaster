@@ -13,6 +13,7 @@ const fetchCalendars = async (
   }
 };
 
+// This function is used to get the selected university from the storage
 const getSelectedUniversity = async (
   setSelectedUniversity: (
     university: { name: string; uuid: string } | null,
