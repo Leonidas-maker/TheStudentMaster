@@ -6,25 +6,21 @@ const Licenses: React.FC = () => {
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <View>
-      <View
-            className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
-          >
-            <Text className="text-black dark:text-white">
-              In der App verwendete Icons & Symbole: material-design-icons
-            </Text>
-            <Text className="text-black dark:text-white">
-              License Type: Apache-2.0
-            </Text>
-            <Text className="text-black dark:text-white">
-              Link: https://github.com/google/material-design-icons.git
-            </Text>
-            <Text className="text-black dark:text-white">
-              Installed Version: 4.0.0
-            </Text>
-            <Text className="text-black dark:text-white">
-              Author: Google
-            </Text>
-          </View>
+        <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
+          <Text className="text-black dark:text-white">
+            In der App verwendete Icons & Symbole: material-design-icons
+          </Text>
+          <Text className="text-black dark:text-white">
+            License Type: Apache-2.0
+          </Text>
+          <Text className="text-black dark:text-white">
+            Link: https://github.com/google/material-design-icons.git
+          </Text>
+          <Text className="text-black dark:text-white">
+            Installed Version: 4.0.0
+          </Text>
+          <Text className="text-black dark:text-white">Author: Google</Text>
+        </View>
         {creditsData.map((credit, index) => (
           <View
             key={index}
