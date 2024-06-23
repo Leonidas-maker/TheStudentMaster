@@ -9,7 +9,7 @@ import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
-import Credits from "../screens/credits/Credits";
+import Credits from "../screens/licenses/Licenses";
 import Profile from "../screens/profile/Profile";
 import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
 import Login from "../screens/accountManagement/login/Login";

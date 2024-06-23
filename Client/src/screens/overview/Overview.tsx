@@ -174,7 +174,7 @@ const Overview: React.FC = () => {
   };
 
   const handleCreditsPress = () => {
-    navigation.navigate("MiscStack", { screen: "Credits" });
+    navigation.navigate("MiscStack", { screen: "Licenses" });
   };
 
   const handleDisclosurePress = () => {
@@ -207,7 +207,7 @@ const Overview: React.FC = () => {
   const overviewTexts = [
     "Einstellungen",
     "Responsible Disclosure",
-    "Credits",
+    "Lizenzen",
     "GitLab",
     "GitHub",
     "Impressum",

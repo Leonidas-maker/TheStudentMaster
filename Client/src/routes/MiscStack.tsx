@@ -4,7 +4,7 @@ import { StatusBar, useColorScheme } from "react-native";
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
 import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
-import Credits from "../screens/credits/Credits";
+import Credits from "../screens/licenses/Licenses";
 
 const Stack = createStackNavigator();
 
@@ -62,12 +62,12 @@ const MiscStack: React.FC = () => {
           }}
         />
         <Stack.Screen
-          name="Credits"
+          name="Licenses"
           component={Credits}
           options={{
             headerShown: true,
             headerBackTitle: "Weiteres",
-            headerTitle: "Credits",
+            headerTitle: "Lizenzen",
           }}
         />
       </Stack.Navigator>
