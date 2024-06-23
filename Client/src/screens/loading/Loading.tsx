@@ -10,7 +10,6 @@ import DefaultText from "../../components/textFields/DefaultText";
 // ====================== Component ===================== //
 // ====================================================== //
 const Loading: React.FC = (props: any) => {
-
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const { navigation } = props;
 
