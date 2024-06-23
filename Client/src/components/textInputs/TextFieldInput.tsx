@@ -29,7 +29,7 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
       multiline = false,
       onChange,
       onChangeText,
-      onFocus = () => { },
+      onFocus = () => {},
       onKeyPress,
       placeholder = "Eingabe",
       secureTextEntry = false,

@@ -3,7 +3,6 @@ import { View, ScrollView, Keyboard, Pressable, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
-
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";

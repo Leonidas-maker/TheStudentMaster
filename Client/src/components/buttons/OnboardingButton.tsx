@@ -12,7 +12,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { OnboardingButtonProps } from "../../interfaces/ComponentInterfaces";
 
-
 const { width } = Dimensions.get("window");
 
 // ====================================================== //
@@ -26,7 +25,6 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   pageIndex,
   visible = true,
 }) => {
-
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //

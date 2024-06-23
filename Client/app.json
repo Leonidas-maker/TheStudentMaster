@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "2"
@@ -23,9 +21,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": [
-          "android.permission.DETECT_SCREEN_CAPTURE"
-        ]
+        "permissions": ["android.permission.DETECT_SCREEN_CAPTURE"]
       },
       "package": "com.schuetze1000.TheStudentMaster",
       "versionCode": 2

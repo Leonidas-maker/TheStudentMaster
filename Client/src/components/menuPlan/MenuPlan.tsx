@@ -32,7 +32,10 @@ import {
 } from "../../services/CanteenService";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { CanteenProps, MenuDataProps } from "../../interfaces/CanteenInterfaces";
+import {
+  CanteenProps,
+  MenuDataProps,
+} from "../../interfaces/CanteenInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
