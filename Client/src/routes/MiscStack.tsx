@@ -1,17 +1,31 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar, useColorScheme } from "react-native";
+
+// ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
 import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
 import Credits from "../screens/licenses/Licenses";
 
+// Create Stack
 const Stack = createStackNavigator();
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const MiscStack: React.FC = () => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -20,8 +34,12 @@ const MiscStack: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the colors based on the color scheme
   const barStyle = isLight ? "dark-content" : "light-content";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <>
       <StatusBar barStyle={barStyle} />

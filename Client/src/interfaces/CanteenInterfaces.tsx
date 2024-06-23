@@ -1,5 +1,6 @@
-import { ScrollView } from "react-native-gesture-handler";
-
+// ====================================================== //
+// ================ Interfaces defintions =============== //
+// ====================================================== //
 interface DayViewProps {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
@@ -31,6 +32,9 @@ interface CanteenResponseProps {
   image_url: string;
 }
 
+// ====================================================== //
+// ================== Interfaces export ================= //
+// ====================================================== //
 export {
   DayViewProps,
   DishMenuProps,

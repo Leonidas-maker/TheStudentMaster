@@ -1,19 +1,33 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar, useColorScheme } from "react-native";
+
+// ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
+import CredentialStack from "./CredentialStack";
+import MiscStack from "./MiscStack";
 import Loading from "../screens/loading/Loading";
 import HomeBottomTabs from "./HomeBottomTabs";
 import OverviewStack from "./OverviewStack";
-import { StatusBar, useColorScheme } from "react-native";
-import CredentialStack from "./CredentialStack";
-import MiscStack from "./MiscStack";
 import Onboarding from "../screens/onboarding/Onboarding";
 
+// Create stack
 const Stack = createStackNavigator();
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const LoadingStack: React.FC = () => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -22,9 +36,13 @@ const LoadingStack: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the colors based on the color scheme
   const barStyle = isLight ? "dark-content" : "light-content";
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <>
       <StatusBar barStyle={barStyle} />

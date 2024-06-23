@@ -1,7 +1,9 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar, useColorScheme } from "react-native";
 
+// ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import Dashboard from "../screens/dashboard/Dashboard";
 import Loading from "../screens/loading/Loading";
 import Overview from "../screens/overview/Overview";
@@ -23,12 +25,23 @@ import NewPassword from "../screens/accountManagement/forgotPassword/NewPassword
 import VerifyForgot from "../screens/accountManagement/forgotPassword/VerifyForgot";
 import BackupMfa from "../screens/accountManagement/mfa/BackupMfa";
 
+// Create Stack
 const Stack = createStackNavigator();
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const OverviewStack: React.FC = () => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -37,12 +50,16 @@ const OverviewStack: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the colors based on the color scheme
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
   const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
   const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
   const barStyle = isLight ? "dark-content" : "light-content";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <>
       <StatusBar barStyle={barStyle} />

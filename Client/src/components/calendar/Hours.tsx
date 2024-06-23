@@ -2,6 +2,8 @@
 import React from "react";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import "nativewind";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { HoursProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //

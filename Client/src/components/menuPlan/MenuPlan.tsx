@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
@@ -16,18 +17,22 @@ import {
   isSunday,
   setDay,
 } from "date-fns";
+import * as Progress from "react-native-progress";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
 import DishView from "./DishView";
 import WeekSelector from "../selector/WeekSelector";
 import Dropdown from "../dropdown/Dropdown";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
   fetchCanteens,
   fetchCanteenDishes,
 } from "../../services/CanteenService";
-import * as Progress from "react-native-progress";
-import { CanteenProps, MenuDataProps } from "../../interfaces/CanteenProps";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { CanteenProps, MenuDataProps } from "../../interfaces/CanteenInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -49,7 +54,7 @@ const MenuPlan: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   // ====================================================== //
-  // ====================== Constants ===================== //
+  // ====================== Variables ===================== //
   // ====================================================== //
   const scrollViewRef = useRef<ScrollView>(null);
   const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });

@@ -3,7 +3,7 @@
     "entryPoint": "./src/App.tsx",
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
-    "version": "0.1.0-dev",
+    "version": "0.5.0-dev",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,17 +12,23 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["android.permission.DETECT_SCREEN_CAPTURE"]
+        "permissions": [
+          "android.permission.DETECT_SCREEN_CAPTURE"
+        ]
       },
-      "package": "com.schuetze1000.TheStudentMaster"
+      "package": "com.schuetze1000.TheStudentMaster",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

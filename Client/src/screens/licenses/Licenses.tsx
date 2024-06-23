@@ -21,6 +21,15 @@ const Licenses: React.FC = () => {
           </Text>
           <Text className="text-black dark:text-white">Author: Google</Text>
         </View>
+        <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
+          <Text className="text-black dark:text-white">
+            Verwendete UIcons in der unteren Leiste: Flaticon
+          </Text>
+          <Text className="text-black dark:text-white">
+            Link: https://www.flaticon.com
+          </Text>
+          <Text className="text-black dark:text-white">Author: Flaticon</Text>
+        </View>
         {creditsData.map((credit, index) => (
           <View
             key={index}

@@ -1,18 +1,21 @@
 import React, { useEffect } from "react";
 import { View, ScrollView, Keyboard, Pressable, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+
+
 import TextFieldInput from "../../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import Heading from "../../../components/textFields/Heading";
 import TextButton from "../../../components/buttons/TextButton";
-import { useNavigation } from "@react-navigation/native";
 import OptionSwitch from "../../../components/switch/OptionSwitch";
 import DefaultText from "../../../components/textFields/DefaultText";
+
 import {
   clearTokens,
   isLoggedIn,
   setTokens,
 } from "../../../services/AuthService";
-import axios from "axios";
 
 const Login: React.FC = () => {
   const [ident, setIdent] = React.useState("");
@@ -37,10 +40,6 @@ const Login: React.FC = () => {
   const toggleStayLoggedIn = () => {
     console.log("Stay logged in toggled");
     setStayLoggedIn(!stayLoggedIn);
-  };
-
-  const handleForgotPress = () => {
-    console.log("Forgot password pressed");
   };
 
   const login = async (ident: string, password: string) => {
@@ -77,6 +76,10 @@ const Login: React.FC = () => {
         "Überprüfen Sie Ihre Anmeldeinformationen.",
       );
     }
+  };
+
+  const handleForgotPress = () => {
+    console.log("Forgot password pressed");
   };
 
   return (

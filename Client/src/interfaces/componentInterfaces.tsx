@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import {
   ViewStyle,
   TextInputProps,
@@ -5,7 +6,11 @@ import {
   TextInputChangeEventData,
   NativeSyntheticEvent,
 } from "react-native";
+import { SharedValue } from "react-native-reanimated";
 
+// ====================================================== //
+// ================ Interfaces defintions =============== //
+// ====================================================== //
 interface DefaultButtonProps {
   text?: string;
   onPress?: () => void;
@@ -16,6 +21,13 @@ interface DefaultButtonProps {
   delayLongPress?: number;
   unstable_pressDelay?: number;
   isCancel?: boolean;
+}
+
+interface OnboardingButtonProps extends DefaultButtonProps {
+  isSkipButton?: boolean;
+  scrollX: SharedValue<number>;
+  pageIndex: number;
+  visible?: boolean;
 }
 
 interface EditButtonProps {
@@ -84,63 +96,63 @@ interface TextProps {
 interface TextFieldInputProps {
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   autoComplete?:
-    | "additional-name"
-    | "address-line1"
-    | "address-line2"
-    | "birthdate-day"
-    | "birthdate-full"
-    | "birthdate-month"
-    | "birthdate-year"
-    | "cc-csc"
-    | "cc-exp"
-    | "cc-exp-day"
-    | "cc-exp-month"
-    | "cc-exp-year"
-    | "cc-number"
-    | "country"
-    | "current-password"
-    | "email"
-    | "family-name"
-    | "given-name"
-    | "honorific-prefix"
-    | "honorific-suffix"
-    | "name"
-    | "new-password"
-    | "off"
-    | "one-time-code"
-    | "postal-code"
-    | "street-address"
-    | "tel"
-    | "username"
-    | "cc-family-name"
-    | "cc-given-name"
-    | "cc-middle-name"
-    | "cc-name"
-    | "cc-type"
-    | "nickname"
-    | "organization"
-    | "organization-title"
-    | "url"
-    | "gender"
-    | "name-family"
-    | "name-given"
-    | "name-middle"
-    | "name-middle-initial"
-    | "name-prefix"
-    | "name-suffix"
-    | "password"
-    | "password-new"
-    | "postal-address"
-    | "postal-address-country"
-    | "postal-address-extended"
-    | "postal-address-extended-postal-code"
-    | "postal-address-locality"
-    | "postal-address-region"
-    | "sms-otp"
-    | "tel-country-code"
-    | "tel-device"
-    | "tel-national"
-    | "username-new";
+  | "additional-name"
+  | "address-line1"
+  | "address-line2"
+  | "birthdate-day"
+  | "birthdate-full"
+  | "birthdate-month"
+  | "birthdate-year"
+  | "cc-csc"
+  | "cc-exp"
+  | "cc-exp-day"
+  | "cc-exp-month"
+  | "cc-exp-year"
+  | "cc-number"
+  | "country"
+  | "current-password"
+  | "email"
+  | "family-name"
+  | "given-name"
+  | "honorific-prefix"
+  | "honorific-suffix"
+  | "name"
+  | "new-password"
+  | "off"
+  | "one-time-code"
+  | "postal-code"
+  | "street-address"
+  | "tel"
+  | "username"
+  | "cc-family-name"
+  | "cc-given-name"
+  | "cc-middle-name"
+  | "cc-name"
+  | "cc-type"
+  | "nickname"
+  | "organization"
+  | "organization-title"
+  | "url"
+  | "gender"
+  | "name-family"
+  | "name-given"
+  | "name-middle"
+  | "name-middle-initial"
+  | "name-prefix"
+  | "name-suffix"
+  | "password"
+  | "password-new"
+  | "postal-address"
+  | "postal-address-country"
+  | "postal-address-extended"
+  | "postal-address-extended-postal-code"
+  | "postal-address-locality"
+  | "postal-address-region"
+  | "sms-otp"
+  | "tel-country-code"
+  | "tel-device"
+  | "tel-national"
+  | "username-new";
   autoCorrect?: boolean;
   autoFocus?: boolean;
   blurOnSubmit?: boolean;
@@ -162,6 +174,9 @@ interface TextFieldInputProps {
   isOTP?: boolean;
 }
 
+// ====================================================== //
+// ================== Interfaces export ================= //
+// ====================================================== //
 export {
   DefaultButtonProps,
   EditButtonProps,
@@ -172,4 +187,5 @@ export {
   OptionSwitchProps,
   TextProps,
   TextFieldInputProps,
+  OnboardingButtonProps,
 };

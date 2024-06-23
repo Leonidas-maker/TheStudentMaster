@@ -1,6 +1,6 @@
 {
   "name": "test",
-  "version": "1.0.0",
+  "version": "0.5.0-dev",
   "main": "./src/App.tsx",
   "scripts": {
     "start": "expo start",
