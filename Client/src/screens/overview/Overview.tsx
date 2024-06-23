@@ -237,7 +237,16 @@ const Overview: React.FC = () => {
     "article",
   ];
 
-  const moduleIsExternalLink = [false, false, false, false, false, true, true, false];
+  const moduleIsExternalLink = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+  ];
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
