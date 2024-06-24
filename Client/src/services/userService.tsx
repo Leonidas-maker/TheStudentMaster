@@ -1,5 +1,5 @@
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { axiosInstance } from "./Api"; 
+import { axiosInstance } from "./Api";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { UserProps } from "../interfaces/UserInterfaces";

@@ -1,5 +1,5 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import axios from "axios"; 
+import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //

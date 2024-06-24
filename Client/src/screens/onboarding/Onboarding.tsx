@@ -23,7 +23,6 @@ const { width } = Dimensions.get("window");
 // ====================== Component ===================== //
 // ====================================================== //
 const Onboarding = () => {
-
   // Set the scroll value
   const scrollX = useSharedValue(0);
 

@@ -171,13 +171,13 @@ const Settings: React.FC = () => {
   // Based on the selected university
   const courseDropdownValues = selectedUniversity
     ? calendars
-      .find(
-        (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-      )
-      ?.course_names.map((course: string) => ({
-        key: course,
-        value: course,
-      })) || []
+        .find(
+          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+        )
+        ?.course_names.map((course: string) => ({
+          key: course,
+          value: course,
+        })) || []
     : [];
 
   // ====================================================== //
