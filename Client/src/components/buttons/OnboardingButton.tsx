@@ -1,24 +1,22 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
-import { Pressable, Text, useColorScheme, View } from "react-native";
+import { Pressable, useColorScheme, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
-  SharedValue,
 } from "react-native-reanimated";
-import { DefaultButtonProps } from "../../interfaces/ComponentInterfaces";
 import { Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { OnboardingButtonProps } from "../../interfaces/ComponentInterfaces";
+
 const { width } = Dimensions.get("window");
 
-interface OnboardingButtonProps extends DefaultButtonProps {
-  isSkipButton?: boolean;
-  scrollX: SharedValue<number>;
-  pageIndex: number;
-  visible?: boolean;
-}
-
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   text,
   onPress,
@@ -27,10 +25,17 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
   pageIndex,
   visible = true,
 }) => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ====================================================== //
+  // ====================== Animation ===================== //
+  // ====================================================== //
+  // Animate the button
   const animatedStyle = useAnimatedStyle(() => {
+    // Interpolate the scale of the button
     const scale = interpolate(
       scrollX.value,
       [(pageIndex - 1) * width, pageIndex * width, (pageIndex + 1) * width],
@@ -38,6 +43,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolation.CLAMP,
     );
 
+    // Interpolate the width of the button
     const widthInterpolated = interpolate(
       scale,
       [1, 1.5],
@@ -45,6 +51,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolation.CLAMP,
     );
 
+    // Interpolate the height of the button
     const heightInterpolated = interpolate(
       scale,
       [1, 1.5],
@@ -52,6 +59,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolation.CLAMP,
     );
 
+    // Interpolate the border radius of the button
     const borderRadiusInterpolated = interpolate(
       scale,
       [1, 1.5],
@@ -59,6 +67,7 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
       Extrapolation.CLAMP,
     );
 
+    // Return the animated style
     return {
       transform: [{ scale }],
       width: widthInterpolated,
@@ -69,6 +78,11 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
     };
   });
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -77,12 +91,16 @@ const OnboardingButton: React.FC<OnboardingButtonProps> = ({
     }
   }, [colorScheme]);
 
+  // Set icon color based on color scheme
   const iconColor = isLight ? "#000000" : "#FFFFFF";
 
   if (!visible) {
     return <View style={{ width: 128, height: 40 }} />;
   }
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <Animated.View style={animatedStyle}>
       {isSkipButton ? (

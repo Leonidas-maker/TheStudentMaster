@@ -1,12 +1,21 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { View, ScrollView } from "react-native";
+
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../../components/textFields/DefaultText";
 import Heading from "../../../components/textFields/Heading";
 import Subheading from "../../../components/textFields/Subheading";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 import OTPInput from "../../../components/accountManagement/otpInput/OTPInput";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const VerifyMfa: React.FC = () => {
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center p-3">

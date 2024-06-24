@@ -11,6 +11,10 @@ import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Progress from "react-native-progress";
+import { useNavigation } from "@react-navigation/native";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
   fetchEvents,
   loadEventsFromStorage,
@@ -19,12 +23,12 @@ import {
   getSelectedUniversity,
   getSelectedCourse,
 } from "../../services/CalendarService";
-import * as Progress from "react-native-progress";
-import { useNavigation } from "@react-navigation/native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { EventTimeProps } from "../../interfaces/CalendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs

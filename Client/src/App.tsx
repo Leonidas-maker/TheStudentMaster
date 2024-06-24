@@ -1,21 +1,34 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import { registerRootComponent } from "expo";
 import "react-native-gesture-handler";
-
-import LoadingStack from "./routes/LoadingStack";
 import { NavigationContainer } from "@react-navigation/native";
 import "../global.css";
-import { ThemeProvider } from "./provider/ThemeProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+// ~~~~~~~~~~ Import translation ~~~~~~~~~ //
 // Import i18next for localisation
 import "./translations/TranslationConfig";
 
-import applyInterceptor from "./services/ApplyInterceptor";
+// ~~~~~~~~~~ Import first stack ~~~~~~~~~ //
+import LoadingStack from "./routes/LoadingStack";
 
+// ~~~~~~~~~~ Import theme provider ~~~~~~~~~ //
+import { ThemeProvider } from "./provider/ThemeProvider";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
+import ApplyInterceptor from "./services/ApplyInterceptor";
+
+// ====================================================== //
+// ===================== Export App ===================== //
+// ====================================================== //
 export default function App() {
-  applyInterceptor();
+  // Apply the interceptor
+  ApplyInterceptor();
 
+  // ====================================================== //
+  // ================ Return App component ================ //
+  // ====================================================== //
   return (
     <ThemeProvider>
       <GestureHandlerRootView>

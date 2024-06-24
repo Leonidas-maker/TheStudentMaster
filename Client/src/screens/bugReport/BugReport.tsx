@@ -5,17 +5,17 @@ import { View, ScrollView, Linking } from "react-native";
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../components/textFields/DefaultText";
 import Heading from "../../components/textFields/Heading";
-import TextButton from "../../components/buttons/TextButton";
+import DefaultButton from "../../components/buttons/DefaultButton";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-const ResponsibleDisclosure: React.FC = () => {
+const BugReport: React.FC = () => {
   // ====================================================== //
   // =================== Press handlers =================== //
   // ====================================================== //
-  const handleMailPress = () => {
-    Linking.openURL("mailto:responsible_disclosure@thestudentmaster.de");
+  const handleGitLabPress = () => {
+    Linking.openURL("https://gitlab.com/themastercollection/thestudentmaster");
   };
 
   // ====================================================== //
@@ -25,15 +25,18 @@ const ResponsibleDisclosure: React.FC = () => {
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="px-5 py-5">
         <View className="mb-5">
-          <Heading text="Du hast eine Sicherheitslücke in unserer App oder unserem Server gefunden?" />
+          <Heading text="Du hast einen Fehler gefunden?" />
         </View>
         <View className="flex-1 m-5">
           <View className="mb-3">
-            <DefaultText text="Schreib uns bitte eine E-Mail an die unten stehende Adresse mit allen relevanten Informationen und wir werden so schnell wie möglich mit dir in Kontakt treten." />
+            <DefaultText text="Erstelle ein Issue auf GitLab damit wir diesen beheben können." />
           </View>
-          <TextButton
-            text="responsible_disclosure@thestudentmaster.de"
-            onPress={handleMailPress}
+          <DefaultText text="Gerne kannst du auch selber versuchen den Fehler zu beheben, da diese App ein Open Source Projekt ist!" />
+        </View>
+        <View className="content-center items-center">
+          <DefaultButton
+            text="Zum GitLab Repository"
+            onPress={handleGitLabPress}
           />
         </View>
       </View>
@@ -41,4 +44,4 @@ const ResponsibleDisclosure: React.FC = () => {
   );
 };
 
-export default ResponsibleDisclosure;
+export default BugReport;

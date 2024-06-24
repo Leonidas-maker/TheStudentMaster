@@ -1,9 +1,14 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import { fetchUser } from "../../services/UserService";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { UserProps } from "../../interfaces/UserInterfaces";
 
 // Placeholder for Login component
@@ -17,17 +22,27 @@ const Login: React.FC = () => {
   );
 };
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const ProfileView: React.FC = () => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [username, setUsername] = useState("");
   const [userUuid, setUserUuid] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<UserProps>({} as UserProps);
-
-  const navigation = useNavigation<any>();
-
-  const colorScheme = useColorScheme();
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use navigation ~~~~~~~~~~ //
+  const navigation = useNavigation<any>();
+
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -36,6 +51,13 @@ const ProfileView: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the icon color based on the color scheme
+  const iconColor = isLight ? "#000000" : "#FFFFFF";
+
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Fetch user data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,16 +84,22 @@ const ProfileView: React.FC = () => {
     fetchData();
   }, []);
 
-  const iconColor = isLight ? "#000000" : "#FFFFFF";
-
+  // ====================================================== //
+  // =================== Press handlers =================== //
+  // ====================================================== //
+  // Navigate to the profile screen
   const handleProfilePress = () => {
     navigation.navigate("CredentialStack", { screen: "Profile" });
   };
 
+  // Navigate to the login screen
   const handleLoginPress = () => {
     navigation.navigate("CredentialStack", { screen: "Login" });
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="m-4">
       <Text className="text-black dark:text-white text-xl font-bold mb-2">
