@@ -1,11 +1,17 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import {
   ViewStyle,
   TextInputProps,
   TextInputKeyPressEventData,
   TextInputChangeEventData,
   NativeSyntheticEvent,
+  ImageSourcePropType,
 } from "react-native";
+import { SharedValue } from "react-native-reanimated";
 
+// ====================================================== //
+// ================ Interfaces defintions =============== //
+// ====================================================== //
 interface DefaultButtonProps {
   text?: string;
   onPress?: () => void;
@@ -16,6 +22,13 @@ interface DefaultButtonProps {
   delayLongPress?: number;
   unstable_pressDelay?: number;
   isCancel?: boolean;
+}
+
+interface OnboardingButtonProps extends DefaultButtonProps {
+  isSkipButton?: boolean;
+  scrollX: SharedValue<number>;
+  pageIndex: number;
+  visible?: boolean;
 }
 
 interface EditButtonProps {
@@ -162,6 +175,24 @@ interface TextFieldInputProps {
   isOTP?: boolean;
 }
 
+interface OnboardingPageProps {
+  index: number;
+  title: string;
+  description: string;
+  image?: ImageSourcePropType;
+  scrollX: SharedValue<number>;
+}
+
+interface RadioOptionProps {
+  label: string;
+  onPress: () => void;
+  checked: boolean;
+  radioColor: string;
+}
+
+// ====================================================== //
+// ================== Interfaces export ================= //
+// ====================================================== //
 export {
   DefaultButtonProps,
   EditButtonProps,
@@ -172,4 +203,7 @@ export {
   OptionSwitchProps,
   TextProps,
   TextFieldInputProps,
+  OnboardingButtonProps,
+  OnboardingPageProps,
+  RadioOptionProps,
 };

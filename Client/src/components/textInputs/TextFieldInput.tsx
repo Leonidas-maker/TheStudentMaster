@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { forwardRef, useState, useEffect } from "react";
 import {
   TextInput,
@@ -5,8 +6,13 @@ import {
   TextInputChangeEventData,
   useColorScheme,
 } from "react-native";
+
+// ~~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { TextFieldInputProps } from "../../interfaces/ComponentInterfaces";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
   (
     {
@@ -34,10 +40,17 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
     },
     ref,
   ) => {
+    // ====================================================== //
+    // ======================= States ======================= //
+    // ====================================================== //
     const [value, setValue] = useState(initialValue);
-    const colorScheme = useColorScheme();
     const [isLight, setIsLight] = useState(false);
 
+    // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+    // Get the current color scheme
+    const colorScheme = useColorScheme();
+
+    // Check if the color scheme is light or dark
     useEffect(() => {
       if (colorScheme === "light") {
         setIsLight(true);
@@ -46,6 +59,13 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
       }
     }, [colorScheme]);
 
+    // Set the placeholder text color based on the color scheme
+    const placeholderTextColor = isLight ? "#000000" : "#FFFFFF";
+
+    // ====================================================== //
+    // ====================== Functions ===================== //
+    // ====================================================== //
+    // Handle the change of the input field and set the value
     const handleOnChange = (
       e: NativeSyntheticEvent<TextInputChangeEventData>,
     ) => {
@@ -54,13 +74,15 @@ const TextFieldInput = forwardRef<TextInput, TextFieldInputProps>(
       if (onChange) onChange(e);
     };
 
+    // Handle the change of the text input and set the value
     const handleChangeText = (text: string) => {
       setValue(text);
       if (onChangeText) onChangeText(text);
     };
 
-    const placeholderTextColor = isLight ? "#000000" : "#FFFFFF";
-
+    // ====================================================== //
+    // ================== Return component ================== //
+    // ====================================================== //
     return (
       <TextInput
         style={isOTP ? { width: 40, height: 40 } : {}}

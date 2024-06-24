@@ -10,8 +10,11 @@ import {
 } from "react-native";
 import "nativewind";
 import { format, parseISO } from "date-fns";
-import { DishMenuProps } from "../../interfaces/CanteenProps";
 
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { DishMenuProps } from "../../interfaces/CanteenInterfaces";
+
+// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 // Cannot be exported to canteenInterfaces because of the RefObject<ScrollView>
 interface DishProps {
   menu: {

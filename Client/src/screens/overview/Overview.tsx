@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
 import { expo } from "../../../app.json";
@@ -6,16 +7,22 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import ProfileView from "../../components/profileView/ProfileView";
 import Navigator from "../../components/navigator/Navigator";
 import DefaultText from "../../components/textFields/DefaultText";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Overview: React.FC = () => {
+  // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
 
   // ====================================================== //
   // ================== AccountNavigator ================== //
   // ====================================================== //
+  // Defines the press functions
   const handleLoginPagePress = () => {
     navigation.navigate("OverviewStack", { screen: "Login" });
   };
@@ -82,8 +89,10 @@ const Overview: React.FC = () => {
     console.log("Storage cleared");
   };
 
+  // Sets the navigator title
   const accountTitle = "Account Management Screens";
 
+  // Sets the press functions
   const onPressAccountFunctions = [
     handleLoadingPress,
     handleLoginPagePress,
@@ -100,6 +109,7 @@ const Overview: React.FC = () => {
     handleDeletePress,
   ];
 
+  // Sets the texts for the navigator
   const accountTexts = [
     "Loading",
     "Login",
@@ -116,6 +126,7 @@ const Overview: React.FC = () => {
     "Delete Storage",
   ];
 
+  // Sets the icons for the navigator
   const accountIconNames = [
     "hourglass-empty",
     "apps",
@@ -174,7 +185,7 @@ const Overview: React.FC = () => {
   };
 
   const handleCreditsPress = () => {
-    navigation.navigate("MiscStack", { screen: "Credits" });
+    navigation.navigate("MiscStack", { screen: "Licenses" });
   };
 
   const handleDisclosurePress = () => {
@@ -193,10 +204,20 @@ const Overview: React.FC = () => {
     Linking.openURL("https://themastercollection.de");
   };
 
+  const handleSupportPress = () => {
+    navigation.navigate("MiscStack", { screen: "Support" });
+  };
+
+  const handleBugReportPress = () => {
+    navigation.navigate("MiscStack", { screen: "BugReport" });
+  };
+
   const overviewTitle = "Weitere Inhalte";
 
   const onPressOverviewFunctions = [
     handleSettingsPress,
+    handleSupportPress,
+    handleBugReportPress,
     handleDisclosurePress,
     handleCreditsPress,
     handleGitLabPress,
@@ -206,8 +227,10 @@ const Overview: React.FC = () => {
 
   const overviewTexts = [
     "Einstellungen",
+    "Support",
+    "Bug Report",
     "Responsible Disclosure",
-    "Credits",
+    "Lizenzen",
     "GitLab",
     "GitHub",
     "Impressum",
@@ -216,6 +239,8 @@ const Overview: React.FC = () => {
   //! Icons for GitLab, GitHub and TheMasterCollection need change
   const moduleIcons = [
     "settings",
+    "support",
+    "bug-report",
     "bug-report",
     "attribution",
     "lightbulb",
@@ -223,8 +248,21 @@ const Overview: React.FC = () => {
     "article",
   ];
 
-  const moduleIsExternalLink = [false, false, false, true, true, false];
+  const moduleIsExternalLink = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    false,
+  ];
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
+  // Returns the navigators and the current app version
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       {/* <ProfileView /> */}

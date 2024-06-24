@@ -8,7 +8,7 @@
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
     "remoteVersion": "8.0.5",
-    "installedVersion": "8.0.4",
+    "installedVersion": "8.0.5",
     "definedVersion": "~8.0.0",
     "author": "n/a"
   },
@@ -151,8 +151,8 @@
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
     "remoteVersion": "51.0.15",
-    "installedVersion": "51.0.8",
-    "definedVersion": "~51.0.8",
+    "installedVersion": "51.0.14",
+    "definedVersion": "^51.0.14",
     "author": "Expo"
   },
   {
@@ -164,8 +164,8 @@
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
     "remoteVersion": "16.0.2",
-    "installedVersion": "16.0.1",
-    "definedVersion": "~16.0.1",
+    "installedVersion": "16.0.2",
+    "definedVersion": "~16.0.2",
     "author": "650 Industries, Inc."
   },
   {
@@ -306,9 +306,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/facebook/react-native.git",
-    "remoteVersion": "0.74.1",
-    "installedVersion": "0.74.1",
-    "definedVersion": "0.74.1",
+    "remoteVersion": "0.74.2",
+    "installedVersion": "0.74.2",
+    "definedVersion": "^0.74.2",
     "author": "n/a"
   },
   {

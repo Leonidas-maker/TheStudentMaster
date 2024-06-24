@@ -1,17 +1,33 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar, useColorScheme } from "react-native";
+
+// ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
 import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
-import Credits from "../screens/credits/Credits";
+import Credits from "../screens/licenses/Licenses";
+import Support from "../screens/support/Support";
+import BugReport from "../screens/bugReport/BugReport";
 
+// Create Stack
 const Stack = createStackNavigator();
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const MiscStack: React.FC = () => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -20,8 +36,14 @@ const MiscStack: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the colors based on the color scheme
+  const headerTintColor = isLight ? "#171717" : "#E0E2DB";
+  const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const barStyle = isLight ? "dark-content" : "light-content";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <>
       <StatusBar barStyle={barStyle} />
@@ -29,9 +51,9 @@ const MiscStack: React.FC = () => {
         initialRouteName="Settings"
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#171717",
+            backgroundColor: backgroundColor,
           },
-          headerTintColor: "#E0E0E2",
+          headerTintColor: headerTintColor,
         }}
       >
         <Stack.Screen
@@ -62,12 +84,30 @@ const MiscStack: React.FC = () => {
           }}
         />
         <Stack.Screen
-          name="Credits"
+          name="Licenses"
           component={Credits}
           options={{
             headerShown: true,
             headerBackTitle: "Weiteres",
-            headerTitle: "Credits",
+            headerTitle: "Lizenzen",
+          }}
+        />
+        <Stack.Screen
+          name="Support"
+          component={Support}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Support",
+          }}
+        />
+        <Stack.Screen
+          name="BugReport"
+          component={BugReport}
+          options={{
+            headerShown: true,
+            headerBackTitle: "Weiteres",
+            headerTitle: "Bug Report",
           }}
         />
       </Stack.Navigator>

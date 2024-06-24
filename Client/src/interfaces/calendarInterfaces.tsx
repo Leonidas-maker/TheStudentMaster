@@ -1,3 +1,6 @@
+// ====================================================== //
+// ================ Interfaces defintions =============== //
+// ====================================================== //
 interface CalculationEventHeightProps {
   start: Date;
   end: Date;
@@ -89,6 +92,9 @@ interface CalendarProps {
   course_names: string[];
 }
 
+// ====================================================== //
+// ================== Interfaces export ================= //
+// ====================================================== //
 export {
   CalculationEventHeightProps,
   CalculationTopPositionProps,

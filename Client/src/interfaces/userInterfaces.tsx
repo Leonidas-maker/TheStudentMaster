@@ -1,3 +1,6 @@
+// ====================================================== //
+// ================ Interfaces defintions =============== //
+// ====================================================== //
 interface UserProps {
   username: string | "";
   email: string | "";
@@ -26,4 +29,7 @@ interface UniversityDropdownItemProps {
   value: string;
 }
 
+// ====================================================== //
+// ================== Interfaces export ================= //
+// ====================================================== //
 export { UserProps, UniversityProps, UniversityDropdownItemProps };

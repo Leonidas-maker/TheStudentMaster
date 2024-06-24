@@ -18,6 +18,8 @@ import {
   calculateEventWidth,
 } from "./CalendarCalculations";
 import DefaultButton from "../buttons/DefaultButton";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { EventProps } from "../../interfaces/CalendarInterfaces";
 
 //TODO Implement a function to choose in settings if the start and end time should be displayed
