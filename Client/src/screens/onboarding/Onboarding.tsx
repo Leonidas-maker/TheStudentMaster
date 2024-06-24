@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState, useRef } from "react";
 import { View, Dimensions, Alert } from "react-native";
 import Animated, {
@@ -8,20 +9,41 @@ import Animated, {
   interpolate,
   Extrapolation,
 } from "react-native-reanimated";
-import OnboardingPage from "./OnboardingPage";
-import { useNavigation } from "@react-navigation/native";
-import OnboardingButton from "../../components/buttons/OnboardingButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 
+// ~~~~~~~~ Own components imports ~~~~~~~ //
+import OnboardingPage from "./OnboardingPage";
+import OnboardingButton from "../../components/buttons/OnboardingButton";
+
+// Set the width of the screen
 const { width } = Dimensions.get("window");
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Onboarding = () => {
+
+  // Set the scroll value
   const scrollX = useSharedValue(0);
+
+  // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
+
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const currentPageIndexRef = useRef(0);
   const [buttonVisible, setButtonVisible] = useState(false);
 
+  // ====================================================== //
+  // ====================== Variables ===================== //
+  // ====================================================== //
+  const currentPageIndexRef = useRef(0);
+
+  // ====================================================== //
+  // ================= Onboarding Content ================= //
+  // ====================================================== //
   const pages = [
     {
       title: "TheStudentMaster",
@@ -50,8 +72,13 @@ const Onboarding = () => {
     },
   ];
 
+  // Set the total number of pages
   const totalPages = pages.length;
 
+  // ====================================================== //
+  // ===================== Functions ====================== //
+  // ====================================================== //
+  // Scroll handler to set the current page index
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollX.value = event.contentOffset.x;
@@ -62,6 +89,10 @@ const Onboarding = () => {
     },
   });
 
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Set the current page index
   useEffect(() => {
     const pageIndex = Math.round(scrollX.value / width);
     if (pageIndex !== currentPageIndexRef.current) {
@@ -73,6 +104,10 @@ const Onboarding = () => {
     }
   }, [scrollX.value, currentPageIndexRef.current]);
 
+  // ====================================================== //
+  // =================== Press handlers =================== //
+  // ====================================================== //
+  //TODO: Add own Button for next navigate to next page and then to the Settings
   // const handleNextPress = () => {
   //   if (currentPageIndexRef.current === totalPages - 1) {
   //     navigation.reset({
@@ -85,6 +120,8 @@ const Onboarding = () => {
   //   }
   // };
 
+  // Handle the next button press
+  // Currently just used inside of the skip alert
   const handleNextPress = async () => {
     await AsyncStorage.setItem("onboarding", "true");
     navigation.reset({
@@ -96,6 +133,7 @@ const Onboarding = () => {
     });
   };
 
+  // Triggers the skip alert and asks the user if they want to skip the onboarding
   const handleSkipPress = () => {
     Alert.alert(
       "Einführung beenden",
@@ -117,6 +155,9 @@ const Onboarding = () => {
     );
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="flex-1">
       <Animated.ScrollView

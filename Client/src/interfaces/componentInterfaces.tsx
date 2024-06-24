@@ -5,6 +5,7 @@ import {
   TextInputKeyPressEventData,
   TextInputChangeEventData,
   NativeSyntheticEvent,
+  ImageSourcePropType,
 } from "react-native";
 import { SharedValue } from "react-native-reanimated";
 
@@ -174,6 +175,21 @@ interface TextFieldInputProps {
   isOTP?: boolean;
 }
 
+interface OnboardingPageProps {
+  index: number;
+  title: string;
+  description: string;
+  image?: ImageSourcePropType;
+  scrollX: SharedValue<number>;
+}
+
+interface RadioOptionProps {
+  label: string;
+  onPress: () => void;
+  checked: boolean;
+  radioColor: string;
+}
+
 // ====================================================== //
 // ================== Interfaces export ================= //
 // ====================================================== //
@@ -188,4 +204,6 @@ export {
   TextProps,
   TextFieldInputProps,
   OnboardingButtonProps,
+  OnboardingPageProps,
+  RadioOptionProps,
 };

@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { Dimensions, Image, ImageSourcePropType } from "react-native";
 import Animated, {
@@ -6,19 +7,20 @@ import Animated, {
   Extrapolation,
   SharedValue,
 } from "react-native-reanimated";
+
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import Heading from "../../components/textFields/Heading";
 import Subheading from "../../components/textFields/Subheading";
 
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { OnboardingPageProps } from "../../interfaces/ComponentInterfaces";
+
+// Set the width and height of the screen
 const { width, height } = Dimensions.get("window");
 
-interface OnboardingPageProps {
-  index: number;
-  title: string;
-  description: string;
-  image?: ImageSourcePropType;
-  scrollX: SharedValue<number>;
-}
-
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const OnboardingPage: React.FC<OnboardingPageProps> = ({
   index,
   title,
@@ -26,8 +28,14 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({
   image,
   scrollX,
 }) => {
+  // Set the input range based on the index and width
   const inputRange = [(index - 1) * width, index * width, (index + 1) * width];
 
+  // ====================================================== //
+  // ====================== Animation ===================== //
+  // ====================================================== //
+  // Set the animated styles for the onboarding pages
+  // This will animate the pages to slide
   const animatedStyles = useAnimatedStyle(() => {
     const translateX = interpolate(
       scrollX.value,
@@ -48,6 +56,9 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({
     };
   });
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <Animated.View
       style={[animatedStyles, { width, height }]}

@@ -1,17 +1,29 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
+
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import TextFieldInput from "../../components/textInputs/TextFieldInput";
 import Subheading from "../../components/textFields/Subheading";
 import DefaultText from "../../components/textFields/DefaultText";
 import DefaultButton from "../../components/buttons/DefaultButton";
 import EditButton from "../../components/buttons/EditButton";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Profile: React.FC = () => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [usernameEdit, setUsernameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [passwordEdit, setPasswordEdit] = useState(false);
   const [addressEdit, setAddressEdit] = useState(false);
 
+  // ====================================================== //
+  // =================== Press handlers =================== //
+  // ====================================================== //
   const handleUsernameEditPress = () => {
     setUsernameEdit(!usernameEdit);
   };
@@ -24,6 +36,9 @@ const Profile: React.FC = () => {
     setPasswordEdit(!passwordEdit);
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="justify-center items-center">
