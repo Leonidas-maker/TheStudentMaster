@@ -46,20 +46,21 @@ const DishView: React.FC<DishProps> = ({
   // ======================= States ======================= //
   // ====================================================== //
   const [dishes, setDishes] = useState<DishMenuProps[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isWeb, setIsWeb] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [isWeb, setIsWeb] = useState(false);
 
   // ====================================================== //
   // ===================== useEffects ===================== //
   // ====================================================== //
   // Checks if the platform is web
-  useEffect(() => {
-    if (Platform.OS === "web") {
-      setIsWeb(true);
-    } else {
-      setIsWeb(false);
-    }
-  }, []);
+  //? For future use
+  // useEffect(() => {
+  //   if (Platform.OS === "web") {
+  //     setIsWeb(true);
+  //   } else {
+  //     setIsWeb(false);
+  //   }
+  // }, []);
 
   // Filters the dishes based on the selected date and canteen
   useEffect(() => {
@@ -79,18 +80,20 @@ const DishView: React.FC<DishProps> = ({
   // =================== Press handlers =================== //
   // ====================================================== //
   // Opens the modal with the dish details
-  const handleDishPress = () => {
-    setModalVisible(true);
-  };
+  //? For future use
+  // const handleDishPress = () => {
+  //   setModalVisible(true);
+  // };
 
   // Closes the modal
-  const handleClosePress = () => {
-    setModalVisible(false);
-  };
+  // const handleClosePress = () => {
+  //   setModalVisible(false);
+  // };
 
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
+  //? If Modal is implemented add active:opacity-50 to Pressable
   return (
     <ScrollView className="flex-1 active:opacity-50" ref={scrollViewRef}>
       {selectedCanteen ? (
@@ -98,8 +101,7 @@ const DishView: React.FC<DishProps> = ({
           dishes.map((dish, index) => (
             <Pressable
               key={`${dish.dish_type}-${format(parseISO(dish.serving_date), "yyyy-MM-dd")}-${index}`}
-              className="flex-1 active:opacity-50"
-              onPress={handleDishPress}
+              className="flex-1"
             >
               <View
                 key={index}
@@ -127,7 +129,7 @@ const DishView: React.FC<DishProps> = ({
           </Text>
         </View>
       )}
-      <Modal visible={modalVisible} animationType="slide" transparent>
+      {/* <Modal visible={modalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-center items-center bg-[rgba(0,0,0,0.5)]">
           <View className="bg-white p-5 rounded-lg">
             <Text className="mb-4">Dish Details</Text>
@@ -136,7 +138,7 @@ const DishView: React.FC<DishProps> = ({
             </Pressable>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </ScrollView>
   );
 };

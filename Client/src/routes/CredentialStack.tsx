@@ -1,7 +1,8 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 // ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import HomeBottomTabs from "./HomeBottomTabs";
@@ -45,16 +46,17 @@ const CredentialStack: React.FC = () => {
   // Set the colors based on the color scheme
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
-  const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
-  const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
-  const barStyle = isLight ? "dark-content" : "light-content";
+  // For future use
+  //const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
+  //const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
+  //const barStyle = isLight ? "dark-content" : "light-content";
 
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   return (
     <>
-      <StatusBar barStyle={barStyle} />
+      <StatusBar style="auto" />
       <Stack.Navigator
         initialRouteName="Registration"
         screenOptions={{

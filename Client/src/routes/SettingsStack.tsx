@@ -1,7 +1,8 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StatusBar, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 // ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import Settings from "../screens/settings/Settings";
@@ -32,14 +33,15 @@ const SettingsStack: React.FC = () => {
   }, [colorScheme]);
 
   // Set the colors based on the color scheme
-  const barStyle = isLight ? "dark-content" : "light-content";
+  // For future use
+  //const barStyle = isLight ? "dark-content" : "light-content";
 
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   return (
     <>
-      <StatusBar barStyle={barStyle} />
+      <StatusBar style="auto" />
       <Stack.Navigator
         initialRouteName="Settings"
         screenOptions={{
