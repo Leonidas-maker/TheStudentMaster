@@ -1,34 +1,10 @@
-// ====================================================== //
-// ===================== Interfaces ===================== //
-// ====================================================== //
-
-export interface CalculationEventHeightProps {
-  start: Date;
-  end: Date;
-  startHour: number;
-  endHour: number;
-  hoursContainerHeight: number;
-}
-
-export interface CalculationTopPositionProps {
-  start: Date;
-  startHour: number;
-  endHour: number;
-  hoursContainerHeight: number;
-  containerHeight: number;
-}
-
-export interface CalculationLeftPositionProps {
-  overlapCount: number;
-  overlapIndex: number;
-}
-
-export interface CalculationMarkerPositionProps {
-  startHour: number;
-  endHour: number;
-  hoursContainerHeight: number;
-  containerHeight: number;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import {
+  CalculationEventHeightProps,
+  CalculationTopPositionProps,
+  CalculationLeftPositionProps,
+  CalculationMarkerPositionProps,
+} from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ================== Helper functions ================== //

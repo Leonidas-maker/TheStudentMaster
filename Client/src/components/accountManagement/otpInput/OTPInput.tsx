@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -5,24 +6,39 @@ import {
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
+
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import TextFieldInput from "../../textInputs/TextFieldInput";
 
-interface OTPInputProps {
-  otpLength?: number;
-  onOtpChange: (otp: string) => void;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { OTPInputProps } from "../../../interfaces/AuthInterfaces";
 
 // TODO Implement paste functionality
 // TODO Block non-numeric characters
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [otp, setOtp] = useState<string[]>(Array(otpLength).fill(""));
+
+  // ====================================================== //
+  // ====================== Variables ===================== //
+  // ====================================================== //
   const inputRefs = useRef<(TextInput | null)[]>(Array(otpLength).fill(null));
 
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Update parent component with the new OTP
   useEffect(() => {
     const otpString = otp.join("");
     onOtpChange(otpString);
   }, [otp, otpLength, onOtpChange]);
 
+  // Focus on the next input field when the current one is filled
   useEffect(() => {
     otp.forEach((value, index) => {
       if (value && index < otpLength - 1 && otp[index + 1].length === 0) {
@@ -31,6 +47,10 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
     });
   }, [otp, otpLength]);
 
+  // ====================================================== //
+  // ====================== Functions ===================== //
+  // ====================================================== //
+  // Handles the change of the OTP input fields and checks if the input is valid
   const handleOtpChange = (text: string, index: number) => {
     const newText = text.replace(/[^0-9]/g, "");
     if (newText !== text) {
@@ -45,6 +65,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
     }
   };
 
+  // Handles the key press events for the OTP input fields (Backspace, ArrowRight, ArrowLeft)
   const handleKeyPress = (
     e: NativeSyntheticEvent<TextInputKeyPressEventData>,
     index: number,
@@ -76,16 +97,21 @@ const OTPInput: React.FC<OTPInputProps> = ({ otpLength = 6, onOtpChange }) => {
     }
   };
 
+  // Checks if the current field is editable
   const isFieldEditable = (index: number) => {
     return index === 0 || otp.slice(0, index).every((val) => val.length === 1);
   };
 
+  // Focuses on the input field
   const handleInputFocus = (index: number) => {
     setTimeout(() => {
       inputRefs.current[index]?.focus();
     }, 100);
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="justify-center items-center flex-row flex-wrap">
       {Array.from({ length: otpLength }).map((_, index) => (

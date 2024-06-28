@@ -54,3 +54,14 @@ class ResGetCanteenMenu(CanteenBase):
 class ResGetCanteenMenuDay(CanteenBase):
     # Response model for a canteen's menu for a specific day
     menu: ResGetMenuDay
+
+    class Config:
+        from_attributes = True
+
+
+class ResGetCanteenHash(CanteenBase):
+    canteen_short_name: str
+    hash: str
+
+    class Config:
+        from_attributes = True

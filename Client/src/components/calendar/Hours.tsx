@@ -3,12 +3,8 @@ import React from "react";
 import { View, Text, LayoutChangeEvent } from "react-native";
 import "nativewind";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface HoursProps {
-  startHour: number;
-  endHour: number;
-  onHeightChange: (height: number) => void;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { HoursProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

@@ -1,28 +1,17 @@
-import { axiosInstance } from "./api";
+// ~~~~~~~~ Own components imports ~~~~~~~ //
+import { axiosInstance } from "./Api";
 
-interface User {
-  username: string | "";
-  email: string | "";
-  uuid: string | "";
-  avatar: string | "";
-  address:
-    | {
-        address1: string;
-        address2: string;
-        district: string;
-        postal_code: string;
-        city: string;
-        country: string;
-      }
-    | "";
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { UserProps } from "../interfaces/UserInterfaces";
 
-const fetchUser = async (setUser: (userdata: User) => void) => {
+// Function to fetch user data and update the state
+const fetchUser = async (setUser: (userdata: UserProps) => void) => {
   try {
-    const response = await axiosInstance.get("/user/me/");
-    setUser(response.data);
+    // Fetch user data from the server
+    const response = await axiosInstance.get("/user/me");
+    setUser(response.data); // Update the state with the fetched user data
   } catch (error) {
-    console.error(error);
+    console.error(error); // Log any errors that occur during the fetch
   }
 };
 

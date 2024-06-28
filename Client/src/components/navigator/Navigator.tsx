@@ -1,15 +1,14 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-interface NavigatorProps {
-  title: string;
-  onPressFunctions: (() => void)[];
-  texts: string[];
-  iconNames: string[];
-  isExternalLink?: boolean[];
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { NavigatorProps } from "../../interfaces/ComponentInterfaces";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const Navigator: React.FC<NavigatorProps> = ({
   title,
   onPressFunctions,
@@ -17,12 +16,20 @@ const Navigator: React.FC<NavigatorProps> = ({
   iconNames,
   isExternalLink = [],
 }) => {
+  // Check if isExternalLink is empty, if so, set all values to false
   const effectiveIsExternalLink =
     isExternalLink.length === 0 ? texts.map(() => false) : isExternalLink;
 
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -31,8 +38,12 @@ const Navigator: React.FC<NavigatorProps> = ({
     }
   }, [colorScheme]);
 
+  // Set the icon color based on the color scheme
   const iconColor = isLight ? "#000000" : "#FFFFFF";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="m-4">
       <Text className="text-black dark:text-white text-xl font-bold mb-2">

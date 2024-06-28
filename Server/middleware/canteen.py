@@ -27,8 +27,7 @@ def create_canteens(db: Session):
         db (Session): database session
     """
     try:
-        # open canteen_addresses.json file
-        with open("./utils/canteen/canteen_addresses.json", "r") as file:
+        with open("./data/address_lists/canteen_addresses.json", "r") as file:
             canteens = json.load(file)
         for canteen_obj in canteens:
             # create address for canteen
@@ -80,8 +79,9 @@ def update_canteen_menus(db: Session, progress: Progress, task_id: TaskID, week_
                 )
                 # add canteen menu to database
                 canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
-                db.commit()
+                db.flush()
                 progress.update(task_id, advance=1)
+        db.commit()
     except Exception as e:
         print(e)
         db.rollback()

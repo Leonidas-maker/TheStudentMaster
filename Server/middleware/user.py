@@ -19,13 +19,28 @@ def get_user(
     with_uuid: bool = False,
     with_address: bool = False,
     with_avatar: bool = False,
+    with_user_security: bool = False,
+    with_tokens: bool = False,
+    with_2fa: bool = False,
 ) -> m_user.User:
+    # User Options
     query_options = [joinedload(m_user.User.user_uuid)] if with_uuid else []
     query_options += [joinedload(m_user.User.address)] if with_address else []
     query_options += [defer(m_user.User.avatar)] if not with_avatar else []
+
+    # User Security Options
+    if with_user_security:
+        query_options += [joinedload(m_user.User.user_security)]
+        if with_tokens:
+            query_options += [joinedload(m_user.User.user_security).joinedload(m_auth.UserSecurity.user_tokens)]
+        if with_2fa:
+            query_options += [joinedload(m_user.User.user_security).joinedload(m_auth.UserSecurity.user_2fa)]
+
+    # Build Query
     query = db.query(m_user.User).options(*query_options)
     user = None
 
+    # Execute Query
     if user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)

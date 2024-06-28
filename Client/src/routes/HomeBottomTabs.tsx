@@ -1,9 +1,11 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
+// ~~~~~~~~~~~~~ Import SVGs ~~~~~~~~~~~~~ //
 import DashboardSVG from "../../public/images/svg/navigatorIcons/inactive/DashboardSVG";
 import ActiveDashboardSVG from "../../public/images/svg/navigatorIcons/active/ActiveDashboardSVG";
 import DualisSVG from "../../public/images/svg/navigatorIcons/inactive/DualisSVG";
@@ -13,17 +15,29 @@ import ActiveMealPlanSVG from "../../public/images/svg/navigatorIcons/active/Act
 import OverviewSVG from "../../public/images/svg/navigatorIcons/inactive/OverviewSVG";
 import ActiveOverviewSVG from "../../public/images/svg/navigatorIcons/active/ActiveOverviewSVG";
 
+// ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
+import OverviewStack from "./OverviewStack";
 import Dashboard from "../screens/dashboard/Dashboard";
 import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
-import OverviewStack from "./OverviewStack";
 
+// Create BottomTabNavigator
 const Tab = createBottomTabNavigator();
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const HomeBottomTabs: React.FC = () => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -32,15 +46,20 @@ const HomeBottomTabs: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the colors based on the color scheme
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
   const tabBarActiveTintColor = isLight ? "#DE1A1A" : "#ED2A1D";
   const tabBarInactiveTintColor = isLight ? "#B71515" : "#C91818";
-  const barStyle = isLight ? "dark-content" : "light-content";
+  // For future use
+  // const barStyle = isLight ? "dark-content" : "light-content";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={barStyle} />
+      <StatusBar style="auto" />
       <Tab.Navigator
         initialRouteName="Dashboard"
         screenOptions={{

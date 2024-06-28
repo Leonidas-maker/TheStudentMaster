@@ -1,11 +1,17 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { Text } from "react-native";
 
-interface HeadingProps {
-  text: string;
-}
+// ~~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { TextProps } from "../../interfaces/ComponentInterfaces";
 
-const Heading: React.FC<HeadingProps> = ({ text }) => {
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
+const Heading: React.FC<TextProps> = ({ text }) => {
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <Text className="text-black dark:text-white text-4xl font-bold text-center">
       {text}

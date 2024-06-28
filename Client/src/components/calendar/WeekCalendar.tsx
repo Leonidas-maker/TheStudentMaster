@@ -11,26 +11,25 @@ import "nativewind";
 import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Progress from "react-native-progress";
+import { useNavigation } from "@react-navigation/native";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
   fetchEvents,
   loadEventsFromStorage,
-} from "../../services/eventService";
+} from "../../services/EventService";
 import {
   getSelectedUniversity,
   getSelectedCourse,
-} from "../../services/calendarService";
-import * as Progress from "react-native-progress";
-import { useNavigation } from "@react-navigation/native";
+} from "../../services/CalendarService";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
-interface Event {
-  start: string | Date;
-  end: string | Date;
-  [key: string]: any;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { EventTimeProps } from "../../interfaces/CalendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {
@@ -48,7 +47,7 @@ const WeekCalendar: React.FC = () => {
   // ====================================================== //
   // Gets the current date
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const navigation = useNavigation<any>();
@@ -104,7 +103,7 @@ const WeekCalendar: React.FC = () => {
               {
                 text: "Zur Auswahl",
                 onPress: () => {
-                  navigation.navigate("OverviewStack", { screen: "Settings" });
+                  navigation.navigate("MiscStack", { screen: "Settings" });
                 },
                 style: "default",
               },

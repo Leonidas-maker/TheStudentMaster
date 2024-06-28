@@ -19,25 +19,9 @@ import {
 } from "./CalendarCalculations";
 import DefaultButton from "../buttons/DefaultButton";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface EventProps {
-  event: {
-    summary: string;
-    description?: string | null;
-    location?: string;
-    start: Date;
-    end: Date;
-  };
-  hoursContainerHeight: number;
-  containerHeight: number;
-  calendar: {
-    startHour: number;
-    endHour: number;
-  };
-  overlapCount: number;
-  overlapIndex: number;
-  isSaturday: boolean;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { EventProps } from "../../interfaces/CalendarInterfaces";
+
 //TODO Implement a function to choose in settings if the start and end time should be displayed
 //TODO Implement a function to choose in settings if the location should be displayed
 //TODO Implement all day events

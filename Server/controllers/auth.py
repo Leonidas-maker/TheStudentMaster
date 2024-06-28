@@ -47,6 +47,7 @@ def refresh_tokens(db: Session, refresh_token: str):
         refresh_token, access_token = create_tokens(
             db, user_security, str(user_uuid), uuid.UUID(payload.get("jti")), payload["aud"]
         )
+        db.commit()
         return {"refresh_token": refresh_token, "access_token": access_token}
     raise HTTPException(status_code=401, detail="Unauthorized")
 
@@ -60,8 +61,7 @@ def register(
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    user, user_uuid = create_user(db, user)
-    user_security = get_user_security(db, user_id=user.user_id)
+    user, user_uuid, user_security = create_user(db, user)
 
     verify_code = create_simple_otp(db, user_security)
     send_mail_with_template(
@@ -73,6 +73,7 @@ def register(
         ),
     )
     response = s_auth.UserResRegister(**user.__dict__, user_uuid=user_uuid)
+    db.commit()
     return response
 
 
@@ -83,21 +84,21 @@ def login(
     new_application: s_auth.Application = None,
 ):
     if "@" in ident:
-        user = get_user(db, email=ident, with_uuid=True)
+        user = get_user(db, email=ident, with_uuid=True, with_user_security=True, with_2fa=True, with_tokens=True)
     else:
-        user = get_user(db, username=ident, with_uuid=True)
+        user = get_user(db, username=ident, with_uuid=True, with_user_security=True, with_2fa=True, with_tokens=True)
 
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     user_id = user.user_id
     user_uuid = str(user.user_uuid.user_uuid)
-    user_security = get_user_security(db, user_id=user_id, with_tokens=True)
+    user_security: m_auth.UserSecurity = user.user_security
 
     # Pre checks
     if not user_security.verified:
         raise HTTPException(status_code=401, detail="Account not verified")
-    check_security_warns(user_security)
+    check_security_warns(db, user_security)
 
     # ~~~~~~~~~~~~~~~~ Password ~~~~~~~~~~~~~~~ #
     if not check_password(db, password, user_security=user_security):
@@ -106,13 +107,16 @@ def login(
     # ~~~~~~~~~~~~~~~~~~ 2FA ~~~~~~~~~~~~~~~~~~ #
     if user_security._2fa_enabled:
         remove_older_security_token(db, user_security, "login-2fa")
+        secret_token = create_security_token(
+            db,
+            user_id,
+            user_uuid,
+            f"login-2fa::{new_application.application_id}" if new_application else "login-2fa",
+        )
+
+        db.commit()
         return {
-            "secret_token": create_security_token(
-                db,
-                user_id,
-                user_uuid,
-                f"login-2fa::{new_application.application_id}" if new_application else "login-2fa",
-            )
+            "secret_token": secret_token,
         }
 
     # ~~~~~~~~ Register new application ~~~~~~~ #
@@ -122,6 +126,7 @@ def login(
         application_uuid = None
 
     refresh_token, access_token = create_tokens(db, user_security, user_uuid, None, application_uuid)
+    db.commit()
     return {"refresh_token": refresh_token, "access_token": access_token}
 
 
@@ -169,7 +174,7 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
             raise HTTPException(status_code=401, detail="Invalid credentials")
 
         _2fa_secret = create_totp(db, user_id)
-
+        db.commit()
         if user_add_2fa_req.need_qr_code:
             user = get_user(db, user_id=user_id)
             return s_auth.UserResActivate2FA(
@@ -220,6 +225,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
             refresh_token, access_token = create_tokens(
                 db, user_security, user_uuid, secret_payload["jti"], application_uuid
             )
+            db.commit()
             return {"refresh_token": refresh_token, "access_token": access_token}
         else:
             raise HTTPException(status_code=401, detail="Invalid credentials | Type: 2FA")
@@ -247,7 +253,6 @@ def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_tok
             # ~~~~~~~~~~~~~~~ Remove 2FA ~~~~~~~~~~~~~~ #
             db.delete(user_security.user_2fa)
             user_security._2fa_enabled = False
-            db.commit()
 
             # TODO Await email response
             send_mail_with_template(
@@ -265,8 +270,8 @@ def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_tok
             refresh_token, access_token = create_tokens(
                 db, user_security, user_uuid, secret_payload["jti"], application_id
             )
+            db.commit()
             return {"refresh_token": refresh_token, "access_token": access_token, "message": "2FA removed"}
-
         else:
             raise HTTPException(status_code=401, detail="Invalid credentials | Type: 2FA")
     else:

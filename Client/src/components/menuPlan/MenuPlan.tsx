@@ -1,3 +1,4 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
@@ -16,37 +17,25 @@ import {
   isSunday,
   setDay,
 } from "date-fns";
+import * as Progress from "react-native-progress";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
 import DishView from "./DishView";
 import WeekSelector from "../selector/WeekSelector";
 import Dropdown from "../dropdown/Dropdown";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
   fetchCanteens,
   fetchCanteenDishes,
-} from "../../services/canteenService";
-import * as Progress from "react-native-progress";
+} from "../../services/CanteenService";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface CanteenProps {
-  key: string;
-  value: string;
-}
-
-interface Dish {
-  dish_type: string;
-  dish: string;
-  price: string;
-  serving_date: string;
-}
-
-interface MenuData {
-  canteen_name: string;
-  canteen_short_name: string;
-  image_url: string | null;
-  menu: Dish[];
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import {
+  CanteenProps,
+  MenuDataProps,
+} from "../../interfaces/CanteenInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -63,12 +52,12 @@ const MenuPlan: React.FC = () => {
     startOfWeek(new Date(), { weekStartsOn: 1 }),
   );
   const [canteenNames, setCanteenNames] = useState<CanteenProps[]>([]);
-  const [menu, setMenu] = useState<MenuData | null>(null);
+  const [menu, setMenu] = useState<MenuDataProps | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
 
   // ====================================================== //
-  // ====================== Constants ===================== //
+  // ====================== Variables ===================== //
   // ====================================================== //
   const scrollViewRef = useRef<ScrollView>(null);
   const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });

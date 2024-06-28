@@ -1,15 +1,24 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { View } from "react-native";
+
+// ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../../components/textFields/DefaultText";
 import Heading from "../../../components/textFields/Heading";
 import Subheading from "../../../components/textFields/Subheading";
 import DefaultButton from "../../../components/buttons/DefaultButton";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 // TODO Implement get Backup-Codes
 // TODO Implement save Backup-Codes
 // TODO Implement show Backup-Codes
 // TODO Implement save Backup-Codes as Screenshot
-const BackupMFA: React.FC = () => {
+const BackupMfa: React.FC = () => {
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Geschafft!" />
@@ -26,4 +35,4 @@ const BackupMFA: React.FC = () => {
   );
 };
 
-export default BackupMFA;
+export default BackupMfa;

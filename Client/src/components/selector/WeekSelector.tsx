@@ -4,16 +4,8 @@ import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface WeekSelectProps {
-  onBackPress: () => void;
-  onForwardPress: () => void;
-  onTodayPress?: () => void;
-  startDate?: Date;
-  endDate?: Date;
-  currentDate?: Date;
-  mode: string;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { WeekSelectProps } from "../../interfaces/ComponentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -30,9 +22,16 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
   currentDate,
   mode,
 }) => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);

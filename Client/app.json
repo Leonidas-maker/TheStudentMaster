@@ -3,29 +3,37 @@
     "entryPoint": "./src/App.tsx",
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
-    "version": "0.1.0-dev",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./public/logo/TheStudentMaster.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./public/logo/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "permissions": ["android.permission.DETECT_SCREEN_CAPTURE"]
+        "foregroundImage": "./public/logo/TheStudentMaster.png",
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.schuetze1000.TheStudentMaster"
+      "package": "com.TheMasterCollection.TheStudentMaster",
+      "versionCode": 4
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./public/logo/TheStudentMaster.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8a98a15b-dfe3-42d6-82fb-4526aecba223"
+      }
+    },
+    "owner": "themastercollection"
   }
 }

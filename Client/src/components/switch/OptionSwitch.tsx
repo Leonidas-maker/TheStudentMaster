@@ -1,15 +1,14 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { Switch, View, Text, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-interface OptionSwitchProps {
-  title: string;
-  texts: string[];
-  iconNames: string[];
-  onValueChanges: ((value: boolean) => void)[];
-  values: boolean[];
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { OptionSwitchProps } from "../../interfaces/ComponentInterfaces";
 
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const OptionSwitch: React.FC<OptionSwitchProps> = ({
   title,
   texts,
@@ -17,9 +16,16 @@ const OptionSwitch: React.FC<OptionSwitchProps> = ({
   onValueChanges,
   values,
 }) => {
-  const colorScheme = useColorScheme();
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -28,9 +34,13 @@ const OptionSwitch: React.FC<OptionSwitchProps> = ({
     }
   }, [colorScheme]);
 
+  // Set the icon and thumb color based on the color scheme
   const iconColor = isLight ? "#000000" : "#FFFFFF";
   const thumbColor = isLight ? "#333333" : "#F5F5F5";
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="m-4">
       <Text className="text-black dark:text-white text-xl font-bold mb-2">

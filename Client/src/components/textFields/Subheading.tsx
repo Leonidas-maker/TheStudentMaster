@@ -1,13 +1,19 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
 import { Text } from "react-native";
 
-interface SubheadingProps {
-  text: string;
-}
+// ~~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { TextProps } from "../../interfaces/ComponentInterfaces";
 
-const Subheading: React.FC<SubheadingProps> = ({ text }) => {
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
+const Subheading: React.FC<TextProps> = ({ text }) => {
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
-    <Text className="text-light_subheading dark:text-dark_subheading text-2xl text-center">
+    <Text className="text-light_subheading dark:text-dark_subheading text-2xl text-center m-4">
       {text}
     </Text>
   );

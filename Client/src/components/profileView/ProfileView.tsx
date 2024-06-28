@@ -1,10 +1,15 @@
+// ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { Text, View, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { fetchUser } from "../../services/userService";
+
+// ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
+import { fetchUser } from "../../services/UserService";
+
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { UserProps } from "../../interfaces/UserInterfaces";
 
 // Placeholder for Login component
 const Login: React.FC = () => {
@@ -17,32 +22,27 @@ const Login: React.FC = () => {
   );
 };
 
-interface User {
-  username: string | "";
-  email: string | "";
-  uuid: string | "";
-  avatar: string | "";
-  address:
-    | {
-        address1: string;
-        address2: string;
-        district: string;
-        postal_code: string;
-        city: string;
-        country: string;
-      }
-    | "";
-}
-
+// ====================================================== //
+// ====================== Component ===================== //
+// ====================================================== //
 const ProfileView: React.FC = () => {
+  // ====================================================== //
+  // ======================= States ======================= //
+  // ====================================================== //
   const [username, setUsername] = useState("");
   const [userUuid, setUserUuid] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigation = useNavigation<any>();
-
-  const colorScheme = useColorScheme();
+  const [user, setUser] = useState<UserProps>({} as UserProps);
   const [isLight, setIsLight] = useState(false);
 
+  // ~~~~~~~~~~~ Use navigation ~~~~~~~~~~ //
+  const navigation = useNavigation<any>();
+
+  // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+  // Get the current color scheme
+  const colorScheme = useColorScheme();
+
+  // Check if the color scheme is light or dark
   useEffect(() => {
     if (colorScheme === "light") {
       setIsLight(true);
@@ -51,31 +51,32 @@ const ProfileView: React.FC = () => {
     }
   }, [colorScheme]);
 
+  // Set the icon color based on the color scheme
+  const iconColor = isLight ? "#000000" : "#FFFFFF";
+
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+  // Fetch user data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = await SecureStore.getItemAsync("access_token");
-        const refreshToken = await SecureStore.getItemAsync("refresh_token");
-        const [user, setUser] = useState<User>({} as User);
+        //TODO Fetch this data at the start of the app and use the stored data @leonidas-maker
+        await fetchUser(setUser);
 
-        if (!token || !refreshToken) {
+        if (!user.user_uuid || !user.username) {
           setIsLoggedIn(false);
           return;
         }
 
-        await fetchUser(setUser);
-
-        //TODO Use the service
-
-        setUsername(user?.username);
-        setUserUuid(user?.uuid);
+        setUsername(user.username);
+        setUserUuid(user.user_uuid);
 
         await SecureStore.setItemAsync("username", username);
         await SecureStore.setItemAsync("uuid", userUuid);
-
         setIsLoggedIn(true);
       } catch (error) {
-        console.error("Error fetching user data: ", error);
+        console.log(error);
         setIsLoggedIn(false);
       }
     };
@@ -83,16 +84,22 @@ const ProfileView: React.FC = () => {
     fetchData();
   }, []);
 
-  const iconColor = isLight ? "#000000" : "#FFFFFF";
-
+  // ====================================================== //
+  // =================== Press handlers =================== //
+  // ====================================================== //
+  // Navigate to the profile screen
   const handleProfilePress = () => {
-    navigation.navigate("OverviewStack", { screen: "Profile" });
+    navigation.navigate("CredentialStack", { screen: "Profile" });
   };
 
+  // Navigate to the login screen
   const handleLoginPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Login" });
+    navigation.navigate("CredentialStack", { screen: "Login" });
   };
 
+  // ====================================================== //
+  // ================== Return component ================== //
+  // ====================================================== //
   return (
     <View className="m-4">
       <Text className="text-black dark:text-white text-xl font-bold mb-2">

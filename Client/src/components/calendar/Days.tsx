@@ -20,13 +20,8 @@ import Event from "./Event";
 import TimeMarker from "./TimeMarker";
 import PastMarker from "./PastMarker";
 
-// ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
-interface OverlapEventProps {
-  start: Date;
-  end: Date;
-  overlapCount: number;
-  overlapIndex: number;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { OverlapEventProps } from "../../interfaces/CalendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
