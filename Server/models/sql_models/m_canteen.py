@@ -8,6 +8,7 @@ from config.database import Base
 class Canteen(Base):
     __tablename__ = "canteens"
 
+    # Primary key and basic information columns
     canteen_id = Column(Integer, primary_key=True, index=True)
     canteen_name = Column(String(255), nullable=False)
     canteen_short_name = Column(String(255))
@@ -16,9 +17,11 @@ class Canteen(Base):
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
+    # Relationship with Address table
     address = relationship("Address", cascade="save-update")
 
     def as_dict(self) -> dict:
+        # Return basic canteen information as a dictionary
         return {
             "canteen_id": self.canteen_id,
             "canteen_name": self.canteen_name,
@@ -28,6 +31,7 @@ class Canteen(Base):
         }
 
     def as_dict_complete(self) -> dict:
+        # Return complete canteen information including address details
         address = self.address.as_dict_complete()
         return {
             "canteen_id": self.canteen_id,
@@ -49,6 +53,7 @@ class Canteen(Base):
 class Dish(Base):
     __tablename__ = "canteen_dishes"
 
+    # Primary key and dish information columns
     dish_id = Column(Integer, primary_key=True, nullable=False)
     description = Column(String(510))
     image_url = Column(String(255))
@@ -60,6 +65,7 @@ class Dish(Base):
 class Menu(Base):
     __tablename__ = "canteen_menus"
 
+    # Primary key and menu information columns
     menu_id = Column(Integer, primary_key=True, index=True)
     canteen_id = Column(Integer, ForeignKey("canteens.canteen_id"), nullable=False)
     dish_id = Column(Integer, ForeignKey("canteen_dishes.dish_id"), nullable=False)
@@ -68,10 +74,12 @@ class Menu(Base):
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
+    # Relationships with Canteen and Dish tables
     canteen = relationship("Canteen")
     dish = relationship("Dish")
 
     def as_dict(self) -> dict:
+        # Return menu information as a dictionary
         return {
             "menu_id": self.menu_id,
             "canteen_id": self.canteen_id,
