@@ -10,6 +10,7 @@ class CanteenBase(BaseModel):
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
+    hash: str
 
     class Config:
         from_attributes = True  # Allows the model to be created from ORM objects
@@ -26,13 +27,22 @@ class CanteenBase(BaseModel):
 
 
 class ResGetCanteen(CanteenBase):
-    # Response model for basic canteen information
-    pass
+    canteen_name: str
+    canteen_short_name: Optional[str]
+    image_url: Optional[str]
+    hash: str
+
+    class Config:
+        from_attributes = True
 
 
 class ResGetCanteenAddress(CanteenBase):
     # Response model for canteen information including address
     address: CompleteAdress
+    hash: str
+
+    class Config:
+        from_attributes = True
 
 
 class ResGetMenuDay(BaseModel):
@@ -48,18 +58,23 @@ class ResGetMenuDay(BaseModel):
 
 class ResGetCanteenMenu(CanteenBase):
     # Response model for a canteen's full menu
+    canteen_name: str
+    canteen_short_name: Optional[str]
+    hash: str
+    image_url: Optional[str]
     menu: list[ResGetMenuDay]
 
 
 class ResGetCanteenMenuDay(CanteenBase):
     # Response model for a canteen's menu for a specific day
     menu: ResGetMenuDay
+    hash: str
 
     class Config:
         from_attributes = True
 
 
-class ResGetCanteenHash(CanteenBase):
+class ResGetCanteenHash(BaseModel):
     canteen_short_name: str
     hash: str
 
