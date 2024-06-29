@@ -68,7 +68,9 @@ const Dualis: React.FC = () => {
 
       // Reset error and navigate to performance overview
       setError("");
-      navigateToPerformanceOverview(extractAuthArguments(response.headers["refresh"]));
+      navigateToPerformanceOverview(
+        extractAuthArguments(response.headers["refresh"]),
+      );
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);
