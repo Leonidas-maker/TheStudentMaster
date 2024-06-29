@@ -1,7 +1,8 @@
 import json
 from datetime import datetime
-from rich.progress import Progress, TaskID
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
+import json
+
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_scraper import fetch_menu
@@ -13,8 +14,8 @@ from middleware.general import create_address
 from models.sql_models import m_canteen, m_general
 
 # ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
+from models.pydantic_schemas.s_canteen import ResGetCanteenMenuDay
 from models.pydantic_schemas import s_general
-from models.pydantic_schemas.s_canteen import ResGetCanteenMenu
 
 
 # ======================================================== #
@@ -343,42 +344,64 @@ def create_menu(db: Session, menu: m_canteen.Menu) -> m_canteen.Menu:
     return new_menu
 
 
-def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> ResGetCanteenMenu:
+def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only: bool = False) -> dict:
+    """Fetches the menu for a given canteen and returns it in a structured format.
 
+    Args:
+        db (Session): Database session.
+        canteen_short_name (str): Short name of the canteen.
+        current_week_only (bool, optional): If True, fetches the menu for the current week only. Defaults to False.
+
+    Raises:
+        ValueError: If required parameters are not provided or are of incorrect type.
+
+    Returns:
+        dict: Structured menu data for the canteen.
+    """
+    # Validate the input parameters
     if not db:
         raise ValueError("Parameter db is required")
-    elif not canteen_short_name:
+    if not canteen_short_name:
         raise ValueError("Parameter canteen_short_name is required")
-    elif not isinstance(canteen_short_name, str):
+    if not isinstance(canteen_short_name, str):
         raise ValueError("Parameter canteen_short_name must be a string")
 
+    # Determine the current week number if only the current week's menu is requested
     if current_week_only:
         current_week = datetime.now().isocalendar()[1]
     else:
         current_week = 0
 
     try:
-        canteen = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
+        # Use joinedload to load menus and dishes in one query for performance optimization
+        canteen = (
+            db.query(m_canteen.Canteen)
+            .options(joinedload(m_canteen.Canteen.menus).joinedload(m_canteen.Menu.dish))
+            .filter_by(canteen_short_name=canteen_short_name)
+            .first()
+        )
+        # Check if the canteen exists
+        if not canteen:
+            raise ValueError("Canteen not found")
+        # Retrieve the menus associated with the canteen
+        menus = canteen.menus
     except AttributeError as e:
-        print("Error while fetching canteen_id")
+        print("Error while fetching canteen or menus")
         print(e)
         return False
 
-    try:
-        menus = db.query(m_canteen.Menu).filter_by(canteen_id=canteen.canteen_id).all()
-    except AttributeError as e:
-        print("Error while fetching menu")
-        print(e)
-        return False
+    # Initialize the return value dictionary with canteen details
+    return_value = {
+        "canteen_name": canteen.canteen_name,
+        "canteen_short_name": canteen.canteen_short_name if canteen.canteen_short_name else None,
+        "image_url": canteen.image_url if canteen.image_url else None,
+        "menu": [],
+    }
 
-    return_value = dict()
-    return_value["canteen_name"] = canteen.canteen_name
-    return_value["canteen_short_name"] = canteen.canteen_short_name if canteen.canteen_short_name else None
-    return_value["image_url"] = canteen.image_url if canteen.image_url else None
-    return_value["menu"] = list()
-
+    # Filter and format the menu items based on the current_week_only flag
     if current_week_only:
         for m in menus:
+            # Check if the menu item is for the current week
             if m.serving_date.isocalendar()[1] == current_week:
                 return_value["menu"].append(
                     {
@@ -389,6 +412,7 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
                     }
                 )
     else:
+        # Include all menu items
         return_value["menu"] = [
             {
                 "dish_type": m.dish_type,
@@ -398,6 +422,56 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
             }
             for m in menus
         ]
+
+    return return_value
+
+
+def get_menu_for_day(db: Session, day: str) -> list[ResGetCanteenMenuDay]:
+    """Fetches the menu for a given day and returns it in a structured format.
+
+    Args:
+        db (Session): Database session.
+        day (str): The day to fetch the menu for.
+
+    Raises:
+        ValueError: If required parameters are not provided or are of incorrect type.
+
+    Returns:
+        list[ResGetCanteenMenuDay]: Structured menu data for the given day.
+    """
+    # Validate the input parameters
+    if not db:
+        raise ValueError("Parameter db is required")
+    if not day:
+        raise ValueError("Parameter day is required")
+    if not isinstance(day, str):
+        raise ValueError("Parameter day must be a string")
+
+    try:
+        # Fetch the menu items for the given day
+        menus = db.query(m_canteen.Menu).filter_by(serving_date=day).all()
+    except AttributeError as e:
+        print("Error while fetching menu items")
+        print(e)
+        return False
+
+    # Initialize the return value list
+    return_value = []
+
+    # Format the menu items
+    for menu in menus:
+        menu_row = dict()
+        menu_row["canteen_name"] = menu.canteen.canteen_name
+        menu_row["canteen_short_name"] = menu.canteen.canteen_short_name
+        menu_row["image_url"] = menu.canteen.image_url if menu.canteen.image_url else None
+        menu_row["hash"] = menu.canteen.hash
+        menu_row["menu"] = {
+            "dish_type": menu.dish_type,
+            "dish": menu.dish.description,
+            "price": menu.dish.price,
+            "serving_date": menu.serving_date,
+        }
+        return_value.append(menu_row)
 
     return return_value
 
@@ -428,7 +502,15 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
     if not week_offset:
         week_offset = 0
     try:
-        canteen_short_name = db.query(m_canteen.Canteen).filter_by(canteen_id=canteen_id).first().canteen_short_name
+        canteen = (
+            db.query(m_canteen.Canteen)
+            .options(joinedload(m_canteen.Canteen.menus))
+            .filter_by(canteen_id=canteen_id)
+            .first()
+        )
+        if not canteen:
+            raise ValueError("Canteen not found")
+        canteen_short_name = canteen.canteen_short_name
     except AttributeError as e:
         print("Error while fetching canteen_short_name")
         print(e)
@@ -482,7 +564,6 @@ def canteen_menu_to_db(db: Session, canteen_id: int, week_offset: int = 0) -> bo
                 return False
 
             try:
-
                 # check if menu_item exists
                 menu_item_exists = (
                     db.query(m_canteen.Menu)

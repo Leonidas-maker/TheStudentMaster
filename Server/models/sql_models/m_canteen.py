@@ -21,6 +21,7 @@ class Canteen(Base):
 
     # Relationship with Address table
     address = relationship("Address", cascade="save-update")
+    menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="canteen")
 
     def __init__(self, canteen_name, canteen_short_name, address_id, image_url=None):
         self.canteen_name = canteen_name
@@ -42,6 +43,7 @@ class Canteen(Base):
             "canteen_short_name": self.canteen_short_name,
             "image_url": self.image_url,
             "address_id": self.address_id,
+            "hash": self.hash,
         }
 
     def as_dict_complete(self) -> dict:
@@ -53,6 +55,7 @@ class Canteen(Base):
             "canteen_short_name": self.canteen_short_name,
             "image_url": self.image_url,
             "address_id": self.address_id,
+            "hash": self.hash,
             "address": {
                 "address1": address["address1"],
                 "address2": address["address2"],
@@ -80,16 +83,7 @@ class Dish(Base):
     price = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    def __init__(self, description, price, image_url=None):
-        self.description = description
-        self.image_url = image_url
-        self.price = price
-        self.hash = self.generate_sha1_hash(description, price, image_url)
-
-    @staticmethod
-    def generate_sha1_hash(description, price, image_url=None):
-        hash_input = f"{description}{price}{image_url if image_url else ''}"
-        return hashlib.sha1(hash_input.encode()).hexdigest()
+    menu = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
 
     def as_dict(self) -> dict:
         return {
@@ -112,21 +106,8 @@ class Menu(Base):
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    # Relationships with Canteen and Dish tables
-    canteen = relationship("Canteen")
-    dish = relationship("Dish")
-
-    def __init__(self, canteen_id, dish_id, dish_type, serving_date):
-        self.canteen_id = canteen_id
-        self.dish_id = dish_id
-        self.dish_type = dish_type
-        self.serving_date = serving_date
-        self.hash = self.generate_sha1_hash(canteen_id, dish_id, dish_type, serving_date)
-
-    @staticmethod
-    def generate_sha1_hash(canteen_id, dish_id, dish_type, serving_date):
-        hash_input = f"{canteen_id}{dish_id}{dish_type}{serving_date}"
-        return hashlib.sha1(hash_input.encode()).hexdigest()
+    canteen = relationship("Canteen", cascade="save-update", uselist=False, back_populates="menus")
+    dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menu")
 
     def as_dict(self) -> dict:
         # Return menu information as a dictionary
