@@ -8,18 +8,23 @@ def fetch_menu(
     canteen_short_name: str,
     week_offset: int,
 ) -> dict:
+    # Function to fetch menu based on canteen name and week offset
     match canteen_short_name:
         case "dhbw_eppelheim":
+            # Special case for DHBW Eppelheim
             try:
                 return fetch_menu_dhbw_eppel(week_offset)
             except Exception as e:
+                # Error handling for DHBW Eppelheim menu fetch
                 print("Error fetching DHBW Eppelheim Menu")
                 print(e)
                 return {}
         case _:
+            # Default case for all other canteens
             try:
                 return fetch_menu_stw_ma(canteen_short_name, week_offset)
             except Exception as e:
+                # Error handling for other canteens' menu fetch
                 print("Error fetching Menu, fetch_menu_stw_ma")
                 print(e)
                 return {}
@@ -28,6 +33,7 @@ def fetch_menu(
 def fetch_menu_dhbw_eppel(
     week_offset: int,
 ) -> dict:
+    # Input validation
     if not isinstance(week_offset, int):
         raise ValueError("week_offset must be an integer")
     if week_offset < 0:
@@ -35,9 +41,10 @@ def fetch_menu_dhbw_eppel(
     if week_offset > 4:
         raise ValueError("week_offset must be less than 4")
 
+    # Calculate the target date
     date = datetime.now().day + 7 * week_offset
 
-    # get dates for the week
+    # Calculate dates for the week
     current_date = datetime.now().date() + timedelta(days=7 * week_offset)
     weekday = current_date.weekday()
     diff = timedelta(days=weekday)
@@ -48,19 +55,25 @@ def fetch_menu_dhbw_eppel(
     thursday = monday + timedelta(days=3)
     friday = monday + timedelta(days=4)
 
+    # Construct URL for the menu
     url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Speisenausgabe+DHBW+Eppelheim-date-2024%25252d03%25252d{date}-view-week.html"
+
+    # Fetch and parse the menu page
     response = requests.get(url)
     soup = BeautifulSoup(response.text, "html.parser")
     rows = soup.find_all("tr")
     menu = {}
 
-    # clean up rows
+    # Clean up rows
     for i in range(0, len(rows)):
         rows[i] = re.split(pattern=r"[\n\t\:\*\xa0]+", string=rows[i].text)
         rows[i] = remove_empty_strings(rows[i])
 
+    # Process menu items
     for i in range(0, len(rows), 2):
         menu_items = list()
+
+        # Determine serving date
         match rows[i][0]:
             case "Montag":
                 serving_date = monday
@@ -75,7 +88,7 @@ def fetch_menu_dhbw_eppel(
             case _:
                 serving_date = None
 
-        # dish 1
+        # Add first dish
         menu_items.append(
             {
                 "dish_type": rows[i][1] if len(rows[i]) > 1 else None,
@@ -84,7 +97,8 @@ def fetch_menu_dhbw_eppel(
                 "serving_date": serving_date,
             }
         )
-        # dish 2
+
+        # Add second dish
         menu_items.append(
             {
                 "dish_type": rows[i + 1][0] if len(rows[i + 1]) > 0 else None,
@@ -93,6 +107,8 @@ def fetch_menu_dhbw_eppel(
                 "serving_date": serving_date,
             }
         )
+
+        # Add menu items to the menu dictionary
         menu[rows[i][0]] = menu_items
 
     return menu
