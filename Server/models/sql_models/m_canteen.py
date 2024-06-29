@@ -78,7 +78,6 @@ class Dish(Base):
     description = Column(String(510))
     image_url = Column(String(255))
     price = Column(String(255), nullable=False)
-    hash = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
     def __init__(self, description, price, image_url=None):
@@ -110,7 +109,6 @@ class Menu(Base):
     dish_id = Column(Integer, ForeignKey("canteen_dishes.dish_id"), nullable=False)
     dish_type = Column(String(255), nullable=False)
     serving_date = Column(DateTime, nullable=False)
-    hash = Column(String(255), nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
