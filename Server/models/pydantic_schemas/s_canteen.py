@@ -27,6 +27,7 @@ class CanteenBase(BaseModel):
 
 
 class ResGetCanteen(CanteenBase):
+    # Response model for basic canteen Information
     canteen_name: str
     canteen_short_name: Optional[str]
     image_url: Optional[str]
