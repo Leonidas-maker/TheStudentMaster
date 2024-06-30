@@ -25,7 +25,6 @@ from controllers.auth import (
     reset_password,
 )
 
-
 ###########################################################################
 ################################### MAIN ##################################
 ###########################################################################
@@ -39,7 +38,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 # ======================= Register ======================= #
 # ======================================================== #
 
-
+# Endpoint to register a new user
 @auth_router.post("/register", response_model=s_auth.UserResRegister)
 def user_register(
     user: s_user.UserCreate,
@@ -48,17 +47,16 @@ def user_register(
 ):
     return register(db, background_tasks, user)
 
-
+# Endpoint to verify a user's account
 @auth_router.post("/verify-account/{user_uuid}", response_model=s_general.BasicMessage)
 def user_verify_account(verify_code: str, db: Session = Depends(get_db), user_uuid: str = Path(...)):
     return verify_account(db, user_uuid, verify_code)
-
 
 # ======================================================== #
 # ==================== Forgot Password =================== #
 # ======================================================== #
 
-
+# Endpoint to request a password reset
 @auth_router.post("/forgot-password", response_model=s_auth.UserResForgotPassword)
 def user_forgot_password(
     req_forgot_password: s_auth.UserForgotPassword,
@@ -67,7 +65,7 @@ def user_forgot_password(
 ):
     return forgot_password(db, background_tasks, req_forgot_password.email)
 
-
+# Endpoint to reset the password
 @auth_router.put("/reset-password/{user_uuid}", response_model=s_general.BasicMessage)
 def user_reset_password(
     req_reset_password: s_auth.UserResetPassword,
@@ -77,17 +75,16 @@ def user_reset_password(
 ):
     return reset_password(db, background_tasks, user_uuid, req_reset_password.otp_code, req_reset_password.new_password)
 
-
 # ======================================================== #
 # ===================== Account Auth ===================== #
 # ======================================================== #
 
-
+# Endpoint to log in a user
 @auth_router.post("/login", response_model=Union[s_auth.UserTokens, s_auth.UserSecurityToken])
 def user_login(user_login: s_auth.UserLogin, db: Session = Depends(get_db)):
     return login(db, user_login.ident, user_login.password, user_login.new_application)
 
-
+# Endpoint to log out a user
 @auth_router.delete("/logout", response_model=s_general.BasicMessage)
 def user_logout(
     access_token: str,
@@ -96,26 +93,23 @@ def user_logout(
 ):
     return logout(db, refresh_token, access_token)
 
-
-# ~~~~~~~~~~~~~~~~~ Tokens ~~~~~~~~~~~~~~~~ #
+# Endpoint to refresh a token
 @auth_router.post("/refresh-token", response_model=s_auth.UserTokens)
 def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return refresh_tokens(db, refresh_token)
-
 
 # ======================================================== #
 # ========================== 2FA ========================= #
 # ======================================================== #
 
-
-# ~~~~~~~~~~~~~~~~~~ TOTP ~~~~~~~~~~~~~~~~~ #
+# Endpoint to add two-factor authentication (2FA)
 @auth_router.post("/add-2fa", response_model=s_auth.UserResActivate2FA)
 def user_add_2fa(
     req: s_auth.UserReqActivate2FA, access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
     return add_2fa(db, req, access_token)
 
-
+# Endpoint to remove two-factor authentication (2FA)
 @auth_router.delete("/remove-2fa", response_model=s_general.BasicMessage)
 def user_remove_2fa(
     otp_code: str,
@@ -125,7 +119,7 @@ def user_remove_2fa(
 ):
     return remove_2fa(db, background_tasks, access_token, otp_code)
 
-
+# Endpoint to verify the first 2FA setup
 @auth_router.post("/verify-first-2fa", response_model=s_auth.UserResVerifyFirst2FA)
 def user_verify_first_2fa(
     otp: s_auth.OTP,
@@ -135,12 +129,12 @@ def user_verify_first_2fa(
 ):
     return verify_first_2fa(db, background_tasks, access_token, otp.otp_code)
 
-
+# Endpoint to verify 2FA for login
 @auth_router.post("/verify-2fa", response_model=s_auth.UserTokens)
 def user_verify_2fa(otp: s_auth.OTP, security_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     return verify_2fa(db, security_token, otp.otp_code)
 
-
+# Endpoint to verify 2FA using backup codes
 @auth_router.post("/verify-2fa-backup/{user_uuid}", response_model=s_auth.UserTokens)
 def user_verify_2fa_backup(
     otp: s_auth.BackupOTP,

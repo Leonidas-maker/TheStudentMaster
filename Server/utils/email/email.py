@@ -5,19 +5,20 @@ from typing import Dict, Any
 from pathlib import Path
 import configparser
 
-
+# Schema for email details
 class EmailSchema(BaseModel):
     email: EmailStr
     body: Dict[str, Any]
     type: str
 
-
+# Initialize the mailer with configuration
 def init_mailer(mail_from_name: str, ssl: bool = False):
     configPath = Path(__file__).parent.parent.parent.absolute() / "config.ini"
     email_template_path = Path(__file__).parent / "email_templates"
     config = configparser.ConfigParser()
     config.read(configPath)
 
+    # Configuration for the email connection
     conf = ConnectionConfig(
         MAIL_USERNAME=config["EMAIL"]["username"],
         MAIL_PASSWORD=config["EMAIL"]["password"],
@@ -33,15 +34,17 @@ def init_mailer(mail_from_name: str, ssl: bool = False):
     )
     return FastMail(conf)
 
-
+# Asynchronously send an email with a template
 async def async_send_mail_with_template(email: EmailSchema):
     email_template = ""
     email_subject = ""
     email_ssl = False
 
+    # Determine if SSL is required based on email type
     if email.type in ["first-verify", "verify-locked", "forgot-password"]:
         email_ssl = True
 
+    # Match email type to template and subject
     match email.type:
         case "verify-first":
             email_template = "mail_verify_first.html"
@@ -67,6 +70,7 @@ async def async_send_mail_with_template(email: EmailSchema):
         case _:
             raise ValueError("Invalid email type")
 
+    # Create the email message
     message = MessageSchema(
         subject=email_subject,
         recipients=[email.email],
@@ -74,9 +78,10 @@ async def async_send_mail_with_template(email: EmailSchema):
         subtype=MessageType.html,
     )
 
+    # Initialize the mailer and send the email
     fm = init_mailer("TheStudentMaster-Service", email_ssl)
     await fm.send_message(message, template_name=email_template)
 
-
+# Schedule sending an email with a template as a background task
 def send_mail_with_template(background_tasks: BackgroundTasks, email: EmailSchema):
     background_tasks.add_task(async_send_mail_with_template, email)

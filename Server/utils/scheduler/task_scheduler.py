@@ -10,7 +10,6 @@ import inspect
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db
 
-
 class TaskScheduler:
     def __init__(self, max_block_time: int = 4, verbose: bool = False):
         self.scheduler = AsyncIOScheduler()
@@ -19,9 +18,9 @@ class TaskScheduler:
         self.MAX_BLOCK_TIME = max_block_time
         self.verbose = verbose
         self.startup_tasks = []
-
         self.progress = Progress()
 
+    # Method to add a task to the scheduler
     def add_task(
         self,
         task_id: str,
@@ -35,9 +34,9 @@ class TaskScheduler:
         args: List = [],
         kwargs: dict = {},
     ):
-
         self.task_blocked_by[task_id] = blocked_by or []
 
+        # Wrapper function to handle task execution
         async def task_wrapper(*args, **kwargs):
             block_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=self.MAX_BLOCK_TIME)
             block_time = block_time.timestamp()
@@ -76,6 +75,7 @@ class TaskScheduler:
                 if self.verbose:
                     self.progress.log(f"[cyan][Scheduler] [green]Task {task_id} finished!")
 
+        # Determine the trigger type based on start and end times
         if isinstance(start_time, int) and isinstance(end_time, int):
             interval_hours = interval_seconds // 3600
             interval_seconds = interval_seconds % 3600
@@ -101,16 +101,19 @@ class TaskScheduler:
         if on_startup:
             self.startup_tasks.append(task_id)
 
+    # Method to run tasks scheduled for startup
     def run_startup_tasks(self):
         for task_id in self.startup_tasks:
             self.scheduler.get_job(task_id).modify(next_run_time=datetime.datetime.now())
 
+    # Method to start the scheduler
     def start(self, run_startup_tasks: bool = True):
         self.progress.start()
         self.scheduler.start()
         if run_startup_tasks:
             self.run_startup_tasks()
 
+    # Method to stop the scheduler
     def stop(self):
         self.progress.stop()
         self.scheduler.shutdown()

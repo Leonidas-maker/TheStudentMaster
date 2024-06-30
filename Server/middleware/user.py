@@ -9,7 +9,7 @@ from models.sql_models import m_user, m_auth
 ############################## Get functions ##############################
 ###########################################################################
 
-
+# Function to get a user with various optional loading configurations
 def get_user(
     db: Session,
     user_uuid: uuid.UUID = None,
@@ -49,7 +49,6 @@ def get_user(
             .filter(m_user.UserUUID.user_uuid == user_uuid)
             .first()
         )
-
     elif user_id:
         user = query.filter(m_user.User.user_id == user_id).first()
     elif username:
@@ -59,11 +58,11 @@ def get_user(
 
     return user
 
-
+# Function to get a list of users with pagination
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(m_user.User).offset(skip).limit(limit).all()
 
-
+# Function to get user security information
 def get_user_security(
     db: Session,
     user_uuid: uuid.UUID = None,
@@ -72,6 +71,7 @@ def get_user_security(
     with_tokens: bool = False,
     with_2fa: bool = False,
 ) -> m_auth.UserSecurity:
+    # Build query options based on provided parameters
     query_options = []
     query_options += [joinedload(m_auth.UserSecurity.user)] if with_user else []
     query_options += [joinedload(m_auth.UserSecurity.user_tokens)] if with_tokens else []
@@ -80,13 +80,12 @@ def get_user_security(
     query = db.query(m_auth.UserSecurity).options(*query_options)
     user_security = None
 
+    # Execute query based on user_id or user_uuid
     if user_id:
         user_security = query.filter_by(user_id=user_id).first()
-
     elif user_uuid:
         if isinstance(user_uuid, str):
             user_uuid = uuid.UUID(user_uuid)
-
         user_security = (
             query.join(m_user.UserUUID, m_user.UserUUID.user_id == m_auth.UserSecurity.user_id)
             .filter(m_user.UserUUID.user_uuid == user_uuid)
@@ -98,11 +97,12 @@ def get_user_security(
     else:
         raise HTTPException(status_code=400, detail="Invalid Parameters")
 
-
+# Function to get user tokens
 def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.UserTokens:
     query = db.query(m_auth.UserTokens)
     user_tokens = None
 
+    # Execute query based on user_id or user_uuid
     if user_id:
         user_tokens = query.filter_by(user_id=user_id).all()
     elif user_uuid:
@@ -119,11 +119,12 @@ def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = Non
     else:
         raise HTTPException(status_code=400, detail="Invalid Parameters")
 
-
+# Function to get user 2FA information
 def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.User2FA:
     query = db.query(m_auth.User2FA)
     user_2fa = None
 
+    # Execute query based on user_id or user_uuid
     if user_id:
         user_2fa = query.filter_by(user_id=user_id).first()
     elif user_uuid:
