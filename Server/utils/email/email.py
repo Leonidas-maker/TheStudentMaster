@@ -5,11 +5,13 @@ from typing import Dict, Any
 from pathlib import Path
 import configparser
 
+
 # Schema for email details
 class EmailSchema(BaseModel):
     email: EmailStr
     body: Dict[str, Any]
     type: str
+
 
 # Initialize the mailer with configuration
 def init_mailer(mail_from_name: str, ssl: bool = False):
@@ -33,6 +35,7 @@ def init_mailer(mail_from_name: str, ssl: bool = False):
         TEMPLATE_FOLDER=email_template_path,
     )
     return FastMail(conf)
+
 
 # Asynchronously send an email with a template
 async def async_send_mail_with_template(email: EmailSchema):
@@ -81,6 +84,7 @@ async def async_send_mail_with_template(email: EmailSchema):
     # Initialize the mailer and send the email
     fm = init_mailer("TheStudentMaster-Service", email_ssl)
     await fm.send_message(message, template_name=email_template)
+
 
 # Schedule sending an email with a template as a background task
 def send_mail_with_template(background_tasks: BackgroundTasks, email: EmailSchema):

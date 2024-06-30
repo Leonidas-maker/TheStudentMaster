@@ -22,6 +22,7 @@ from middleware.user import get_user_security
 # ======================= Register ======================= #
 # ======================================================== #
 
+
 # Function to create a new user
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
@@ -55,9 +56,11 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 
     return new_user, new_user_uuid.user_uuid, new_user_security
 
+
 # ======================================================== #
 # ====================== Update User ===================== #
 # ======================================================== #
+
 
 # Function to update a user without authentication checks
 def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
@@ -69,6 +72,7 @@ def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpda
         user.avatar = new_user.avatar
 
     db.flush()
+
 
 # Function to update a user with authentication checks
 def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
@@ -90,6 +94,7 @@ def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserU
     else:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
+
 # Function to update a user based on check result
 def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, check_result: int):
     # Based on the check_result, update user normally or with authentication checks
@@ -107,6 +112,7 @@ def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, che
     db.refresh(user)
     return user
 
+
 # Function to update a user's calendar
 def update_user_calendar(
     db: Session,
@@ -123,7 +129,7 @@ def update_user_calendar(
 
     if not calendar:
         raise HTTPException(status_code=404, detail="Not Found")
-    
+
     # Return response with calendar details
     res_calendar = s_calendar.ResCalendar(
         university_name=calendar.university.university_name if calendar.university else None,

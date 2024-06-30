@@ -10,6 +10,7 @@ import inspect
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db
 
+
 class TaskScheduler:
     def __init__(self, max_block_time: int = 4, verbose: bool = False):
         self.scheduler = AsyncIOScheduler()

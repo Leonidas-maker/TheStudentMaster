@@ -23,6 +23,7 @@ calendar_router = APIRouter()
 # ======================== Calendar ====================== #
 # ======================================================== #
 
+
 # Endpoint to get the list of available calendars
 @calendar_router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars])
 def get_available_calendars(db: Session = Depends(get_db)):
@@ -57,6 +58,7 @@ def get_available_calendars(db: Session = Depends(get_db)):
 
     return response
 
+
 # Endpoint to get a specific calendar by university UUID and course name
 @calendar_router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar)
 def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Depends(get_db)):
@@ -83,6 +85,7 @@ def get_calendar(university_uuid: uuid.UUID, course_name: str, db: Session = Dep
         last_modified=calendar.last_modified,
     )
     return res_calendar
+
 
 # Endpoint to get the hash of a specific calendar by university UUID and course name
 @calendar_router.get("/{university_uuid}/{course_name}/hash", response_model=s_general.BasicMessage)

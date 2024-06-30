@@ -28,6 +28,7 @@ from utils.calendar.calendar_wrapper import CalendarWrapper
 # =================== Startup functions ================== #
 # ======================================================== #
 
+
 # Function to prepare calendar tables by adding initial data
 def prepareCalendarTables(db: Session):
     backends = ["Rapla", "iCalendar"]
@@ -75,6 +76,7 @@ def prepareCalendarTables(db: Session):
 # ===================== Native Update ==================== #
 # ======================================================== #
 
+
 # Function to update active native calendars
 def update_active_native_calendars(db: Session, progress, task_id):
     query_options = [
@@ -118,10 +120,12 @@ def update_active_native_calendars(db: Session, progress, task_id):
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
 
+
 # Function to get backend IDs for calendar updates
 def get_backend_ids(db: Session):
     backends = db.query(m_calendar.CalendarBackend).all()
     return {backend.backend_name: backend.calendar_backend_id for backend in backends}
+
 
 # Function to update all native calendars
 def update_all_native_calendars(db: Session, progress, task_id: int):
@@ -199,6 +203,7 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
 # ===================== Custom Update ==================== #
 # ======================================================== #
 
+
 # Function to update custom calendars
 def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.CalendarBackend):
     query_options = [
@@ -256,6 +261,7 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
 # ===================== Adder/Updater ==================== #
 # ======================================================== #
 
+
 # Function to add or update a user's calendar
 def add_update_user_calendar(
     db: Session, user_id: int, custom_calendar_id: int = None, native_calendar_id: int = None
@@ -278,6 +284,7 @@ def add_update_user_calendar(
     db.flush()
     return user_calendar
 
+
 # Function to add a native calendar to a user
 def add_native_calendar_to_user(
     db: Session, user_id: int, course_name: int, university_uuid: uuid.UUID
@@ -298,6 +305,7 @@ def add_native_calendar_to_user(
         db.commit()
         return calendar_native
     return None
+
 
 # Function to add a custom calendar to a user
 def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):
@@ -363,6 +371,7 @@ def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: 
 # ======================== Getter ======================== #
 # ======================================================== #
 
+
 # Function to get a user's calendar
 def get_calendar(
     db: Session, user_id: int, with_university: bool = False, with_data: bool = False
@@ -407,6 +416,7 @@ def get_calendar(
 # ======================================================== #
 # ========================= Utils ======================== #
 # ======================================================== #
+
 
 # Function to clean up custom calendars that are not used by any user
 def clean_custom_calendars(db: Session) -> int:

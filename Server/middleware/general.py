@@ -13,17 +13,21 @@ from models.sql_models import m_general, m_user, m_calendar, m_canteen
 ########################## Basic logic functions ##########################
 ###########################################################################
 
+
 # Function to perform XOR operation on multiple arguments
 def xor(*args) -> bool:
     return reduce(xor_, map(bool, args))
+
 
 # Function to check if only one argument is True
 def only_one(*args) -> bool:
     return sum(map(bool, args)) == 1
 
+
 ###########################################################################
 ####################### Database specific functions #######################
 ###########################################################################
+
 
 # Function to create a new address in the database
 def create_address(db: Session, new_address: s_general.AddressCreate) -> s_general.Address:
@@ -123,6 +127,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
     db.flush()
 
     return new_address
+
 
 # Function to clean up unused addresses from the database
 def clean_address(db: Session) -> int:

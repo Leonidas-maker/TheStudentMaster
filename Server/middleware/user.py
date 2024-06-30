@@ -9,6 +9,7 @@ from models.sql_models import m_user, m_auth
 ############################## Get functions ##############################
 ###########################################################################
 
+
 # Function to get a user with various optional loading configurations
 def get_user(
     db: Session,
@@ -58,9 +59,11 @@ def get_user(
 
     return user
 
+
 # Function to get a list of users with pagination
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(m_user.User).offset(skip).limit(limit).all()
+
 
 # Function to get user security information
 def get_user_security(
@@ -97,6 +100,7 @@ def get_user_security(
     else:
         raise HTTPException(status_code=400, detail="Invalid Parameters")
 
+
 # Function to get user tokens
 def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.UserTokens:
     query = db.query(m_auth.UserTokens)
@@ -118,6 +122,7 @@ def get_user_tokens(db: Session, user_uuid: uuid.UUID = None, user_id: str = Non
         return user_tokens
     else:
         raise HTTPException(status_code=400, detail="Invalid Parameters")
+
 
 # Function to get user 2FA information
 def get_user_2fa(db: Session, user_uuid: uuid.UUID = None, user_id: str = None) -> m_auth.User2FA:

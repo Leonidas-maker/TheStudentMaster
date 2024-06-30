@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.database import SessionLocal
 
+
 # Dependency to get a synchronous database session
 def get_db():
     db = SessionLocal()
@@ -12,6 +13,7 @@ def get_db():
     finally:
         # Ensure the database session is closed after use
         db.close()
+
 
 # Dependency to get an asynchronous database session
 @asynccontextmanager
