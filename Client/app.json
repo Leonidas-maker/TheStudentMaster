@@ -23,7 +23,7 @@
         "foregroundImage": "./public/logo/TheStudentMaster.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.TheMasterCollection.TheStudentMaster",
+      "package": "com.schuetze1000.TheStudentMaster",
       "versionCode": 4
     },
     "web": {
