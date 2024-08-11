@@ -11,7 +11,8 @@ def get_source_dhbw_ma() -> dict[str, str]:
     icals = {}
     for ical_info in ical_infos:
         if ical_info.get("value", "") and ical_info.get("label", "") != ical_info.get("value", ""):
-            icals[ical_info["label"]] = ical_info["value"]
+            ical_name = ical_info["label"].replace("/", "_")
+            icals[ical_name] = ical_info["value"]
     return icals
 
 
