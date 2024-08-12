@@ -64,7 +64,7 @@ def fetch_calendar_by_university_and_course(university_uuid: uuid.UUID, course_n
     if (current_time - calendar.guest_last_accessed) > datetime.timedelta(minutes=15):
         # Update last_accessed to the current time if more than 15 minutes have passed
         calendar.guest_last_accessed = current_time
-        db.commit() # Commit the update to the database
+        db.commit()  # Commit the update to the database
 
     # Create the response structure with the necessary calendar details
     res_calendar = s_calendar.CalendarNative(
@@ -80,7 +80,9 @@ def fetch_calendar_by_university_and_course(university_uuid: uuid.UUID, course_n
 
 
 def fetch_calendar_hash(university_uuid: uuid.UUID, course_name: str, db: Session):
-    querry_options = [defer(m_calendar.CalendarNative.data)]  # Defer loading of large 'data' field to optimize query performance
+    querry_options = [
+        defer(m_calendar.CalendarNative.data)
+    ]  # Defer loading of large 'data' field to optimize query performance
     course_name = course_name.replace("_", " ")  # Replace underscores with spaces in the course name
     print(course_name)  # Debug print to verify the course name formatting
 

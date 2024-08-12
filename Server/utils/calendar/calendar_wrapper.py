@@ -49,7 +49,6 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
     def get_type(self) -> str:
         return self.type.capitalize()
 
-
     def __dict_hash(self, dictionary: dict) -> str:
         dhash = hashlib.sha1()
         encoded = json.dumps(dictionary, sort_keys=True).encode("utf-8")
