@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
+# ~~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas.s_canteen import (
     ResGetCanteen,
     ResGetCanteenAddress,
@@ -10,6 +10,8 @@ from models.pydantic_schemas.s_canteen import (
     ResGetCanteenMenuDay,
     ResGetCanteenHash,
 )
+
+# ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_canteen
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #

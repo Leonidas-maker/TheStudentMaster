@@ -71,6 +71,7 @@ class CalendarNative(Base):
     hash = Column(String(255), nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
+    guest_last_accessed = Column(TIMESTAMP, nullable=False, server_default=func.now())
 
     university = relationship("University", cascade="save-update", uselist=False)
     source_backend = relationship("CalendarBackend", cascade="save-update", uselist=False)

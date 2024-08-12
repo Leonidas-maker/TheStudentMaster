@@ -3,8 +3,6 @@ from fastapi import FastAPI, Depends
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 import asyncio
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
-import datetime
 from fastapi_cdn_host import monkey_patch
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
@@ -16,7 +14,8 @@ from middleware.database import get_async_db, get_db
 from middleware.general import clean_address
 from middleware.calendar import (
     prepareCalendarTables,
-    update_active_native_calendars,
+    update_user_linked_calendars,
+    update_guest_accessed_calendars,
     update_all_native_calendars,
     update_custom_calendars,
     clean_custom_calendars,
@@ -78,8 +77,17 @@ async def lifespan(app: FastAPI):
     )
 
     task_scheduler.add_task(
-        "calendar_native_active",
-        update_active_native_calendars,
+        "calendar_native_linked",
+        update_user_linked_calendars,
+        interval_seconds=60 * 15,  # 15 minutes
+        start_time=6,
+        end_time=18,
+        blocked_by=["calendar_native_all"],
+    )
+
+    task_scheduler.add_task(
+        "calendar_native_guest_accessed",
+        update_guest_accessed_calendars,
         interval_seconds=60 * 15,  # 15 minutes
         start_time=6,
         end_time=18,
@@ -119,7 +127,7 @@ async def lifespan(app: FastAPI):
         with_progress=False,
     )
 
-    task_scheduler.start(run_startup_tasks=True)
+    task_scheduler.start(run_startup_tasks=False)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield

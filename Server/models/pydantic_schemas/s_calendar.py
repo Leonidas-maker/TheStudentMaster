@@ -9,6 +9,7 @@ class CalendarNative(BaseModel):
     data: dict
     hash: str
     last_modified: datetime
+    guest_last_accessed: datetime
 
     class Config:
         from_attributes = True
