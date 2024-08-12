@@ -30,7 +30,9 @@ def get_backend_ids(db: Session):
     return {backend.backend_name: backend.calendar_backend_id for backend in backends}
 
 
-def update_calendars(db: Session, progress, task_id, calendars: set[m_calendar.CalendarNative], calendar_wrapper: CalendarWrapper):
+def update_calendars(
+    db: Session, progress, task_id, calendars: set[m_calendar.CalendarNative], calendar_wrapper: CalendarWrapper
+):
     """Helper function to update the provided set of calendars."""
     progress.update(task_id, total=len(calendars), refresh=True)
     for calendar in calendars:
@@ -178,7 +180,9 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
         defer(m_calendar.CalendarNative.data),  # Defer loading of large 'data' field to optimize query performance
     ]
     try:
-        calendar_wrapper = CalendarWrapper("iCalendar", "dhbw-mannheim")  # Initialize the wrapper for handling calendar data
+        calendar_wrapper = CalendarWrapper(
+            "iCalendar", "dhbw-mannheim"
+        )  # Initialize the wrapper for handling calendar data
         calendar_backends = get_backend_ids(db)  # Retrieve calendar backend IDs for reference
 
         # Query the DHBW Mannheim university record
@@ -196,7 +200,9 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
             .all()
         )
 
-        dhbw_available_sources = nativ_sources.get_source_dhbw_ma()  # Get the currently available sources for DHBW Mannheim
+        dhbw_available_sources = (
+            nativ_sources.get_source_dhbw_ma()
+        )  # Get the currently available sources for DHBW Mannheim
 
         progress.update(task_id, total=len(dhbw_available_sources), refresh=True)
 
@@ -212,7 +218,9 @@ def update_all_native_calendars(db: Session, progress, task_id: int):
                 db.delete(dhbw_calendar)
                 continue
             else:
-                dhbw_available_sources.pop(dhbw_calendar.course_name, None)  # Remove the processed source from available sources
+                dhbw_available_sources.pop(
+                    dhbw_calendar.course_name, None
+                )  # Remove the processed source from available sources
 
             # Fetch and update calendar data if it has changed
             calendar_data = calendar_wrapper.get_data(dhbw_calendar.source)
