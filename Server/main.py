@@ -28,7 +28,7 @@ from middleware.canteen import create_canteens, update_canteen_menus
 from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
-from routes import user, auth, canteen, calendar
+from routes import user, auth, canteen, calendar, email
 
 from utils.scheduler.task_scheduler import TaskScheduler
 
@@ -157,3 +157,4 @@ app.include_router(user.users_router, prefix="/user", tags=["user"])
 app.include_router(auth.auth_router, prefix="/auth", tags=["auth"])
 app.include_router(canteen.canteen_router, prefix="/canteen", tags=["canteen"])
 app.include_router(calendar.calendar_router, prefix="/calendar", tags=["calendar"])
+app.include_router(email.email_router, prefix="/email", tags=["email"])

@@ -14,12 +14,15 @@ import MealPlanSVG from "../../public/images/svg/navigatorIcons/inactive/MealPla
 import ActiveMealPlanSVG from "../../public/images/svg/navigatorIcons/active/ActiveMealPlanSVG";
 import OverviewSVG from "../../public/images/svg/navigatorIcons/inactive/OverviewSVG";
 import ActiveOverviewSVG from "../../public/images/svg/navigatorIcons/active/ActiveOverviewSVG";
+import EmailSVG from "../../public/images/svg/navigatorIcons/inactive/EmailSVG";
+import ActiveEmailSVG from "../../public/images/svg/navigatorIcons/active/ActiveEmailSVG";
 
 // ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import OverviewStack from "./OverviewStack";
 import Dashboard from "../screens/dashboard/Dashboard";
 import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
+import Email from "../screens/email/Email";
 
 // Create BottomTabNavigator
 const Tab = createBottomTabNavigator();
@@ -101,6 +104,22 @@ const HomeBottomTabs: React.FC = () => {
                 );
               } else {
                 return <MealPlanSVG width={size} height={size} fill={color} />;
+              }
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Email"
+          component={Email}
+          options={{
+            headerTitle: "TheStudentMaster",
+            tabBarIcon: ({ color, size, focused }) => {
+              if (focused) {
+                return (
+                  <ActiveEmailSVG width={size} height={size} fill={color} />
+                );
+              } else {
+                return <EmailSVG width={size} height={size} fill={color} />;
               }
             },
           }}
