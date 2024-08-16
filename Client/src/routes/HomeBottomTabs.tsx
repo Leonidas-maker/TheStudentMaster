@@ -58,8 +58,8 @@ const HomeBottomTabs: React.FC = () => {
   // ================== Return component ================== //
   // ====================================================== //
   return (
-    <SafeAreaProvider >
-      <StatusBar style="auto"/>
+    <SafeAreaProvider>
+      <StatusBar style="auto" />
       <Tab.Navigator
         initialRouteName="Dashboard"
         screenOptions={{

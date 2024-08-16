@@ -24,7 +24,7 @@ module.exports = {
 
         light_event: "#8344C2",
         light_event_active: "#7037A9",
-        
+
         dark_event: "#66329A",
         dark_event_active: "#52287B",
 

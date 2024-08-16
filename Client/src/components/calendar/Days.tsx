@@ -72,7 +72,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
       isWithinInterval(event.start, {
         start: startOfWeekDate,
         end: endOfWeekDate,
-      })
+      }),
     );
 
     // Sets calenderHours back to a default value if no events are found
@@ -120,7 +120,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
   const calculateOverlaps = (eventsForDay: OverlapEventProps[]) => {
     // Sorts the events by start time
     const sortedEvents: OverlapEventProps[] = [...eventsForDay].sort(
-      (a, b) => a.start.getTime() - b.start.getTime()
+      (a, b) => a.start.getTime() - b.start.getTime(),
     );
 
     // Array to store the groups of overlapping events
@@ -131,7 +131,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
       let addedToGroup = false;
       for (const group of overlapGroups) {
         const lastEventEnd = new Date(
-          Math.max(...group.map((e) => e.end.getTime()))
+          Math.max(...group.map((e) => e.end.getTime())),
         );
         if (event.start < lastEventEnd) {
           group.push(event);
@@ -173,7 +173,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
         {Array.from({ length: weekDays }).map((_, index) => {
           const day = addDays(startOfWeekDate, index);
           const eventsForDay = events.filter((event) =>
-            isSameDay(event.start, day)
+            isSameDay(event.start, day),
           );
           calculateOverlaps(eventsForDay);
           const isCurrentDay = isToday(day);

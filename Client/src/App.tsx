@@ -39,7 +39,7 @@ export default function App() {
       ScreenOrientation.unlockAsync();
     } else {
       ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
+        ScreenOrientation.OrientationLock.PORTRAIT_UP,
       );
     }
   }, []);
