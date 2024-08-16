@@ -2,9 +2,9 @@
 import axios from "axios";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { axiosInstance } from "./Api"; // Custom axios instance
-import { refreshAuthLogic } from "./TokenService"; // Logic to refresh authentication token
-import { getAuthToken } from "./AuthService"; // Function to get the current authentication token
+import { axiosInstance } from "./api"; // Custom axios instance
+import { refreshAuthLogic } from "./tokenService"; // Logic to refresh authentication token
+import { getAuthToken } from "./authService"; // Function to get the current authentication token
 
 // ~~~~~~~~~~~~~~~ Function ~~~~~~~~~~~~~~~ //
 const ApplyInterceptor = () => {

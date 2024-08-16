@@ -5,7 +5,7 @@ import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { WeekSelectProps } from "../../interfaces/ComponentInterfaces";
+import { WeekSelectProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

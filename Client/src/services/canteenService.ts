@@ -7,7 +7,7 @@ import {
   CanteenResponseProps,
   CanteenProps,
   MenuDataProps,
-} from "../interfaces/CanteenInterfaces";
+} from "../interfaces/canteenInterfaces";
 
 // Function to fetch the list of canteens and update the state
 const fetchCanteens = async (

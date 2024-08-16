@@ -12,7 +12,7 @@ import "nativewind";
 import { format, parseISO } from "date-fns";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { DishMenuProps } from "../../interfaces/CanteenInterfaces";
+import { DishMenuProps } from "../../interfaces/canteenInterfaces";
 
 // ~~~~~~~~~~~~~~ Interfaces ~~~~~~~~~~~~~ //
 // Cannot be exported to canteenInterfaces because of the RefObject<ScrollView>

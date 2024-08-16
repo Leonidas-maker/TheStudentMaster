@@ -1,10 +1,9 @@
 {
   "expo": {
-    "entryPoint": "./src/App.tsx",
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
     "version": "1.0.1",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./public/logo/TheStudentMaster.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -12,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
@@ -34,6 +35,9 @@
         "projectId": "8a98a15b-dfe3-42d6-82fb-4526aecba223"
       }
     },
-    "owner": "themastercollection"
+    "owner": "themastercollection",
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

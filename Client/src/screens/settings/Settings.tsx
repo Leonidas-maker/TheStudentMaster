@@ -13,19 +13,19 @@ import Subheading from "../../components/textFields/Subheading";
 import RadioOption from "../../components/radioOption/RadioOption";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
-import { fetchEventsWithoutWait } from "../../services/EventService";
+import { fetchEventsWithoutWait } from "../../services/eventService";
 import {
   fetchCalendars,
   getSelectedUniversity,
   getSelectedCourse,
   fetchInitialHash,
-} from "../../services/CalendarService";
+} from "../../services/calendarService";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import {
   EventTimeProps,
   CalendarProps,
-} from "../../interfaces/CalendarInterfaces";
+} from "../../interfaces/calendarInterfaces";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 type SchemeType = "light" | "dark" | "system";

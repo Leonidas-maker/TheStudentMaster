@@ -39,7 +39,9 @@ interface OverlapEventProps {
 interface EventProps {
   event: {
     summary: string;
-    description?: string | null;
+    description?: {
+      tags?: string[];
+    };
     location?: string;
     start: Date;
     end: Date;

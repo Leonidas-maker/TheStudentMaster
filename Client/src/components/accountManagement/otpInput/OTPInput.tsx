@@ -11,7 +11,7 @@ import {
 import TextFieldInput from "../../textInputs/TextFieldInput";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { OTPInputProps } from "../../../interfaces/AuthInterfaces";
+import { OTPInputProps } from "../../../interfaces/authInterfaces";
 
 // TODO Implement paste functionality
 // TODO Block non-numeric characters

@@ -29,13 +29,13 @@ import Dropdown from "../dropdown/Dropdown";
 import {
   fetchCanteens,
   fetchCanteenDishes,
-} from "../../services/CanteenService";
+} from "../../services/canteenService";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import {
   CanteenProps,
   MenuDataProps,
-} from "../../interfaces/CanteenInterfaces";
+} from "../../interfaces/canteenInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
