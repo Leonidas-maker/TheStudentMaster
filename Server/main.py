@@ -127,7 +127,7 @@ async def lifespan(app: FastAPI):
         with_progress=False,
     )
 
-    task_scheduler.start(run_startup_tasks=False)
+    task_scheduler.start(run_startup_tasks=True)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
