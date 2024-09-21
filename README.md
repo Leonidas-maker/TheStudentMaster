@@ -1,100 +1,114 @@
-# TheStudentMaster
+# 🎓 TheStudentMaster
 
-### Project Description:
+## 📖 Project Description
 
-TheStudentMaster is a project being developed to facilitate the daily lives of students at the Cooperative State University Baden-Württemberg (DHBW). The app offers various features and services tailored specifically to the needs of students. It is being developed by a group of six students enrolled in the Cyber Security program at DHBW.
-
----
-
-### Planned Features:
-
-- **Timetable Management**: The app allows students to manage their timetables, check lecture times, and quickly capture changes.
-
-- **Cafeteria Menu**: The app provides an overview of the cafeteria menus to help students plan their meals.
-
-- **Cafeteria Occupancy**: Students can view the predicted occupancy of the cafeteria to choose times with less waiting.
-
-- **Integration with Dualis**: The app connects to the Dualis platform to provide students with quick access to their grades.
-
-- **Available Rooms**: The app allows identification of available rooms for study purposes
+TheStudentMaster is a project developed to facilitate the daily lives of students at the **Cooperative State University Baden-Württemberg (DHBW)**. The app offers various features and services tailored specifically to student needs. It is being developed by a group of six students enrolled in the Cyber Security program at DHBW.
 
 ---
 
-### Contributors:
+## 🌟 Planned Features
 
-- Julian Gardeike (Project Lead)
-- Kasimir Weilandt
-- Andreas Wolf
-- Andreas Schütz
-- Daniel Hecht
-- Leon Sylvester
+- **🗓️ Timetable Management**: Manage your timetables, check lecture times, and quickly capture changes.
+  
+- **🍽️ Cafeteria Menu**: Get an overview of cafeteria menus to help plan your meals.
 
----
+- **🚦 Cafeteria Occupancy**: View predicted occupancy of the cafeteria to choose times with less waiting.
 
-### Getting started
+- **📊 Integration with Dualis**: Connect to the Dualis platform for quick access to your grades.
 
-This is the quick start guide for the front end of TheStudentMaster.
-
-#### Frontend
-
-⚠️ Please note that you must already have `Node v21 or Node v20 (LTS)` installed on your computer in order to run the frontend application. You also need either an iOS/Android emulator or a corresponding device. Note: For a simple test of this app, we recommend that ExpoGo from the Apple App Store or Google Play Store is already installed on this device.
-
-##### Installation and Setup
-
-Run the following command to clone the repository:
-
-`git clone https://gitlab.com/themastercollection/thestudentmaster.git`
-
-Once the cloning is complete, change into the project directory:
-
-`cd thestudentmaster`
-
-To start the frontend go to the client folder:
-
-`cd Client`
-
-First install all required node packages:
-
-`npm install`
-
-After all packages have been successfully installed, run the following command to start the ExpoDev-Server:
-
-`npm run start -c`
-
-Now you can scan the QR code shown with your iOS or Android device and the app should open in Expo. With iOS you have to scan the QR code with the camera app and with Android you scan the code directly in the Expo app. For the web version, press `w` in the terminal.
-
-⚠️ Please note that the web version will not compile on windows. This is a known issue.
-
-#### Backend
-
-⚠️ Please note that you must already have `Python v3.11` installed on your computer in order to run the backend application.
-
-##### Installation and Setup
-
-Run the following command to clone the repository:
-
-`git clone https://gitlab.com/themastercollection/thestudentmaster.git`
-
-Once the cloning is complete, change into the project directory:
-
-`cd thestudentmaster`
-
-To start the backend go to the server folder:
-
-`cd Server`
-
-First install all required python modules:
-
-`pip install -r requirements.txt`
-
-After all packages have been successfully installed, run the following command to start the backend:
-
-`uvicorn main:app --reload` or `python uvicorn main:app --reload`
+- **🏫 Available Rooms**: Identify available rooms for study purposes.
 
 ---
 
-### Support and Feedback:
+## 👥 Contributors
 
-For support or feedback regarding TheStudentMaster, please contact the development team at [support@thestudentmaster.de](mailto:support@thestudentmaster.de)
+- **Andreas Schütz** *(Backend Lead)*
+- **Leon Sylvester** *(Frontend Lead)*
+- **Andreas Wolf** *(Backend, CI/CD)*
+
+---
+
+- **Julian Gardeike** *(inactive)*
+- **Daniel Hecht** *(inactive)*
+- **Kasimir Weilandt** *(inactive)*
+
+---
+
+## 🚀 Getting Started
+
+This is the quick start guide for the front end of **TheStudentMaster**.
+
+### 📱 Frontend
+
+⚠️ **Please note**: You must have **Node v20 (LTS)** or **Node v21** installed on your computer to run the frontend application. You also need either an iOS/Android emulator or a corresponding device. For a simple test of this app, we recommend installing **Expo Go** from the Apple App Store or Google Play Store on your device.
+
+#### Installation and Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://gitlab.com/themastercollection/thestudentmaster.git
+    ```
+
+2. **Go to the client folder**:
+    ```bash
+    cd ./thestudentmaster/Client
+    ```
+
+3. **Install all required node packages**:
+    ```bash
+    npm install
+    ```
+
+4. **Start the Expo Dev Server**:
+    ```bash
+    npm run start -c
+    ```
+
+5. **Run the App**:
+    - Scan the QR code displayed with your iOS or Android device.
+        - iOS: Scan the QR code with the Camera app.
+        - Android: Scan the code directly in the Expo Go app.
+    - For the web version, press w in the terminal.
+
+    ⚠️ Note: The web version will not compile on Windows. This is a known issue.
+
+
+### 🖥️ Backend
+
+⚠️ **Please note**: You must have **Python >= v3.11** installed on your computer to run the backend application.
+
+#### Installation and Setup
+
+1. Clone the repository:
+    ```bash
+    npm run start -c
+    ```
+
+2. **Go to the server folder**:
+    ```bash
+    cd ./thestudentmaster/Server
+    ```
+
+3. **Install all required Python modules**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. **Start the Backend**:
+    ```bash
+    uvicorn main:app --reload
+    ```
+
+    or
+
+    ```bash
+    python uvicorn main:app --reload
+    ```
+
+---
+
+### 📬 Support and Feedback
+
+For support or feedback regarding TheStudentMaster, please contact the development team at 📧 [support@thestudentmaster.de](mailto:support@thestudentmaster.de)
 
 ---
