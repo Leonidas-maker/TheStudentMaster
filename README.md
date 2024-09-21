@@ -9,7 +9,6 @@ TheStudentMaster is a project developed to facilitate the daily lives of student
 ## 🌟 Planned Features
 
 - **🗓️ Timetable Management**: Manage your timetables, check lecture times, and quickly capture changes.
-  
 - **🍽️ Cafeteria Menu**: Get an overview of cafeteria menus to help plan your meals.
 
 - **🚦 Cafeteria Occupancy**: View predicted occupancy of the cafeteria to choose times with less waiting.
@@ -22,15 +21,15 @@ TheStudentMaster is a project developed to facilitate the daily lives of student
 
 ## 👥 Contributors
 
-- **Andreas Schütz** *(Backend Lead)*
-- **Leon Sylvester** *(Frontend Lead)*
-- **Andreas Wolf** *(Backend, CI/CD)*
+- **Andreas Schütz** _(Backend Lead)_
+- **Leon Sylvester** _(Frontend Lead)_
+- **Andreas Wolf** _(Backend, CI/CD)_
 
 ---
 
-- **Julian Gardeike** *(inactive)*
-- **Daniel Hecht** *(inactive)*
-- **Kasimir Weilandt** *(inactive)*
+- **Julian Gardeike** _(inactive)_
+- **Daniel Hecht** _(inactive)_
+- **Kasimir Weilandt** _(inactive)_
 
 ---
 
@@ -45,33 +44,37 @@ This is the quick start guide for the front end of **TheStudentMaster**.
 #### Installation and Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://gitlab.com/themastercollection/thestudentmaster.git
-    ```
+   ```
 
 2. **Go to the client folder**:
-    ```bash
-    cd ./thestudentmaster/Client
-    ```
+
+   ```bash
+   cd ./thestudentmaster/Client
+   ```
 
 3. **Install all required node packages**:
-    ```bash
-    npm install
-    ```
+
+   ```bash
+   npm install
+   ```
 
 4. **Start the Expo Dev Server**:
-    ```bash
-    npm run start -c
-    ```
+
+   ```bash
+   npm run start -c
+   ```
 
 5. **Run the App**:
-    - Scan the QR code displayed with your iOS or Android device.
-        - iOS: Scan the QR code with the Camera app.
-        - Android: Scan the code directly in the Expo Go app.
-    - For the web version, press w in the terminal.
 
-    ⚠️ Note: The web version will not compile on Windows. This is a known issue.
+   - Scan the QR code displayed with your iOS or Android device.
+     - iOS: Scan the QR code with the Camera app.
+     - Android: Scan the code directly in the Expo Go app.
+   - For the web version, press w in the terminal.
 
+   ⚠️ Note: The web version will not compile on Windows. This is a known issue.
 
 ### 🖥️ Backend
 
@@ -80,30 +83,34 @@ This is the quick start guide for the front end of **TheStudentMaster**.
 #### Installation and Setup
 
 1. Clone the repository:
-    ```bash
-    npm run start -c
-    ```
+
+   ```bash
+   npm run start -c
+   ```
 
 2. **Go to the server folder**:
-    ```bash
-    cd ./thestudentmaster/Server
-    ```
+
+   ```bash
+   cd ./thestudentmaster/Server
+   ```
 
 3. **Install all required Python modules**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 4. **Start the Backend**:
-    ```bash
-    uvicorn main:app --reload
-    ```
 
-    or
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-    ```bash
-    python uvicorn main:app --reload
-    ```
+   or
+
+   ```bash
+   python uvicorn main:app --reload
+   ```
 
 ---
 
