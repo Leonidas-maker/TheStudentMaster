@@ -28,6 +28,18 @@ module.exports = {
         dark_event: "#66329A",
         dark_event_active: "#52287B",
 
+        //* Exam Class Colors
+        light_exam: "#8b0000",
+        light_exam_active: "#b22727",
+        dark_exam: "#640b0b",
+        dark_exam_active: "#832a2a",
+
+        //* Online Class Colors
+        light_online: "#006400",
+        light_online_active: "#1c811c",
+        dark_online: "#084808",
+        dark_online_active: "#1f5f1f",
+
         primary: "#0A1128",
         secondary: "#171717",
         font_primary: "#E0E0E2",

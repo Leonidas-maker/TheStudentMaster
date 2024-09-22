@@ -18,18 +18,18 @@ import { useNavigation } from "@react-navigation/native";
 import {
   fetchEvents,
   loadEventsFromStorage,
-} from "../../services/EventService";
+} from "../../services/eventService";
 import {
   getSelectedUniversity,
   getSelectedCourse,
-} from "../../services/CalendarService";
+} from "../../services/calendarService";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { EventTimeProps } from "../../interfaces/CalendarInterfaces";
+import { EventTimeProps } from "../../interfaces/calendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
 if (Platform.OS === "android") {

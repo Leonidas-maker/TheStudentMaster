@@ -3,7 +3,7 @@ import jwtDecode from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { refreshAuthLogic } from "./TokenService"; // Logic to refresh authentication tokens
+import { refreshAuthLogic } from "./tokenService"; // Logic to refresh authentication tokens
 
 // Variables to store tokens in memory
 let accessToken: string | null = null;

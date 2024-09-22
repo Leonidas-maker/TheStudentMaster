@@ -114,14 +114,17 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
             event_description_tmp = str(event.get("description", "")).lower()
 
             # Check if the lecture is online or hybrid
-            if "online" in event_description_tmp:
+            if "online" in event_description_tmp.lower() or "online" in event.get("summary").lower():
                 event_description["tags"].append("online")
-            elif "hybrid" in event_description_tmp.lower():
+            elif "hybrid" in event_description_tmp.lower() or "hybrid" in event.get("summary").lower():
                 event_description["tags"].append("hybrid")
 
             # Check if the lecture is an exam
-            if any(ext in event.get("summary") for ext in self.exam_keywords):
-                event_description["tags"].append("exam")
+            if any(ext in event.get("summary").lower() for ext in self.exam_keywords):  #
+                if "klausureinsicht" in event.get("summary").lower():
+                    event_description["tags"].append("exam_review")
+                else:
+                    event_description["tags"].append("exam")
 
             # ~~~~~~~~~~~~~~ Build event ~~~~~~~~~~~~~~ #
             jsonEvents.append(

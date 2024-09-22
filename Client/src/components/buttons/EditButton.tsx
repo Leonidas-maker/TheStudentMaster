@@ -4,7 +4,7 @@ import { Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { EditButtonProps } from "../../interfaces/ComponentInterfaces";
+import { EditButtonProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

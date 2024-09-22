@@ -4,7 +4,7 @@ import { Switch, View, Text, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { OptionSwitchProps } from "../../interfaces/ComponentInterfaces";
+import { OptionSwitchProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

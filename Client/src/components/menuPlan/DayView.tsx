@@ -4,7 +4,7 @@ import { View, Text, Pressable } from "react-native";
 import { format, addDays, isSameDay } from "date-fns";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { DayViewProps } from "../../interfaces/CanteenInterfaces";
+import { DayViewProps } from "../../interfaces/canteenInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

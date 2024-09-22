@@ -3,7 +3,7 @@ import React from "react";
 import { Pressable, Text } from "react-native";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { DefaultButtonProps } from "../../interfaces/ComponentInterfaces";
+import { DefaultButtonProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
