@@ -8,7 +8,6 @@ export interface EmailListProps {
   onSelectEmail: (emailId: string, mailbox: string) => void; // Zwei Argumente hier definieren
 }
 
-
 export interface Email {
   id: string;
   subject: string;
@@ -27,7 +26,7 @@ export interface EmailDetail {
   body: string;
 }
 
-export interface Mailbox{
+export interface Mailbox {
   id: string;
   name: string;
 }

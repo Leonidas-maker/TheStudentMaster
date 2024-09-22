@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import axios from "axios";
-import RenderHtml from 'react-native-render-html';
+import RenderHtml from "react-native-render-html";
 import { EmailDetailsProps, EmailDetail } from "../../interfaces/email";
 
 const EmailDetails: React.FC<EmailDetailsProps> = ({ mailbox, emailId }) => {
@@ -28,7 +28,9 @@ const EmailDetails: React.FC<EmailDetailsProps> = ({ mailbox, emailId }) => {
   return (
     <ScrollView className="p-4">
       <Text className="text-lg font-semibold">From: {emailDetails.from_}</Text>
-      <Text className="text-lg font-semibold">Subject: {emailDetails.subject}</Text>
+      <Text className="text-lg font-semibold">
+        Subject: {emailDetails.subject}
+      </Text>
       <RenderHtml contentWidth={300} source={{ html: emailDetails.body }} />
     </ScrollView>
   );

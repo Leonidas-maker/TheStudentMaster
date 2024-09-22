@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import axios from "axios";
 import EmailList from "../../components/email/EmailList";
 import EmailDetails from "../../components/email/EmailDetails";
@@ -16,7 +19,10 @@ const CustomDrawerContent = (props: any) => (
 
 const Email: React.FC = () => {
   const [mailboxes, setMailboxes] = useState<string[]>([]);
-  const [selectedEmail, setSelectedEmail] = useState<{ id: string; mailbox: string } | null>(null);
+  const [selectedEmail, setSelectedEmail] = useState<{
+    id: string;
+    mailbox: string;
+  } | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -76,14 +82,16 @@ const Email: React.FC = () => {
                 {() => (
                   <EmailList
                     mailbox={mailboxName}
-                    onSelectEmail={(emailId, mailbox) => onMailSelect(emailId, mailbox, index)}
+                    onSelectEmail={(emailId, mailbox) =>
+                      onMailSelect(emailId, mailbox, index)
+                    }
                   />
                 )}
               </Drawer.Screen>
             ))
           ) : (
             <Drawer.Screen name="Loading">
-              {() => (<Text>Loading...</Text>)}
+              {() => <Text>Loading...</Text>}
             </Drawer.Screen>
           )}
         </Drawer.Navigator>
