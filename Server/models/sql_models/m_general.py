@@ -11,7 +11,7 @@ class Address(Base):
     address1 = Column(String(255), nullable=False)
     address2 = Column(String(255))
 
-    postal_code_id = Column(Integer, ForeignKey("postal_codes.postal_code_id"),  primary_key=True)
+    postal_code_id = Column(Integer, ForeignKey("postal_codes.postal_code_id"), primary_key=True)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     postal_code = relationship("PostalCode", back_populates="addresses")
