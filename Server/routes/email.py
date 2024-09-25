@@ -7,6 +7,7 @@ from models.pydantic_schemas import s_email
 
 email_router = APIRouter()
 
+
 @email_router.post("/get-folders")
 async def get_folders(request: s_email.EmailBaseAuth):
     """
@@ -51,6 +52,7 @@ async def get_email_list(
         print(e)
         raise HTTPException(status_code=500)
 
+
 @email_router.post("/get-tagged-email-list", response_model=List[s_email.EmailListTaggedResponse])
 async def get_specific_email_list(
     request: s_email.EmailBaseAuth,
@@ -71,6 +73,7 @@ async def get_specific_email_list(
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500)
+
 
 @email_router.post("/get-email", response_model=s_email.EmailResponse)
 async def get_email(request: s_email.EmailRequest):

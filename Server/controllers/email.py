@@ -228,7 +228,6 @@ def fetch_tagged_emails(username, password, imap_server, imap_port, tags: List[s
         status, messages = mail.search(None, search_criteria)
         if status != "OK":
             continue
-        
 
         email_ids = messages[0].split()
 
@@ -287,7 +286,7 @@ def fetch_tagged_emails(username, password, imap_server, imap_port, tags: List[s
                             "date": date_,
                             "message_id": message_id,
                             "flags": msg_flags,
-                            "mailbox": folder
+                            "mailbox": folder,
                         }
                     )
     mail.logout()
