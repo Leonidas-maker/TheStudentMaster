@@ -112,7 +112,7 @@ const HomeBottomTabs: React.FC = () => {
           name="Email"
           component={Email}
           options={{
-            headerTitle: "TheStudentMaster",
+            headerShown: false,
             tabBarIcon: ({ color, size, focused }) => {
               if (focused) {
                 return (

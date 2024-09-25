@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException, Query
-from typing import List, Optional
+from typing import List, Optional, Annotated
+from datetime import datetime
 
-from controllers.email import fetch_folders, fetch_email_list, fetch_email, mark_emails
+from controllers.email import fetch_folders, fetch_email_list, fetch_email, setFlags, fetch_tagged_emails
 from models.pydantic_schemas import s_email
 
 email_router = APIRouter()
-
 
 @email_router.post("/get-folders")
 async def get_folders(request: s_email.EmailBaseAuth):
@@ -27,7 +27,10 @@ async def get_folders(request: s_email.EmailBaseAuth):
 
 @email_router.post("/get-email-list", response_model=List[s_email.EmailListResponse])
 async def get_email_list(
-    request: s_email.EmailListRequest, read_status: Optional[str] = Query("all", enum=["all", "unread", "read"])
+    request: s_email.EmailListRequest,
+    read_status: Optional[str] = Query("all", enum=["all", "unread", "read"]),
+    since_date: Optional[datetime] = None,
+    before_date: Optional[datetime] = None,
 ):
     """
     Retrieve a list of emails from a specified mailbox with basic information, excluding the body content.
@@ -40,12 +43,34 @@ async def get_email_list(
             imap_port=request.imap_port,
             mailbox=request.mailbox,
             read_status=read_status,
+            since_date=since_date,
+            before_date=before_date,
         )
         return emails
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500)
 
+@email_router.post("/get-tagged-email-list", response_model=List[s_email.EmailListTaggedResponse])
+async def get_specific_email_list(
+    request: s_email.EmailBaseAuth,
+    tags: Annotated[list[str] | None, Query()],
+):
+    """
+    Retrieve unread and starred emails from a specified mailbox with basic information, excluding the body content.
+    """
+    try:
+        emails = fetch_tagged_emails(
+            username=request.username,
+            password=request.password,
+            imap_server=request.imap_server,
+            imap_port=request.imap_port,
+            tags=tags,
+        )
+        return emails
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500)
 
 @email_router.post("/get-email", response_model=s_email.EmailResponse)
 async def get_email(request: s_email.EmailRequest):
@@ -58,7 +83,7 @@ async def get_email(request: s_email.EmailRequest):
             password=request.password,
             imap_server=request.imap_server,
             imap_port=request.imap_port,
-            email_id=request.email_id,
+            message_id=request.message_id,
             mailbox=request.mailbox,
         )
         return email
@@ -67,22 +92,23 @@ async def get_email(request: s_email.EmailRequest):
         raise HTTPException(status_code=500)
 
 
-@email_router.post("/mark-emails")
-async def mark_emails_endpoint(request: s_email.MarkEmailRequest):
+@email_router.post("/set-flags")
+async def set_flags(request: s_email.FlagsEmailsRequest):
     """
-    Mark specific emails as read or unread in a specified mailbox.
+    Add or remove flags to/from a list of emails in a specified mailbox. Flags with '+' will be added,
+    while flags with '-' will be removed.
     """
     try:
-        mark_emails(
+        setFlags(
             username=request.username,
             password=request.password,
             imap_server=request.imap_server,
             imap_port=request.imap_port,
-            email_ids=request.email_ids,
-            mark_as_read=request.mark_as_read,
             mailbox=request.mailbox,
+            message_ids=request.message_ids,
+            flags=request.flags,
         )
-        return {"message": "Emails successfully marked"}
+        return {"message": "Emails successfully flagged"}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500)
