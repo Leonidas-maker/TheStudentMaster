@@ -29,7 +29,15 @@ const Dualis: React.FC = () => {
   const [password, setPassword] = useState("");
   const [htmlContent, setHtmlContent] = useState("");
   const [error, setError] = useState("");
-  const [moduleData, setModuleData] = useState<Array<{ number: string; name: string; ects: string; note: string; passed: boolean }>>([]);
+  const [moduleData, setModuleData] = useState<
+    Array<{
+      number: string;
+      name: string;
+      ects: string;
+      note: string;
+      passed: boolean;
+    }>
+  >([]);
 
   // Function to handle login
   const login = async () => {
@@ -91,30 +99,50 @@ const Dualis: React.FC = () => {
       // Parse HTML content and filter the required data
       filterHtmlContent(content);
     } catch (err) {
-      setError("An error occurred while navigating to the performance overview. Please try again.");
+      setError(
+        "An error occurred while navigating to the performance overview. Please try again.",
+      );
       console.error(err);
     }
   };
 
   // Function to filter HTML content and extract the desired data
   const filterHtmlContent = (html: string) => {
-    const extractedModules: Array<{ number: string; name: string; ects: string; note: string; passed: boolean }> = [];
-    let currentModule = { number: "", name: "", ects: "", note: "", passed: false };
+    const extractedModules: Array<{
+      number: string;
+      name: string;
+      ects: string;
+      note: string;
+      passed: boolean;
+    }> = [];
+    let currentModule = {
+      number: "",
+      name: "",
+      ects: "",
+      note: "",
+      passed: false,
+    };
     let currentTdIndex = 0;
     let insideClassTr = false;
     let insideAnchorTag = false;
-  
+
     const parser = new Parser({
       onopentag(name, attribs) {
         if (name === "tr" && !attribs.class?.includes("subhead")) {
           currentTdIndex = 0;
           insideClassTr = true;
-          currentModule = { number: "", name: "", ects: "", note: "", passed: false }; // Reset module
+          currentModule = {
+            number: "",
+            name: "",
+            ects: "",
+            note: "",
+            passed: false,
+          }; // Reset module
         }
-  
+
         // Check if we are inside an anchor tag (either for module name or passed status)
         insideAnchorTag = name === "a" && attribs.id?.startsWith("result_id_");
-  
+
         // Set module as passed if an image with title "Bestanden" is found
         if (name === "img" && attribs.title === "Bestanden") {
           currentModule.passed = true;
@@ -123,7 +151,7 @@ const Dualis: React.FC = () => {
       ontext(text) {
         const cleanText = text.trim();
         if (!cleanText || !insideClassTr) return; // Skip empty text or if not inside the relevant row
-  
+
         if (insideAnchorTag) {
           currentModule.name = cleanText; // Extract module name from <a> tag
         } else {
@@ -146,20 +174,20 @@ const Dualis: React.FC = () => {
       },
       onclosetag(tagname) {
         if (tagname === "td") currentTdIndex++; // Move to next <td> in the row
-  
+
         if (tagname === "tr" && insideClassTr) {
           if (currentModule.name) extractedModules.push({ ...currentModule }); // Only add module if name exists
           insideClassTr = false; // Reset after processing the row
         }
       },
     });
-  
+
     parser.write(html);
     parser.end();
-  
+
     setModuleData(extractedModules);
-  };  
-  
+  };
+
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Bei Dualis anmelden" />
@@ -183,7 +211,9 @@ const Dualis: React.FC = () => {
         {moduleData.length > 0 ? (
           moduleData.map((module, index) => (
             <View key={index} className="mb-4">
-              <Text className="text-lg font-semibold">{module.number} - {module.name}</Text>
+              <Text className="text-lg font-semibold">
+                {module.number} - {module.name}
+              </Text>
               <Text>ECTS: {module.ects}</Text>
               <Text>Note: {module.note}</Text>
               <Text>{module.passed ? "Bestanden" : ""}</Text>
