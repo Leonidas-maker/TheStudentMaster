@@ -1,18 +1,18 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export interface SpecialEmailHashTables {
   [key: string]: EmailCompressedHashTable;
 }
 
 export interface EmailCompressedHashTable {
-  [key: string]: Omit<EmailCompressed, 'message_id'>;
+  [key: string]: Omit<EmailCompressed, "message_id">;
 }
 
 export interface EmailDetailsHashTable {
-  [key: string]: Omit<EmailDetails, 'message_id'>;
+  [key: string]: Omit<EmailDetails, "message_id">;
 }
 
 export interface EmailHashTable {
-  [key: string]: Omit<Email, 'message_id'>;
+  [key: string]: Omit<Email, "message_id">;
 }
 export interface EmailListGroup {
   today: EmailCompressed[];
@@ -20,8 +20,8 @@ export interface EmailListGroup {
   older: EmailCompressed[];
 }
 export interface EmailAddress {
-  name?: string;   
-  email: string;   
+  name?: string;
+  email: string;
 }
 
 export interface EmailCompressed {
@@ -41,7 +41,7 @@ export interface EmailDetails {
 }
 export interface Email extends EmailCompressed, EmailDetails {}
 
-export interface Mailbox{
+export interface Mailbox {
   id: string;
   name: string;
 }
@@ -52,19 +52,23 @@ export interface GroupedEmailItem {
 }
 
 export interface AsyncStorageEmailSave {
-  [mailbox: string]: { emails: EmailHashTable; timestamp: number }
+  [mailbox: string]: { emails: EmailHashTable; timestamp: number };
 }
 
 // ##################################################################### //
 // ############################### Props ############################### //
 // ##################################################################### //
 export interface EmailListProps {
-  emails:  EmailCompressedHashTable | null;
+  emails: EmailCompressedHashTable | null;
   mailbox: React.MutableRefObject<string>;
   searchQuery: string;
   isRefreshing: boolean;
   setIsRefreshing: (isRefreshing: boolean) => void;
-  updateEmails: (mailbox:string, softRefresh?: boolean, hardRefresh?: boolean) => Promise<void>;
+  updateEmails: (
+    mailbox: string,
+    softRefresh?: boolean,
+    hardRefresh?: boolean,
+  ) => Promise<void>;
   onSelectEmail: (messageId: string, mailbox: string) => void;
 }
 

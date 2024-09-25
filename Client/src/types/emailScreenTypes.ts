@@ -1,7 +1,11 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { EmailCompressed, EmailDetailsHashTable, Email } from "../interfaces/email";
+import {
+  EmailCompressed,
+  EmailDetailsHashTable,
+  Email,
+} from "../interfaces/email";
 
 // Define the EmailStackParamList type
 export type EmailStackParamList = {

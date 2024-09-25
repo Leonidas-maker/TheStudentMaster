@@ -19,7 +19,8 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
   route,
   navigation,
 }) => {
-  const { emailCompressed, emailDetailsRef, changeSelectedEmail } = route.params;
+  const { emailCompressed, emailDetailsRef, changeSelectedEmail } =
+    route.params;
   const [email, setEmail] = useState<Email | null>(null);
   const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [isStarred, setIsStarred] = useState(false);
@@ -41,14 +42,15 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
   `;
 
   const preCheckEmail = () => {
-     // Mark the email as read if it hasn't been already
-     if (!emailCompressed.flags.includes("\\Seen")) {
+    // Mark the email as read if it hasn't been already
+    if (!emailCompressed.flags.includes("\\Seen")) {
       changeSelectedEmail.current = {
-        ...emailCompressed, ...emailDetailsRef.current[emailCompressed.message_id],
+        ...emailCompressed,
+        ...emailDetailsRef.current[emailCompressed.message_id],
         flags: [...emailCompressed.flags, "\\Seen"],
       };
     }
-  }
+  };
 
   useEffect(() => {
     if (emailDetailsRef.current[emailCompressed.message_id].body) {
@@ -61,7 +63,7 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
       const intervalId = setInterval(() => {
         if (emailDetailsRef.current[emailCompressed.message_id].body) {
           console.log("Email loaded");
-          preCheckEmail(); 
+          preCheckEmail();
 
           // Set the email data
           setEmail({

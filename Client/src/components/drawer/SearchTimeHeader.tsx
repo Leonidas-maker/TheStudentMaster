@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, useColorScheme, TextInput, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  useColorScheme,
+  TextInput,
+  BackHandler,
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useNavigation, DrawerActions, useFocusEffect} from "@react-navigation/native";
+import {
+  useNavigation,
+  DrawerActions,
+  useFocusEffect,
+} from "@react-navigation/native";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -21,31 +32,32 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
   searchString,
   setSearchString,
 }) => {
-  const colorScheme  = useColorScheme();
+  const colorScheme = useColorScheme();
   const navigation = useNavigation();
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [strLastUpdated, setStrLastUpdated] = useState("None");
-
 
   // Handle back button press (Android) and screen unfocus (iOS and Android)
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
         if (isSearchVisible) {
-          setIsSearchVisible(false); 
-          setSearchString("");       
-          return true;               // Prevent default back behavior
+          setIsSearchVisible(false);
+          setSearchString("");
+          return true; // Prevent default back behavior
         } else {
-          return false;              // Allow default back behavior
+          return false; // Allow default back behavior
         }
       };
 
       // Android BackHandler for hardware back button
-      const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress,
+      );
 
-      return () => backHandler.remove();  // Cleanup event listener
-
-    }, [isSearchVisible])
+      return () => backHandler.remove(); // Cleanup event listener
+    }, [isSearchVisible]),
   );
 
   // Handle screen focus change (iOS swipe or Android back press)
@@ -58,7 +70,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
           setSearchString("");
         }
       };
-    }, [isSearchVisible])
+    }, [isSearchVisible]),
   );
 
   useEffect(() => {
@@ -74,8 +86,6 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
     // Clear the interval on component unmount
     return () => clearInterval(interval);
   }, [lastUpdated]);
-    
-
 
   return (
     <View className="flex-row items-center justify-between p-4 bg-light_primary dark:bg-dark_primary">
@@ -86,7 +96,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
           onChangeText={setSearchString}
           placeholder="Search..."
           className="flex-1 bg-gray-300 dark:bg-gray-800 rounded-md text-black dark:text-white  p-2 mr-2"
-          placeholderTextColor={colorScheme  === "dark" ? "gray" : "darkgray"}
+          placeholderTextColor={colorScheme === "dark" ? "gray" : "darkgray"}
         />
       ) : (
         <>
@@ -99,7 +109,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
               <Icon
                 name="menu"
                 size={30}
-                color={colorScheme  === "dark" ? "white" : "black"}
+                color={colorScheme === "dark" ? "white" : "black"}
               />
             </Pressable>
             <View className="ml-4">
@@ -120,7 +130,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
         <Icon
           name="magnify"
           size={30}
-          color={colorScheme  === "dark" ? "white" : "black"}
+          color={colorScheme === "dark" ? "white" : "black"}
         />
       </Pressable>
     </View>

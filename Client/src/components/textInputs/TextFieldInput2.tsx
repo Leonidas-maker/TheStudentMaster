@@ -48,7 +48,7 @@ const TextFieldInput = forwardRef<TextInput, CustomInputProps>(
         {error ? <Text className="text-red-500 mt-1">{error}</Text> : null}
       </View>
     );
-  }
+  },
 );
 
 export default TextFieldInput;

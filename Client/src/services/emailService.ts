@@ -5,7 +5,7 @@ import {
   EmailHashTable,
   EmailCompressedHashTable,
   EmailDetailsHashTable,
-  AsyncStorageEmailSave
+  AsyncStorageEmailSave,
 } from "../interfaces/email";
 import CryptoES from "crypto-es";
 
@@ -19,42 +19,39 @@ import { getData, storeData } from "./asyncStorageHelper";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Mailbox } from "../interfaces/email";
 
-
 // ##################################################################### //
 // ######################### Encrypt / Decrypt ######################### //
 // ##################################################################### //
 const saveAndEncryptEmails = async (
   asyncStorageEmails: AsyncStorageEmailSave,
-  secretKey: string
+  secretKey: string,
 ) => {
   const encryptedData = CryptoES.AES.encrypt(
     JSON.stringify(asyncStorageEmails),
-    secretKey
+    secretKey,
   ).toString();
   await storeData("mailServerEmails", encryptedData);
 };
 
-const decryptEmails = async (secretKey: string): Promise<AsyncStorageEmailSave> => {
+const decryptEmails = async (
+  secretKey: string,
+): Promise<AsyncStorageEmailSave> => {
   // Retrieve the encrypted data from AsyncStorage
   const encryptedData = await getData("mailServerEmails");
 
-
-
   // Check if the encrypted data exists
   if (!encryptedData) {
-    return  {};
+    return {};
   }
 
   // Decrypt the data
-  const decryptedData = CryptoES.AES.decrypt(
-    encryptedData,
-    secretKey
-  ).toString(CryptoES.enc.Utf8);
+  const decryptedData = CryptoES.AES.decrypt(encryptedData, secretKey).toString(
+    CryptoES.enc.Utf8,
+  );
 
   // Return the decrypted data as a JSON object
   return JSON.parse(decryptedData) || {};
 };
-
 
 // ##################################################################### //
 // ############################### Helper ############################## //
@@ -70,7 +67,7 @@ const convertHashTableToEmails = (emailHashTable: EmailHashTable) => {
 };
 
 const splitHashTables = (
-  emailHashTable: EmailHashTable
+  emailHashTable: EmailHashTable,
 ): {
   emailCompressedHashTable: EmailCompressedHashTable;
   emailDetailsHashTable: EmailDetailsHashTable;
@@ -97,7 +94,6 @@ const splitHashTables = (
   return { emailCompressedHashTable, emailDetailsHashTable };
 };
 
-
 // ##################################################################### //
 // ####################### AsyncStorageEmailSave ####################### //
 // ##################################################################### //
@@ -107,7 +103,7 @@ const storeEmailsInAsyncStorage = async (
   mailbox: string,
   emails: Email[],
   secretKey: string,
-  deleteEmails: boolean = false
+  deleteEmails: boolean = false,
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
@@ -143,7 +139,7 @@ const storeEmailsInAsyncStorage = async (
     await saveAndEncryptEmails(existingMailboxData, secretKey);
     console.debug(
       "Emails successfully stored in AsyncStorage under mailbox:",
-      mailbox
+      mailbox,
     );
     return {
       lastupdate: existingMailboxData[mailbox].timestamp,
@@ -160,7 +156,7 @@ const updateEmailBodyInAsyncStorage = async (
   mailbox: string,
   message_id: string,
   newBody: string,
-  secretKey: string
+  secretKey: string,
 ): Promise<Email | null> => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
@@ -184,7 +180,7 @@ const updateEmailBodyInAsyncStorage = async (
     // Encrypt and save the updated data
     await saveAndEncryptEmails(existingMailboxData, secretKey);
     console.debug(
-      `Email body successfully updated for message_id: ${message_id}`
+      `Email body successfully updated for message_id: ${message_id}`,
     );
     return {
       message_id: message_id,
@@ -196,7 +192,12 @@ const updateEmailBodyInAsyncStorage = async (
   }
 };
 
-const updateEmailFlagsInAsyncStorage = async (mailbox: string, message_ids: string[], flags: string[], secretKey: string) => {
+const updateEmailFlagsInAsyncStorage = async (
+  mailbox: string,
+  message_ids: string[],
+  flags: string[],
+  secretKey: string,
+) => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
     const existingMailboxData = await decryptEmails(secretKey);
@@ -216,12 +217,11 @@ const updateEmailFlagsInAsyncStorage = async (mailbox: string, message_ids: stri
 
     // Encrypt and save the updated data
     await saveAndEncryptEmails(existingMailboxData, secretKey);
-
   } catch (error) {
     console.error("Error updating email flags in AsyncStorage:", error);
     return null;
   }
-}
+};
 
 // ##################################################################### //
 // ################################ Main ############################### //
@@ -242,7 +242,7 @@ const fetchEmailListByTags = async (
   mailServerDomain: string,
   mailServerPort: string,
   tags: string[],
-  retrieveSinceDate?: string
+  retrieveSinceDate?: string,
 ): Promise<Email[]> => {
   //TODO change to correct URL
   const response = await axios.post(
@@ -261,13 +261,13 @@ const fetchEmailListByTags = async (
             return params[key]
               .map(
                 (tag: string) =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`
+                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`,
               )
               .join("&");
           })
           .join("&");
       },
-    }
+    },
   );
   return response.data;
 };
@@ -278,7 +278,7 @@ const fetchEmailListByMailbox = async (
   mailServerDomain: string,
   mailServerPort: string,
   mailbox: string,
-  retrieveSinceDate?: string
+  retrieveSinceDate?: string,
 ): Promise<Email[]> => {
   //TODO change to correct URL
   let requestUrl =
@@ -331,7 +331,7 @@ const getEmailFolders = async () => {
         password: password,
         imap_server: mailServerDomain,
         imap_port: mailServerPort,
-      }
+      },
     );
     const saveData = {
       folders: response.data.folders,
@@ -358,7 +358,7 @@ const getEmailList = async (
   mailbox: string,
   readStatus: string,
   softRefresh: boolean = false,
-  hardRefresh: boolean = true
+  hardRefresh: boolean = true,
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   const { username, password } = await getMailServerCredentials();
   let retrieveSinceDate = null;
@@ -369,7 +369,7 @@ const getEmailList = async (
   if (availableEmails && password) {
     const decryptedData = CryptoES.AES.decrypt(
       availableEmails,
-      password
+      password,
     ).toString(CryptoES.enc.Utf8);
     const parsedEmails = JSON.parse(decryptedData)[mailbox] || {
       emails: [],
@@ -408,7 +408,7 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           ["FLAGGED"],
-          retrieveSinceDate || undefined
+          retrieveSinceDate || undefined,
         );
         break;
       case "unseen":
@@ -418,7 +418,7 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           ["UNSEEN"],
-          retrieveSinceDate || undefined
+          retrieveSinceDate || undefined,
         );
         break;
       default:
@@ -428,7 +428,7 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           mailbox,
-          retrieveSinceDate || undefined
+          retrieveSinceDate || undefined,
         );
         break;
     }
@@ -443,7 +443,7 @@ const getEmailList = async (
     if (availableEmails) {
       const decryptedData = CryptoES.AES.decrypt(
         availableEmails,
-        password
+        password,
       ).toString(CryptoES.enc.Utf8);
       const parsedEmails = JSON.parse(decryptedData)[mailbox] || {
         emails: [],
@@ -466,7 +466,7 @@ const getEmailList = async (
  */
 const getEmailDetails = async (
   messageId: string,
-  mailbox: string
+  mailbox: string,
 ): Promise<Email | null> => {
   const { username, password } = await getMailServerCredentials();
   const mailServerDomain = await getData("mailServerDomain");
@@ -488,13 +488,13 @@ const getEmailDetails = async (
         imap_port: mailServerPort,
         message_id: messageId,
         mailbox: mailbox,
-      }
+      },
     );
     return await updateEmailBodyInAsyncStorage(
       mailbox,
       messageId,
       response.data.body,
-      password
+      password,
     );
   } catch (error) {
     console.error("Error fetching email details:", error);
@@ -505,7 +505,7 @@ const getEmailDetails = async (
 const updateEmailFlags = async (
   mailbox: string,
   message_ids: string[],
-  flags: string[]
+  flags: string[],
 ) => {
   const { username, password } = await getMailServerCredentials();
   const mailServerDomain = await getData("mailServerDomain");
@@ -518,15 +518,18 @@ const updateEmailFlags = async (
   }
 
   try {
-    const response = await axios.post("http://192.168.178.43:8000/email/set-flags", {
-      username: username,
-      password: password,
-      imap_server: mailServerDomain,
-      imap_port: mailServerPort,
-      message_ids: message_ids,
-      mailbox: mailbox,
-      flags: flags,
-    });
+    const response = await axios.post(
+      "http://192.168.178.43:8000/email/set-flags",
+      {
+        username: username,
+        password: password,
+        imap_server: mailServerDomain,
+        imap_port: mailServerPort,
+        message_ids: message_ids,
+        mailbox: mailbox,
+        flags: flags,
+      },
+    );
 
     if (response.status !== 200) {
       console.error("Error updating email flags:", response.data);
@@ -538,4 +541,10 @@ const updateEmailFlags = async (
   }
 };
 
-export { getEmailFolders, getEmailList, getEmailDetails, splitHashTables, updateEmailFlags };
+export {
+  getEmailFolders,
+  getEmailList,
+  getEmailDetails,
+  splitHashTables,
+  updateEmailFlags,
+};

@@ -121,13 +121,13 @@ const Settings: React.FC = () => {
       await getSelectedUniversity(
         setSelectedUniversity,
         setPlaceholderUniversity,
-        setMissingUniversity
+        setMissingUniversity,
       );
       setProgress(0.75);
       await getSelectedCourse(
         setSelectedCourse,
         setPlaceholderCourse,
-        setMissingCourse
+        setMissingCourse,
       );
       setProgress(1);
       setLoading(false);
@@ -208,7 +208,7 @@ const Settings: React.FC = () => {
       return () => {
         // Do something when the screen is unfocused
       };
-    }, [])
+    }, []),
   );
 
   // ====================================================== //
@@ -224,7 +224,7 @@ const Settings: React.FC = () => {
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
     const selectedUni = calendars.find(
-      (calendar) => calendar.university_name === selectedValue
+      (calendar) => calendar.university_name === selectedValue,
     );
     if (selectedUni) {
       const selectedUniData = {
@@ -236,7 +236,7 @@ const Settings: React.FC = () => {
       setSelectedUniversity(selectedUniData);
       await AsyncStorage.setItem(
         "selectedUniversity",
-        JSON.stringify(selectedUniData)
+        JSON.stringify(selectedUniData),
       );
       setProgress(0.6);
       setPlaceholderUniversity(selectedUni.university_name);
@@ -273,7 +273,7 @@ const Settings: React.FC = () => {
   const courseDropdownValues = selectedUniversity
     ? calendars
         .find(
-          (calendar) => calendar.university_uuid === selectedUniversity.uuid
+          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
         )
         ?.course_names.map((course: string) => ({
           key: course,
@@ -366,11 +366,12 @@ const Settings: React.FC = () => {
             keyboardType="numeric"
             validate={validatePort}
           />
-          <Pressable className="p-4 mb-2 rounded shadow bg-light_primary dark:bg-dark_primary active:opacity-50"
-            onPress={() => removeData("mailServerEmails")}>
-          <Text>Clear Email Cache</Text>
+          <Pressable
+            className="p-4 mb-2 rounded shadow bg-light_primary dark:bg-dark_primary active:opacity-50"
+            onPress={() => removeData("mailServerEmails")}
+          >
+            <Text>Clear Email Cache</Text>
           </Pressable>
-          
         </View>
       </ScrollView>
       <SaveToast

@@ -14,7 +14,7 @@ import {
   getEmailList,
   getEmailDetails,
   splitHashTables,
-  updateEmailFlags
+  updateEmailFlags,
 } from "../../services/emailService";
 import {
   Email,
@@ -95,7 +95,7 @@ const EmailDrawer = ({ navigation }: any) => {
         .trim()
         .split(" ")
         .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
         )
         .join(" ");
 
@@ -110,7 +110,7 @@ const EmailDrawer = ({ navigation }: any) => {
   const updateEmails = async (
     mailbox: string,
     softRefresh = false,
-    hardRefresh = false
+    hardRefresh = false,
   ) => {
     setIsRefreshing(true);
     if (mailbox && !isUpdating.current) {
@@ -123,7 +123,7 @@ const EmailDrawer = ({ navigation }: any) => {
         mailbox,
         "all",
         softRefresh,
-        hardRefresh
+        hardRefresh,
       );
 
       if (response) {
@@ -143,7 +143,7 @@ const EmailDrawer = ({ navigation }: any) => {
       const newTimeout = Math.max(300000 - timeSinceLastUpdate, 10000); // Minimum interval of 10 seconds
 
       console.debug(
-        `Next update in ${newTimeout / 60000} minutes - ${mailbox}`
+        `Next update in ${newTimeout / 60000} minutes - ${mailbox}`,
       );
 
       // Set the new Timeout and store it in the ref
@@ -177,7 +177,7 @@ const EmailDrawer = ({ navigation }: any) => {
   const onMailSelect = (
     messageId: string,
     mailbox: string,
-    index: number
+    index: number,
   ): void => {
     if (!currentEmails) return;
 

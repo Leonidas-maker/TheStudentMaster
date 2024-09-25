@@ -1,4 +1,4 @@
-import React, { useState, memo  } from "react";
+import React, { useState, memo } from "react";
 import { View, Text, Pressable } from "react-native";
 import dayjs from "dayjs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // Verwende ein Icon-Paket
@@ -13,11 +13,11 @@ const EmailItem: React.FC<EmailItemProps> = ({
   if (!email.from_ || !email.subject || !email.date) {
     return null;
   }
-  
+
   const emailDate = dayjs(email.date);
   const [showToast, setShowToast] = useState(false);
   const displayTime = emailDate.isBefore(
-    dayjs().startOf("day").subtract(1, "day")
+    dayjs().startOf("day").subtract(1, "day"),
   )
     ? emailDate.format("DD.MM.YYYY") // Show full date for older emails
     : emailDate.format("HH:mm"); // Show time for today and yesterday emails
@@ -31,7 +31,7 @@ const EmailItem: React.FC<EmailItemProps> = ({
       // Show toast if no message ID is available
       setShowToast(true);
       setTimeout(() => {
-        setShowToast(false); 
+        setShowToast(false);
       }, 2000);
     } else {
       onSelectEmail(email.message_id, mailbox);
@@ -105,7 +105,7 @@ const EmailItem: React.FC<EmailItemProps> = ({
       )}
     </View>
   );
-  
+
   // return (
   //   <View className={`${true ? "" : "opacity-70 rounded"}`}>
   //     <Pressable
@@ -113,36 +113,36 @@ const EmailItem: React.FC<EmailItemProps> = ({
   //       onPress={() => {}}
   //       className="p-4 mb-2 rounded shadow bg-light_primary dark:bg-dark_primary active:opacity-50"
   //     >
-        // <View className="flex-1">
-        //   {/* Sender, Subject, and Flags */}
-        //   <View className="flex-row justify-between items-center">
-        //     {/* Sender */}
-        //     <View className="flex-shrink pr-3">
-        //       <Text
-        //         className={`text-lg ${
-        //           true ? "font-bold" : "font-semibold"
-        //         } text-black dark:text-white`}
-        //         numberOfLines={1}
-        //         ellipsizeMode="tail"
-        //       >
-        //         {email.from_.name ? email.from_.name : email.from_.email}
-        //       </Text>
-        //     </View>
+  // <View className="flex-1">
+  //   {/* Sender, Subject, and Flags */}
+  //   <View className="flex-row justify-between items-center">
+  //     {/* Sender */}
+  //     <View className="flex-shrink pr-3">
+  //       <Text
+  //         className={`text-lg ${
+  //           true ? "font-bold" : "font-semibold"
+  //         } text-black dark:text-white`}
+  //         numberOfLines={1}
+  //         ellipsizeMode="tail"
+  //       >
+  //         {email.from_.name ? email.from_.name : email.from_.email}
+  //       </Text>
+  //     </View>
 
-        //     {/* Flags */}
-        //     <View className="flex-row items-center space-x-2">
-        //       {/* Draft Icon */}
-        //       {false && (
-        //         <Icon name="file-document-outline" size={18} color="orange" />
-        //       )}
+  //     {/* Flags */}
+  //     <View className="flex-row items-center space-x-2">
+  //       {/* Draft Icon */}
+  //       {false && (
+  //         <Icon name="file-document-outline" size={18} color="orange" />
+  //       )}
 
-        //       {/* Starred Icon */}
-        //       {false && <Icon name="star" size={18} color="yellow" />}
+  //       {/* Starred Icon */}
+  //       {false && <Icon name="star" size={18} color="yellow" />}
 
-        //       {/* Time */}
-        //       <Text className="text-gray-500">51531</Text>
-        //     </View>
-        //   </View>
+  //       {/* Time */}
+  //       <Text className="text-gray-500">51531</Text>
+  //     </View>
+  //   </View>
 
   //         {/* Subject */}
   //         <Text

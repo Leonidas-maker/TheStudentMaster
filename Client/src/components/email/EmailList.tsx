@@ -4,7 +4,8 @@ import {
   Text,
   RefreshControl,
   SectionList,
-  ActivityIndicator, useColorScheme
+  ActivityIndicator,
+  useColorScheme,
 } from "react-native";
 import dayjs from "dayjs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -50,7 +51,7 @@ const groupEmails = (emails: EmailCompressedHashTable) => {
 
 const filterEmails = (
   emails: EmailCompressedHashTable,
-  searchQuery: string
+  searchQuery: string,
 ) => {
   const filteredEmails: EmailCompressedHashTable = {};
 
@@ -92,7 +93,7 @@ const EmailList: React.FC<EmailListProps> = ({
 
   const groupedEmails = useMemo(
     () => groupEmails(filterEmails(emails, searchQuery)),
-    [emails, searchQuery]
+    [emails, searchQuery],
   );
 
   // ====================================================== //
@@ -154,9 +155,11 @@ const EmailList: React.FC<EmailListProps> = ({
         <RefreshControl
           refreshing={isRefreshing}
           onRefresh={onRefresh}
-          colors={ colorScheme === "dark" ? ["white"] : ["black"]}
-          tintColor={ colorScheme === "dark" ? "white" : "black"}
-          progressBackgroundColor={colorScheme === "dark" ? "#121212" : "#f9f9f9"}
+          colors={colorScheme === "dark" ? ["white"] : ["black"]}
+          tintColor={colorScheme === "dark" ? "white" : "black"}
+          progressBackgroundColor={
+            colorScheme === "dark" ? "#121212" : "#f9f9f9"
+          }
         />
       }
     />
