@@ -17,7 +17,4 @@ function MealPlanSVG(props: any) {
   );
 }
 
-
-
-
 export default MealPlanSVG;

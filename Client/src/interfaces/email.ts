@@ -41,7 +41,7 @@ export interface EmailDetails {
 }
 export interface Email extends EmailCompressed, EmailDetails {}
 
-export interface Mailbox{
+export interface Mailbox {
   id: string;
   name: string;
 }
