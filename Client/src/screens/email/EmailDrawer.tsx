@@ -208,7 +208,7 @@ const EmailDrawer = ({ navigation }: any) => {
   // ====================================================== //
   // =================== useFocusEffects ================== //
   // ====================================================== //
-  // TODO: Fix the issue with the email flags not updating
+  // TODO
   // useFocusEffect(
   //   useCallback(() => {
   //     if (currentEmails && changeSelectedEmail.current) {
