@@ -25,6 +25,7 @@
     "expo-screen-orientation": "~7.0.5",
     "expo-secure-store": "~13.0.2",
     "expo-status-bar": "~1.12.1",
+    "htmlparser2": "^9.1.0",
     "i18next-chained-backend": "^4.6.2",
     "i18next-http-backend": "^2.5.0",
     "intl-pluralrules": "^2.0.1",
