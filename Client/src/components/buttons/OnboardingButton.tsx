@@ -10,7 +10,7 @@ import { Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { OnboardingButtonProps } from "../../interfaces/ComponentInterfaces";
+import { OnboardingButtonProps } from "../../interfaces/componentInterfaces";
 
 const { width } = Dimensions.get("window");
 

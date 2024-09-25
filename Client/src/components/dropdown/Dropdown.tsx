@@ -4,7 +4,7 @@ import { View, useColorScheme } from "react-native";
 import { SelectList } from "react-native-dropdown-select-list";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { DropdownProps } from "../../interfaces/ComponentInterfaces";
+import { DropdownProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

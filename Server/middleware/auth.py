@@ -34,6 +34,9 @@ from middleware.user import get_user_security, get_user_2fa, get_user
 ###########################################################################
 ############################## Security Warns #############################
 ###########################################################################
+
+
+# Raise security warnings and potentially lock the account
 def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error: str) -> None:
     security_warns = user_security.security_warns + 1
     if security_warns >= MAX_WARNS:
@@ -58,6 +61,7 @@ def raise_security_warns(db: Session, user_security: m_auth.UserSecurity, error:
     )
 
 
+# Check if an account is locked and handle unlocking if necessary
 def check_security_warns(db: Session, user_security: m_auth.UserSecurity) -> None:
     if user_security.locked_until:
         if user_security.locked and user_security.locked_until > unix_timestamp():
@@ -76,6 +80,9 @@ def check_security_warns(db: Session, user_security: m_auth.UserSecurity) -> Non
 ###########################################################################
 ################################## Helper #################################
 ###########################################################################
+
+
+# Helper function to get the current Unix timestamp with optional time adjustments
 def unix_timestamp(
     days: int = 0,
     seconds: int = 0,
@@ -106,8 +113,8 @@ def unix_timestamp(
 # ======================================================== #
 
 
+# Function to generate ECDSA keys
 def generate_ecdsa_keys(curve: ec.EllipticCurve):
-    # ~~~~~~~~~~~~~~ Access Token ~~~~~~~~~~~~~ #
     # Generate the private key
     private_key = ec.generate_private_key(curve)
 
@@ -133,11 +140,13 @@ def generate_ecdsa_keys(curve: ec.EllipticCurve):
 # ======================================================== #
 
 
+# Function to save a key to a file
 def save_key(key: bytes, file_name: str, folder_path: Path):
     with (folder_path / file_name).open("wb") as key_file:
         key_file.write(key)
 
 
+# Function to load a key from a file
 def load_key(
     file_name: str,
     key_password: bytes = None,
@@ -154,6 +163,7 @@ def load_key(
     return key
 
 
+# Function to generate keys and save them to files
 def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys"):
     access_private_key, access_public_key = generate_ecdsa_keys(ec.SECP256R1())
     refresh_private_key, refresh_public_key = generate_ecdsa_keys(ec.SECP521R1())
@@ -168,7 +178,7 @@ def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_ke
 # ======================================================== #
 
 
-# ~~~~~~~~~~~~~~ Private Keys ~~~~~~~~~~~~~ #
+# Get the private keys for tokens, generate if not exist
 def get_tokens_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
@@ -184,6 +194,7 @@ def get_tokens_private(
     return refresh_private_key, access_private_key
 
 
+# Get the private key for security tokens, generate if not exist
 def get_security_token_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePrivateKey:
@@ -195,7 +206,7 @@ def get_security_token_private(
     return security_private_key
 
 
-# ~~~~~~~~~~~~~~ Public Keys ~~~~~~~~~~~~~ #
+# Get the public key for refresh tokens, generate if not exist
 def get_refresh_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
@@ -209,6 +220,7 @@ def get_refresh_token_public(
     return public_key
 
 
+# Get the public key for access tokens, generate if not exist
 def get_access_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
@@ -222,6 +234,7 @@ def get_access_token_public(
     return public_key
 
 
+# Get the public key for security tokens, generate if not exist
 def get_security_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
@@ -240,7 +253,7 @@ def get_security_token_public(
 # ======================================================== #
 
 
-# TODO Application ID
+# Function to check the JTI of a token
 def check_jti(
     db: Session,
     jti: uuid.UUID,
@@ -258,7 +271,7 @@ def check_jti(
 
     token_exists = False
 
-    # ~~~~~~~~~~~~~~~~ User ID ~~~~~~~~~~~~~~~~ #
+    # Check if the token exists for the given user ID
     if user_id:
         if application_id:
             token_exists = (
@@ -286,7 +299,7 @@ def check_jti(
                 is not None
             )
 
-    # ~~~~~~~~~~~~~~~~ User UUID ~~~~~~~~~~~~~~~ #
+    # Check if the token exists for the given user UUID
     elif user_uuid:
         user_uuid = uuid.UUID(user_uuid)
         if application_id:
@@ -313,7 +326,7 @@ def check_jti(
                 is not None
             )
 
-    # ~~~~~~~~~~~~~~~~ User Security ~~~~~~~~~~~~~~~ #
+    # Check if the token exists for the given user security
     elif user_security:
         tokens: List[m_auth.UserTokens] = user_security.user_tokens
 
@@ -331,7 +344,7 @@ def check_jti(
     return token_exists
 
 
-# ~~~~~~~~~~~~~~ Refresh Token ~~~~~~~~~~~~~ #
+# Verify the refresh token
 def verify_refresh_token(db: Session, token: str):
     public_key = get_refresh_token_public()
     try:
@@ -353,14 +366,14 @@ def verify_refresh_token(db: Session, token: str):
         return False
 
 
-# ~~~~~~~~~~~~~~ Access Token ~~~~~~~~~~~~~ #
+# Verify the access token
 def verify_access_token(db: Session, token: str):
     public_key = get_access_token_public()
     try:
         options = {"verify_aud": False}  # TODO Change this to True
         payload = jwt.decode(token, public_key, algorithms="ES256", options=options)
 
-        # Check if the jti is valid
+        # Check if the JTI is valid
         if not check_jti(
             db=db,
             jti=uuid.UUID(payload["jti"]),
@@ -375,7 +388,7 @@ def verify_access_token(db: Session, token: str):
         return False
 
 
-# ~~~~~~~~~~~~~ Security Token ~~~~~~~~~~~~ #
+# Verify the security token
 def verify_security_token(db: Session, token: str, is_2fa: bool = False):
     public_key = get_security_token_public()
     try:
@@ -383,7 +396,7 @@ def verify_security_token(db: Session, token: str, is_2fa: bool = False):
         payload = jwt.decode(token, public_key, algorithms="ES256", audience=reasons)
 
         user_security = get_user_security(db, user_uuid=payload["sub"], with_2fa=is_2fa)
-        # Check if the jti is valid
+        # Check if the JTI is valid
         if not check_jti(
             db=db,
             jti=uuid.UUID(payload["jti"]),
@@ -399,6 +412,7 @@ def verify_security_token(db: Session, token: str, is_2fa: bool = False):
         return False, None
 
 
+# Get the payload of a token without verifying the signature
 def get_token_payload(token: str):
     payload = jwt.decode(token, options={"verify_signature": False})
     return payload
@@ -407,6 +421,9 @@ def get_token_payload(token: str):
 # ======================================================== #
 # ===================== Check Tokens ===================== #
 # ======================================================== #
+
+
+# Check if the refresh token is valid and return the user
 def check_refresh_token(db: Session, token: str) -> m_user.User:
     jwt_payload = verify_refresh_token(db, token)
     if jwt_payload:
@@ -419,6 +436,7 @@ def check_refresh_token(db: Session, token: str) -> m_user.User:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+# Check if the access token is valid and return the user
 def check_access_token(
     db: Session, token: str, with_uuid: bool = False, with_address: bool = False, with_avatar: bool = False
 ) -> m_user.User:
@@ -438,6 +456,9 @@ def check_access_token(
 # ======================================================== #
 # ==================== Tokens-Rotation =================== #
 # ======================================================== #
+
+
+# Create new tokens (refresh and access)
 def create_tokens(
     db: Session,
     user_security: m_auth.UserSecurity,
@@ -446,7 +467,7 @@ def create_tokens(
     application_id: uuid.UUID = None,
 ) -> Tuple[str, str]:
 
-    # Check if the application_id is a valid UUID (this is needed because python does not check the type of the variable)
+    # Check if the application_id is a valid UUID
     if application_id:
         try:
             application_id = uuid.UUID(application_id)
@@ -469,7 +490,7 @@ def create_tokens(
     if len(temporary_tokens) >= MAX_WEB_REFRESH_TOKENS:
         raise HTTPException(status_code=403, detail="Too many active temporary instances")
 
-    # Get the private keys and create the jti
+    # Get the private keys and create the JTI
     refresh_private_key, access_private_key = get_tokens_private()
     refresh_jti = uuid.uuid4()
     access_jti = uuid.uuid4()
@@ -488,8 +509,8 @@ def create_tokens(
             "jti": str(refresh_jti),
         }
 
-        # Add the jti and application_id to the user_security
-        new_reftesh_token = m_auth.UserTokens(
+        # Add the JTI and application_id to the user_security
+        new_refresh_token = m_auth.UserTokens(
             user_id=user_id,
             token_type="Application",
             token_jti=refresh_jti,
@@ -498,7 +519,7 @@ def create_tokens(
             expiration_time=token_exp,
         )
     else:
-        token_exp = unix_timestamp(minutes=15)  #! More then 15 minutes?
+        token_exp = unix_timestamp(minutes=15)  #! More than 15 minutes?
         payload = {
             "iss": "https://api.theshopmaster.com",  #! Change this to the domain of the api
             "sub": user_uuid,
@@ -508,7 +529,7 @@ def create_tokens(
             "iat": current_timestamp,
             "jti": str(refresh_jti),
         }
-        new_reftesh_token = m_auth.UserTokens(
+        new_refresh_token = m_auth.UserTokens(
             user_id=user_id,
             token_type="Temporary",
             token_jti=refresh_jti,
@@ -517,8 +538,8 @@ def create_tokens(
             expiration_time=token_exp,
         )
 
-    reftesh_token = jwt.encode(payload, refresh_private_key, algorithm="ES512")
-    db.add(new_reftesh_token)
+    refresh_token = jwt.encode(payload, refresh_private_key, algorithm="ES512")
+    db.add(new_refresh_token)
     db.flush()
 
     # ~~~~~~~~ Create the access token ~~~~~~~ #
@@ -556,9 +577,10 @@ def create_tokens(
     db.add(new_access_token)
     db.flush()
 
-    return reftesh_token, access_token
+    return refresh_token, access_token
 
 
+# Create a security token
 def create_security_token(
     db: Session,
     user_id: str,
@@ -598,7 +620,7 @@ def create_security_token(
 # ======================================================== #
 
 
-# ~~~~~~~~~~~~~~ Single Token ~~~~~~~~~~~~~ #
+# Revoke a single token
 def revoke_token(db: Session, user_id: str, token_type: str, token_value: str, token_jti: uuid.UUID) -> bool:
     try:
         db.query(m_auth.UserTokens).filter(
@@ -613,7 +635,7 @@ def revoke_token(db: Session, user_id: str, token_type: str, token_value: str, t
         return False
 
 
-# ~~~~~~~~~~~~~~ All Tokens ~~~~~~~~~~~~~ #
+# Revoke all tokens of a specific type or value for a user
 def revoke_all_tokens(db: Session, user_id: str, token_type: str = None, token_value: str = None):
     query = db.query(m_auth.UserTokens).filter(m_auth.UserTokens.user_id == user_id)
 
@@ -626,18 +648,22 @@ def revoke_all_tokens(db: Session, user_id: str, token_type: str = None, token_v
     db.flush()
 
 
+# Revoke all application tokens for a user
 def revoke_all_application_tokens(db: Session, user: s_user.User):
     revoke_all_tokens(db, user.user_id, token_type="Application")
 
 
+# Revoke all security tokens for a user
 def revoke_all_security_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Security")
 
 
+# Revoke all temporary tokens for a user
 def revoke_all_temporary_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Temporary")
 
 
+# Revoke all access tokens for a user
 def revoke_all_access_tokens(db: Session, user_id: str):
     revoke_all_tokens(db, user_id, token_type="Access")
 
@@ -646,10 +672,12 @@ def revoke_all_access_tokens(db: Session, user_id: str):
 ################################### OTP ###################################
 ###########################################################################
 
-
 # ======================================================== #
 # ========================= TOTP ========================= #
 # ======================================================== #
+
+
+# Verify a TOTP (Time-based One-Time Password)
 def verify_totp(db: Session, otp: str, user_uuid: str = None, user_2fa: m_auth.User2FA = None) -> bool:
     if user_uuid:
         user_2fa = get_user_2fa(db, user_uuid=user_uuid)
@@ -668,6 +696,7 @@ def verify_totp(db: Session, otp: str, user_uuid: str = None, user_2fa: m_auth.U
         return False
 
 
+# Create a TOTP for a user
 def create_totp(db: Session, user_id: str) -> str:
     if db.query(m_auth.User2FA).filter(m_auth.User2FA.user_id == user_id).first() is not None:
         raise HTTPException(status_code=400, detail="2FA-TOTP already in creation process")
@@ -683,6 +712,7 @@ def create_totp(db: Session, user_id: str) -> str:
     return totp_secret
 
 
+# Create backup codes for a user
 def create_backup_codes(db: Session, user_uuid: str) -> List[str]:
     user_security = get_user_security(db, user_uuid=user_uuid, with_2fa=True)
     if not user_security._2fa_enabled:
@@ -704,6 +734,9 @@ def create_backup_codes(db: Session, user_uuid: str) -> List[str]:
 # ======================================================== #
 # ====================== Simple-OTP ====================== #
 # ======================================================== #
+
+
+# Verify a simple OTP
 def verify_simple_otp(user_security: m_auth.UserSecurity, otp: str) -> bool:
     otp = otp.strip()
     verify_otp = user_security.verify_otp
@@ -717,6 +750,7 @@ def verify_simple_otp(user_security: m_auth.UserSecurity, otp: str) -> bool:
         return False
 
 
+# Create a simple OTP for a user
 def create_simple_otp(db: Session, user_security: m_auth.UserSecurity, expire_time: int = 15) -> int:
     # Create the otp: XXXXXX
     otp = secrets.randbelow(1000000)
@@ -729,6 +763,9 @@ def create_simple_otp(db: Session, user_security: m_auth.UserSecurity, expire_ti
 # ======================================================== #
 # ======================= Password ======================= #
 # ======================================================== #
+
+
+# Check if a password is correct
 def check_password(
     db: Session,
     password: str,
@@ -751,6 +788,7 @@ def check_password(
         return False
 
 
+# Change a user's password
 def change_password(db: Session, user_security: m_auth.UserSecurity, new_password: str):
     user_security.password = bcrypt.hashpw(new_password.encode("utf-8"), bcrypt.gensalt())
     db.flush()
@@ -761,6 +799,7 @@ def change_password(db: Session, user_security: m_auth.UserSecurity, new_passwor
 # ======================================================== #
 
 
+# Register a new application for a user
 def register_application(db: Session, user_security: m_auth.UserSecurity, application: s_auth.Application) -> uuid.UUID:
     application_uuid = application.application_id
 
@@ -791,6 +830,7 @@ def register_application(db: Session, user_security: m_auth.UserSecurity, applic
 ###########################################################################
 
 
+# Remove old tokens from the database
 def remove_old_tokens(
     db: Session,
     user_security: m_auth.UserSecurity,
@@ -852,6 +892,7 @@ def remove_old_tokens(
     return application_tokens, temporary_tokens, access_tokens
 
 
+# Remove older security tokens if the limit is reached
 def remove_older_security_token(db: Session, user_security: m_auth.UserSecurity, reason: str):
     security_tokens: List[m_auth.UserTokens] = user_security.user_tokens
     if len(security_tokens) >= MAX_SECURITY_TOKENS:

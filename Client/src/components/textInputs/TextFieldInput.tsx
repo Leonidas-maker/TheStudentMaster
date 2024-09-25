@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 // ~~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { TextFieldInputProps } from "../../interfaces/ComponentInterfaces";
+import { TextFieldInputProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

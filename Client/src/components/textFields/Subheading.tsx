@@ -3,7 +3,7 @@ import React from "react";
 import { Text } from "react-native";
 
 // ~~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { TextProps } from "../../interfaces/ComponentInterfaces";
+import { TextProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

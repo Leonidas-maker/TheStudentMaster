@@ -21,7 +21,7 @@ import TimeMarker from "./TimeMarker";
 import PastMarker from "./PastMarker";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { OverlapEventProps } from "../../interfaces/CalendarInterfaces";
+import { OverlapEventProps } from "../../interfaces/calendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

@@ -6,7 +6,7 @@ import { Pressable, View } from "react-native";
 import DefaultText from "../textFields/DefaultText";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { RadioOptionProps } from "../../interfaces/ComponentInterfaces";
+import { RadioOptionProps } from "../../interfaces/componentInterfaces";
 
 const RadioOption: React.FC<RadioOptionProps> = ({
   label,

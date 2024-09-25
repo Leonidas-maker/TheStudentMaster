@@ -4,7 +4,7 @@ import { View, Text, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { NavigatorProps } from "../../interfaces/ComponentInterfaces";
+import { NavigatorProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

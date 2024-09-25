@@ -18,17 +18,17 @@ from middleware.auth import check_password, change_password
 from middleware.calendar import add_native_calendar_to_user, add_custom_calendar_to_user
 from middleware.user import get_user_security
 
-
 # ======================================================== #
 # ======================= Register ======================= #
 # ======================================================== #
 
 
+# Function to create a new user
 def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]:
     if user.address:
         new_address = create_address(db, user.address)
 
-    # Create new user
+    # Create a new user in the database
     new_user = m_user.User(
         username=user.username,
         email=user.email,
@@ -38,13 +38,14 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
     db.add(new_user)
     db.flush()
 
+    # Create a new user UUID
     new_user_uuid = m_user.UserUUID(
         user_id=new_user.user_id,
     )
     db.add(new_user_uuid)
     db.flush()
 
-    # Create new user_security
+    # Create new user security details
     new_user_security = m_auth.UserSecurity(
         user_id=new_user.user_id,
         password=bcrypt.hashpw(user.security.password.encode("utf-8"), bcrypt.gensalt()),
@@ -61,6 +62,7 @@ def create_user(db: Session, user: s_user.UserCreate) -> tuple[m_user.User, str]
 # ======================================================== #
 
 
+# Function to update a user without authentication checks
 def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     if new_user.address:
         address = create_address(db, new_user.address)
@@ -72,6 +74,7 @@ def update_user_normal(db: Session, user: m_user.User, new_user: s_user.UserUpda
     db.flush()
 
 
+# Function to update a user with authentication checks
 def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserUpdate):
     user_security = get_user_security(db, user_id=user.user_id)
     min_update_time = user_security.last_modified + datetime.timedelta(hours=security.MAX_SECURITY_CHANGE_HOURS)
@@ -92,8 +95,9 @@ def update_user_with_auth(db: Session, user: m_user.User, new_user: s_user.UserU
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+# Function to update a user based on check result
 def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, check_result: int):
-    # Because of the are_fields_correct_set function used in the route, we can assume that the fields are correct
+    # Based on the check_result, update user normally or with authentication checks
     if check_result == 1:
         update_user_normal(db, user, new_user)
     elif check_result == 2:
@@ -109,12 +113,13 @@ def update_user(db: Session, user: m_user.User, new_user: s_user.UserUpdate, che
     return user
 
 
+# Function to update a user's calendar
 def update_user_calendar(
     db: Session,
     user: m_user.User,
     new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate,
 ):
-    # Add new calendar to userYou need to enable JavaScript to run this app.
+    # Add a new calendar to the user based on the type of calendar provided
     if isinstance(new_user_calendar, s_calendar.NativeCalenderIdentifier):
         calendar = add_native_calendar_to_user(
             db, user.user_id, new_user_calendar.course_name, new_user_calendar.university_uuid
@@ -124,7 +129,8 @@ def update_user_calendar(
 
     if not calendar:
         raise HTTPException(status_code=404, detail="Not Found")
-    # Return response
+
+    # Return response with calendar details
     res_calendar = s_calendar.ResCalendar(
         university_name=calendar.university.university_name if calendar.university else None,
         course_name=calendar.course_name,
