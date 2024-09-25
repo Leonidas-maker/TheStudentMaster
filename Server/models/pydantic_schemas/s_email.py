@@ -17,16 +17,18 @@ class EmailAddress(BaseModel):
     name: str
     email: str
 
+
 class EmailListResponse(BaseModel):
     id: str
     subject: str
     from_: EmailAddress
-    to: List[EmailAddress]     
-    cc: Optional[List[EmailAddress]]  
-    bcc: Optional[List[EmailAddress]] 
+    to: List[EmailAddress]
+    cc: Optional[List[EmailAddress]]
+    bcc: Optional[List[EmailAddress]]
     date: str
     message_id: str
     flags: List[str]
+
 
 class EmailListTaggedResponse(EmailListResponse):
     mailbox: str
@@ -46,7 +48,6 @@ class FlagsEmailsRequest(EmailBaseAuth):
     mailbox: str
     message_ids: List[str]
     flags: List[str]
-    
 
 
 class MailboxResponse(BaseModel):
