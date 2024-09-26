@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -37,6 +37,43 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [strLastUpdated, setStrLastUpdated] = useState("None");
 
+  const searchInputRef = useRef<TextInput>(null);
+
+  // ====================================================== //
+  // ===================== Callbacks; ===================== //
+  // ====================================================== //
+
+  // Handle search button press and auto-focus
+  const handleSearchPress = () => {
+    setIsSearchVisible(true);
+    setTimeout(() => {
+      // Focus on the TextInput after rendering
+      searchInputRef.current?.focus();
+    }, 0);
+  };
+
+  // ====================================================== //
+  // ===================== useEffects ===================== //
+  // ====================================================== //
+
+  useEffect(() => {
+    // Update Time immediately on first render
+    const lastUpdatedDate = new Date(lastUpdated);
+    setStrLastUpdated(dayjs(lastUpdatedDate).fromNow());
+
+    // Update Time every 10 seconds
+    const interval = setInterval(() => {
+      setStrLastUpdated(dayjs(lastUpdatedDate).fromNow());
+    }, 10000);
+
+    // Clear the interval on component unmount
+    return () => clearInterval(interval);
+  }, [lastUpdated]);
+
+  // ====================================================== //
+  // ==================== FocusEffects ==================== //
+  // ====================================================== //
+
   // Handle back button press (Android) and screen unfocus (iOS and Android)
   useFocusEffect(
     React.useCallback(() => {
@@ -53,11 +90,11 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
       // Android BackHandler for hardware back button
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
-        onBackPress,
+        onBackPress
       );
 
       return () => backHandler.remove(); // Cleanup event listener
-    }, [isSearchVisible]),
+    }, [isSearchVisible])
   );
 
   // Handle screen focus change (iOS swipe or Android back press)
@@ -70,28 +107,15 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
           setSearchString("");
         }
       };
-    }, [isSearchVisible]),
+    }, [isSearchVisible])
   );
-
-  useEffect(() => {
-    // Update Time immediately on first render
-    const lastUpdatedDate = new Date(lastUpdated);
-    setStrLastUpdated(dayjs(lastUpdatedDate).fromNow());
-
-    // Update Time every 10 seconds
-    const interval = setInterval(() => {
-      setStrLastUpdated(dayjs(lastUpdatedDate).fromNow());
-    }, 10000);
-
-    // Clear the interval on component unmount
-    return () => clearInterval(interval);
-  }, [lastUpdated]);
 
   return (
     <View className="flex-row items-center justify-between p-4 bg-light_primary dark:bg-dark_primary">
       {isSearchVisible ? (
         // Search Input Field
         <TextInput
+          ref={searchInputRef}
           value={searchString}
           onChangeText={setSearchString}
           placeholder="Search..."
@@ -125,7 +149,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
       {/* Search Icon */}
       <Pressable
         className="active:opacity-50"
-        onPress={() => setIsSearchVisible(!isSearchVisible)}
+        onPress={() => handleSearchPress()}
       >
         <Icon
           name="magnify"

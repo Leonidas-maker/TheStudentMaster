@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from 'lodash';
 export interface SpecialEmailHashTables {
   [key: string]: EmailCompressedHashTable;
 }
@@ -51,8 +52,48 @@ export interface GroupedEmailItem {
   data: EmailCompressed[];
 }
 
+export interface ChangedEmail {
+  flags: string[];
+  //mailbox: string;
+  message_id: string;
+}
+// ##################################################################### //
+// ############################ AsyncStorage ########################### //
+// ##################################################################### //
+
+export interface AsyncStorageEmail {
+  subject: string;
+  from_: EmailAddress;
+  date: string;
+  flags: string[];
+  to: EmailAddress[];
+  cc?: EmailAddress[];
+  bcc?: EmailAddress[];
+  body?: string;
+}
+
+export interface AsyncStorageEmailHashTable {
+  [messageId: string]: AsyncStorageEmail;
+}
+
+export interface AsyncStorageMailbox {
+  emails: AsyncStorageEmailHashTable;
+  lastupdate: number;
+}
+
+export interface AsyncStorageVirtualMailboxItem {
+  messageIds: Set<string>;
+  lastUpdate: number;
+}
+
+export interface AsyncStorageVirtualMailbox {
+  unread: AsyncStorageVirtualMailboxItem;
+  important: AsyncStorageVirtualMailboxItem;
+}
+
 export interface AsyncStorageEmailSave {
-  [mailbox: string]: { emails: EmailHashTable; timestamp: number };
+  mailboxes: { [mailbox: string]: AsyncStorageMailbox };
+  virtualMailboxes: AsyncStorageVirtualMailbox;
 }
 
 // ##################################################################### //
@@ -67,7 +108,7 @@ export interface EmailListProps {
   updateEmails: (
     mailbox: string,
     softRefresh?: boolean,
-    hardRefresh?: boolean,
+    hardRefresh?: boolean
   ) => Promise<void>;
   onSelectEmail: (messageId: string, mailbox: string) => void;
 }

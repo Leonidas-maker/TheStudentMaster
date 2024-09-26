@@ -131,7 +131,7 @@ def fetch_email(username, password, imap_server, imap_port, message_id, mailbox)
     mail.login(username, password)
     mail.select(f'"{mailbox}"')
 
-    # Search for the email using the Message-ID
+    # Search for the email using the Email-ID
     status, msg_ids = mail.search(None, f'HEADER Message-ID "{message_id}"')
     if status != "OK" or not msg_ids[0]:
         raise HTTPException(status_code=404, detail="Email not found")
@@ -177,15 +177,12 @@ def fetch_email(username, password, imap_server, imap_port, message_id, mailbox)
 
 def setFlags(username, password, imap_server, imap_port, mailbox: str, message_ids: List[str], flags: List[str]):
     """
-    Add or remove flags to/from a list of emails in a specified mailbox. Flags with '+' will be added,
-    and flags with '-' will be removed.
+    Add or remove flags to/from a list of emails in a specified mailbox using Message-ID.
+    Flags with '+' will be added, and flags with '-' will be removed.
     """
     mail = imaplib.IMAP4_SSL(imap_server, imap_port)
     mail.login(username, password)
     mail.select(f'"{mailbox}"')
-
-    # Combine all message_ids into a single string, which is supported by IMAP for batch operations
-    message_id_str = ",".join(message_ids)
 
     # Create two lists for flags to add and remove
     add_flags = []
@@ -198,11 +195,32 @@ def setFlags(username, password, imap_server, imap_port, mailbox: str, message_i
         elif flag.startswith("-"):
             remove_flags.append(flag[1:])  # Strip the "-" before appending
 
-    # Apply the flags in batch if there are flags to add or remove
-    if add_flags:
-        mail.store(message_id_str, "+FLAGS", " ".join(add_flags))
-    if remove_flags:
-        mail.store(message_id_str, "-FLAGS", " ".join(remove_flags))
+    # List to store all found UIDs
+    all_uids = []
+
+    for message_id in message_ids:
+        # Search for the email using its Message-ID
+        search_criteria = f'HEADER Message-ID "{message_id}"'
+        status, msg_uids = mail.uid("SEARCH", None, search_criteria)
+
+        if status != "OK" or not msg_uids[0]:
+            continue
+
+        # Add the UIDs to the list (multiple UIDs could be returned)
+        all_uids += msg_uids[0].split()
+
+    all_uids = [uid.decode("utf-8") for uid in all_uids]
+
+    # Check if we have any UIDs to update
+    if all_uids:
+        # Combine all UIDs into a single string for batch processing
+        uid_str = ",".join(all_uids)
+
+        # Apply flags in one batch
+        if add_flags:
+            mail.uid("STORE", uid_str, "+FLAGS", f"({' '.join(add_flags)})")
+        if remove_flags:
+            mail.uid("STORE", uid_str, "-FLAGS", f"({' '.join(remove_flags)})")
 
     mail.logout()
 

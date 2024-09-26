@@ -6,6 +6,7 @@ import {
   SectionList,
   ActivityIndicator,
   useColorScheme,
+  Pressable,
 } from "react-native";
 import dayjs from "dayjs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -51,7 +52,7 @@ const groupEmails = (emails: EmailCompressedHashTable) => {
 
 const filterEmails = (
   emails: EmailCompressedHashTable,
-  searchQuery: string,
+  searchQuery: string
 ) => {
   const filteredEmails: EmailCompressedHashTable = {};
 
@@ -93,7 +94,7 @@ const EmailList: React.FC<EmailListProps> = ({
 
   const groupedEmails = useMemo(
     () => groupEmails(filterEmails(emails, searchQuery)),
-    [emails, searchQuery],
+    [emails, searchQuery]
   );
 
   // ====================================================== //
@@ -101,19 +102,31 @@ const EmailList: React.FC<EmailListProps> = ({
   // ====================================================== //
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
-    if (refreshCount > 1) {
-      refreshCount++;
-      updateEmails(mailbox.current, false, false);
-    } else if (refreshCount === 0) {
-      refreshCount++;
-      updateEmails(mailbox.current, true, false);
-    } else {
-      refreshCount++;
+    refreshCount++;
+    if (Object.keys(emails).length === 0 && refreshCount === 0) {
       updateEmails(mailbox.current, false, true).then(() => {
-        setTimeout(() => {
-          refreshCount = 0;
-        }, 5000);
+        setIsRefreshing(false);
       });
+    } else if (Object.keys(emails).length === 0 && refreshCount > 0) { 
+      updateEmails(mailbox.current, true, false).then(() => {
+        setIsRefreshing(false);
+      });
+      if (refreshCount > 10) {
+        refreshCount = 0;
+      }
+    }
+    else {
+      if (refreshCount > 1) {
+        updateEmails(mailbox.current, false, false);
+      } else if (refreshCount === 0) {
+        updateEmails(mailbox.current, true, false);
+      } else {
+        updateEmails(mailbox.current, false, true).then(() => {
+          setTimeout(() => {
+            refreshCount = 0;
+          }, 5000);
+        });
+      }
     }
   }, []);
 
@@ -131,6 +144,22 @@ const EmailList: React.FC<EmailListProps> = ({
       <Text className="text-gray-500 dark:text-gray-400 text-sm mt-2">
         Dieser Ordner ist leer.
       </Text>
+
+      {/* Refresh Button */}
+      <Pressable onPress={onRefresh}>
+        <Text className="text-blue-500 dark:text-blue-400 text-sm mt-2">
+          Aktualisieren
+        </Text>
+      </Pressable>
+
+      {/* Load */}
+      {isRefreshing && (
+        <ActivityIndicator
+          size="large"
+          color={colorScheme === "dark" ? "white" : "black"}
+          style={{ marginTop: 20 }}
+        />
+      )}
     </View>
   ) : (
     <SectionList

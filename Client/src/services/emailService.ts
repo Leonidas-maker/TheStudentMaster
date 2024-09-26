@@ -6,6 +6,8 @@ import {
   EmailCompressedHashTable,
   EmailDetailsHashTable,
   AsyncStorageEmailSave,
+  AsyncStorageVirtualMailbox,
+  AsyncStorageMailbox,
 } from "../interfaces/email";
 import CryptoES from "crypto-es";
 
@@ -20,37 +22,114 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Mailbox } from "../interfaces/email";
 
 // ##################################################################### //
+// ############################## Helpers ############################## //
+// ##################################################################### //
+const isTimePassed = (timestamp: number, seconds: number) => {
+  const currentTime = new Date().getTime();
+  const difference = currentTime - timestamp;
+  const minutes = difference / 60000;
+  return minutes > seconds / 60;
+};
+
+// ##################################################################### //
+// ############################### Inits ############################### //
+// ##################################################################### //
+
+/**
+ * Initializes the virtual mailboxes for unread and important emails
+ * @returns - The initialized virtual mailboxes
+ */
+const initVirtualMailboxes = (): AsyncStorageVirtualMailbox => {
+  return {
+    unread: { lastUpdate: 0, messageIds: new Set<string>() },
+    important: { lastUpdate: 0, messageIds: new Set<string>() },
+  };
+};
+
+// ##################################################################### //
 // ######################### Encrypt / Decrypt ######################### //
 // ##################################################################### //
-const saveAndEncryptEmails = async (
+
+/**
+ * Encrypts and saves the email data in AsyncStorage
+ * @param asyncStorageEmails - The email data to save
+ * @param secretKey - The secret key to encrypt the data
+ */
+const encryptAndSaveEmails = async (
   asyncStorageEmails: AsyncStorageEmailSave,
-  secretKey: string,
+  secretKey: string
 ) => {
+  const emailsToSave = {
+    ...asyncStorageEmails,
+    virtualMailboxes: {
+      unread: {
+        ...asyncStorageEmails.virtualMailboxes.unread,
+        messageIds: Array.from(
+          asyncStorageEmails.virtualMailboxes.unread.messageIds
+        ),
+      },
+      important: {
+        ...asyncStorageEmails.virtualMailboxes.important,
+        messageIds: Array.from(
+          asyncStorageEmails.virtualMailboxes.important.messageIds
+        ),
+      },
+    },
+  };
+
   const encryptedData = CryptoES.AES.encrypt(
-    JSON.stringify(asyncStorageEmails),
-    secretKey,
+    JSON.stringify(emailsToSave),
+    secretKey
   ).toString();
   await storeData("mailServerEmails", encryptedData);
 };
 
+/**
+ * Decrypts the email data from AsyncStorage
+ * @param secretKey  - The secret key to decrypt the data
+ * @returns - The decrypted email data
+ */
 const decryptEmails = async (
-  secretKey: string,
+  secretKey: string
 ): Promise<AsyncStorageEmailSave> => {
   // Retrieve the encrypted data from AsyncStorage
   const encryptedData = await getData("mailServerEmails");
 
   // Check if the encrypted data exists
   if (!encryptedData) {
-    return {};
+    return {
+      mailboxes: {},
+      virtualMailboxes: initVirtualMailboxes(),
+    };
   }
 
   // Decrypt the data
   const decryptedData = CryptoES.AES.decrypt(encryptedData, secretKey).toString(
-    CryptoES.enc.Utf8,
+    CryptoES.enc.Utf8
   );
 
-  // Return the decrypted data as a JSON object
-  return JSON.parse(decryptedData) || {};
+  // Parse the decrypted data
+  let parsedData = JSON.parse(decryptedData);
+  // If data is valid convert virtual mailboxes to Set
+  if (parsedData && parsedData.virtualMailboxes) {
+    if (Array.isArray(parsedData.virtualMailboxes.unread.messageIds)) {
+      parsedData.virtualMailboxes.unread.messageIds = new Set(
+        parsedData.virtualMailboxes.unread.messageIds
+      );
+    } else {
+      console.error("unread.messageIds is not an array");
+    }
+    if (Array.isArray(parsedData.virtualMailboxes.important.messageIds)) {
+      parsedData.virtualMailboxes.important.messageIds = new Set(
+        parsedData.virtualMailboxes.important.messageIds
+      );
+    } else {
+      console.error("important.messageIds is not an array");
+    }
+    return parsedData;
+  } else {
+    return { mailboxes: {}, virtualMailboxes: initVirtualMailboxes() };
+  }
 };
 
 // ##################################################################### //
@@ -67,7 +146,7 @@ const convertHashTableToEmails = (emailHashTable: EmailHashTable) => {
 };
 
 const splitHashTables = (
-  emailHashTable: EmailHashTable,
+  emailHashTable: EmailHashTable
 ): {
   emailCompressedHashTable: EmailCompressedHashTable;
   emailDetailsHashTable: EmailDetailsHashTable;
@@ -94,6 +173,85 @@ const splitHashTables = (
   return { emailCompressedHashTable, emailDetailsHashTable };
 };
 
+/**
+ * Adds or removes an email from the virtual mailboxes based on its flags
+ * @param email - The email to update the virtual mailboxes for
+ * @param virtualMailboxes - The virtual mailboxes to update
+ * @returns - The updated virtual mailboxes
+ */
+const updateVirtualMailbox = (
+  email: Email,
+  virtualMailboxes: AsyncStorageVirtualMailbox
+): AsyncStorageVirtualMailbox => {
+  // Update unreadEmails based on "\\Seen" flag
+  if (email.flags.includes("\\Seen")) {
+    virtualMailboxes.unread.messageIds.delete(email.message_id);
+  } else {
+    virtualMailboxes.unread.messageIds.add(email.message_id);
+  }
+
+  // Update importantEmails based on "\\Flagged" flag
+  if (!email.flags.includes("\\Flagged")) {
+    virtualMailboxes.important.messageIds.delete(email.message_id);
+  } else {
+    virtualMailboxes.important.messageIds.add(email.message_id);
+  }
+
+  return virtualMailboxes;
+};
+
+/**
+ * Updates the virtual mailboxes for a specific email based on its flags
+ * @param messageId - The message ID of the email to check
+ * @param flags - The flags of the email
+ * @param virtualMailboxes - The virtual mailboxes to update
+ * @returns - The updated virtual mailboxes
+ */
+const updateVirtualMailboxByMessageId = (
+  messageId: string,
+  flags: string[],
+  virtualMailboxes: AsyncStorageVirtualMailbox
+): AsyncStorageVirtualMailbox => {
+  if (flags.includes("\\Seen")) {
+    virtualMailboxes.unread.messageIds.delete(messageId);
+  } else {
+    virtualMailboxes.unread.messageIds.add(messageId);
+  }
+
+  if (!flags.includes("\\Flagged")) {
+    virtualMailboxes.important.messageIds.delete(messageId);
+  } else {
+    virtualMailboxes.important.messageIds.add(messageId);
+  }
+  return virtualMailboxes;
+};
+
+/**
+ * Retrieves emails by their message IDs from the mailboxes
+ * @param messageIds - The message IDs to retrieve emails for
+ * @param mailboxes  - The mailboxes to retrieve the emails from
+ * @returns - A hash table of emails with the specified message IDs
+ */
+const retrieveEmailsbyMessageIds = (
+  messageIds: Set<string>,
+  mailboxes: { [mailbox: string]: AsyncStorageMailbox }
+): EmailHashTable => {
+  const emails: EmailHashTable = {};
+
+  for (const messageId of messageIds) {
+    // Iterate over the message IDs
+    for (const mailbox in mailboxes) {
+      if (mailboxes[mailbox].emails[messageId]) {
+        console.debug(mailboxes[mailbox].emails[messageId]);
+        emails[messageId] = mailboxes[mailbox].emails[messageId];
+        break; // Break the loop if the email was found
+      }
+    }
+  }
+
+  return emails;
+};
+
 // ##################################################################### //
 // ####################### AsyncStorageEmailSave ####################### //
 // ##################################################################### //
@@ -103,25 +261,30 @@ const storeEmailsInAsyncStorage = async (
   mailbox: string,
   emails: Email[],
   secretKey: string,
-  deleteEmails: boolean = false,
+  deleteEmails: boolean = false
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
     const existingMailboxData = await decryptEmails(secretKey);
 
     // Initialize the mailbox if it doesn't exist
-    if (!existingMailboxData[mailbox]) {
-      existingMailboxData[mailbox] = { emails: {}, timestamp: 0 };
+    if (!existingMailboxData.mailboxes[mailbox]) {
+      existingMailboxData.mailboxes[mailbox] = { emails: {}, lastupdate: 0 };
     }
 
-    // Create a set of the current emails' message IDs
+    // Init the virtual mailboxes if they don't exist
+    if (!existingMailboxData.virtualMailboxes) {
+      existingMailboxData.virtualMailboxes = initVirtualMailboxes();
+    }
+
+    // Create a set of the new/ current emails' message IDs (depending on deleteEmails)
     const newEmailIds = new Set(emails.map((email) => email.message_id));
 
+    // Remove emails from the existing mailbox that are no longer in the new email list
     if (deleteEmails) {
-      // Remove emails from the existing mailbox that are no longer in the new email list
-      for (const messageId in existingMailboxData[mailbox].emails) {
+      for (const messageId in existingMailboxData.mailboxes[mailbox].emails) {
         if (!newEmailIds.has(messageId)) {
-          delete existingMailboxData[mailbox].emails[messageId]; // Remove the email
+          delete existingMailboxData.mailboxes[mailbox].emails[messageId]; // Remove the email
         }
       }
     }
@@ -129,21 +292,130 @@ const storeEmailsInAsyncStorage = async (
     // Add new emails or update existing ones in the mailbox
     emails.forEach((email) => {
       const { message_id, ...rest } = email;
-      existingMailboxData[mailbox].emails[message_id] = rest; // Insert new email into mailbox
+      // Insert or update the email in the mailbox and virtual mailboxes
+      existingMailboxData.mailboxes[mailbox].emails[message_id] = {...existingMailboxData.mailboxes[mailbox].emails[message_id], ...rest };
+      existingMailboxData.virtualMailboxes = updateVirtualMailbox(
+        email,
+        existingMailboxData.virtualMailboxes
+      );
     });
 
     // Update the timestamp for the mailbox
-    existingMailboxData[mailbox].timestamp = new Date().getTime();
+    existingMailboxData.mailboxes[mailbox].lastupdate = new Date().getTime();
 
     // Encrypt and save the updated data
-    await saveAndEncryptEmails(existingMailboxData, secretKey);
+    await encryptAndSaveEmails(existingMailboxData, secretKey);
     console.debug(
       "Emails successfully stored in AsyncStorage under mailbox:",
-      mailbox,
+      mailbox
     );
+
     return {
-      lastupdate: existingMailboxData[mailbox].timestamp,
-      emails: existingMailboxData[mailbox].emails,
+      lastupdate: existingMailboxData.mailboxes[mailbox].lastupdate,
+      emails: existingMailboxData.mailboxes[mailbox].emails,
+    };
+  } catch (error) {
+    console.error("Error storing emails in AsyncStorage:", error);
+    return { lastupdate: 0, emails: {} };
+  }
+};
+
+/**
+ * Stores emails retrieved by tags in AsyncStorage.
+ * @param virtualMailbox - The virtual mailbox to retrieve all emails from (needed for retrieval)
+ * @param emails - The emails to store - dont need to be all emails from the specified virtual mailbox
+ * @param secretKey - The secret key to encrypt the emails
+ * @returns - The virtual mailboxes with the updated emails
+ */
+const storeTaggedEmailsInAsyncStorage = async (
+  virtualMailbox: string,
+  emails: Email[],
+  secretKey: string
+): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
+  try {
+    if (
+      virtualMailbox !== "unreadEmails" &&
+      virtualMailbox !== "importantEmails"
+    ) {
+      console.error("Invalid virtual mailbox:", virtualMailbox);
+      return { lastupdate: 0, emails: {} };
+    }
+
+    // Retrieve the encrypted mailbox data from AsyncStorage
+    const existingMailboxData = await decryptEmails(secretKey);
+
+    // Init the virtual mailboxes if they don't exist
+    if (!existingMailboxData.virtualMailboxes) {
+      existingMailboxData.virtualMailboxes = initVirtualMailboxes();
+    }
+    if (virtualMailbox === "unreadEmails") {
+      existingMailboxData.virtualMailboxes.unread.messageIds =
+        new Set<string>();
+    } else if (virtualMailbox === "importantEmails") {
+      existingMailboxData.virtualMailboxes.important.messageIds =
+        new Set<string>();
+    }
+
+    // Update the emails in the mailbox and add them to the virtual mailboxes
+    emails.forEach((email) => {
+      if (!email.mailbox) {
+        return;
+      }
+
+      // Initialize the mailbox if it doesn't exist
+      if (!existingMailboxData.mailboxes[email.mailbox]) {
+        existingMailboxData.mailboxes[email.mailbox] = {
+          emails: {},
+          lastupdate: 0,
+        };
+      }
+
+      // Add or update the email in the mailbox
+      existingMailboxData.mailboxes[email.mailbox].emails[email.message_id] = { ...existingMailboxData.mailboxes[email.mailbox].emails[email.message_id], ...email };
+
+      // Update the virtual mailboxes
+      existingMailboxData.virtualMailboxes = updateVirtualMailbox(
+        email,
+        existingMailboxData.virtualMailboxes
+      );
+    });
+
+    let retrievedEmails: EmailHashTable = {};
+
+    if (virtualMailbox === "unreadEmails") {
+      // Update the timestamp for the virtual mailbox
+      existingMailboxData.virtualMailboxes.unread.lastUpdate =
+        new Date().getTime();
+
+      // Get the emails for the unread mailbox
+      retrievedEmails = retrieveEmailsbyMessageIds(
+        existingMailboxData.virtualMailboxes.unread.messageIds,
+        existingMailboxData.mailboxes
+      );
+    } else if (virtualMailbox === "importantEmails") {
+      // Update the timestamp for the virtual mailbox
+      existingMailboxData.virtualMailboxes.important.lastUpdate =
+        new Date().getTime();
+
+      // Get the emails for the important mailbox
+      retrievedEmails = retrieveEmailsbyMessageIds(
+        existingMailboxData.virtualMailboxes.important.messageIds,
+        existingMailboxData.mailboxes
+      );
+    } else {
+      console.error("Invalid virtual mailbox:", virtualMailbox);
+      return { lastupdate: 0, emails: {} };
+    }
+
+    // Encrypt and save the updated data
+    await encryptAndSaveEmails(existingMailboxData, secretKey);
+    console.debug(
+      "Emails successfully stored in AsyncStorage under virtual mailboxes"
+    );
+
+    return {
+      lastupdate: new Date().getTime(),
+      emails: retrievedEmails,
     };
   } catch (error) {
     console.error("Error storing emails in AsyncStorage:", error);
@@ -154,37 +426,39 @@ const storeEmailsInAsyncStorage = async (
 // Function to update the body of an email by its message_id
 const updateEmailBodyInAsyncStorage = async (
   mailbox: string,
-  message_id: string,
+  messageId: string,
   newBody: string,
-  secretKey: string,
+  secretKey: string
 ): Promise<Email | null> => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
     const existingMailboxData = await decryptEmails(secretKey);
 
     // Check if the requested mailbox exists
-    if (!existingMailboxData[mailbox] || !existingMailboxData[mailbox].emails) {
+    if (!existingMailboxData.mailboxes[mailbox]) {
       console.debug(`No emails found for mailbox: ${mailbox}`);
       return null; // No emails found for the mailbox
     }
 
     // Check if the email with the specified message_id exists
-    if (!existingMailboxData[mailbox].emails[message_id]) {
-      console.debug(`No email found with message_id: ${message_id}`);
+    if (!existingMailboxData.mailboxes[mailbox].emails[messageId]) {
+      console.debug(`No email found with messageId: ${messageId}`);
       return null; // No email found with the specified message_id
     }
 
     // Update the body of the email
-    existingMailboxData[mailbox].emails[message_id].body = newBody;
+    existingMailboxData.mailboxes[mailbox].emails[messageId].body = newBody;
 
     // Encrypt and save the updated data
-    await saveAndEncryptEmails(existingMailboxData, secretKey);
+    await encryptAndSaveEmails(existingMailboxData, secretKey);
+
     console.debug(
-      `Email body successfully updated for message_id: ${message_id}`,
+      `Email body successfully updated for messageId: ${messageId} - mailbox: ${mailbox}`
     );
+
     return {
-      message_id: message_id,
-      ...existingMailboxData[mailbox].emails[message_id],
+      message_id: messageId,
+      ...existingMailboxData.mailboxes[mailbox].emails[messageId],
     };
   } catch (error) {
     console.error("Error updating email body in AsyncStorage:", error);
@@ -194,38 +468,76 @@ const updateEmailBodyInAsyncStorage = async (
 
 const updateEmailFlagsInAsyncStorage = async (
   mailbox: string,
-  message_ids: string[],
+  messageIds: string[],
   flags: string[],
-  secretKey: string,
+  secretKey: string
 ) => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
     const existingMailboxData = await decryptEmails(secretKey);
 
     // Check if the requested mailbox exists
-    if (!existingMailboxData[mailbox] || !existingMailboxData[mailbox].emails) {
+    if (!existingMailboxData.mailboxes[mailbox]) {
       console.debug(`No emails found for mailbox: ${mailbox}`);
       return; // No emails found for the mailbox
     }
 
     // Update the flags of the specified emails
-    message_ids.forEach((message_id) => {
-      if (existingMailboxData[mailbox].emails[message_id]) {
-        existingMailboxData[mailbox].emails[message_id].flags = flags;
+    messageIds.forEach((messageId) => {
+      if (existingMailboxData.mailboxes[mailbox].emails[messageId]) {
+        existingMailboxData.mailboxes[mailbox].emails[messageId].flags = flags;
+        existingMailboxData.virtualMailboxes = updateVirtualMailboxByMessageId(
+          messageId,
+          flags,
+          existingMailboxData.virtualMailboxes
+        );
       }
     });
 
     // Encrypt and save the updated data
-    await saveAndEncryptEmails(existingMailboxData, secretKey);
+    await encryptAndSaveEmails(existingMailboxData, secretKey);
+
+    console.debug(
+      `Email flags successfully updated for messageIds: ${messageIds} - mailbox: ${mailbox}`
+    );
   } catch (error) {
     console.error("Error updating email flags in AsyncStorage:", error);
-    return null;
   }
 };
 
 // ##################################################################### //
-// ################################ Main ############################### //
+// ############################### Fetch ############################### //
 // ##################################################################### //
+/**
+ * Fetches the email folders from the mail server
+ * @param username - The username of the email account
+ * @param password - The password of the email account
+ * @param mailServerDomain - The domain of the mail server
+ * @param mailServerPort - The port of the mail server
+ * @returns - The list of email folders and the timestamp of the fetch
+ */
+const fetchEmailFolders = async (
+  username: string,
+  password: string,
+  mailServerDomain: string,
+  mailServerPort: string
+): Promise<{ folders: Mailbox[]; timestamp: number }> => {
+  //TODO change to correct URL
+  const response = await axios.post(
+    "http://192.168.178.43:8000/email/get-folders",
+    {
+      username: username,
+      password: password,
+      imap_server: mailServerDomain,
+      imap_port: mailServerPort,
+    }
+  );
+  const data = {
+    folders: response.data.folders,
+    timestamp: new Date().getTime(),
+  };
+  return data;
+};
 
 /**
  * Fetches all emails with the specified tags
@@ -242,9 +554,9 @@ const fetchEmailListByTags = async (
   mailServerDomain: string,
   mailServerPort: string,
   tags: string[],
-  retrieveSinceDate?: string,
+  retrieveSinceDate?: string
 ): Promise<Email[]> => {
-  //TODO change to correct URL
+  //TODO change to correct URL and use retrieveSinceDate
   const response = await axios.post(
     "http://192.168.178.43:8000/email/get-tagged-email-list",
     {
@@ -261,24 +573,34 @@ const fetchEmailListByTags = async (
             return params[key]
               .map(
                 (tag: string) =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`,
+                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`
               )
               .join("&");
           })
           .join("&");
       },
-    },
+    }
   );
   return response.data;
 };
 
+/**
+ * Fetches the list of emails for the specified mailbox
+ * @param username - The username of the email account
+ * @param password - The password of the email account
+ * @param mailServerDomain - The domain of the mail server
+ * @param mailServerPort - The port of the mail server
+ * @param mailbox - The mailbox to fetch emails from
+ * @param retrieveSinceDate - The date to retrieve emails since
+ * @returns - The list of emails for the specified mailbox
+ */
 const fetchEmailListByMailbox = async (
   username: string,
   password: string,
   mailServerDomain: string,
   mailServerPort: string,
   mailbox: string,
-  retrieveSinceDate?: string,
+  retrieveSinceDate?: string
 ): Promise<Email[]> => {
   //TODO change to correct URL
   let requestUrl =
@@ -297,9 +619,13 @@ const fetchEmailListByMailbox = async (
   return response.data;
 };
 
+// ##################################################################### //
+// ############################## Getters ############################## //
+// ##################################################################### //
+
 /**
- * Fetches the email folders from the mail server
- * @returns The list of email folders
+ * Gets the list of email folders from the AsyncStorage or fetches them from the mail server
+ * @returns - The list of email folders
  */
 const getEmailFolders = async () => {
   const availableFolders = await getData("mailServerFolders");
@@ -323,23 +649,14 @@ const getEmailFolders = async () => {
     return [];
   }
   try {
-    //TODO change to correct URL
-    const response = await axios.post(
-      "http://192.168.178.43:8000/email/get-folders",
-      {
-        username: username,
-        password: password,
-        imap_server: mailServerDomain,
-        imap_port: mailServerPort,
-      },
+    const saveData = await fetchEmailFolders(
+      username,
+      password,
+      mailServerDomain,
+      mailServerPort
     );
-    const saveData = {
-      folders: response.data.folders,
-      timestamp: new Date().getTime(),
-    };
     storeData("mailServerFolders", JSON.stringify(saveData));
-
-    return response.data.folders;
+    return saveData.folders;
   } catch (error) {
     console.error("Error fetching folders:", error);
     return [];
@@ -347,112 +664,184 @@ const getEmailFolders = async () => {
 };
 
 /**
- * Fetches the list of emails for the specified mailbox
- * @param mailbox - The mailbox to fetch emails from
- * @param readStatus - The read status of the emails to fetch
- * @param softRefresh - Only retrieve emails since the last update
- * @param hardRefresh - Retrieve all emails from the server
- * @returns
+ * Retrieves a list of emails from either AsyncStorage or the mail server based on the provided mailbox and refresh options.
+ * @param mailbox - The mailbox from which emails should be retrieved (e.g., "virtual-unseen", "virtual-starred", or regular mailbox names).
+ * @param readStatus - The read status of the emails to filter (used with virtual mailboxes like unseen).
+ * @param softRefresh - Whether to perform a soft refresh (check if emails are updated within the last hour).
+ * @param hardRefresh - Whether to perform a hard refresh (force retrieval from the server).
+ * @returns A promise resolving to an object containing the last update timestamp and a hash table of emails.
  */
 const getEmailList = async (
   mailbox: string,
   readStatus: string,
   softRefresh: boolean = false,
   hardRefresh: boolean = true,
+  onlyLocal: boolean = false
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
+  console.debug("Fetching emails");
+  // Retrieve user credentials and initialize variables for the process
   const { username, password } = await getMailServerCredentials();
   let retrieveSinceDate = null;
-  let availableEmails = null;
+  let decryptedData = null;
 
-  // Check if the emails are available in AsyncStorage
-  availableEmails = await getData("mailServerEmails");
-  if (availableEmails && password) {
-    const decryptedData = CryptoES.AES.decrypt(
-      availableEmails,
-      password,
-    ).toString(CryptoES.enc.Utf8);
-    const parsedEmails = JSON.parse(decryptedData)[mailbox] || {
-      emails: [],
-      timestamp: 0,
-    };
+  // Decrypt emails from AsyncStorage if credentials are available
+  if (password) {
+    decryptedData = await decryptEmails(password);
+  }
 
-    const timestamp = parsedEmails.timestamp;
-    const currentTime = new Date().getTime();
-    const difference = currentTime - timestamp;
-    const minutes = difference / 60000;
-    if (!softRefresh && !hardRefresh && minutes < 5) {
-      return {
-        lastupdate: parsedEmails.timestamp,
-        emails: parsedEmails.emails,
-      };
-    } else if (minutes < 60 && (!hardRefresh || softRefresh)) {
-      retrieveSinceDate = new Date(timestamp).toISOString();
-      console.debug("Retrieving emails since:", retrieveSinceDate);
+  if (decryptedData) {
+    // Handle virtual mailboxes first
+    switch (mailbox.toLowerCase()) {
+      case "virtual-starred":
+        if (onlyLocal ||
+          !softRefresh &&
+          !hardRefresh &&
+          isTimePassed(decryptedData.virtualMailboxes.important.lastUpdate, 5)
+        ) {
+          // Return important emails from virtual mailbox if no refresh is requested
+          return {
+            emails: await retrieveEmailsbyMessageIds(
+              decryptedData.virtualMailboxes.important.messageIds,
+              decryptedData.mailboxes
+            ),
+            lastupdate: decryptedData.virtualMailboxes.important.lastUpdate,
+          };
+        }
+        break;
+
+      case "virtual-unseen":
+        if (onlyLocal ||
+          !softRefresh &&
+          !hardRefresh &&
+          isTimePassed(decryptedData.virtualMailboxes.unread.lastUpdate, 5)
+        ) {
+          // Return unread emails from virtual mailbox if no refresh is requested
+          return {
+            emails: await retrieveEmailsbyMessageIds(
+              decryptedData.virtualMailboxes.unread.messageIds,
+              decryptedData.mailboxes
+            ),
+            lastupdate: decryptedData.virtualMailboxes.unread.lastUpdate,
+          };
+        }
+        break;
+
+      default:
+        if (!decryptedData.mailboxes[mailbox]) break;
+
+        // Return cached emails if within 5 minutes (avoiding unnecessary fetches)
+        if (onlyLocal || !softRefresh && !hardRefresh &&
+          isTimePassed(decryptedData.mailboxes[mailbox].lastupdate, 5 * 60)
+        ) {
+          return {
+            lastupdate: decryptedData.mailboxes[mailbox].lastupdate,
+            emails: decryptedData.mailboxes[mailbox]?.emails || {},
+          };
+        }
+
+        // Check if soft refresh can avoid a hard server request
+        if (
+          !hardRefresh && softRefresh && isTimePassed(decryptedData.mailboxes[mailbox].lastupdate, 15 * 60)
+        ) {
+          retrieveSinceDate = new Date(
+            decryptedData.mailboxes[mailbox].lastupdate
+          ).toISOString();
+          console.debug("Retrieving emails since:", retrieveSinceDate);
+        }
+        break;
     }
   }
 
-  // Retrieve emails from the mail server
+  // Proceed to retrieve emails from mail server if no cache was used
   const mailServerDomain = await getData("mailServerDomain");
   const mailServerPort = await getData("mailServerPort");
 
+  // Exit early if credentials or mail server details are missing
   if (!username || !password || !mailServerDomain || !mailServerPort) {
     return { lastupdate: 0, emails: {} };
   }
+
   try {
     let emails;
     switch (mailbox.toLowerCase()) {
-      case "starred":
+      case "virtual-starred":
+        // Fetch flagged (important) emails from the server
         emails = await fetchEmailListByTags(
           username,
           password,
           mailServerDomain,
           mailServerPort,
           ["FLAGGED"],
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
-        break;
-      case "unseen":
+
+        return await storeTaggedEmailsInAsyncStorage(
+          "importantEmails",
+          emails,
+          password
+        );
+      case "virtual-unseen":
+        // Fetch unseen (unread) emails from the server
         emails = await fetchEmailListByTags(
           username,
           password,
           mailServerDomain,
           mailServerPort,
           ["UNSEEN"],
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
-        break;
+        return await storeTaggedEmailsInAsyncStorage(
+          "unreadEmails",
+          emails,
+          password
+        );
       default:
+        // Fetch emails from the specified mailbox
         emails = await fetchEmailListByMailbox(
           username,
           password,
           mailServerDomain,
           mailServerPort,
           mailbox,
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
-        break;
-    }
 
-    if (!retrieveSinceDate) {
-      return await storeEmailsInAsyncStorage(mailbox, emails, password, true);
-    } else {
-      return await storeEmailsInAsyncStorage(mailbox, emails, password);
+        // Store emails in AsyncStorage with full or partial update depending on the refresh
+        return await storeEmailsInAsyncStorage(
+          mailbox,
+          emails,
+          password,
+          !retrieveSinceDate
+        );
     }
   } catch (error) {
     console.error("Error fetching emails:", error);
-    if (availableEmails) {
-      const decryptedData = CryptoES.AES.decrypt(
-        availableEmails,
-        password,
-      ).toString(CryptoES.enc.Utf8);
-      const parsedEmails = JSON.parse(decryptedData)[mailbox] || {
-        emails: [],
-        timestamp: 0,
-      };
-      return {
-        lastupdate: parsedEmails.timestamp,
-        emails: parsedEmails.emails,
-      };
+
+    // Fallback to cached emails in case of an error while fetching
+    if (decryptedData) {
+      switch (mailbox.toLowerCase()) {
+        case "virtual-starred":
+          return {
+            emails: await retrieveEmailsbyMessageIds(
+              decryptedData.virtualMailboxes.important.messageIds,
+              decryptedData.mailboxes
+            ),
+            lastupdate: decryptedData.virtualMailboxes.important.lastUpdate,
+          };
+        case "virtual-unseen":
+          return {
+            emails: await retrieveEmailsbyMessageIds(
+              decryptedData.virtualMailboxes.unread.messageIds,
+              decryptedData.mailboxes
+            ),
+            lastupdate: decryptedData.virtualMailboxes.unread.lastUpdate,
+          };
+        default:
+          return {
+            lastupdate: decryptedData.mailboxes[mailbox].lastupdate || 0,
+            emails: decryptedData.mailboxes[mailbox]?.emails || {},
+          };
+      }
     }
     return { lastupdate: 0, emails: {} };
   }
@@ -460,15 +849,16 @@ const getEmailList = async (
 
 /**
  * Fetches the email details for a given message ID
- * @param messageId
- * @param mailbox
- * @returns
+ * @param messageId - The message ID of the email to fetch
+ * @param mailbox - The mailbox the email belongs to
+ * @returns - The email details
  */
 const getEmailDetails = async (
   messageId: string,
-  mailbox: string,
+  mailbox: string
 ): Promise<Email | null> => {
   const { username, password } = await getMailServerCredentials();
+
   const mailServerDomain = await getData("mailServerDomain");
   const mailServerPort = await getData("mailServerPort");
 
@@ -477,8 +867,6 @@ const getEmailDetails = async (
   }
   try {
     //TODO change to correct URL
-    console.debug(messageId);
-
     const response = await axios.post(
       "http://192.168.178.43:8000/email/get-email",
       {
@@ -488,13 +876,14 @@ const getEmailDetails = async (
         imap_port: mailServerPort,
         message_id: messageId,
         mailbox: mailbox,
-      },
+      }
     );
+
     return await updateEmailBodyInAsyncStorage(
       mailbox,
       messageId,
       response.data.body,
-      password,
+      password
     );
   } catch (error) {
     console.error("Error fetching email details:", error);
@@ -502,10 +891,24 @@ const getEmailDetails = async (
   }
 };
 
+// ##################################################################### //
+// ############################## Updater ############################## //
+// ##################################################################### //
+
+/**
+ * Updates the flags of the specified emails in the mailbox and optionally on the mail server
+ * @param mailbox - The mailbox to update the flags in
+ * @param message_ids - The message IDs of the emails to update
+ * @param flags - The flags to set for the emails
+ * @param only_local - Whether to only update the flags in AsyncStorage
+ * @returns - A promise resolving to the updated flags
+ */
 const updateEmailFlags = async (
   mailbox: string,
   message_ids: string[],
   flags: string[],
+  serverFlags: string[] = [],
+  alreadyServerSeen: boolean = false
 ) => {
   const { username, password } = await getMailServerCredentials();
   const mailServerDomain = await getData("mailServerDomain");
@@ -518,33 +921,47 @@ const updateEmailFlags = async (
   }
 
   try {
-    const response = await axios.post(
-      "http://192.168.178.43:8000/email/set-flags",
-      {
-        username: username,
-        password: password,
-        imap_server: mailServerDomain,
-        imap_port: mailServerPort,
-        message_ids: message_ids,
-        mailbox: mailbox,
-        flags: flags,
-      },
-    );
-
-    if (response.status !== 200) {
-      console.error("Error updating email flags:", response.data);
-    }
-
     await updateEmailFlagsInAsyncStorage(mailbox, message_ids, flags, password);
+
+    if (serverFlags.length > 0) {
+      if (alreadyServerSeen) {
+        // Remove the "\\Seen" flag from the server flags
+        const index = serverFlags.indexOf("+\\Seen");
+        if (index > -1) {
+          serverFlags[index] = serverFlags[serverFlags.length - 1];
+          serverFlags.pop();
+        }
+      }
+      if (serverFlags.length === 0) {
+        return;
+      }
+
+      const response = await axios.post(
+        "http://192.168.178.43:8000/email/set-flags",
+        {
+          username: username,
+          password: password,
+          imap_server: mailServerDomain,
+          imap_port: mailServerPort,
+          message_ids: message_ids,
+          mailbox: mailbox,
+          flags: serverFlags,
+        }
+      );
+
+      if (response.status !== 200) {
+        console.error("Error updating email flags:", response.data);
+      }
+    }
   } catch (error) {
     console.error("Error updating email flags:", error);
   }
 };
 
 export {
+  splitHashTables,
   getEmailFolders,
   getEmailList,
   getEmailDetails,
-  splitHashTables,
   updateEmailFlags,
 };

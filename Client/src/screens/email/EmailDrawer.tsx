@@ -17,9 +17,9 @@ import {
   updateEmailFlags,
 } from "../../services/emailService";
 import {
-  Email,
   EmailCompressedHashTable,
   EmailDetailsHashTable,
+  ChangedEmail,
 } from "../../interfaces/email";
 import dayjs from "dayjs";
 import { useFocusEffect } from "@react-navigation/native";
@@ -39,8 +39,8 @@ const folderNameMapperGer: { [key: string]: string } = {
   archive: "Archiv",
   important: "Wichtig",
   all_mail: "Alle E-Mails",
-  starred: "Markiert",
-  unseen: "Ungelesen",
+  "virtual-starred": "Markiert",
+  "virtual-unseen": "Ungelesen",
   "chats-1": "Chats",
   "contacts-1": "Kontakte",
   "emailed contacts-1": "Gesendete Kontakte",
@@ -63,7 +63,8 @@ const EmailDrawer = ({ navigation }: any) => {
   const updateEmailTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
   const emailDetailsRef = useRef<EmailDetailsHashTable>({});
-  const changeSelectedEmail = useRef<Email | null>(null);
+  const currentEmailsRef = useRef(currentEmails);
+  const changeSelectedEmail = useRef<ChangedEmail | null>(null);
   const mailboxesRef = useRef<string>("");
   const isUpdating = useRef(false);
 
@@ -95,7 +96,7 @@ const EmailDrawer = ({ navigation }: any) => {
         .trim()
         .split(" ")
         .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         )
         .join(" ");
 
@@ -111,6 +112,7 @@ const EmailDrawer = ({ navigation }: any) => {
     mailbox: string,
     softRefresh = false,
     hardRefresh = false,
+    onlyLocal = false
   ) => {
     setIsRefreshing(true);
     if (mailbox && !isUpdating.current) {
@@ -124,6 +126,7 @@ const EmailDrawer = ({ navigation }: any) => {
         "all",
         softRefresh,
         hardRefresh,
+        onlyLocal
       );
 
       if (response) {
@@ -143,12 +146,12 @@ const EmailDrawer = ({ navigation }: any) => {
       const newTimeout = Math.max(300000 - timeSinceLastUpdate, 10000); // Minimum interval of 10 seconds
 
       console.debug(
-        `Next update in ${newTimeout / 60000} minutes - ${mailbox}`,
+        `Next update in ${newTimeout / 60000} minutes - ${mailbox}`
       );
 
       // Set the new Timeout and store it in the ref
       updateEmailTimeoutId.current = setTimeout(() => {
-        updateEmails(mailbox, true, false);
+        updateEmails(mailbox, true);
       }, newTimeout);
       isUpdating.current = false;
       setIsRefreshing(false);
@@ -177,13 +180,15 @@ const EmailDrawer = ({ navigation }: any) => {
   const onMailSelect = (
     messageId: string,
     mailbox: string,
-    index: number,
+    index: number
   ): void => {
     if (!currentEmails) return;
 
     if (!emailDetailsRef.current[messageId].body) {
       // Remap the virtual mailbox name to the actual mailbox name
-      if (["unseen", "starred"].includes(mailbox.toLowerCase())) {
+      if (
+        ["virtual-unseen", "virtual-starred"].includes(mailbox.toLowerCase())
+      ) {
         if (currentEmails[messageId].mailbox) {
           mailbox = currentEmails[messageId].mailbox;
         } else {
@@ -197,7 +202,6 @@ const EmailDrawer = ({ navigation }: any) => {
         }
       });
     }
-
     navigation.navigate("EmailDetails", {
       emailCompressed: { ...currentEmails[messageId], message_id: messageId },
       emailDetailsRef: emailDetailsRef,
@@ -208,20 +212,62 @@ const EmailDrawer = ({ navigation }: any) => {
   // ====================================================== //
   // =================== useFocusEffects ================== //
   // ====================================================== //
-  // TODO
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (currentEmails && changeSelectedEmail.current) {
-  //       console.log(changeSelectedEmail.current);
-  //       let emailTmp = { ...currentEmails };
+  const addRemoveFlags = (currentFlags: string[], flags: string[]): { currentFlags: string[], changedFlags: string[] } => {
+    let changedFlags: string[] = [];
+    flags.forEach((flag) => {
+      const newFlag = flag.substring(1);
+      if (flag.startsWith("+") && !currentFlags.includes(newFlag)) {
+        currentFlags.push(newFlag);
+        changedFlags.push(flag);
+      } else if (flag.startsWith("-")) {
+        const index = currentFlags.indexOf(newFlag);
+        if (index > -1) {
+          currentFlags[index] = currentFlags[currentFlags.length - 1];
+          currentFlags.pop();
+          changedFlags.push(flag);
+        }
+      }
+    });
+    return { currentFlags, changedFlags };
+  };
 
-  //       emailTmp[changeSelectedEmail.current.message_id].flags =
-  //         changeSelectedEmail.current.flags;
-  //       setCurrentEmails(emailTmp);
-  //       changeSelectedEmail.current = null;
-  //     }
-  //   }, [])
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      if (currentEmails && changeSelectedEmail.current) {
+        const emailTmp =  { ...currentEmailsRef.current };
+        if (!emailTmp) return;
+
+        const { currentFlags, changedFlags } = addRemoveFlags(
+          emailTmp[changeSelectedEmail.current.message_id].flags,
+          changeSelectedEmail.current.flags
+        );
+
+        emailTmp[changeSelectedEmail.current.message_id].flags = currentFlags;
+        updateEmailFlags(
+          emailTmp[changeSelectedEmail.current.message_id].mailbox ||
+            mailboxesRef.current,
+          [changeSelectedEmail.current.message_id],
+          currentFlags,
+          changedFlags,
+          true
+        );
+        if (
+          mailboxesRef.current === "virtual-unseen" &&
+          currentFlags.includes("\\Seen")
+        ) {
+          delete emailTmp[changeSelectedEmail.current.message_id];
+        } else if (
+          mailboxesRef.current === "virtual-starred" &&
+          !currentFlags.includes("\\Flagged")
+        ) {
+          delete emailTmp[changeSelectedEmail.current.message_id];
+        } 
+
+        setCurrentEmails(emailTmp);
+        changeSelectedEmail.current = null;
+      }
+    }, [])
+  );
 
   // ====================================================== //
   // ===================== useEffects ===================== //
@@ -232,7 +278,7 @@ const EmailDrawer = ({ navigation }: any) => {
     getEmailFolders().then((response) => {
       if (response.length > 0) {
         if (response) {
-          const mailboxes = ["Unseen", "Starred", ...response];
+          const mailboxes = ["virtual-unseen", "virtual-starred", ...response];
           setMailboxes(mailboxes);
           setSelectedMailbox(mailboxes[0]); // Set the default mailbox to the first folder
         }
@@ -244,7 +290,10 @@ const EmailDrawer = ({ navigation }: any) => {
   useEffect(() => {
     console.debug(`Updating emails for ${selectedMailbox}`);
     mailboxesRef.current = selectedMailbox;
-    updateEmails(selectedMailbox, true, false);
+    updateEmails(selectedMailbox, false, false, true);
+    setTimeout(() => {
+      updateEmails(selectedMailbox, true, false);
+    }, 1000);
 
     // Cleanup: clear the timeout when component unmounts or mailbox changes
     return () => {
@@ -254,6 +303,10 @@ const EmailDrawer = ({ navigation }: any) => {
       }
     };
   }, [selectedMailbox]);
+
+  useEffect(() => {
+    currentEmailsRef.current = currentEmails;
+  }, [currentEmails]);
 
   const backgroundColor = colorScheme === "dark" ? "#1E1E24" : "#E8EBF7";
 

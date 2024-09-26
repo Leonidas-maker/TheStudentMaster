@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import {
   EmailCompressed,
   EmailDetailsHashTable,
-  Email,
+  ChangedEmail,
 } from "../interfaces/email";
 
 // Define the EmailStackParamList type
@@ -13,7 +13,7 @@ export type EmailStackParamList = {
   EmailDetails: {
     emailCompressed: EmailCompressed;
     emailDetailsRef: React.MutableRefObject<EmailDetailsHashTable>;
-    changeSelectedEmail: React.MutableRefObject<Email | null>;
+    changeSelectedEmail: React.MutableRefObject<ChangedEmail | null>;
   };
 };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Dimensions } from "react-native";
 import {
   ScrollView,
@@ -7,13 +7,13 @@ import {
   ActivityIndicator,
   Pressable,
 } from "react-native";
-import RenderHtml from "react-native-render-html";
 import { WebView } from "react-native-webview";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { EmailDetailsScreenProps } from "../../types/emailScreenTypes";
 import { Email } from "../../interfaces/email";
+import { useFocusEffect } from "@react-navigation/native";
 
 const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
   route,
@@ -27,31 +27,23 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
 
   const colorScheme = useColorScheme();
 
-  // Inject both the meta viewport tag and the dynamic styles for dark/light mode
-  const injectedJavaScript = `
-    // Add the meta viewport tag for responsiveness
-    const meta = document.createElement('meta');
-    meta.setAttribute('name', 'viewport');
-    meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
-    document.getElementsByTagName('head')[0].appendChild(meta);
-
-    // If dark mode is enabled, invert all colors
-    if ('${colorScheme}' === 'dark') {
-      document.body.style.filter = 'invert(1) hue-rotate(180deg)';
-    }
-  `;
+  // ====================================================== //
+  // ======================= Helpers ====================== //
+  // ====================================================== //
 
   const preCheckEmail = () => {
     // Mark the email as read if it hasn't been already
     if (!emailCompressed.flags.includes("\\Seen")) {
       changeSelectedEmail.current = {
-        ...emailCompressed,
-        ...emailDetailsRef.current[emailCompressed.message_id],
-        flags: [...emailCompressed.flags, "\\Seen"],
+        message_id: emailCompressed.message_id,
+        flags: ["+\\Seen"],
       };
     }
   };
 
+  // ====================================================== //
+  // ===================== UseEffects ===================== //
+  // ====================================================== //
   useEffect(() => {
     if (emailDetailsRef.current[emailCompressed.message_id].body) {
       preCheckEmail();
@@ -62,7 +54,8 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
     } else {
       const intervalId = setInterval(() => {
         if (emailDetailsRef.current[emailCompressed.message_id].body) {
-          console.log("Email loaded");
+          console.debug("Email loaded");
+
           preCheckEmail();
 
           // Set the email data
@@ -85,16 +78,50 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
     }
   }, [email]);
 
-  // Define custom HTML styles for light and dark mode
-  const tagsStyles = {
-    body: {
-      color: colorScheme === "dark" ? "white" : "black", // Set the text color based on the theme
-    },
-    p: {
-      color: colorScheme === "dark" ? "white" : "black", // Apply to paragraph text
-    },
-    // Add other tags here if needed
-  };
+  useEffect(() => {
+    if (email) {
+      if (isStarred && !email.flags.includes("\\Flagged")) {
+        if (!changeSelectedEmail.current) {
+          changeSelectedEmail.current = {
+            message_id: email.message_id,
+            flags: ["+\\Flagged"],
+          };
+        } else {
+          changeSelectedEmail.current.flags.push("+\\Flagged");
+        }
+      } else if (!isStarred && email.flags.includes("\\Flagged")) {
+        if (!changeSelectedEmail.current) {
+          changeSelectedEmail.current = {
+            message_id: email.message_id,
+            flags: ["-\\Flagged"],
+          };
+        } else {
+          changeSelectedEmail.current.flags.push("-\\Flagged");
+        }
+      }
+    }
+  }, [isStarred]);
+
+  // ====================================================== //
+  // ================== Styling / Screen ================== //
+  // ====================================================== //
+
+  const backgroundColor = colorScheme === "dark" ? "#1E1E24" : "#E8EBF7";
+  const iconColor = colorScheme === "dark" ? "white" : "black";
+
+  // Inject both the meta viewport tag and the dynamic styles for dark/light mode
+  const injectedJavaScript = `
+    // Add the meta viewport tag for responsiveness
+    const meta = document.createElement('meta');
+    meta.setAttribute('name', 'viewport');
+    meta.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+    document.getElementsByTagName('head')[0].appendChild(meta);
+
+    // If dark mode is enabled, invert all colors
+    if ('${colorScheme}' === 'dark') {
+      document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+  `;
 
   const getFormattedDate = (date: string) => {
     const formattedDate = new Date(date);
@@ -108,9 +135,6 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
       </View>
     );
   }
-
-  const backgroundColor = colorScheme === "dark" ? "#1E1E24" : "#E8EBF7";
-  const iconColor = colorScheme === "dark" ? "white" : "black";
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: backgroundColor }}>
@@ -142,7 +166,7 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
             </Pressable>
             <Pressable
               className="mr-2 active:opacity-50"
-              onPress={() => console.log("Star Email")}
+              onPress={() => setIsStarred(!isStarred)}
             >
               {isStarred ? (
                 <Icon name="star" size={30} color={iconColor} />
