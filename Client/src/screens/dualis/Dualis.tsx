@@ -4,7 +4,7 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { Parser } from "htmlparser2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store"; 
+import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../components/textFields/DefaultText";
@@ -86,7 +86,10 @@ const Dualis: React.FC = () => {
   useEffect(() => {
     const saveSaveLoginState = async () => {
       try {
-        await AsyncStorage.setItem("saveDualisLogin", JSON.stringify(saveLogin)); // Convert boolean to string
+        await AsyncStorage.setItem(
+          "saveDualisLogin",
+          JSON.stringify(saveLogin),
+        ); // Convert boolean to string
       } catch (err) {
         console.error("Error saving saveLogin state", err);
       }
@@ -140,7 +143,7 @@ const Dualis: React.FC = () => {
       formData.append("PRGNAME", "LOGINCHECK");
       formData.append(
         "ARGUMENTS",
-        "clino,usrname,pass,menuno,menu_type,browser,platform"
+        "clino,usrname,pass,menuno,menu_type,browser,platform",
       );
       formData.append("clino", "000000000000001");
       formData.append("menuno", "000324");
@@ -162,7 +165,7 @@ const Dualis: React.FC = () => {
 
       setError("");
       navigateToPerformanceOverview(
-        extractAuthArguments(response.headers["refresh"])
+        extractAuthArguments(response.headers["refresh"]),
       );
 
       // Save credentials after successful login
@@ -194,7 +197,7 @@ const Dualis: React.FC = () => {
       filterHtmlContent(content, setModuleData);
     } catch (err) {
       setError(
-        "An error occurred while navigating to the performance overview. Please try again."
+        "An error occurred while navigating to the performance overview. Please try again.",
       );
       console.error(err);
     }

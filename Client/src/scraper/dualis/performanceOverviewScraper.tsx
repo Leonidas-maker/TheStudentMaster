@@ -14,7 +14,7 @@ interface ModuleData {
 // Function to filter HTML content and extract the desired data
 export const filterHtmlContent = (
   html: string,
-  setModuleData: React.Dispatch<React.SetStateAction<Array<ModuleData>>>
+  setModuleData: React.Dispatch<React.SetStateAction<Array<ModuleData>>>,
 ) => {
   const extractedModules: Array<ModuleData> = [];
   let currentModule: ModuleData = {
