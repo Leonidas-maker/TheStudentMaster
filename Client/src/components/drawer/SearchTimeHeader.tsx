@@ -90,11 +90,11 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
       // Android BackHandler for hardware back button
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
-        onBackPress
+        onBackPress,
       );
 
       return () => backHandler.remove(); // Cleanup event listener
-    }, [isSearchVisible])
+    }, [isSearchVisible]),
   );
 
   // Handle screen focus change (iOS swipe or Android back press)
@@ -107,7 +107,7 @@ const SearchTimeHeader: React.FC<SearchTimeHeaderProps> = ({
           setSearchString("");
         }
       };
-    }, [isSearchVisible])
+    }, [isSearchVisible]),
   );
 
   return (

@@ -52,7 +52,7 @@ const groupEmails = (emails: EmailCompressedHashTable) => {
 
 const filterEmails = (
   emails: EmailCompressedHashTable,
-  searchQuery: string
+  searchQuery: string,
 ) => {
   const filteredEmails: EmailCompressedHashTable = {};
 
@@ -94,7 +94,7 @@ const EmailList: React.FC<EmailListProps> = ({
 
   const groupedEmails = useMemo(
     () => groupEmails(filterEmails(emails, searchQuery)),
-    [emails, searchQuery]
+    [emails, searchQuery],
   );
 
   // ====================================================== //
@@ -107,15 +107,14 @@ const EmailList: React.FC<EmailListProps> = ({
       updateEmails(mailbox.current, false, true).then(() => {
         setIsRefreshing(false);
       });
-    } else if (Object.keys(emails).length === 0 && refreshCount > 0) { 
+    } else if (Object.keys(emails).length === 0 && refreshCount > 0) {
       updateEmails(mailbox.current, true, false).then(() => {
         setIsRefreshing(false);
       });
       if (refreshCount > 10) {
         refreshCount = 0;
       }
-    }
-    else {
+    } else {
       if (refreshCount > 1) {
         updateEmails(mailbox.current, false, false);
       } else if (refreshCount === 0) {

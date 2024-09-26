@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { set } from 'lodash';
+import { set } from "lodash";
 export interface SpecialEmailHashTables {
   [key: string]: EmailCompressedHashTable;
 }
@@ -108,7 +108,7 @@ export interface EmailListProps {
   updateEmails: (
     mailbox: string,
     softRefresh?: boolean,
-    hardRefresh?: boolean
+    hardRefresh?: boolean,
   ) => Promise<void>;
   onSelectEmail: (messageId: string, mailbox: string) => void;
 }

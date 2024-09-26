@@ -65,7 +65,7 @@ const EmailDetailsScreen: React.FC<EmailDetailsScreenProps> = ({
       const intervalId = setInterval(() => {
         if (emailDetailsRef.current[emailCompressed.message_id].body) {
           console.log("Email loadeds");
-          
+
           preCheckEmail();
 
           // Set the email data
