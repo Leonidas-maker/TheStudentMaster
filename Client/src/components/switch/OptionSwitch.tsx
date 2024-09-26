@@ -60,6 +60,7 @@ const OptionSwitch: React.FC<OptionSwitchProps> = ({
                 onValueChange={onValueChanges[index]}
                 value={values[index]}
                 thumbColor={thumbColor}
+                className="ml-3"
               />
             </View>
             {index < texts.length - 1 && (

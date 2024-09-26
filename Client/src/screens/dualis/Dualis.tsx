@@ -1,14 +1,19 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import axios from "axios";
-import { Parser } from "htmlparser2"; // Import htmlparser2
+import { Parser } from "htmlparser2";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store"; 
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../components/textFields/DefaultText";
 import TextFieldInput from "../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../components/buttons/DefaultButton";
 import Heading from "../../components/textFields/Heading";
+import OptionSwitch from "../../components/switch/OptionSwitch";
+
+import { filterHtmlContent } from "../../scraper/dualis/performanceOverviewScraper";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -38,6 +43,90 @@ const Dualis: React.FC = () => {
       passed: boolean;
     }>
   >([]);
+  const [saveLogin, setSaveLogin] = useState(true);
+  const [isLoginLoading, setIsLoginLoading] = useState(true);
+
+  // Function to save login credentials
+  const saveCredentials = async () => {
+    try {
+      await AsyncStorage.setItem("dualisUsername", username);
+      await SecureStore.setItemAsync("dualisPassword", password);
+    } catch (err) {
+      console.error("Error saving credentials", err);
+    }
+  };
+
+  // Function to remove login credentials
+  const removeCredentials = async () => {
+    try {
+      await AsyncStorage.removeItem("dualisUsername");
+      await SecureStore.deleteItemAsync("dualisPassword");
+    } catch (err) {
+      console.error("Error removing credentials", err);
+    }
+  };
+
+  // Load saveLogin state from AsyncStorage when component mounts
+  useEffect(() => {
+    const loadSaveLoginState = async () => {
+      try {
+        const savedSaveLogin = await AsyncStorage.getItem("saveDualisLogin");
+        if (savedSaveLogin !== null) {
+          setSaveLogin(JSON.parse(savedSaveLogin)); // Convert string back to boolean
+        }
+      } catch (err) {
+        console.error("Error loading saveLogin state", err);
+      }
+    };
+
+    loadSaveLoginState();
+  }, []);
+
+  // Save saveLogin state to AsyncStorage when it changes
+  useEffect(() => {
+    const saveSaveLoginState = async () => {
+      try {
+        await AsyncStorage.setItem("saveDualisLogin", JSON.stringify(saveLogin)); // Convert boolean to string
+      } catch (err) {
+        console.error("Error saving saveLogin state", err);
+      }
+    };
+
+    saveSaveLoginState();
+  }, [saveLogin]);
+
+  // Load saved credentials when component mounts
+  useEffect(() => {
+    const loadCredentials = async () => {
+      try {
+        const savedUsername = await AsyncStorage.getItem("dualisUsername");
+        const savedPassword = await SecureStore.getItemAsync("dualisPassword");
+
+        if (savedUsername) setUsername(savedUsername);
+        if (savedPassword) setPassword(savedPassword);
+      } catch (err) {
+        console.error("Error loading credentials", err);
+      } finally {
+        setIsLoginLoading(false); // Set loading state to false after loading credentials
+      }
+    };
+
+    if (saveLogin) {
+      loadCredentials();
+    } else {
+      setIsLoginLoading(false); // Set loading state to false if saveLogin is disabled
+    }
+  }, [saveLogin]);
+
+  // Toggles the save login switch
+  const toggleSaveLogin = () => {
+    setSaveLogin(!saveLogin);
+
+    // Remove credentials if saveLogin is disabled
+    if (!saveLogin === false) {
+      removeCredentials();
+    }
+  };
 
   // Function to handle login
   const login = async () => {
@@ -51,7 +140,7 @@ const Dualis: React.FC = () => {
       formData.append("PRGNAME", "LOGINCHECK");
       formData.append(
         "ARGUMENTS",
-        "clino,usrname,pass,menuno,menu_type,browser,platform",
+        "clino,usrname,pass,menuno,menu_type,browser,platform"
       );
       formData.append("clino", "000000000000001");
       formData.append("menuno", "000324");
@@ -73,8 +162,13 @@ const Dualis: React.FC = () => {
 
       setError("");
       navigateToPerformanceOverview(
-        extractAuthArguments(response.headers["refresh"]),
+        extractAuthArguments(response.headers["refresh"])
       );
+
+      // Save credentials after successful login
+      if (saveLogin) {
+        await saveCredentials();
+      }
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);
@@ -97,96 +191,24 @@ const Dualis: React.FC = () => {
       // Set HTML content state
       setHtmlContent(content);
       // Parse HTML content and filter the required data
-      filterHtmlContent(content);
+      filterHtmlContent(content, setModuleData);
     } catch (err) {
       setError(
-        "An error occurred while navigating to the performance overview. Please try again.",
+        "An error occurred while navigating to the performance overview. Please try again."
       );
       console.error(err);
     }
   };
 
-  // Function to filter HTML content and extract the desired data
-  const filterHtmlContent = (html: string) => {
-    const extractedModules: Array<{
-      number: string;
-      name: string;
-      ects: string;
-      note: string;
-      passed: boolean;
-    }> = [];
-    let currentModule = {
-      number: "",
-      name: "",
-      ects: "",
-      note: "",
-      passed: false,
-    };
-    let currentTdIndex = 0;
-    let insideClassTr = false;
-    let insideAnchorTag = false;
-
-    const parser = new Parser({
-      onopentag(name, attribs) {
-        if (name === "tr" && !attribs.class?.includes("subhead")) {
-          currentTdIndex = 0;
-          insideClassTr = true;
-          currentModule = {
-            number: "",
-            name: "",
-            ects: "",
-            note: "",
-            passed: false,
-          }; // Reset module
-        }
-
-        // Check if we are inside an anchor tag (either for module name or passed status)
-        insideAnchorTag = name === "a" && attribs.id?.startsWith("result_id_");
-
-        // Set module as passed if an image with title "Bestanden" is found
-        if (name === "img" && attribs.title === "Bestanden") {
-          currentModule.passed = true;
-        }
-      },
-      ontext(text) {
-        const cleanText = text.trim();
-        if (!cleanText || !insideClassTr) return; // Skip empty text or if not inside the relevant row
-
-        if (insideAnchorTag) {
-          currentModule.name = cleanText; // Extract module name from <a> tag
-        } else {
-          // Handle the text based on current index within the row
-          switch (currentTdIndex) {
-            case 0:
-              currentModule.number = cleanText; // Module number
-              break;
-            case 1:
-              if (!currentModule.name) currentModule.name = cleanText; // Fallback for module name directly in <td>
-              break;
-            case 3:
-              currentModule.ects = cleanText; // ECTS points
-              break;
-            case 4:
-              currentModule.note = cleanText; // Grade
-              break;
-          }
-        }
-      },
-      onclosetag(tagname) {
-        if (tagname === "td") currentTdIndex++; // Move to next <td> in the row
-
-        if (tagname === "tr" && insideClassTr) {
-          if (currentModule.name) extractedModules.push({ ...currentModule }); // Only add module if name exists
-          insideClassTr = false; // Reset after processing the row
-        }
-      },
-    });
-
-    parser.write(html);
-    parser.end();
-
-    setModuleData(extractedModules);
-  };
+  // Wait for login data to load (this is very fast so it will most likely not be shown)
+  if (isLoginLoading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Lade Anmeldedaten...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
@@ -203,6 +225,13 @@ const Dualis: React.FC = () => {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+        />
+        <OptionSwitch
+          title="Login Optionen"
+          texts={["Anmeldedaten speichern"]}
+          iconNames={["update"]}
+          onValueChanges={[toggleSaveLogin]}
+          values={[saveLogin]}
         />
         <DefaultButton text="Login" onPress={login} />
       </View>
