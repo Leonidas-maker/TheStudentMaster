@@ -214,12 +214,11 @@ def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
                 if lecture_exists:
                     calenders.pop(lectures.course_name)
 
-
             progress.update(
                 task_id,
                 description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Adding...",
             )
-   
+
             for course_name, calendar_data in calenders.items():
                 db.add(
                     m_calendar.CalendarNative(
@@ -239,7 +238,7 @@ def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
 
         if error_messages:
             raise ValueError("\n".join(error_messages))
-        
+
         # Final update to indicate the task is done
         progress.update(
             task_id,
@@ -261,7 +260,7 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int):
     """Function to update all native calendars."""
     try:
         dhbw_app_fetcher = DHBWAppFetcher(progress)  # Initialize the DHBW App fetcher
-        
+
         progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Fetching updates...")
         updated_calendars = dhbw_app_fetcher.get_updated_calendars()
 
@@ -283,16 +282,27 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int):
             if not university and university_name not in available_dhbw_sites:
                 print(f"University not found for site: {university_name}")
                 continue
-            
-            lectures = _types.get("new", {}).keys() | _types.get("updated", {}).keys() | _types.get("deleted", {}).keys()
-            courses_to_update = db.query(m_calendar.CalendarNative).filter(
-                m_calendar.CalendarNative.university_id == university.university_id, m_calendar.CalendarNative.course_name.in_(lectures.keys())
-            ).all()
 
-            progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Updating {university.university_name}...", total=len(courses_to_update))
+            lectures = (
+                _types.get("new", {}).keys() | _types.get("updated", {}).keys() | _types.get("deleted", {}).keys()
+            )
+            courses_to_update = (
+                db.query(m_calendar.CalendarNative)
+                .filter(
+                    m_calendar.CalendarNative.university_id == university.university_id,
+                    m_calendar.CalendarNative.course_name.in_(lectures.keys()),
+                )
+                .all()
+            )
+
+            progress.update(
+                task_id,
+                description=f"[bold green]Native-Calendar-DHBW[/bold green] Updating {university.university_name}...",
+                total=len(courses_to_update),
+            )
 
             for course in courses_to_update:
-                
+
                 new = _types.get("new", {}).get(course.course_name)
                 updated = _types.get("updated", {}).get(course.course_name)
                 deleted = _types.get("deleted", {}).get(course.course_name)
@@ -309,7 +319,7 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int):
                         course.data["events"][lecture] = updated.get("events", {}).pop(lecture_id)
                     elif lecture_id in new:
                         course.data["events"][lecture] = new.get("events", {}).pop(lecture_id)
-                
+
                 for lecture in new.get("events", []):
                     course.data["events"][lecture] = new["events"][lecture]
 
@@ -317,7 +327,7 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int):
                 course.hash = dhbw_app_fetcher.__dict_hash(course.data)
                 course.last_modified = datetime.datetime.now()
                 db.add(course)
-            
+
             progress.update(task_id, advance=1)
 
         db.commit()
