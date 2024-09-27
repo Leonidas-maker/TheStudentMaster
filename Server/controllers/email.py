@@ -310,6 +310,7 @@ def fetch_tagged_emails(username, password, imap_server, imap_port, tags: List[s
     mail.logout()
     return emails
 
+
 def delete_emails(username, password, imap_server, imap_port, message_ids: List[str], mailbox: str):
     """
     Delete a list of emails from a specified mailbox using Message-ID.
