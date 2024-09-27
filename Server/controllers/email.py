@@ -309,3 +309,49 @@ def fetch_tagged_emails(username, password, imap_server, imap_port, tags: List[s
                     )
     mail.logout()
     return emails
+
+def delete_emails(username, password, imap_server, imap_port, message_ids: List[str], mailbox: str):
+    """
+    Delete a list of emails from a specified mailbox using Message-ID.
+    """
+    mail = imaplib.IMAP4_SSL(imap_server, imap_port)
+    mail.login(username, password)
+    mail.select(f'"{mailbox}"')
+
+    for message_id in message_ids:
+        # Search for the email using the Email-ID
+        status, msg_ids = mail.search(None, f'HEADER Message-ID "{message_id}"')
+        if status != "OK" or not msg_ids[0]:
+            continue
+
+        email_id = msg_ids[0].split()[0]
+
+        # Delete the email
+        mail.store(email_id, "+FLAGS", "\\Deleted")
+
+    mail.expunge()
+    mail.logout()
+
+
+def move_email_to_trash(username, password, imap_server, imap_port, message_ids: List[str], mailbox: str):
+    """
+    Move a list of emails from a specified mailbox to the Trash mailbox using Message-ID.
+    """
+    mail = imaplib.IMAP4_SSL(imap_server, imap_port)
+    mail.login(username, password)
+    mail.select(f'"{mailbox}"')
+
+    for message_id in message_ids:
+        # Search for the email using the Email-ID
+        status, msg_ids = mail.search(None, f'HEADER Message-ID "{message_id}"')
+        if status != "OK" or not msg_ids[0]:
+            continue
+
+        email_id = msg_ids[0].split()[0]
+
+        # Move the email to the Trash mailbox
+        mail.copy(email_id, "Trash")
+        mail.store(email_id, "+FLAGS", "\\Deleted")
+
+    mail.expunge()
+    mail.logout()

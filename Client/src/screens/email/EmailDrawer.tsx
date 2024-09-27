@@ -281,6 +281,7 @@ const EmailDrawer = ({ navigation }: any) => {
     getEmailFolders().then((response) => {
       if (response.length > 0) {
         if (response) {
+          console.debug("Loaded mailboxes");
           const mailboxes = ["virtual-unseen", "virtual-starred", ...response];
           setMailboxes(mailboxes);
           setSelectedMailbox(mailboxes[0]); // Set the default mailbox to the first folder
@@ -293,9 +294,13 @@ const EmailDrawer = ({ navigation }: any) => {
   useEffect(() => {
     console.debug(`Updating emails for ${selectedMailbox}`);
     mailboxesRef.current = selectedMailbox;
+    if (updateEmailTimeoutId.current) {
+      console.debug(`Clearing timeout for ${selectedMailbox}`);
+      clearTimeout(updateEmailTimeoutId.current);
+    }
     updateEmails(selectedMailbox, false, false, true);
     setTimeout(() => {
-      updateEmails(selectedMailbox, true, false);
+      updateEmails(selectedMailbox, false, true);
     }, 1000);
 
     // Cleanup: clear the timeout when component unmounts or mailbox changes

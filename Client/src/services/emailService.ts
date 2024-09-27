@@ -57,7 +57,7 @@ const initVirtualMailboxes = (): AsyncStorageVirtualMailbox => {
  */
 const encryptAndSaveEmails = async (
   asyncStorageEmails: AsyncStorageEmailSave,
-  secretKey: string,
+  secretKey: string
 ) => {
   const emailsToSave = {
     ...asyncStorageEmails,
@@ -65,13 +65,13 @@ const encryptAndSaveEmails = async (
       unread: {
         ...asyncStorageEmails.virtualMailboxes.unread,
         messageIds: Array.from(
-          asyncStorageEmails.virtualMailboxes.unread.messageIds,
+          asyncStorageEmails.virtualMailboxes.unread.messageIds
         ),
       },
       important: {
         ...asyncStorageEmails.virtualMailboxes.important,
         messageIds: Array.from(
-          asyncStorageEmails.virtualMailboxes.important.messageIds,
+          asyncStorageEmails.virtualMailboxes.important.messageIds
         ),
       },
     },
@@ -79,7 +79,7 @@ const encryptAndSaveEmails = async (
 
   const encryptedData = CryptoES.AES.encrypt(
     JSON.stringify(emailsToSave),
-    secretKey,
+    secretKey
   ).toString();
   await storeData("mailServerEmails", encryptedData);
 };
@@ -90,7 +90,7 @@ const encryptAndSaveEmails = async (
  * @returns - The decrypted email data
  */
 const decryptEmails = async (
-  secretKey: string,
+  secretKey: string
 ): Promise<AsyncStorageEmailSave> => {
   // Retrieve the encrypted data from AsyncStorage
   const encryptedData = await getData("mailServerEmails");
@@ -105,7 +105,7 @@ const decryptEmails = async (
 
   // Decrypt the data
   const decryptedData = CryptoES.AES.decrypt(encryptedData, secretKey).toString(
-    CryptoES.enc.Utf8,
+    CryptoES.enc.Utf8
   );
 
   // Parse the decrypted data
@@ -114,14 +114,14 @@ const decryptEmails = async (
   if (parsedData && parsedData.virtualMailboxes) {
     if (Array.isArray(parsedData.virtualMailboxes.unread.messageIds)) {
       parsedData.virtualMailboxes.unread.messageIds = new Set(
-        parsedData.virtualMailboxes.unread.messageIds,
+        parsedData.virtualMailboxes.unread.messageIds
       );
     } else {
       console.error("unread.messageIds is not an array");
     }
     if (Array.isArray(parsedData.virtualMailboxes.important.messageIds)) {
       parsedData.virtualMailboxes.important.messageIds = new Set(
-        parsedData.virtualMailboxes.important.messageIds,
+        parsedData.virtualMailboxes.important.messageIds
       );
     } else {
       console.error("important.messageIds is not an array");
@@ -146,7 +146,7 @@ const convertHashTableToEmails = (emailHashTable: EmailHashTable) => {
 };
 
 const splitHashTables = (
-  emailHashTable: EmailHashTable,
+  emailHashTable: EmailHashTable
 ): {
   emailCompressedHashTable: EmailCompressedHashTable;
   emailDetailsHashTable: EmailDetailsHashTable;
@@ -181,7 +181,7 @@ const splitHashTables = (
  */
 const updateVirtualMailbox = (
   email: Email,
-  virtualMailboxes: AsyncStorageVirtualMailbox,
+  virtualMailboxes: AsyncStorageVirtualMailbox
 ): AsyncStorageVirtualMailbox => {
   // Update unreadEmails based on "\\Seen" flag
   if (email.flags.includes("\\Seen")) {
@@ -210,7 +210,7 @@ const updateVirtualMailbox = (
 const updateVirtualMailboxByMessageId = (
   messageId: string,
   flags: string[],
-  virtualMailboxes: AsyncStorageVirtualMailbox,
+  virtualMailboxes: AsyncStorageVirtualMailbox
 ): AsyncStorageVirtualMailbox => {
   if (flags.includes("\\Seen")) {
     virtualMailboxes.unread.messageIds.delete(messageId);
@@ -234,7 +234,7 @@ const updateVirtualMailboxByMessageId = (
  */
 const retrieveEmailsbyMessageIds = (
   messageIds: Set<string>,
-  mailboxes: { [mailbox: string]: AsyncStorageMailbox },
+  mailboxes: { [mailbox: string]: AsyncStorageMailbox }
 ): EmailHashTable => {
   const emails: EmailHashTable = {};
 
@@ -242,7 +242,6 @@ const retrieveEmailsbyMessageIds = (
     // Iterate over the message IDs
     for (const mailbox in mailboxes) {
       if (mailboxes[mailbox].emails[messageId]) {
-        console.debug(mailboxes[mailbox].emails[messageId]);
         emails[messageId] = mailboxes[mailbox].emails[messageId];
         break; // Break the loop if the email was found
       }
@@ -256,18 +255,24 @@ const retrieveEmailsbyMessageIds = (
 // ####################### AsyncStorageEmailSave ####################### //
 // ##################################################################### //
 
-// Update the structure to manage email deletion and addition in mailboxes
+/**
+ * Stores emails in AsyncStorage based on the mailbox and updates the virtual mailboxes
+ * @param mailbox - The mailbox to store the emails in
+ * @param emails - The emails to store
+ * @param existingMailboxData - The existing mailbox data from AsyncStorage
+ * @param secretKey - The secret key to encrypt the emails
+ * @param deleteEmails - Whether to delete emails not in the new list
+ * @returns - The last update timestamp and the emails stored in the mailbox
+ */
 const storeEmailsInAsyncStorage = async (
   mailbox: string,
   emails: Email[],
+  existingMailboxData: AsyncStorageEmailSave,
   secretKey: string,
-  deleteEmails: boolean = false,
+  deleteEmails: boolean = false
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   try {
-    // Retrieve the encrypted mailbox data from AsyncStorage
-    const existingMailboxData = await decryptEmails(secretKey);
-
-    // Initialize the mailbox if it doesn't exist
+    // Init the mailbox if it doesn't exist
     if (!existingMailboxData.mailboxes[mailbox]) {
       existingMailboxData.mailboxes[mailbox] = { emails: {}, lastupdate: 0 };
     }
@@ -299,7 +304,7 @@ const storeEmailsInAsyncStorage = async (
       };
       existingMailboxData.virtualMailboxes = updateVirtualMailbox(
         email,
-        existingMailboxData.virtualMailboxes,
+        existingMailboxData.virtualMailboxes
       );
     });
 
@@ -310,7 +315,7 @@ const storeEmailsInAsyncStorage = async (
     await encryptAndSaveEmails(existingMailboxData, secretKey);
     console.debug(
       "Emails successfully stored in AsyncStorage under mailbox:",
-      mailbox,
+      mailbox
     );
 
     return {
@@ -327,13 +332,15 @@ const storeEmailsInAsyncStorage = async (
  * Stores emails retrieved by tags in AsyncStorage.
  * @param virtualMailbox - The virtual mailbox to retrieve all emails from (needed for retrieval)
  * @param emails - The emails to store - dont need to be all emails from the specified virtual mailbox
+ * @param existingMailboxData - The existing mailbox data from AsyncStorage
  * @param secretKey - The secret key to encrypt the emails
  * @returns - The virtual mailboxes with the updated emails
  */
 const storeTaggedEmailsInAsyncStorage = async (
   virtualMailbox: string,
   emails: Email[],
-  secretKey: string,
+  existingMailboxData: AsyncStorageEmailSave,
+  secretKey: string
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   try {
     if (
@@ -343,9 +350,6 @@ const storeTaggedEmailsInAsyncStorage = async (
       console.error("Invalid virtual mailbox:", virtualMailbox);
       return { lastupdate: 0, emails: {} };
     }
-
-    // Retrieve the encrypted mailbox data from AsyncStorage
-    const existingMailboxData = await decryptEmails(secretKey);
 
     // Init the virtual mailboxes if they don't exist
     if (!existingMailboxData.virtualMailboxes) {
@@ -384,7 +388,7 @@ const storeTaggedEmailsInAsyncStorage = async (
       // Update the virtual mailboxes
       existingMailboxData.virtualMailboxes = updateVirtualMailbox(
         email,
-        existingMailboxData.virtualMailboxes,
+        existingMailboxData.virtualMailboxes
       );
     });
 
@@ -398,7 +402,7 @@ const storeTaggedEmailsInAsyncStorage = async (
       // Get the emails for the unread mailbox
       retrievedEmails = retrieveEmailsbyMessageIds(
         existingMailboxData.virtualMailboxes.unread.messageIds,
-        existingMailboxData.mailboxes,
+        existingMailboxData.mailboxes
       );
     } else if (virtualMailbox === "importantEmails") {
       // Update the timestamp for the virtual mailbox
@@ -408,7 +412,7 @@ const storeTaggedEmailsInAsyncStorage = async (
       // Get the emails for the important mailbox
       retrievedEmails = retrieveEmailsbyMessageIds(
         existingMailboxData.virtualMailboxes.important.messageIds,
-        existingMailboxData.mailboxes,
+        existingMailboxData.mailboxes
       );
     } else {
       console.error("Invalid virtual mailbox:", virtualMailbox);
@@ -418,7 +422,7 @@ const storeTaggedEmailsInAsyncStorage = async (
     // Encrypt and save the updated data
     await encryptAndSaveEmails(existingMailboxData, secretKey);
     console.debug(
-      "Emails successfully stored in AsyncStorage under virtual mailboxes",
+      "Emails successfully stored in AsyncStorage under virtual mailboxes"
     );
 
     return {
@@ -431,12 +435,19 @@ const storeTaggedEmailsInAsyncStorage = async (
   }
 };
 
-// Function to update the body of an email by its message_id
+/**
+ * Updates the body of an email in the mailbox and saves the changes in AsyncStorage
+ * @param mailbox - The mailbox to update the email in
+ * @param messageId - The message ID of the email to update
+ * @param newBody - The new body of the email
+ * @param secretKey - The secret key to encrypt the emails
+ * @returns - The updated email
+ */
 const updateEmailBodyInAsyncStorage = async (
   mailbox: string,
   messageId: string,
   newBody: string,
-  secretKey: string,
+  secretKey: string
 ): Promise<Email | null> => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
@@ -461,7 +472,7 @@ const updateEmailBodyInAsyncStorage = async (
     await encryptAndSaveEmails(existingMailboxData, secretKey);
 
     console.debug(
-      `Email body successfully updated for messageId: ${messageId} - mailbox: ${mailbox}`,
+      `Email body successfully updated for messageId: ${messageId} - mailbox: ${mailbox}`
     );
 
     return {
@@ -474,11 +485,19 @@ const updateEmailBodyInAsyncStorage = async (
   }
 };
 
+/**
+ * Updates the flags of the specified emails in the mailbox and saves the changes in AsyncStorage
+ * @param mailbox - The mailbox to update the flags in
+ * @param messageIds - The message IDs of the emails to update
+ * @param flags - The flags to set for the emails
+ * @param secretKey - The secret key to encrypt the emails
+ * @returns - A promise resolving to the updated flags
+ */
 const updateEmailFlagsInAsyncStorage = async (
   mailbox: string,
   messageIds: string[],
   flags: string[],
-  secretKey: string,
+  secretKey: string
 ) => {
   try {
     // Retrieve the encrypted mailbox data from AsyncStorage
@@ -497,7 +516,7 @@ const updateEmailFlagsInAsyncStorage = async (
         existingMailboxData.virtualMailboxes = updateVirtualMailboxByMessageId(
           messageId,
           flags,
-          existingMailboxData.virtualMailboxes,
+          existingMailboxData.virtualMailboxes
         );
       }
     });
@@ -506,7 +525,7 @@ const updateEmailFlagsInAsyncStorage = async (
     await encryptAndSaveEmails(existingMailboxData, secretKey);
 
     console.debug(
-      `Email flags successfully updated for messageIds: ${messageIds} - mailbox: ${mailbox}`,
+      `Email flags successfully updated for messageIds: ${messageIds} - mailbox: ${mailbox}`
     );
   } catch (error) {
     console.error("Error updating email flags in AsyncStorage:", error);
@@ -528,7 +547,7 @@ const fetchEmailFolders = async (
   username: string,
   password: string,
   mailServerDomain: string,
-  mailServerPort: string,
+  mailServerPort: string
 ): Promise<{ folders: Mailbox[]; timestamp: number }> => {
   //TODO change to correct URL
   const response = await axios.post(
@@ -538,7 +557,7 @@ const fetchEmailFolders = async (
       password: password,
       imap_server: mailServerDomain,
       imap_port: mailServerPort,
-    },
+    }
   );
   const data = {
     folders: response.data.folders,
@@ -562,7 +581,7 @@ const fetchEmailListByTags = async (
   mailServerDomain: string,
   mailServerPort: string,
   tags: string[],
-  retrieveSinceDate?: string,
+  retrieveSinceDate?: string
 ): Promise<Email[]> => {
   //TODO change to correct URL and use retrieveSinceDate
   const response = await axios.post(
@@ -581,13 +600,13 @@ const fetchEmailListByTags = async (
             return params[key]
               .map(
                 (tag: string) =>
-                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`,
+                  `${encodeURIComponent(key)}=${encodeURIComponent(tag)}`
               )
               .join("&");
           })
           .join("&");
       },
-    },
+    }
   );
   return response.data;
 };
@@ -608,7 +627,7 @@ const fetchEmailListByMailbox = async (
   mailServerDomain: string,
   mailServerPort: string,
   mailbox: string,
-  retrieveSinceDate?: string,
+  retrieveSinceDate?: string
 ): Promise<Email[]> => {
   //TODO change to correct URL
   let requestUrl =
@@ -661,7 +680,7 @@ const getEmailFolders = async () => {
       username,
       password,
       mailServerDomain,
-      mailServerPort,
+      mailServerPort
     );
     storeData("mailServerFolders", JSON.stringify(saveData));
     return saveData.folders;
@@ -684,7 +703,7 @@ const getEmailList = async (
   readStatus: string,
   softRefresh: boolean = false,
   hardRefresh: boolean = true,
-  onlyLocal: boolean = false,
+  onlyLocal: boolean = false
 ): Promise<{ lastupdate: number; emails: EmailHashTable }> => {
   console.debug("Fetching emails");
   // Retrieve user credentials and initialize variables for the process
@@ -692,10 +711,12 @@ const getEmailList = async (
   let retrieveSinceDate = null;
   let decryptedData = null;
 
-  // Decrypt emails from AsyncStorage if credentials are available
-  if (password) {
-    decryptedData = await decryptEmails(password);
+  if (!username || !password) {
+    return { lastupdate: 0, emails: {} };
   }
+
+  // Decrypt emails from AsyncStorage if credentials are available
+  decryptedData = await decryptEmails(password);
 
   if (decryptedData) {
     // Handle virtual mailboxes first
@@ -707,14 +728,14 @@ const getEmailList = async (
             !hardRefresh &&
             isTimePassed(
               decryptedData.virtualMailboxes.important.lastUpdate,
-              5,
+              5
             ))
         ) {
           // Return important emails from virtual mailbox if no refresh is requested
           return {
             emails: await retrieveEmailsbyMessageIds(
               decryptedData.virtualMailboxes.important.messageIds,
-              decryptedData.mailboxes,
+              decryptedData.mailboxes
             ),
             lastupdate: decryptedData.virtualMailboxes.important.lastUpdate,
           };
@@ -732,7 +753,7 @@ const getEmailList = async (
           return {
             emails: await retrieveEmailsbyMessageIds(
               decryptedData.virtualMailboxes.unread.messageIds,
-              decryptedData.mailboxes,
+              decryptedData.mailboxes
             ),
             lastupdate: decryptedData.virtualMailboxes.unread.lastUpdate,
           };
@@ -762,7 +783,7 @@ const getEmailList = async (
           isTimePassed(decryptedData.mailboxes[mailbox].lastupdate, 15 * 60)
         ) {
           retrieveSinceDate = new Date(
-            decryptedData.mailboxes[mailbox].lastupdate,
+            decryptedData.mailboxes[mailbox].lastupdate
           ).toISOString();
           console.debug("Retrieving emails since:", retrieveSinceDate);
         }
@@ -774,8 +795,8 @@ const getEmailList = async (
   const mailServerDomain = await getData("mailServerDomain");
   const mailServerPort = await getData("mailServerPort");
 
-  // Exit early if credentials or mail server details are missing
-  if (!username || !password || !mailServerDomain || !mailServerPort) {
+  // Exit early if mail server details are missing
+  if (!mailServerDomain || !mailServerPort) {
     return { lastupdate: 0, emails: {} };
   }
 
@@ -790,13 +811,14 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           ["FLAGGED"],
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
 
         return await storeTaggedEmailsInAsyncStorage(
           "importantEmails",
           emails,
-          password,
+          decryptedData,
+          password
         );
       case "virtual-unseen":
         // Fetch unseen (unread) emails from the server
@@ -806,12 +828,13 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           ["UNSEEN"],
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
         return await storeTaggedEmailsInAsyncStorage(
           "unreadEmails",
           emails,
-          password,
+          decryptedData,
+          password
         );
       default:
         // Fetch emails from the specified mailbox
@@ -821,15 +844,16 @@ const getEmailList = async (
           mailServerDomain,
           mailServerPort,
           mailbox,
-          retrieveSinceDate || undefined,
+          retrieveSinceDate || undefined
         );
 
         // Store emails in AsyncStorage with full or partial update depending on the refresh
         return await storeEmailsInAsyncStorage(
           mailbox,
           emails,
+          decryptedData,
           password,
-          !retrieveSinceDate,
+          !retrieveSinceDate
         );
     }
   } catch (error) {
@@ -842,7 +866,7 @@ const getEmailList = async (
           return {
             emails: await retrieveEmailsbyMessageIds(
               decryptedData.virtualMailboxes.important.messageIds,
-              decryptedData.mailboxes,
+              decryptedData.mailboxes
             ),
             lastupdate: decryptedData.virtualMailboxes.important.lastUpdate,
           };
@@ -850,7 +874,7 @@ const getEmailList = async (
           return {
             emails: await retrieveEmailsbyMessageIds(
               decryptedData.virtualMailboxes.unread.messageIds,
-              decryptedData.mailboxes,
+              decryptedData.mailboxes
             ),
             lastupdate: decryptedData.virtualMailboxes.unread.lastUpdate,
           };
@@ -873,7 +897,7 @@ const getEmailList = async (
  */
 const getEmailDetails = async (
   messageId: string,
-  mailbox: string,
+  mailbox: string
 ): Promise<Email | null> => {
   const { username, password } = await getMailServerCredentials();
 
@@ -894,14 +918,14 @@ const getEmailDetails = async (
         imap_port: mailServerPort,
         message_id: messageId,
         mailbox: mailbox,
-      },
+      }
     );
 
     return await updateEmailBodyInAsyncStorage(
       mailbox,
       messageId,
       response.data.body,
-      password,
+      password
     );
   } catch (error) {
     console.error("Error fetching email details:", error);
@@ -926,7 +950,7 @@ const updateEmailFlags = async (
   message_ids: string[],
   flags: string[],
   serverFlags: string[] = [],
-  alreadyServerSeen: boolean = false,
+  alreadyServerSeen: boolean = false
 ) => {
   const { username, password } = await getMailServerCredentials();
   const mailServerDomain = await getData("mailServerDomain");
@@ -964,7 +988,7 @@ const updateEmailFlags = async (
           message_ids: message_ids,
           mailbox: mailbox,
           flags: serverFlags,
-        },
+        }
       );
 
       if (response.status !== 200) {
