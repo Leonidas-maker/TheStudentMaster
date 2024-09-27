@@ -63,7 +63,7 @@ class CalendarNative(Base):
 
     university_id = Column(Integer, ForeignKey("university.university_id"), nullable=False)
 
-    course_name = Column(String(255), nullable=False, unique=True)
+    course_name = Column(String(255), nullable=False)
 
     source_backend_id = Column(Integer, ForeignKey("calendar_backend.calendar_backend_id"), nullable=False)
     source = Column(String(255), nullable=False)
@@ -98,6 +98,7 @@ class CalendarBackend(Base):
     __tablename__ = "calendar_backend"
     calendar_backend_id = Column(Integer, primary_key=True, index=True)
     backend_name = Column(String(255), nullable=False, unique=True)
+    is_custom_available = Column(BOOLEAN, nullable=False, default=True)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
 

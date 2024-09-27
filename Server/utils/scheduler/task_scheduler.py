@@ -1,5 +1,6 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
+from apscheduler.triggers.date import DateTrigger
 from apscheduler.triggers.cron import CronTrigger
 import datetime
 from rich.progress import Progress
@@ -76,8 +77,10 @@ class TaskScheduler:
                 if self.verbose:
                     self.progress.log(f"[cyan][Scheduler] [green]Task {task_id} finished!")
 
-        # Determine the trigger type based on start and end times
-        if isinstance(start_time, int) and isinstance(end_time, int):
+        # Determine the trigger type based on start and end times and interval
+        if start_time is None and end_time is None and interval_seconds == 0:
+            trigger = DateTrigger(run_date=datetime.datetime.now() + datetime.timedelta(seconds=5))
+        elif isinstance(start_time, int) and isinstance(end_time, int):
             interval_hours = interval_seconds // 3600
             interval_seconds = interval_seconds % 3600
             interval_minutes = interval_seconds // 60

@@ -5,6 +5,7 @@ from profanity_check import predict
 import json
 import datetime
 import uuid
+from typing import List
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_calendar
@@ -16,7 +17,7 @@ from middleware.general import create_address
 from models.pydantic_schemas import s_general, s_calendar
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
-import utils.calendar.nativ_sources as nativ_sources
+from utils.calendar.dhbw_app_fetcher import DHBWAppFetcher
 from utils.calendar.calendar_wrapper import CalendarWrapper
 
 ###########################################################################
@@ -58,6 +59,43 @@ def update_calendars(
     )
 
 
+def map_dhbw_app_site_to_university_name(db: Session, site: str) -> str | None:
+    match site:
+        case "MOS":
+            return "Duale Hochschule Baden-Wuerttemberg Mosbach"
+        case "MGH":
+            return "Duale Hochschule Baden-Wuerttemberg Bad Mergentheim"
+        case "HN":
+            return "Duale Hochschule Baden-Wuerttemberg Heilbronn"
+        case "KA":
+            return "Duale Hochschule Baden-Wuerttemberg Karlsruhe"
+        case "VS":
+            return "Duale Hochschule Baden-Wuerttemberg Villingen-Schwenningen"
+        case "MA":
+            return "Duale Hochschule Baden-Wuerttemberg Mannheim"
+        case "STG":
+            return "Duale Hochschule Baden-Wuerttemberg Stuttgart"
+        case "HDH":
+            return "Duale Hochschule Baden-Wuerttemberg Heidenheim"
+        case "FN":
+            return "Duale Hochschule Baden-Wuerttemberg Friedrichshafen"
+        case "RV":
+            return "Duale Hochschule Baden-Wuerttemberg Ravensburg"
+        # case "DHBW":
+        #     return "Duale Hochschule Baden-Wuerttemberg - Standortübergreifend"
+        case _:
+            return None
+
+
+def map_dhbw_app_site_to_university(db: Session, site) -> m_calendar.University | None:
+    """Function to map DHBW.APP sites to university records."""
+
+    university_name = map_dhbw_app_site_to_university_name(db, site)
+    if university_name:
+        return db.query(m_calendar.University).filter(m_calendar.University.university_name == university_name).first()
+    return None
+
+
 ###########################################################################
 ############################ Major Update Logic ###########################
 ###########################################################################
@@ -70,10 +108,13 @@ def update_calendars(
 
 def prepareCalendarTables(db: Session):
     """Function to prepare calendar tables by adding initial data"""
-    backends = ["Rapla", "iCalendar"]
+    backends = ["Rapla", "iCalendar", "DHBW.APP"]
     for backend in backends:
         if not db.query(m_calendar.CalendarBackend).filter(m_calendar.CalendarBackend.backend_name == backend).first():
-            db.add(m_calendar.CalendarBackend(backend_name=backend))
+            if backend == "DHBW.APP":
+                db.add(m_calendar.CalendarBackend(backend_name=backend, is_custom_available=False))
+            else:
+                db.add(m_calendar.CalendarBackend(backend_name=backend))
 
     with open(
         "./data/address_lists/ger_univercity.json", "r", encoding="utf-8"
@@ -111,147 +152,180 @@ def prepareCalendarTables(db: Session):
     db.commit()
 
 
+def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
+    query_options = [
+        defer(m_calendar.CalendarNative.data),  # Defer loading of large 'data' field to optimize query performance
+    ]
+
+    error_messages = []
+
+    try:
+        source_backend_ids = get_backend_ids(db)  # Get the backend IDs for calendar updates
+        dhbw_app_fetcher = DHBWAppFetcher(progress)  # Initialize the DHBW App fetcher
+        available_dhbw_sites = dhbw_app_fetcher.get_nativ_dhbw_sources()  # Get the currently available sources for DHBW
+
+        progress.update(task_id, total=len(available_dhbw_sites), refresh=True)
+
+        for available_dhbw_site in available_dhbw_sites:
+            university = map_dhbw_app_site_to_university(db, available_dhbw_site)
+
+            if not university:
+                error_messages.append(f"University not found for site: {available_dhbw_site}")
+                continue
+
+            progress.update(
+                task_id,
+                description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Fetching...",
+            )
+
+            calenders = dhbw_app_fetcher.get_all_calendars(available_dhbw_site)
+
+            if not calenders:
+                error_messages.append(f"Failed to fetch calendar for site: {available_dhbw_site}")
+                continue
+
+            site_lectures = (
+                db.query(m_calendar.CalendarNative)
+                .filter(m_calendar.CalendarNative.university_id == university.university_id)
+                .options(*query_options)
+                .all()
+            )
+
+            progress.update(
+                task_id,
+                description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Processing...",
+            )
+
+            for lectures in site_lectures:
+                lecture_exists = False
+                if lectures.course_name not in calenders.keys():
+                    db.delete(lectures)
+                    calenders.pop(lectures.course_name)
+                    continue
+                else:
+                    lecture_exists = True
+
+                calendar_data = calenders.get(lectures.course_name)
+                if calendar_data.get("hash") != lectures.hash:
+                    lectures.data = calendar_data.get("data")
+                    lectures.hash = calendar_data.get("hash")
+                    db.add(lectures)
+
+                if lecture_exists:
+                    calenders.pop(lectures.course_name)
+
+
+            progress.update(
+                task_id,
+                description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Adding...",
+            )
+   
+            for course_name, calendar_data in calenders.items():
+                db.add(
+                    m_calendar.CalendarNative(
+                        university_id=university.university_id,
+                        source_backend_id=source_backend_ids.get("DHBW.APP"),
+                        course_name=course_name,
+                        source="DHBW.APP",
+                        data=calendar_data.get("data"),
+                        hash=calendar_data.get("hash"),
+                        last_modified=datetime.datetime.now(),
+                    )
+                )
+
+            db.flush()
+            progress.update(task_id, advance=1)
+        db.commit()
+
+        if error_messages:
+            raise ValueError("\n".join(error_messages))
+        
+        # Final update to indicate the task is done
+        progress.update(
+            task_id,
+            description=f"[bold green]Native-Calendar-DHBW[/bold green] Done!",
+            visible=True,
+            refresh=True,
+        )
+
+    except Exception as e:
+        # Handle any errors by updating the progress bar and printing the error
+        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
+        print(e)
+
+
 # ======================================================== #
 # ===================== Native Update ==================== #
 # ======================================================== #
-
-
-def update_user_linked_calendars(db: Session, progress, task_id):
-    """Update calendars linked to user accounts."""
-    query_options = [
-        defer(m_calendar.CalendarNative.data),  # Defer loading of large 'data' field to optimize query performance
-    ]
-    try:
-        calendar_wrapper = CalendarWrapper("iCalendar", "dhbw-mannheim")
-
-        # Query calendars linked to user accounts from the DHBW Mannheim university
-        user_calendars: set[m_calendar.CalendarNative] = set(
-            db.query(m_calendar.CalendarNative)
-            .join(
-                m_calendar.UserCalendar,
-                m_calendar.UserCalendar.native_calendar_id == m_calendar.CalendarNative.calendar_native_id,
-            )
-            .join(m_calendar.University)
-            .filter(m_calendar.University.university_name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
-            .options(*query_options)
-            .all()
-        )
-
-        # Update the queried calendars using the helper function
-        update_calendars(db, progress, task_id, user_calendars, calendar_wrapper)
-
-    except Exception as e:
-        # Handle any exceptions by updating the progress bar and logging the error
-        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
-        print(e)
-
-
-def update_guest_accessed_calendars(db: Session, progress, task_id):
-    """Update calendars accessed by guests in the last 15 minutes."""
-    query_options = [
-        defer(m_calendar.CalendarNative.data),  # Defer loading of large 'data' field to optimize query performance
-    ]
-    try:
-        calendar_wrapper = CalendarWrapper("iCalendar", "dhbw-mannheim")
-
-        # Query calendars accessed by guests in the last 15 minutes
-        time_threshold = datetime.datetime.now() - datetime.timedelta(minutes=15)
-        guest_calendars = set(
-            db.query(m_calendar.CalendarNative)
-            .join(m_calendar.University)
-            .filter(m_calendar.University.university_name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
-            .filter(m_calendar.CalendarNative.guest_last_accessed >= time_threshold)
-            .options(*query_options)
-            .all()
-        )
-
-        # Update the queried calendars using the helper function
-        update_calendars(db, progress, task_id, guest_calendars, calendar_wrapper)
-
-    except Exception as e:
-        # Handle any exceptions by updating the progress bar and logging the error
-        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
-        print(e)
-
-
-def update_all_native_calendars(db: Session, progress, task_id: int):
+def update_all_dhbw_calendars(db: Session, progress, task_id: int):
     """Function to update all native calendars."""
-    query_options = [
-        defer(m_calendar.CalendarNative.data),  # Defer loading of large 'data' field to optimize query performance
-    ]
     try:
-        calendar_wrapper = CalendarWrapper(
-            "iCalendar", "dhbw-mannheim"
-        )  # Initialize the wrapper for handling calendar data
-        calendar_backends = get_backend_ids(db)  # Retrieve calendar backend IDs for reference
+        dhbw_app_fetcher = DHBWAppFetcher(progress)  # Initialize the DHBW App fetcher
+        
+        progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Fetching updates...")
+        updated_calendars = dhbw_app_fetcher.get_updated_calendars()
 
-        # Query the DHBW Mannheim university record
-        dhbw_mannheim = (
-            db.query(m_calendar.University)
-            .filter(m_calendar.University.university_name == "Duale Hochschule Baden-Wuerttemberg Mannheim")
-            .first()
-        )
-
-        # Query all native calendars associated with DHBW Mannheim
-        dhbw_calendars = (
-            db.query(m_calendar.CalendarNative)
-            .filter(m_calendar.CalendarNative.university_id == dhbw_mannheim.university_id)
-            .options(*query_options)
-            .all()
-        )
-
-        dhbw_available_sources = (
-            nativ_sources.get_source_dhbw_ma()
-        )  # Get the currently available sources for DHBW Mannheim
-
-        progress.update(task_id, total=len(dhbw_available_sources), refresh=True)
-
-        # Process each existing DHBW calendar
-        for dhbw_calendar in dhbw_calendars:
+        if not updated_calendars:
+            # Final update to indicate the task found no updates
             progress.update(
                 task_id,
-                description=f"[bold green]Native-Calendar[/bold green] Update DHBW-Mannheim - {dhbw_calendar.course_name}",
+                description=f"[bold green]Native-Calendar-DHBW[/bold green] No updates found!",
+                visible=True,
+                refresh=True,
             )
-            # If the source is no longer available, delete the calendar entry
-            if dhbw_calendar.source not in dhbw_available_sources.values():
-                print("Deleting", dhbw_calendar.course_name)
-                db.delete(dhbw_calendar)
+            return
+
+        available_dhbw_sites = dhbw_app_fetcher.get_nativ_dhbw_sources()  # Get the currently available sources for DHBW
+
+        for university_name, _types in updated_calendars.items():
+            university = map_dhbw_app_site_to_university(db, university_name)
+
+            if not university and university_name not in available_dhbw_sites:
+                print(f"University not found for site: {university_name}")
                 continue
-            else:
-                dhbw_available_sources.pop(
-                    dhbw_calendar.course_name, None
-                )  # Remove the processed source from available sources
+            
+            lectures = _types.get("new", {}).keys() | _types.get("updated", {}).keys() | _types.get("deleted", {}).keys()
+            courses_to_update = db.query(m_calendar.CalendarNative).filter(
+                m_calendar.CalendarNative.university_id == university.university_id, m_calendar.CalendarNative.course_name.in_(lectures.keys())
+            ).all()
 
-            # Fetch and update calendar data if it has changed
-            calendar_data = calendar_wrapper.get_data(dhbw_calendar.source)
-            if calendar_data and calendar_data.get("hash") != dhbw_calendar.hash:
-                dhbw_calendar.data = calendar_data.get("data")
-                dhbw_calendar.hash = calendar_data.get("hash")
-                db.add(dhbw_calendar)  # Stage the updated calendar for commit
+            progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Updating {university.university_name}...", total=len(courses_to_update))
+
+            for course in courses_to_update:
+                
+                new = _types.get("new", {}).get(course.course_name)
+                updated = _types.get("updated", {}).get(course.course_name)
+                deleted = _types.get("deleted", {}).get(course.course_name)
+
+                # Check if timezones are the same and raise an error if they are not
+                if new.get("X-WR-TIMEZONE") != course.data.get("X-WR-TIMEZONE"):
+                    raise ValueError("Timezone mismatch!\nDelete the data in the database or change the timezone!")
+
+                for lecture in course.data.get("events", []):
+                    lecture_id = lecture.get("description", {}).get("id")
+                    if lecture_id in deleted:
+                        course.data["events"].pop(lecture)
+                    elif lecture_id in updated:
+                        course.data["events"][lecture] = updated.get("events", {}).pop(lecture_id)
+                    elif lecture_id in new:
+                        course.data["events"][lecture] = new.get("events", {}).pop(lecture_id)
+                
+                for lecture in new.get("events", []):
+                    course.data["events"][lecture] = new["events"][lecture]
+
+                # Update the hash and last_modified fields
+                course.hash = dhbw_app_fetcher.__dict_hash(course.data)
+                course.last_modified = datetime.datetime.now()
+                db.add(course)
+            
             progress.update(task_id, advance=1)
 
-        # Add new calendars for any remaining sources that were not in the existing records
-        for name, source in dhbw_available_sources.items():
-            progress.update(
-                task_id, description=f"[bold green]Native-Calendar[/bold green] Adding DHBW-Mannheim - {name}"
-            )
-            calendar_data = calendar_wrapper.get_data(source)
-            if calendar_data:
-                calendar = m_calendar.CalendarNative(
-                    university_id=dhbw_mannheim.university_id,
-                    course_name=name,
-                    source_backend_id=calendar_backends.get("iCalendar"),
-                    source=source,
-                    data=calendar_data.get("data"),
-                    hash=calendar_data.get("hash"),
-                )
-                db.add(calendar)  # Stage the new calendar for commit
-            progress.update(task_id, advance=1)
+        db.commit()
 
-        db.commit()  # Commit all changes to the database in a single transaction
+        # Final update to indicate the task is done
         progress.update(
             task_id,
-            description=f"[bold green]Native-Calendar-DHBWMannheim[/bold green] Done!",
+            description=f"[bold green]Native-Calendar-DHBW[/bold green] Done!",
             visible=True,
             refresh=True,
         )

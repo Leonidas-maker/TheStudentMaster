@@ -14,11 +14,10 @@ from middleware.database import get_async_db, get_db
 from middleware.general import clean_address
 from middleware.calendar import (
     prepareCalendarTables,
-    update_user_linked_calendars,
-    update_guest_accessed_calendars,
-    update_all_native_calendars,
     update_custom_calendars,
     clean_custom_calendars,
+    refresh_all_dhbw_calendars,
+    update_all_dhbw_calendars,
 )
 from middleware.canteen import create_canteens, update_canteen_menus
 
@@ -67,44 +66,34 @@ async def lifespan(app: FastAPI):
     )
 
     task_scheduler.add_task(
-        "calendar_native_all",
-        update_all_native_calendars,
-        interval_seconds=60 * 60 * 2,  # 2 hour
-        start_time=6,
-        end_time=18,
-        blocked_by=[],
+        "calendar_dhbw_refresh",
+        refresh_all_dhbw_calendars,
+        interval_seconds=60 * 60 * 24 * 7,  # 1 week
         on_startup=True,
     )
 
     task_scheduler.add_task(
-        "calendar_native_linked",
-        update_user_linked_calendars,
-        interval_seconds=60 * 15,  # 15 minutes
+        "calendar_dhbw_update",
+        update_all_dhbw_calendars,
+        interval_seconds=20 * 60,  # 20 minutes
         start_time=6,
         end_time=18,
-        blocked_by=["calendar_native_all"],
-    )
-
-    task_scheduler.add_task(
-        "calendar_native_guest_accessed",
-        update_guest_accessed_calendars,
-        interval_seconds=60 * 15,  # 15 minutes
-        start_time=6,
-        end_time=18,
-        blocked_by=["calendar_native_all"],
+        blocked_by=["calendar_dhbw_refresh"],
+        on_startup=False,
     )
 
     for backend in backends:
-        task_scheduler.add_task(
-            f"calendar_custom_{backend.backend_name}",
-            update_custom_calendars,
-            interval_seconds=60 * 15,  # 15 minutes
-            start_time=6,
-            end_time=18,
-            blocked_by=[],
-            on_startup=True,
-            kwargs={"backend": backend},
-        )
+        if backend.backend_name != "DHBW.APP":
+            task_scheduler.add_task(
+                f"calendar_custom_{backend.backend_name}",
+                update_custom_calendars,
+                interval_seconds=60 * 15,  # 15 minutes
+                start_time=6,
+                end_time=18,
+                blocked_by=[],
+                on_startup=True,
+                kwargs={"backend": backend},
+            )
 
     # ~~~~~~~~~~~~~~~~ Cleaners ~~~~~~~~~~~~~~~ #
     task_scheduler.add_task(

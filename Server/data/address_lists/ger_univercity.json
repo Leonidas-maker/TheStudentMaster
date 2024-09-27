@@ -3096,8 +3096,19 @@
     "rooms": null
   },
   {
-    "name": "Duale Hochschule Baden-Wuerttemberg",
+    "name": "Duale Hochschule Baden-Wuerttemberg - Standort\u00fcbergreifend",
     "domains": ["dhbw.de"],
+    "address1": null,
+    "address2": null,
+    "city": null,
+    "zip": null,
+    "district": null,
+    "county": "Germany",
+    "rooms": null
+  },
+  {
+    "name": "Duale Hochschule Baden-Wuerttemberg Bad Mergentheim",
+    "domains": ["mosbach.dhbw.de/bad-mergentheim"],
     "address1": null,
     "address2": null,
     "city": null,
@@ -3213,6 +3224,17 @@
     "city": "Mannheim",
     "zip": "68163",
     "district": "Baden-Wuerttemberg",
+    "county": "Germany",
+    "rooms": null
+  },
+  {
+    "name": "Duale Hochschule Baden-Wuerttemberg Friedrichshafen",
+    "domains": ["www.ravensburg.dhbw.de"],
+    "address1": null,
+    "address2": null,
+    "city": null,
+    "zip": null,
+    "district": null,
     "county": "Germany",
     "rooms": null
   },

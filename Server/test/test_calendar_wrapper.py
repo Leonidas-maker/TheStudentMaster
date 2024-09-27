@@ -3,7 +3,7 @@ import random
 
 # ~~~~~~~~~~~~~~~ Test-Asset ~~~~~~~~~~~~~~ #
 from utils.calendar.calendar_wrapper import CalendarWrapper
-from utils.calendar.nativ_sources import get_source_dhbw_ma
+from Server.utils.calendar.dhbw_app_fetcher import get_source_dhbw_ma
 
 ###########################################################################
 ################################### Init ##################################

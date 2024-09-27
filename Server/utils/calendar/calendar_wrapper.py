@@ -235,7 +235,7 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
 
                             tmp = row.findChild("span", class_="person")
                             if tmp:
-                                lecture_description["person"] = tmp.get_text()
+                                lecture_description["lecturer"] = tmp.get_text()
 
                             # ~~ Process <span> tag - location information ~ #
                             tmp = row.findChildren("span", class_="resource")
