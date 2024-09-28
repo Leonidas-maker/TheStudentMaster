@@ -1,18 +1,10 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import { useState } from "react";
 import { Parser } from "htmlparser2";
 
-// ~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~ //
-interface ModuleData {
-  number: string;
-  name: string;
-  ects: string;
-  note: string;
-  passed: boolean;
-}
+// ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
+import { ModuleData } from "../../interfaces/dualisInterfaces";
 
-// Function to filter HTML content and extract the desired data
-export const filterHtmlContent = (
+export const filterPerformanceOverview = (
   html: string,
   setModuleData: React.Dispatch<React.SetStateAction<Array<ModuleData>>>,
 ) => {
@@ -21,7 +13,7 @@ export const filterHtmlContent = (
     number: "",
     name: "",
     ects: "",
-    note: "",
+    grade: "",
     passed: false,
   };
   let currentTdIndex = 0;
@@ -37,7 +29,7 @@ export const filterHtmlContent = (
           number: "",
           name: "",
           ects: "",
-          note: "",
+          grade: "",
           passed: false,
         }; // Reset module
       }
@@ -69,7 +61,7 @@ export const filterHtmlContent = (
             currentModule.ects = cleanText; // ECTS points
             break;
           case 4:
-            currentModule.note = cleanText; // Grade
+            currentModule.grade = cleanText; // Grade
             break;
         }
       }
