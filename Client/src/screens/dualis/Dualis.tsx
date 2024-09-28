@@ -30,7 +30,7 @@ import {
   GpaData,
   EctsData,
   SemesterData,
-  GradeData
+  GradeData,
 } from "../../interfaces/dualisInterfaces";
 import { filterGrade } from "../../scraper/dualis/gradeScraper";
 
@@ -342,15 +342,15 @@ const Dualis: React.FC = () => {
             </View>
           ))}
         </View>
-        ) : null}
+      ) : null}
       <View className="mt-4 p-4 border border-gray-300 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
-            <View key={index} className="mb-4">
-              <Text>{semester.name}</Text>
-              <Text>{semester.value}</Text>
-            </View>
-          ))
+              <View key={index} className="mb-4">
+                <Text>{semester.name}</Text>
+                <Text>{semester.value}</Text>
+              </View>
+            ))
           : null}
         <Text>ECTS: {ectsData.ectsSum}</Text>
         <Text>ECTS benötigt: {ectsData.ectsTotal}</Text>
@@ -358,15 +358,15 @@ const Dualis: React.FC = () => {
         <Text>Hauptfach-GPA: {gpaData.gpaSubject}</Text>
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
-            <View key={index} className="mb-4">
-              <Text className="text-lg font-semibold">
-                {module.number} - {module.name}
-              </Text>
-              <Text>ECTS: {module.ects}</Text>
-              <Text>Note: {module.grade}</Text>
-              <Text>{module.passed ? "Bestanden" : ""}</Text>
-            </View>
-          ))
+              <View key={index} className="mb-4">
+                <Text className="text-lg font-semibold">
+                  {module.number} - {module.name}
+                </Text>
+                <Text>ECTS: {module.ects}</Text>
+                <Text>Note: {module.grade}</Text>
+                <Text>{module.passed ? "Bestanden" : ""}</Text>
+              </View>
+            ))
           : null}
       </View>
     </ScrollView>
