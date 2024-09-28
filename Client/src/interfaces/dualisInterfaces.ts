@@ -23,7 +23,16 @@ interface SemesterData {
   semester: Array<{ name: string; value: string }>;
 }
 
+interface GradeData {
+  number: string;
+  name: string;
+  grade: string;
+  ects: string;
+  status: string;
+  detail: string;
+}
+
 // ====================================================== //
 // ================== Interfaces export ================= //
 // ====================================================== //
-export { ModuleData, GpaData, EctsData, SemesterData };
+export { ModuleData, GpaData, EctsData, SemesterData, GradeData };
