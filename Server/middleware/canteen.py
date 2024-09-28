@@ -56,7 +56,7 @@ def create_canteens(db: Session):
         db.rollback()
 
 
-def update_canteen_menus(db: Session, progress: Progress, task_id: TaskID, week_offset: int = 0):
+def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
     """This function updates the menu for all canteens in the database. This function is used by the repeated update task.
 
     Args:
@@ -393,6 +393,7 @@ def get_menu_for_canteen(db: Session, canteen_short_name: str, current_week_only
     # Initialize the return value dictionary with canteen details
     return_value = {
         "canteen_name": canteen.canteen_name,
+        "hash": canteen.hash,
         "canteen_short_name": canteen.canteen_short_name if canteen.canteen_short_name else None,
         "image_url": canteen.image_url if canteen.image_url else None,
         "menu": [],

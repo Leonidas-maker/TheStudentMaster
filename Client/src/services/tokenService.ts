@@ -3,8 +3,8 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { setTokens, clearTokens } from "./AuthService"; // Import functions to set and clear authentication tokens
-import { BASE_URL } from "./Api"; // Import the base URL for API requests
+import { setTokens, clearTokens } from "./authService"; // Import functions to set and clear authentication tokens
+import { BASE_URL } from "./api"; // Import the base URL for API requests
 
 // Function to refresh the authentication tokens
 const refreshAuthLogic = async () => {

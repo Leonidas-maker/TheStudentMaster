@@ -9,16 +9,17 @@ from models.pydantic_schemas import s_general
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_general, m_user, m_calendar, m_canteen
 
-
 ###########################################################################
 ########################## Basic logic functions ##########################
 ###########################################################################
 
 
+# Function to perform XOR operation on multiple arguments
 def xor(*args) -> bool:
     return reduce(xor_, map(bool, args))
 
 
+# Function to check if only one argument is True
 def only_one(*args) -> bool:
     return sum(map(bool, args)) == 1
 
@@ -28,11 +29,12 @@ def only_one(*args) -> bool:
 ###########################################################################
 
 
+# Function to create a new address in the database
 def create_address(db: Session, new_address: s_general.AddressCreate) -> s_general.Address:
     if not new_address:
         raise ValueError("Address is required")
 
-    # Check if request.address exists
+    # Check if the address already exists
     address_exists = (
         db.query(m_general.Address)
         .join(m_general.PostalCode)
@@ -47,8 +49,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
     if address_exists:
         return address_exists
 
-    # Check if request.address.postal_code exists
-
+    # Check if the postal code already exists
     postal_code_exists = (
         db.query(m_general.PostalCode)
         .join(m_general.City)
@@ -60,7 +61,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
     )
 
     if not postal_code_exists:
-        # Check if request.address.city exists
+        # Check if the city already exists
         city_exists = (
             db.query(m_general.City)
             .join(m_general.District)
@@ -72,7 +73,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         )
 
         if not city_exists:
-            # Check if request.address.district exists
+            # Check if the district already exists
             district_exists = (
                 db.query(m_general.District)
                 .join(m_general.Country)
@@ -84,7 +85,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
             )
 
             if not district_exists:
-                # Check if request.address.country exists
+                # Check if the country already exists
                 country_exists = (
                     db.query(m_general.Country).filter(m_general.Country.country == new_address.country).first()
                 )
@@ -128,6 +129,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
     return new_address
 
 
+# Function to clean up unused addresses from the database
 def clean_address(db: Session) -> int:
     # Addresses used by University Table (calendar)
     native_address_1_subquery = (

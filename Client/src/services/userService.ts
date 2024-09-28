@@ -1,8 +1,8 @@
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { axiosInstance } from "./Api";
+import { axiosInstance } from "./api";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { UserProps } from "../interfaces/UserInterfaces";
+import { UserProps } from "../interfaces/userInterfaces";
 
 // Function to fetch user data and update the state
 const fetchUser = async (setUser: (userdata: UserProps) => void) => {

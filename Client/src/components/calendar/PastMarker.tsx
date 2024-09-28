@@ -10,7 +10,7 @@ import {
 } from "./CalendarCalculations";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { PastMarkerProps } from "../../interfaces/CalendarInterfaces";
+import { PastMarkerProps } from "../../interfaces/calendarInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //

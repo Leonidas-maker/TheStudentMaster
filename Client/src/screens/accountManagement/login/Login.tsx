@@ -17,7 +17,7 @@ import {
   clearTokens,
   isLoggedIn,
   setTokens,
-} from "../../../services/AuthService";
+} from "../../../services/authService";
 
 // ====================================================== //
 // ====================== Component ===================== //

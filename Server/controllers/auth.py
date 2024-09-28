@@ -39,6 +39,7 @@ from middleware.auth import (
 from utils.email.email import async_send_mail_with_template, send_mail_with_template, EmailSchema
 
 
+# Function to refresh tokens using a refresh token
 def refresh_tokens(db: Session, refresh_token: str):
     payload = verify_refresh_token(db, refresh_token)
     if payload and payload.get("jti"):
@@ -52,6 +53,7 @@ def refresh_tokens(db: Session, refresh_token: str):
     raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+# Function to register a new user
 def register(
     db: Session,
     background_tasks: BackgroundTasks,
@@ -77,12 +79,14 @@ def register(
     return response
 
 
+# Function to log in a user
 def login(
     db: Session,
     ident: str,
     password: str,
     new_application: s_auth.Application = None,
 ):
+    # Determine if the identifier is an email or username
     if "@" in ident:
         user = get_user(db, email=ident, with_uuid=True, with_user_security=True, with_2fa=True, with_tokens=True)
     else:
@@ -95,16 +99,16 @@ def login(
     user_uuid = str(user.user_uuid.user_uuid)
     user_security: m_auth.UserSecurity = user.user_security
 
-    # Pre checks
+    # Check if the user's account is verified
     if not user_security.verified:
         raise HTTPException(status_code=401, detail="Account not verified")
     check_security_warns(db, user_security)
 
-    # ~~~~~~~~~~~~~~~~ Password ~~~~~~~~~~~~~~~ #
+    # Verify the user's password
     if not check_password(db, password, user_security=user_security):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    # ~~~~~~~~~~~~~~~~~~ 2FA ~~~~~~~~~~~~~~~~~~ #
+    # Handle 2FA if enabled
     if user_security._2fa_enabled:
         remove_older_security_token(db, user_security, "login-2fa")
         secret_token = create_security_token(
@@ -119,7 +123,7 @@ def login(
             "secret_token": secret_token,
         }
 
-    # ~~~~~~~~ Register new application ~~~~~~~ #
+    # Register a new application if provided
     if new_application:
         application_uuid = register_application(db, user_security, new_application)
     else:
@@ -130,6 +134,7 @@ def login(
     return {"refresh_token": refresh_token, "access_token": access_token}
 
 
+# Function to log out a user
 def logout(db: Session, refresh_token: str, access_token: str):
     refresh_payload = verify_refresh_token(db, refresh_token)
     access_payload = get_token_payload(access_token)
@@ -145,6 +150,7 @@ def logout(db: Session, refresh_token: str, access_token: str):
         raise HTTPException(status_code=403, detail="Forbidden")
 
 
+# Function to verify a user's account
 def verify_account(db: Session, user_uuid: str, verify_code: str):
     user_security = get_user_security(db, user_uuid=user_uuid)
     if not user_security.verified and verify_simple_otp(user_security, verify_code):
@@ -161,6 +167,7 @@ def verify_account(db: Session, user_uuid: str, verify_code: str):
 ###########################################################################
 
 
+# Function to add 2FA to a user's account
 def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_token: str) -> s_auth.UserResActivate2FA:
     access_payload = verify_access_token(db, access_token)
     if access_payload:
@@ -189,6 +196,7 @@ def add_2fa(db: Session, user_add_2fa_req: s_auth.UserReqActivate2FA, access_tok
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
+# Function to verify the first 2FA setup
 def verify_first_2fa(db: Session, background_tasks: BackgroundTasks, access_token: str, otp: str):
     user = check_access_token(db, access_token, with_uuid=True)
     if user:
@@ -210,6 +218,7 @@ def verify_first_2fa(db: Session, background_tasks: BackgroundTasks, access_toke
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
+# Function to verify 2FA during login
 def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth.Application = None):
     secret_payload, user_security = verify_security_token(db, secret_token, is_2fa=True)
     if secret_payload:
@@ -233,6 +242,7 @@ def verify_2fa(db: Session, secret_token: str, otp: str, new_application: s_auth
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+# Function to verify 2FA backup codes
 def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_token: str, otp: s_auth.BackupOTP):
     secret_payload, user_security = verify_security_token(db, secret_token, is_2fa=True)
     if secret_payload:
@@ -278,6 +288,7 @@ def verify_2fa_backup(db: Session, background_tasks: BackgroundTasks, secret_tok
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
+# Function to remove 2FA from a user's account
 def remove_2fa(db: Session, background_tasks: BackgroundTasks, access_token: str, otp: str):
     access_payload = verify_access_token(db, access_token)
     if access_payload:
@@ -313,6 +324,7 @@ def remove_2fa(db: Session, background_tasks: BackgroundTasks, access_token: str
 ###########################################################################
 
 
+# Function to handle forgot password requests
 # TODO Optimize the two db queries to only one
 def forgot_password(db: Session, background_tasks: BackgroundTasks, email: str):
     user = get_user(db, email=email, with_uuid=True)
@@ -339,6 +351,7 @@ def forgot_password(db: Session, background_tasks: BackgroundTasks, email: str):
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
+# Function to reset a user's password
 def reset_password(db: Session, background_tasks: BackgroundTasks, user_uuid: str, verify_code: str, new_password: str):
     user_security = get_user_security(db, user_uuid=user_uuid)
 

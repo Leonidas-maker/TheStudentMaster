@@ -18,25 +18,26 @@ import { useNavigation } from "@react-navigation/native";
 import {
   fetchEvents,
   loadEventsFromStorage,
-} from "../../services/EventService";
+} from "../../services/eventService";
 import {
   getSelectedUniversity,
   getSelectedCourse,
-} from "../../services/CalendarService";
+} from "../../services/calendarService";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { EventTimeProps } from "../../interfaces/CalendarInterfaces";
+import { EventTimeProps } from "../../interfaces/calendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
-if (Platform.OS === "android") {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-}
+//! Disabled because it causes a crash on Android
+// if (Platform.OS === "android") {
+//   if (UIManager.setLayoutAnimationEnabledExperimental) {
+//     UIManager.setLayoutAnimationEnabledExperimental(true);
+//   }
+// }
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -56,8 +57,12 @@ const WeekCalendar: React.FC = () => {
   // ===================== Animations ===================== //
   // ====================================================== //
   // Defines the animation for the transition between weeks (animation: easeInEaseOut)
+  //! Disabled animation on Android because it causes a crash
   const animateTransition = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (Platform.OS === "android") {
+    } else {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
   };
 
   useFocusEffect(

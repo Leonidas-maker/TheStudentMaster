@@ -20,7 +20,7 @@ import {
 import DefaultButton from "../buttons/DefaultButton";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { EventProps } from "../../interfaces/CalendarInterfaces";
+import { EventProps } from "../../interfaces/calendarInterfaces";
 
 //TODO Implement a function to choose in settings if the start and end time should be displayed
 //TODO Implement a function to choose in settings if the location should be displayed
@@ -131,6 +131,30 @@ const Event: React.FC<EventProps> = ({
       : text;
   };
 
+  // Gets the color for the event based on the event type
+  // TODO Implement more colors for different event types
+  const getEventColor = () => {
+    if (isLight) {
+      if (event.description?.tags) {
+        if (event.description.tags.includes("exam")) {
+          return "bg-light_exam active:bg-light_exam_active";
+        } else if (event.description.tags.includes("online")) {
+          return "bg-light_online active:bg-light_online_active";
+        }
+      }
+      return "bg-light_event active:bg-light_event_active";
+    } else {
+      if (event.description?.tags) {
+        if (event.description.tags.includes("exam")) {
+          return "bg-dark_exam active:bg-dark_exam_active";
+        } else if (event.description.tags.includes("online")) {
+          return "bg-dark_online active:bg-dark_online_active";
+        }
+      }
+      return "bg-dark_event active:bg-dark_event_active";
+    }
+  };
+
   //TODO Better styling for event popup information
   // ====================================================== //
   // ================== Return component ================== //
@@ -139,11 +163,7 @@ const Event: React.FC<EventProps> = ({
     <View className="absolute w-full">
       <Pressable
         onPress={handleEventPress}
-        className={`rounded-lg shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px] ${
-          isLight
-            ? "bg-light_event active:bg-light_event_active"
-            : "bg-dark_event active:bg-dark_event_active"
-        }`}
+        className={`rounded-lg shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px] ${getEventColor()}`}
         style={{
           position: "absolute",
           top: topPosition,

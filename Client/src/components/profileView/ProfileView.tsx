@@ -6,10 +6,10 @@ import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
-import { fetchUser } from "../../services/UserService";
+import { fetchUser } from "../../services/userService";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { UserProps } from "../../interfaces/UserInterfaces";
+import { UserProps } from "../../interfaces/userInterfaces";
 
 // Placeholder for Login component
 const Login: React.FC = () => {

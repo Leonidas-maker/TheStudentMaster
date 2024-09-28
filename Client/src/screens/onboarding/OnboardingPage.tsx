@@ -13,7 +13,7 @@ import Heading from "../../components/textFields/Heading";
 import Subheading from "../../components/textFields/Subheading";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { OnboardingPageProps } from "../../interfaces/ComponentInterfaces";
+import { OnboardingPageProps } from "../../interfaces/componentInterfaces";
 
 // Set the width and height of the screen
 const { width, height } = Dimensions.get("window");
