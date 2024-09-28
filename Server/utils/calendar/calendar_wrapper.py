@@ -1,14 +1,13 @@
-from typing import List
+# ~~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~~ #
 from icalendar import Calendar
 import requests
-from time import sleep
-import hashlib
-import json
 from typing import Dict, Any
 import re
 import datetime
 from bs4 import BeautifulSoup
 
+# ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
+from utils.helpers.hashing import dict_hash
 
 # TODO Max size of source
 class CalendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
@@ -48,12 +47,6 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
     # ======================================================== #
     def get_type(self) -> str:
         return self.type.capitalize()
-
-    def __dict_hash(self, dictionary: dict) -> str:
-        dhash = hashlib.sha1()
-        encoded = json.dumps(dictionary, sort_keys=True).encode("utf-8")
-        dhash.update(encoded)
-        return dhash.hexdigest()
 
     def set_type(self, type: str):
         if type not in ["custom", "dhbw-mannheim"]:
@@ -148,7 +141,7 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
 
             json_data = self.__ical_convert_to_json(data)
             if json_data.get("events"):
-                return {"data": json_data, "hash": self.__dict_hash(json_data)}
+                return {"data": json_data, "hash": dict_hash(json_data)}
         return None
 
     def __ical_get_data_multiple(self, ical_sources: dict) -> Dict[str, any]:
@@ -293,7 +286,7 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
             return None
 
         if data:
-            return {"data": data, "hash": self.__dict_hash(data)}
+            return {"data": data, "hash": dict_hash(data)}
         else:
             return None
 
