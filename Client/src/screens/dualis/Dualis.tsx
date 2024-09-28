@@ -11,13 +11,26 @@ import TextFieldInput from "../../components/textInputs/TextFieldInput";
 import DefaultButton from "../../components/buttons/DefaultButton";
 import Heading from "../../components/textFields/Heading";
 import OptionSwitch from "../../components/switch/OptionSwitch";
-import { asyncSaveData, asyncLoadData, asyncRemoveData } from "../../components/storageManager/asyncStorageManager";
-import { secureSaveData, secureLoadData, secureRemoveData } from "../../components/storageManager/secureStorageManager";
+import {
+  asyncSaveData,
+  asyncLoadData,
+  asyncRemoveData,
+} from "../../components/storageManager/asyncStorageManager";
+import {
+  secureSaveData,
+  secureLoadData,
+  secureRemoveData,
+} from "../../components/storageManager/secureStorageManager";
 import { filterPerformanceOverview } from "../../scraper/dualis/performanceOverviewScraper";
 import { filterGPA } from "../../scraper/dualis/gpaScraper";
 import { filterECTS } from "../../scraper/dualis/ectsScraper";
 import { filterSemester } from "../../scraper/dualis/semesterScraper";
-import { ModuleData, GpaData, EctsData, SemesterData } from "../../interfaces/dualisInterfaces";
+import {
+  ModuleData,
+  GpaData,
+  EctsData,
+  SemesterData,
+} from "../../interfaces/dualisInterfaces";
 import { set } from "lodash";
 
 // Define the base URL for the Dualis API
@@ -40,15 +53,24 @@ const Dualis: React.FC = () => {
   const [htmlContent, setHtmlContent] = useState("");
   const [error, setError] = useState("");
   const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
-  const [gpaData, setGpaData] = useState<GpaData>({ gpaTotal: '', gpaSubject: '' });
-  const [ectsData, setEctsData] = useState<EctsData>({ ectsTotal: '', ectsSum: '' });
-  const [semesterData, setSemesterData] = useState<SemesterData>({ semester: [] });
+  const [gpaData, setGpaData] = useState<GpaData>({
+    gpaTotal: "",
+    gpaSubject: "",
+  });
+  const [ectsData, setEctsData] = useState<EctsData>({
+    ectsTotal: "",
+    ectsSum: "",
+  });
+  const [semesterData, setSemesterData] = useState<SemesterData>({
+    semester: [],
+  });
   const [saveLogin, setSaveLogin] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
-  const [naviagtedThroughSemesters, setNavigatedThroughSemesters] = useState(false);
+  const [naviagtedThroughSemesters, setNavigatedThroughSemesters] =
+    useState(false);
 
   // Function to save login credentials
   const saveCredentials = () => {
@@ -150,11 +172,11 @@ const Dualis: React.FC = () => {
       setProgress(0.2);
       setError("");
       await navigateToPerformanceOverview(
-        extractAuthArguments(response.headers["refresh"])
+        extractAuthArguments(response.headers["refresh"]),
       );
 
       await navigateToExamResults(
-        extractAuthArguments(response.headers["refresh"])
+        extractAuthArguments(response.headers["refresh"]),
       );
 
       // Save credentials after successful login
@@ -168,7 +190,11 @@ const Dualis: React.FC = () => {
   };
 
   useEffect(() => {
-    if (semesterData.semester.length > 0 && authArguments && !naviagtedThroughSemesters) {
+    if (
+      semesterData.semester.length > 0 &&
+      authArguments &&
+      !naviagtedThroughSemesters
+    ) {
       navigateThroughSemesters(authArguments, semesterData.semester);
       setNavigatedThroughSemesters(true);
     }
@@ -197,7 +223,7 @@ const Dualis: React.FC = () => {
       setProgress(0.33);
       filterGPA(content, setGpaData);
       setProgress(0.36);
-      filterECTS(content, setEctsData);  
+      filterECTS(content, setEctsData);
       setProgress(0.4);
     } catch (err) {
       setError(
@@ -220,17 +246,21 @@ const Dualis: React.FC = () => {
       // Parse HTML content and filter the required data
       filterSemester(content, setSemesterData);
       setProgress(0.6);
-
     } catch (err) {
-      setError("An error occurred while navigating to the exam results. Please try again.");
+      setError(
+        "An error occurred while navigating to the exam results. Please try again.",
+      );
       console.error(err);
     }
   };
 
-  const navigateThroughSemesters = async (authArguments: string, semesterArray: Array<{ name: string, value: string }>) => {
+  const navigateThroughSemesters = async (
+    authArguments: string,
+    semesterArray: Array<{ name: string; value: string }>,
+  ) => {
     setProgress(0.7);
     try {
-      let allSemesterData: Array<{ name: string, html: string }> = [];
+      let allSemesterData: Array<{ name: string; html: string }> = [];
 
       for (const sem of semesterArray) {
         const semesterUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N${sem.value},-N000307`;
@@ -239,17 +269,20 @@ const Dualis: React.FC = () => {
 
         allSemesterData.push({ name: sem.name, html: content });
 
-        const progressUpdate = 0.8 + (0.2 * (semesterArray.indexOf(sem) + 1) / semesterArray.length);
+        const progressUpdate =
+          0.8 + (0.2 * (semesterArray.indexOf(sem) + 1)) / semesterArray.length;
         setProgress(progressUpdate);
       }
 
       setHtmlContent(JSON.stringify(allSemesterData));
     } catch (err) {
-      setError("An error occurred while navigating through the semesters. Please try again.");
+      setError(
+        "An error occurred while navigating through the semesters. Please try again.",
+      );
       console.error(err);
     }
 
-    setProgress(1); 
+    setProgress(1);
     setLoading(false);
   };
 
@@ -291,29 +324,30 @@ const Dualis: React.FC = () => {
       {loading && <Progress.Bar progress={progress} width={null} />}
       {error ? <Text className="text-red-500 mt-4">{error}</Text> : null}
       <View className="mt-4 p-4 border border-gray-300 rounded w-full">
-        {semesterData.semester.length > 0 ? (
-          semesterData.semester.map((semester, index) => (
-            <View key={index} className="mb-4">
-              <Text>{semester.name}</Text>
-              <Text>{semester.value}</Text>
-            </View>
-          ))) : null}
+        {semesterData.semester.length > 0
+          ? semesterData.semester.map((semester, index) => (
+              <View key={index} className="mb-4">
+                <Text>{semester.name}</Text>
+                <Text>{semester.value}</Text>
+              </View>
+            ))
+          : null}
         <Text>ECTS: {ectsData.ectsSum}</Text>
         <Text>ECTS benötigt: {ectsData.ectsTotal}</Text>
         <Text>Gesamt-GPA: {gpaData.gpaTotal}</Text>
         <Text>Hauptfach-GPA: {gpaData.gpaSubject}</Text>
-        {moduleData.length > 0 ? (
-          moduleData.map((module, index) => (
-            <View key={index} className="mb-4">
-              <Text className="text-lg font-semibold">
-                {module.number} - {module.name}
-              </Text>
-              <Text>ECTS: {module.ects}</Text>
-              <Text>Note: {module.grade}</Text>
-              <Text>{module.passed ? "Bestanden" : ""}</Text>
-            </View>
-          ))
-        ) : null}
+        {moduleData.length > 0
+          ? moduleData.map((module, index) => (
+              <View key={index} className="mb-4">
+                <Text className="text-lg font-semibold">
+                  {module.number} - {module.name}
+                </Text>
+                <Text>ECTS: {module.ects}</Text>
+                <Text>Note: {module.grade}</Text>
+                <Text>{module.passed ? "Bestanden" : ""}</Text>
+              </View>
+            ))
+          : null}
       </View>
     </ScrollView>
   );
