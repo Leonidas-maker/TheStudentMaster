@@ -26,6 +26,7 @@ import utils.calendar.schemes as calendar_schemes
 ############################# Helper Functions ############################
 ###########################################################################
 
+
 def get_backend_ids(db: Session):
     """Function to get backend IDs for calendar updates."""
     backends = db.query(m_calendar.CalendarBackend).all()
@@ -35,7 +36,7 @@ def get_backend_ids(db: Session):
 def map_dhbw_app_site_to_university_name(db: Session, site: str) -> str | None:
     """
     Function to map DHBW.APP sites to university names.
-    
+
     This function maps the DHBW.APP site codes to the corresponding university names.
 
     Args:
@@ -84,13 +85,14 @@ def map_dhbw_app_site_to_university(db: Session, site) -> m_calendar.University 
         return db.query(m_calendar.University).filter(m_calendar.University.university_name == university_name).first()
     return None
 
+
 ###########################################################################
 ############################ Startup functions ############################
 ###########################################################################
 def prepareCalendarTables(db: Session):
     """
     Function to prepare calendar tables by adding initial data
-    
+
     This function adds initial data to the calendar tables if they are empty.
 
     Args:
@@ -139,6 +141,7 @@ def prepareCalendarTables(db: Session):
         )
     db.commit()
 
+
 ###########################################################################
 ############################ Major Update Logic ###########################
 ###########################################################################
@@ -146,10 +149,11 @@ def prepareCalendarTables(db: Session):
 # ======================= DHBW.APP ======================= #
 # ======================================================== #
 
+
 async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
     """
     Function to refresh all native dhbw calendars.
-    
+
     This function fetches all available DHBW.APP sites and updates the native calendars for each site.
 
     Args:
@@ -223,7 +227,6 @@ async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
                 description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Adding...",
             )
 
-
             for course_name, calendar_data in calenders.items():
                 db.add(
                     m_calendar.CalendarNative(
@@ -244,7 +247,6 @@ async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
         if error_messages:
             raise ValueError("\n".join(error_messages))
 
-
         # Final update to indicate the task is done
         progress.update(
             task_id,
@@ -262,7 +264,7 @@ async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
 async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
     """
     Function to update all native calendars.
-    
+
     This function fetches updates for all native DHBW calendars and updates the database accordingly.
 
     Args:
@@ -274,10 +276,9 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
         source_backend_ids = get_backend_ids(db)  # Get the backend IDs for calendar updates
         dhbw_app_fetcher = DHBWAppFetcher(progress)  # Initialize the DHBW App fetcher
 
-
         progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Fetching updates...")
 
-        raw_updates:calendar_schemes.DHBWUpdateCalendar = await dhbw_app_fetcher.get_updated_calendars()
+        raw_updates: calendar_schemes.DHBWUpdateCalendar = await dhbw_app_fetcher.get_updated_calendars()
 
         timzone = raw_updates.X_WR_TIMEZONE
         updated_calendars = raw_updates.data
@@ -301,10 +302,9 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
                 print(f"University not found for site: {university_name}")
                 continue
 
-            lecture_names = list(_types.new.keys()) 
+            lecture_names = list(_types.new.keys())
             lecture_names += list(_types.updated.keys())
             lecture_names += list(_types.deleted)
-           
 
             courses_to_update = (
                 db.query(m_calendar.CalendarNative)
@@ -314,7 +314,7 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
                 )
                 .all()
             )
-            
+
             progress.update(
                 task_id,
                 description=f"[bold green]Native-Calendar-DHBW[/bold green] Updating {university.university_name}...",
@@ -346,14 +346,13 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
                         remaining_events.append(lecture)
                     else:
                         remaining_events.append(lecture)
-                
+
                 for lecture, data in new.items():
                     remaining_events.append(data.model_dump())
 
                 course_data["events"] = remaining_events
 
-
-                #* Data will not automatically update in the database so we need to manually update it
+                # * Data will not automatically update in the database so we need to manually update it
                 flag_modified(course, "data")
 
                 # Update the course data, hash and last modified timestamp
@@ -364,7 +363,6 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
 
             for course_name, new_data in _types.new.items():
 
-                
                 db.add(
                     m_calendar.CalendarNative(
                         university_id=university.university_id,
@@ -394,13 +392,14 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
 
+
 # ======================================================== #
 # ===================== Custom Update ==================== #
 # ======================================================== #
 async def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.CalendarBackend):
     """
     Function to update custom calendars for a specific backend.
-    
+
     This function fetches updates for all custom calendars associated with the specified backend and updates the database accordingly.
 
     Args:
@@ -469,6 +468,7 @@ async def update_custom_calendars(db: Session, progress, task_id, backend: m_cal
 ######################## Calendar_Users Management ########################
 ###########################################################################
 
+
 # ======================================================== #
 # ===================== Adder/Updater ==================== #
 # ======================================================== #
@@ -486,7 +486,6 @@ async def add_update_user_calendar(
         custom_calendar_id (int, optional): ID of the custom calendar to add/update. Defaults to None.
         native_calendar_id (int, optional): ID of the native calendar to add/update. Defaults to None.
     """
-
 
     # Ensure only one of custom_calendar_id or native_calendar_id is provided
     if custom_calendar_id and native_calendar_id or not custom_calendar_id and not native_calendar_id:
@@ -542,6 +541,7 @@ def add_native_calendar_to_user(
         db.commit()
         return calendar_native
     return None
+
 
 def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):
     """Function to add a custom calendar to a user.
@@ -614,7 +614,7 @@ def get_calendar(
 ) -> m_calendar.CalendarCustom | m_calendar.CalendarNative | None:
     """
     Function to get a user's calendar.
-    
+
     This function fetches a user's calendar based on the user ID.
 
     Args:

@@ -140,7 +140,6 @@ class DHBWAppFetcher:
                 site_data.new.setdefault(course_name, {})[lecture.get("id")] = event
             elif _type == "updated":
                 site_data.updated.setdefault(course_name, {})[lecture.get("id")] = event
-                
 
             self.progress.update(self.task_id, advance=1)
         return courses
@@ -257,7 +256,9 @@ class DHBWAppFetcher:
 
         # Calculate hashes for each course
         for course in courses.data.values():
-            course.data.events = self.__remove_duplicate_events(course.data.events, ["start", "end", "summary", "location"])
+            course.data.events = self.__remove_duplicate_events(
+                course.data.events, ["start", "end", "summary", "location"]
+            )
             course.hash = dict_hash(course.data.model_dump())
 
         self.progress.remove_task(self.task_id)

@@ -29,7 +29,7 @@ class Event(BaseModel):
     description: EventDescription
 
     # Serialize the 'start' and 'end' fields to a string in ISO format
-    @field_validator('start', 'end', mode='before')
+    @field_validator("start", "end", mode="before")
     def serialize_time(cls, value: Union[str, datetime]) -> str:
         if isinstance(value, str):
             value = parser.parse(value)
@@ -66,6 +66,7 @@ class CourseData(BaseModel):
 
 class DHBWCourse(BaseModel):
     """Represents a collection of courses."""
+
     data: Dict[str, CourseData]
 
 
@@ -82,6 +83,7 @@ class DHBWUpdateSiteBase(BaseModel):
 
 class DHBWUpdateCalendar(BaseModel):
     """Represents the data structure for updating a DHBW calendar."""
+
     X_WR_TIMEZONE: str = Field(DEFAULT_TIMEZONE.zone, alias="X-WR-TIMEZONE")
     data: Dict[str, DHBWUpdateSiteBase]
 
