@@ -223,6 +223,7 @@ async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
                 description=f"[bold green]Native-Calendar-DHBW[/bold green] Init-Update {university.university_name}: Adding...",
             )
 
+
             for course_name, calendar_data in calenders.items():
                 db.add(
                     m_calendar.CalendarNative(
@@ -242,6 +243,7 @@ async def refresh_all_dhbw_calendars(db: Session, progress, task_id: int):
 
         if error_messages:
             raise ValueError("\n".join(error_messages))
+
 
         # Final update to indicate the task is done
         progress.update(
@@ -271,6 +273,7 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int):
     try:
         source_backend_ids = get_backend_ids(db)  # Get the backend IDs for calendar updates
         dhbw_app_fetcher = DHBWAppFetcher(progress)  # Initialize the DHBW App fetcher
+
 
         progress.update(task_id, description=f"[bold green]Native-Calendar-DHBW[/bold green] Fetching updates...")
 
