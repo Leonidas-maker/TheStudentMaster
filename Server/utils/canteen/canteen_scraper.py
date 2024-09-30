@@ -120,7 +120,7 @@ def fetch_menu_stw_ma(
     week_offset: int,
 ) -> dict:
 
-    no_menu_list = ['Für den heutigen Tag steht kein Angebot zur Verfügung.']
+    no_menu_list = ["Für den heutigen Tag steht kein Angebot zur Verfügung."]
 
     # * check input
     # check week_offset
@@ -161,7 +161,7 @@ def fetch_menu_stw_ma(
         case "greens":
             url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=710&date={year}-{month}-{day}&lang=de"
         case "mensawagon":
-            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=709&date={year}-{month}-{day}&lang=de" # no menu available
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=709&date={year}-{month}-{day}&lang=de"  # no menu available
         case "hochschule_mannheim":
             url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=611&date={year}-{month}-{day}&lang=de"
         case "cafeteria_musikhochschule":
@@ -216,9 +216,9 @@ def fetch_menu_stw_ma(
         for j in range(0, len(raw_price_list), 2):
             # check if there is no menu for that day
             if raw_price_list[0] in no_menu_list:
-                menu_prices=["Kein Angebot"]
+                menu_prices = ["Kein Angebot"]
                 break
-        
+
             # catch errors from the website regarding price
             if not re.match(r"(Portion|Glas|pro 100g): \d+,\d{2} €", f"{raw_price_list[j+1]}: {raw_price_list[j]}"):
                 # if quantity is missing, add it
@@ -233,7 +233,10 @@ def fetch_menu_stw_ma(
             menu_prices.append(f"{raw_price_list[j+1]}: {raw_price_list[j]}")
 
         # check if menu items and prices match
-        if not (len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names)) and not menu_prices[0] == "Kein Angebot":
+        if (
+            not (len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names))
+            and not menu_prices[0] == "Kein Angebot"
+        ):
             print("Error: Length of menu items and prices do not match")
             return {}
 
