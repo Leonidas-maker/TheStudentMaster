@@ -35,7 +35,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         raise ValueError("Address is required")
 
     # Check if the address already exists
-    address_exists = (
+    address_db = (
         db.query(m_general.Address)
         .join(m_general.PostalCode)
         .filter(
@@ -46,11 +46,12 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         .first()
     )
 
-    if address_exists:
-        return address_exists
+    if address_db:
+        return address_db
 
+    new_db_objects = []
     # Check if the postal code already exists
-    postal_code_exists = (
+    postal_code_db = (
         db.query(m_general.PostalCode)
         .join(m_general.City)
         .filter(
@@ -60,9 +61,9 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         .first()
     )
 
-    if not postal_code_exists:
+    if not postal_code_db:
         # Check if the city already exists
-        city_exists = (
+        city_db = (
             db.query(m_general.City)
             .join(m_general.District)
             .filter(
@@ -72,9 +73,9 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
             .first()
         )
 
-        if not city_exists:
+        if not city_db:
             # Check if the district already exists
-            district_exists = (
+            district_db = (
                 db.query(m_general.District)
                 .join(m_general.Country)
                 .filter(
@@ -84,48 +85,45 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
                 .first()
             )
 
-            if not district_exists:
+            if not district_db:
                 # Check if the country already exists
-                country_exists = (
+                country_db = (
                     db.query(m_general.Country).filter(m_general.Country.country == new_address.country).first()
                 )
 
-                if not country_exists:
+                if not country_db:
                     # Create new country
-                    country_exists = m_general.Country(country=new_address.country)
-                    db.add(country_exists)
-                    db.flush()
+                    country_db = m_general.Country(country=new_address.country)
+                    new_db_objects.append(country_db)
                 # >> End country check <<
 
                 # Create new district
-                district_exists = m_general.District(
-                    district=new_address.district, country_id=country_exists.country_id
+                district_db = m_general.District(
+                    district=new_address.district, country=country_db
                 )
-                db.add(district_exists)
-                db.flush()
+                new_db_objects.append(district_db)
             # >> End district check <<
 
             # Create new city
-            city_exists = m_general.City(city=new_address.city, district_id=district_exists.district_id)
-            db.add(city_exists)
-            db.flush()
+            city_db = m_general.City(city=new_address.city, district=district_db)
+            new_db_objects.append(city_db)
         # >> End city check <<
 
         # Create new postal code
-        postal_code_exists = m_general.PostalCode(postal_code=new_address.postal_code, city_id=city_exists.city_id)
-        db.add(postal_code_exists)
-        db.flush()
+        postal_code_db = m_general.PostalCode(postal_code=new_address.postal_code, city=city_db)
+        new_db_objects.append(postal_code_db)
     # >> End postal code check <<
 
     # Create new address
     new_address = m_general.Address(
         address1=new_address.address1,
         address2=new_address.address2,
-        postal_code_id=postal_code_exists.postal_code_id,
+        postal_code=postal_code_db,
     )
-    db.add(new_address)
+    new_db_objects.append(new_address)
+    
+    db.add_all(new_db_objects)
     db.flush()
-
     return new_address
 
 

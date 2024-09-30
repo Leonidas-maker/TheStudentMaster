@@ -3,8 +3,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.triggers.date import DateTrigger
 from apscheduler.triggers.cron import CronTrigger
 import datetime
-from rich.progress import Progress
-from typing import Optional, Callable, List
+from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
+from rich.console import Console
+from typing import Optional, Callable, List, Union
 import asyncio
 import inspect
 
@@ -13,111 +14,231 @@ from middleware.database import get_async_db
 
 
 class TaskScheduler:
+    """
+    A task scheduler that manages and executes asynchronous tasks based on specified triggers.
+    Utilizes APScheduler for scheduling, Rich for console logging and progress display.
+
+    Attributes:
+        MAX_BLOCK_TIME (int): Maximum block time in seconds to prevent task conflicts.
+        verbose (bool): Enables verbose logging if set to True.
+    """
+
     def __init__(self, max_block_time: int = 4, verbose: bool = False):
+        """
+        Initializes the TaskScheduler with optional maximum block time and verbosity.
+
+        Args:
+            max_block_time (int, optional): Maximum block time in seconds. Defaults to 4.
+            verbose (bool, optional): Enables verbose logging if set to True. Defaults to False.
+        """
         self.scheduler = AsyncIOScheduler()
-        self.task_blocked_by = {}
-        self.running_tasks = []
+        self.task_blocked_by: dict[str, List[str]] = {}
+        self.running_tasks: List[str] = []
         self.MAX_BLOCK_TIME = max_block_time
         self.verbose = verbose
-        self.startup_tasks = []
-        self.progress = Progress()
+        self.startup_tasks: List[str] = []
+        self.console = Console()
+        self.progress = Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TimeElapsedColumn(),
+            console=self.console,
+            transient=True  # Progress bar disappears when completed
+        )
 
-    # Method to add a task to the scheduler
+    def __log(self, message: str, level: str = "info"):
+        """
+        Logs messages to the console with different severity levels using Rich.
+
+        Args:
+            message (str): The message to log.
+            level (str, optional): The severity level of the log. Defaults to "info".
+                                   Accepted values: "info", "warning", "error", "success", "debug".
+        """
+        if level == "info":
+            self.console.log(f"[blue][INFO][/blue] {message}")
+        elif level == "warning":
+            self.console.log(f"[yellow][WARNING][/yellow] {message}")
+        elif level == "error":
+            self.console.log(f"[red][ERROR][/red] {message}")
+        elif level == "success":
+            self.console.log(f"[green][SUCCESS][/green] {message}")
+        elif level == "debug" and self.verbose:
+            self.console.log(f"[purple][DEBUG][/purple] {message}")
+
     def add_task(
         self,
         task_id: str,
         func: Callable,
-        start_time: datetime.datetime | int = None,
-        end_time: datetime.datetime | int = None,
-        interval_seconds: int = 60,
+        interval_seconds: int = None,
+        cron: str = None,
+        run_date: Union[int, datetime.datetime] = None,
         blocked_by: List[str] = None,
         on_startup: bool = False,
         with_progress: bool = True,
-        args: List = [],
-        kwargs: dict = {},
+        with_console: bool = False,
+        args: list = None,
+        kwargs: dict = None,
     ):
+        """
+        Adds a task to the scheduler with the specified parameters.
+
+        :param task_id: The unique identifier for the task.
+        :param func: The function to be executed by the task.
+        :param interval_seconds: The interval in seconds at which the task should run.
+        :param cron: The cron expression for the task schedule.
+        :param run_date: The date and time when the task should run.
+        :param blocked_by: A list of task names that this task is blocked by.
+        :param on_startup: If True, the task will run on scheduler startup.
+        :param with_progress: If True, a progress bar will be displayed for the task.
+        :param with_console: If True, the task will have access to the console for logging.
+        :param args: Positional arguments to pass to the task
+        :param kwargs: Keyword arguments to pass to the task
+
+        :raises ValueError: If more than one of 'interval_seconds', 'cron', or 'run_date' is specified.
+        :raises ValueError: If a task with the same task_id already exists.
+        :raises ValueError: If no trigger is specified for the task.
+        """
+        if interval_seconds and cron and run_date:
+            raise ValueError("Only one of 'interval_seconds', 'cron', or 'run_date' can be specified.")
+
+
+        args = args or []
+        kwargs = kwargs or {}
         self.task_blocked_by[task_id] = blocked_by or []
 
-        # Wrapper function to handle task execution
-        async def task_wrapper(*args, **kwargs):
-            block_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=self.MAX_BLOCK_TIME)
-            block_time = block_time.timestamp()
+        # Check for duplicate task_id
+        if self.scheduler.get_job(task_id):
+            raise ValueError(f"A task with task_id '{task_id}' already exists.")
 
+        # Log the task addition
+        self.__log(f"Adding task '{task_id}'", level="info")
+
+        async def task_wrapper(*wrapper_args, **wrapper_kwargs):
+            """
+            Wrapper function to handle task execution, including blocking logic, progress display, and logging.
+
+            Args:
+                *wrapper_args: Positional arguments.
+                **wrapper_kwargs: Keyword arguments.
+            """
+            block_time = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(seconds=self.MAX_BLOCK_TIME)
+            block_timestamp = block_time.timestamp()
+
+            # Check if any blocking tasks are running or scheduled to run soon
             for block_task in self.task_blocked_by[task_id]:
                 job = self.scheduler.get_job(block_task)
                 if job is None:
                     continue
 
-                if block_task in self.running_tasks or job.next_run_time.timestamp() < block_time:
+                # Check if blocking task is running
+                if block_task in self.running_tasks:
                     if self.verbose:
-                        self.progress.log(f"[cyan][Scheduler] [red]Task {task_id} blocked by {block_task}")
+                        self.__log(f"Task '{task_id}' is blocked by running task '{block_task}'", level="warning")
                     return
 
+                # Check if blocking task is scheduled to run within MAX_BLOCK_TIME
+                next_run = job.next_run_time
+                if next_run and next_run.timestamp() < block_timestamp:
+                    if self.verbose:
+                        self.__log(
+                            f"Task '{task_id}' is blocked by task '{block_task}' scheduled to run at {next_run}",
+                            level="warning"
+                        )
+                    return
+
+            # Log task start
             if self.verbose:
-                self.progress.log(f"[cyan][Scheduler] [purple]Task {task_id} starting...")
+                self.__log(f"Task '{task_id}' is starting...", level="info")
 
             self.running_tasks.append(task_id)
             self.progress.start()
+
+            task_progress = None
             if with_progress:
-                task = self.progress.add_task(f"[cyan][Scheduler] [yellow]Task {task_id} starting...", total=None)
-                kwargs["task_id"] = task
+                task_progress = self.progress.add_task(f"Task '{task_id}' in progress...", total=None)
+                kwargs["task_id"] = task_progress
                 kwargs["progress"] = self.progress
+            if with_console:
+                kwargs["console"] = self.console
+
             try:
                 async with get_async_db() as db:
                     if inspect.iscoroutinefunction(func):
-                        await func(db, *args, **kwargs)
+                        await func(db, *wrapper_args, **kwargs)
                     else:
-                        await asyncio.to_thread(func, db, *args, **kwargs)
+                        # Run blocking functions in a separate thread to avoid blocking the event loop
+                        await asyncio.to_thread(func, db, *wrapper_args, **kwargs)
+                self.__log(f"Task '{task_id}' finished successfully.", level="success")
+            except Exception as e:
+                self.__log(f"Task '{task_id}' failed with error: {str(e)}", level="error")
             finally:
-                if with_progress:
-                    self.progress.remove_task(task)
-                if len(self.running_tasks) == 0:
+                if with_progress and task_progress is not None:
+                    self.progress.remove_task(task_progress)
+                if len(self.running_tasks) == 0 and self.progress:
                     self.progress.stop()
-                self.running_tasks.remove(task_id)
-                if self.verbose:
-                    self.progress.log(f"[cyan][Scheduler] [green]Task {task_id} finished!")
+                if task_id in self.running_tasks:
+                    self.running_tasks.remove(task_id)
 
-        # Determine the trigger type based on start and end times and interval
-        if start_time is None and end_time is None and interval_seconds == 0:
-            trigger = DateTrigger(run_date=datetime.datetime.now() + datetime.timedelta(seconds=5))
-        elif isinstance(start_time, int) and isinstance(end_time, int):
-            interval_hours = interval_seconds // 3600
-            interval_seconds = interval_seconds % 3600
-            interval_minutes = interval_seconds // 60
-            interval_seconds = interval_seconds % 60
-
-            trigger = CronTrigger(
-                hour=(
-                    f"{start_time}-{end_time - 1}/{interval_hours}"
-                    if interval_hours > 0
-                    else f"{start_time}-{end_time - 1}"
-                ),
-                minute=f"*/{interval_minutes}" if interval_minutes > 0 else None,
-                second=f"*/{interval_seconds}" if interval_seconds > 0 else None,
-            )
-        elif isinstance(start_time, datetime.datetime) and isinstance(end_time, datetime.datetime):
-            trigger = IntervalTrigger(seconds=interval_seconds, start_date=start_time, end_date=end_time)
-        else:
+        # Create the trigger based on the provided parameters
+        trigger = None
+        if cron:
+            trigger = CronTrigger.from_crontab(cron)
+            self.__log(f"Task '{task_id}' scheduled with cron expression '{cron}'.", level="info")
+        elif interval_seconds:
             trigger = IntervalTrigger(seconds=interval_seconds)
+            self.__log(f"Task '{task_id}' scheduled with interval of {interval_seconds} seconds.", level="info")
+        elif run_date:
+            trigger = DateTrigger(run_date)
+            self.__log(f"Task '{task_id}' scheduled to run at {run_date}.", level="info")
+        
+        if not trigger:
+            raise ValueError("No trigger specified for the task.")
 
-        self.scheduler.add_job(task_wrapper, trigger=trigger, id=task_id, args=args, kwargs=kwargs)
+        # Add the job to the scheduler
+        self.scheduler.add_job(
+            task_wrapper,
+            trigger=trigger,
+            id=task_id,
+            args=args,
+            kwargs=kwargs,
+            replace_existing=False  # Prevent replacing existing jobs with the same ID
+        )
 
         if on_startup:
             self.startup_tasks.append(task_id)
+            self.__log(f"Task '{task_id}' scheduled to run on startup.", level="info")
 
-    # Method to run tasks scheduled for startup
-    def run_startup_tasks(self):
+    def __run_startup_tasks(self):
+        """
+        Executes all tasks marked to run on scheduler startup by setting their next run time to now.
+        """
         for task_id in self.startup_tasks:
-            self.scheduler.get_job(task_id).modify(next_run_time=datetime.datetime.now())
+            job = self.scheduler.get_job(task_id)
+            if job:
+                job.modify(next_run_time=datetime.datetime.now())
+                self.__log(f"Startup task '{task_id}' has been triggered to run immediately.", level="info")
 
-    # Method to start the scheduler
     def start(self, run_startup_tasks: bool = True):
+        """
+        Starts the task scheduler and optionally runs tasks designated to run on startup.
+
+        Args:
+            run_startup_tasks (bool, optional): If True, runs tasks scheduled for startup. Defaults to True.
+        """
+        self.__log("Starting the task scheduler...", level="info")
         self.progress.start()
         self.scheduler.start()
         if run_startup_tasks:
-            self.run_startup_tasks()
+            self.__run_startup_tasks()
+        self.__log("Task scheduler started.", level="success")
 
-    # Method to stop the scheduler
     def stop(self):
+        """
+        Stops the task scheduler and halts all scheduled tasks.
+        """
+        self.__log("Stopping the task scheduler...", level="info")
         self.progress.stop()
         self.scheduler.shutdown()
+        self.__log("Task scheduler stopped.", level="success")

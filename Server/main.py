@@ -1,7 +1,7 @@
 # ~~~~~~~~~~~~ External Modules ~~~~~~~~~~~ #
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from sqlalchemy.orm import Session
+
 import asyncio
 from fastapi_cdn_host import monkey_patch
 
@@ -27,7 +27,7 @@ from middleware.canteen import create_canteens, update_canteen_menus
 from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
-from routes import user, auth, canteen, calendar
+from routes import user, auth, canteen, calendar, static
 
 from utils.scheduler.task_scheduler import TaskScheduler
 
@@ -58,28 +58,26 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "canteen",
         update_canteen_menus,
-        interval_seconds=60 * 15,  # 15 minutes
-        start_time=6,
-        end_time=18,
+        cron="*/15 6-18 * * 1-5",  # Every 15 minutes from 6am to 6pm on weekdays
         blocked_by=[],
-        on_startup=True,
+        on_startup=False,
     )
 
     task_scheduler.add_task(
         "calendar_dhbw_refresh",
         refresh_all_dhbw_calendars,
-        interval_seconds=60 * 60 * 24 * 7,  # 1 week
+        cron="0 0 */7 * *",  # Every 7 days
         on_startup=True,
+        with_console=True,
     )
 
     task_scheduler.add_task(
         "calendar_dhbw_update",
         update_all_dhbw_calendars,
-        interval_seconds=20 * 60,  # 20 minutes
-        start_time=6,
-        end_time=18,
+        cron="*/20 * * * *",  # Every 20 minutes
         blocked_by=["calendar_dhbw_refresh"],
-        on_startup=False,
+        on_startup=True,
+        with_console=True,
     )
 
     for backend in backends:
@@ -87,9 +85,7 @@ async def lifespan(app: FastAPI):
             task_scheduler.add_task(
                 f"calendar_custom_{backend.backend_name}",
                 update_custom_calendars,
-                interval_seconds=60 * 15,  # 15 minutes
-                start_time=6,
-                end_time=18,
+                cron="*/20 * * * *",  # Every 20 minutes
                 blocked_by=[],
                 on_startup=True,
                 kwargs={"backend": backend},
@@ -99,9 +95,7 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "calendar_custom_clean",
         clean_custom_calendars,
-        interval_seconds=60 * 60 * 6,  # 6 hours
-        start_time=6,
-        end_time=18,
+        cron="0 0 * * *",  # Every day at midnight
         blocked_by=[],
         with_progress=False,
     )
@@ -109,14 +103,12 @@ async def lifespan(app: FastAPI):
     task_scheduler.add_task(
         "address_clean",
         clean_address,
-        interval_seconds=60 * 60 * 6,  # 6 hours
-        start_time=6,
-        end_time=18,
+        cron="0 0 * * *",  # Every day at midnight
         blocked_by=[],
         with_progress=False,
     )
 
-    task_scheduler.start(run_startup_tasks=True)
+    task_scheduler.start(run_startup_tasks=False)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
@@ -126,7 +118,25 @@ async def lifespan(app: FastAPI):
     # ~~~~~~~~ End of code to run on shutdown ~~~~~~~~ #
 
 
-app = FastAPI(lifespan=lifespan, swagger_ui_parameters={"operationsSorter": "tag"}, root_path="/api")
+from fastapi import FastAPI
+
+with open("app_description.md", "r", encoding="utf-8") as file:
+    description_content = file.read()
+app = FastAPI(
+    lifespan=lifespan,
+    swagger_ui_parameters={"operationsSorter": "tag"},
+    root_path="/api",
+    title="🎓 TheStudentMaster API",
+    description=description_content,
+    version="1.3.0",
+    contact={
+        "name": "TheStudentMaster Support",
+        "email": "support@thestudentmaster.de",
+    },
+)
+
+# Your routes and middleware would be added here
+
 monkey_patch(app)
 
 
@@ -141,8 +151,13 @@ async def root():
 # ======================================================== #
 # ======================== Router ======================== #
 # ======================================================== #
-
+static.configure_static(app)
 app.include_router(user.users_router, prefix="/user", tags=["user"])
 app.include_router(auth.auth_router, prefix="/auth", tags=["auth"])
 app.include_router(canteen.canteen_router, prefix="/canteen", tags=["canteen"])
 app.include_router(calendar.calendar_router, prefix="/calendar", tags=["calendar"])
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", workers=4, host="0.0.0.0", port=8000, reload=True)

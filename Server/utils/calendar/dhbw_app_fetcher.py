@@ -1,35 +1,14 @@
 # ~~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~~ #
 import requests
-from dateutil import parser
-import pytz
 from rich.progress import Progress
 import asyncio
 from typing import List, Dict
 
-import hashlib
-import json
 
 
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
-def dict_hash(dictionary: dict) -> str:
-    dhash = hashlib.sha1()
-    encoded = json.dumps(dictionary, sort_keys=True).encode("utf-8")
-    dhash.update(encoded)
-    return dhash.hexdigest()
-
-
-from utils.helpers.hashing import dict_hash
-from utils.calendar.schemes import (
-    Event,
-    EventDescription,
-    EventData,
-    DEFAULT_TIMEZONE,
-    CourseData,
-    DHBWUpdateSiteBase,
-    DHBWUpdateCalendar,
-    EventData,
-    DHBWCourse,
-)
+import models.pydantic_schemas.s_calendar as Scheme
+from config.general import DEFAULT_TIMEZONE, MAX_COURSE_NAME_LENGTH
 
 
 ###########################################################################
@@ -60,21 +39,124 @@ class DHBWAppFetcher:
         self.tz = DEFAULT_TIMEZONE
         self.task_id = None
 
-    def __remove_duplicate_events(self, events: List[Event], unique_keys: List[str]) -> List[Event]:
-        seen = set()  # Set zum Speichern der einzigartigen Kombinationen
-        result = []
+    # ======================================================== #
+    # ======================== Helpers ======================= #
+    # ======================================================== #
+    def __get_tags(self, lecture_name: str, room_str: str) -> List[str]:
+        tags = []
+        lecture_name_lower = lecture_name.lower()
+        if any((online_keyword in lecture_name_lower or online_keyword in room_str) for online_keyword in self.online_keywords):
+            tags.append("online")
+        elif "hybrid" in lecture_name_lower:
+            tags.append("hybrid")
 
-        for event in events:
-            # Erstelle einen Schlüssel basierend auf den Werten der einzigartigen Felder
-            key = tuple(getattr(event, key) for key in unique_keys)
+        if any(exam_keyword in lecture_name_lower for exam_keyword in self.exam_keywords):
+            if "klausureinsicht" in lecture_name_lower:
+                tags.append("exam_review")
+            else:
+                tags.append("exam")
+        return tags
 
-            if key not in seen:
-                seen.add(key)  # Füge den Schlüssel zum Set hinzu
-                result.append(event)  # Füge das Event zur Ergebnisliste hinzu
+    def __clean_room_info(self, rooms: List[str]) -> List[str]:
+        """
+        Converts the list of rooms to a string.
 
-        return result
+        :param rooms: List of rooms to convert to a string.
+        """
+        cleaned_rooms = [room.replace("VL-Raum", "").replace("Unterrichtsraum", "").strip() for room in rooms]
+        return cleaned_rooms
+
+    def __convert_to_site_course_models(
+        self, lectures_input: List[dict], _type: str, updated_sites: Dict[str, Scheme.DHBWCourseUpdate]
+    ) -> Dict[str, Scheme.DHBWCourseUpdate]:
+
+        for lecture_input in lectures_input:
+            if not lecture_input.get("course") or not lecture_input.get("name") or not lecture_input.get("id"):
+                continue
+
+            # Get the site and course name
+            splitted_course = lecture_input.get("course").split("-")
+            site = splitted_course[0]
+            course_name = "-".join(splitted_course[1:])[:MAX_COURSE_NAME_LENGTH]
+
+            session_external_id = str(lecture_input.get("id"))
+            lecture_name = lecture_input.get("name")[:MAX_COURSE_NAME_LENGTH]
+
+            # Initialize the site in courses if not present
+            if site not in updated_sites.keys():
+                updated_sites[site] = Scheme.DHBWCourseUpdate(courses={})
+
+            # Initialize the deleted sessions list if not present
+            if updated_sites.get(site).deleted_sessions:
+                updated_sites[site].deleted_sessions = []
+
+
+            # Prepare the session
+            session = Scheme.SessionBase(
+                start=lecture_input.get("startTime"),
+                end=lecture_input.get("endTime"),
+                rooms=self.__clean_room_info(lecture_input.get("rooms")),
+                tags=self.__get_tags(lecture_input.get("name"), " ".join(lecture_input.get("rooms"))),
+            )
+            
+            # Add the event to the appropriate type and course
+            if _type == "deleted":
+                updated_sites.get(site).deleted_sessions.append(session_external_id)
+            elif _type == "new" or _type == "updated":
+                # Initialize the course if not present
+                if not updated_sites.get(site).courses.get(course_name):
+                    updated_sites.get(site).courses[course_name] = {}
+
+                # Initialize the lecture if not present
+                if not updated_sites.get(site).courses[course_name].get(lecture_name):
+                    updated_sites.get(site).courses[course_name][lecture_name] = Scheme.DHBWLecture(
+                        lecturer="",
+                        sessions={},
+                    )
+
+                # Update the lecturer
+                if lecture_name not in updated_sites.get(site).courses[course_name][lecture_name].lecturer:
+                    if updated_sites.get(site).courses[course_name][lecture_name].lecturer:
+                        updated_sites.get(site).courses[course_name][lecture_name].lecturer += f", {lecture_name}"
+                    else:
+                        updated_sites.get(site).courses[course_name][lecture_name].lecturer = lecture_name
+
+                updated_sites.get(site).courses[course_name][lecture_name].sessions[session_external_id] = session
+                
+            self.progress.update(self.task_id, advance=1)
+        return updated_sites
+
+
+    def __process_sync_info(self, sync_info: dict, updated_courses: Dict[str, Scheme.DHBWCourseUpdate]) -> Dict[str, Scheme.DHBWCourseUpdate]:
+        if sync_info.get("newLectures"):
+            updated_courses = self.__convert_to_site_course_models(
+                sync_info.get("newLectures"), "new", updated_courses
+            )
+
+        if sync_info.get("updatedLectures"):
+            updated_courses = self.__convert_to_site_course_models(
+                sync_info.get("updatedLectures"), "updated", updated_courses
+            )
+
+        if sync_info.get("removedLectures"):
+            updated_courses = self.__convert_to_site_course_models(
+                sync_info.get("removedLectures"), "deleted", updated_courses
+            )
+        return updated_courses
+    
+    # ======================================================== #
+    # ======================== Getters ======================= #
+    # ======================================================== #
 
     def get_nativ_dhbw_sources(self) -> List[str]:
+        """
+        Fetches available DHBW sources from the DHBW API.
+
+        This function retrieves and returns available DHBW sources from the DHBW API.
+
+        :return: List of available DHBW sources.        
+        """
+
         response = requests.get("https://api.dhbw.dev/sites")
         if response.status_code != 200:
             print("Failed to fetch DHBW sources")
@@ -86,74 +168,15 @@ class DHBWAppFetcher:
         ]
         return available_sources
 
-    def __get_tags(self, lecture_name: str) -> List[str]:
-        tags = []
-        lecture_name_lower = lecture_name.lower()
-        if any(keyword in lecture_name_lower for keyword in self.online_keywords):
-            tags.append("online")
-        elif "hybrid" in lecture_name_lower:
-            tags.append("hybrid")
 
-        if any(keyword in lecture_name_lower for keyword in self.exam_keywords):
-            if "klausureinsicht" in lecture_name_lower:
-                tags.append("exam_review")
-            else:
-                tags.append("exam")
-        return tags
-
-    def __convert_room_info(self, rooms: List[str]) -> str:
-        cleaned_rooms = [room.replace("VL-Raum", "").replace("Unterrichtsraum", "").strip() for room in rooms]
-        return "\n".join(cleaned_rooms)
-
-    def __convert_to_site_course_models(
-        self, lectures: List[dict], _type: str, courses: DHBWUpdateCalendar = DHBWUpdateCalendar(data={})
-    ) -> DHBWUpdateCalendar:
-
-        for lecture in lectures:
-            # Get the site and course name
-            splitted_course = lecture.get("course").split("-")
-            site = splitted_course[0]
-            course_name = "-".join(splitted_course[1:])
-
-            # Initialize the site in courses if not present
-            if site not in courses.data:
-                courses.data[site] = DHBWUpdateSiteBase(new={}, updated={}, deleted=[])
-
-            # Prepare the event
-            event = Event(
-                start=lecture.get("startTime"),
-                end=lecture.get("endTime"),
-                summary=lecture.get("name"),
-                location=self.__convert_room_info(lecture.get("rooms")),
-                description=EventDescription(
-                    tags=self.__get_tags(lecture.get("name")),
-                    lecturer=lecture.get("lecturer", ""),
-                    id=lecture.get("id"),
-                ),
-            )
-
-            # Add the event to the appropriate type and course
-            site_data = courses.data[site]
-            if _type == "deleted":
-                site_data.deleted.append(lecture.get("id"))
-            elif _type == "new":
-                site_data.new.setdefault(course_name, {})[lecture.get("id")] = event
-            elif _type == "updated":
-                site_data.updated.setdefault(course_name, {})[lecture.get("id")] = event
-                
-
-            self.progress.update(self.task_id, advance=1)
-        return courses
-
-    async def get_updated_calendars(self) -> DHBWUpdateCalendar:
+    async def get_updated_calendars(self) -> Dict[str, Scheme.DHBWCourseUpdate]:
         """
         Fetches updated calendars from the DHBW API.
 
         This function retrieves and returns updated calendar data from the DHBW API.
         The returned data is structured using Pydantic models for validation and serialization.
 
-        Returns:
-            DHBWUpdateCalendar: A Pydantic model containing the updated calendars.
+        :return: Updated calendar data.
         """
         self.task_id = self.progress.add_task(
             "[bold green]Native-Calendar-DHBW[/bold green] Checking for updated calendars"
@@ -161,19 +184,19 @@ class DHBWAppFetcher:
         is_synced = False
 
         while not is_synced:
-            response = requests.get("https://api.dhbw.dev/sync/lectures/group/latest", params={"skip": 3, "amount": 1})
+            response = requests.get("https://api.dhbw.dev/sync/lectures/group/latest", params={"skip": 0, "amount": 1})
 
             if response.status_code != 200:
                 print("Failed to fetch DHBW updated calendars")
                 self.progress.remove_task(self.task_id)
-                return DHBWUpdateCalendar(data={})
+                return {}
 
             sync_status = response.json()[0]
 
             if sync_status.get("status") == "error":
                 print("Failed to fetch DHBW updated calendars")
                 self.progress.remove_task(self.task_id)
-                return DHBWUpdateCalendar(data={})
+                return {}
             elif sync_status.get("status") == "running":
                 await asyncio.sleep(20)
             else:
@@ -186,7 +209,7 @@ class DHBWAppFetcher:
             if sync_info.get("status") != "error" and sync_info.get("hasChanges")
         ]
 
-        updated_calendars = DHBWUpdateCalendar(data={})
+        updated_courses = {}
         for sync_id in needed_sync_ids:
             response = requests.get(f"https://api.dhbw.dev/sync/lectures/info/{sync_id}")
             if response.status_code != 200:
@@ -194,71 +217,70 @@ class DHBWAppFetcher:
                 continue
 
             sync_info = response.json()
-            updated_calendars = self.__process_sync_info(sync_info, updated_calendars)
+            updated_courses = self.__process_sync_info(sync_info, updated_courses)
 
         self.progress.remove_task(self.task_id)
-        return updated_calendars
 
-    def __process_sync_info(self, sync_info: dict, updated_calendars: DHBWUpdateCalendar) -> DHBWUpdateCalendar:
-        if sync_info.get("newLectures"):
-            updated_calendars = self.__convert_to_site_course_models(
-                sync_info.get("newLectures"), "new", updated_calendars
-            )
+        return updated_courses
 
-        if sync_info.get("updatedLectures"):
-            updated_calendars = self.__convert_to_site_course_models(
-                sync_info.get("updatedLectures"), "updated", updated_calendars
-            )
+    
 
-        if sync_info.get("removedLectures"):
-            updated_calendars = self.__convert_to_site_course_models(
-                sync_info.get("removedLectures"), "deleted", updated_calendars
-            )
-
-        return updated_calendars
-
-    def get_all_calendars(self, site: str) -> DHBWCourse:
+    def get_all_calendars(self, site: str) -> Scheme.DHBWCourses:
         response = requests.get(f"https://api.dhbw.app/rapla/{site}/lectures")
         if response.status_code != 200:
             print(f"Failed to fetch DHBW calendar for {site}")
             return {}
 
-        lectures = response.json()
-        if not lectures:
+        sessions = response.json()
+        if not sessions:
             return {}
 
         self.task_id = self.progress.add_task(
-            f"[bold green]Native-Calendar-DHBW[/bold green] Processing {site.upper()} calendar", total=len(lectures)
+            f"[bold green]Native-Calendar-DHBW[/bold green] Processing {site.upper()} calendar", total=len(sessions)
         )
 
-        courses = DHBWCourse(data={})
-        for lecture in lectures:
-            course_name = lecture.get("course").replace(f"{site}-", "")
-            event = Event(
-                id=lecture.get("id"),
-                start=lecture.get("startTime"),
-                end=lecture.get("endTime"),
-                summary=lecture.get("name"),
-                location=self.__convert_room_info(lecture.get("rooms")),
-                description=EventDescription(
-                    tags=self.__get_tags(lecture.get("name")),
-                    lecturer=lecture.get("lecturer", ""),
-                    id=lecture.get("id"),
-                ),
+        courses = Scheme.DHBWCourses(courses={})
+        for session in sessions:
+            # Get the course name
+            course_name = session.get("course").replace(f"{site.upper()}-", "")[:MAX_COURSE_NAME_LENGTH]
+            session_name = session.get("name")[:MAX_COURSE_NAME_LENGTH]
+            
+            # Initialize the course if not present
+            if not courses.courses.get(course_name):
+                courses.courses[course_name] = {}
+
+            # Initialize the lecture if not present
+            if session_name and not courses.courses[course_name].get(session_name):
+                courses.courses[course_name][session.get("name")[:MAX_COURSE_NAME_LENGTH]] = Scheme.DHBWLecture(
+                    lecturer="",
+                    sessions={},
+                )
+
+            # Update the lecturer
+            if session.get("lecturer") and session.get("lecturer") not in courses.courses[course_name][session_name].lecturer:
+                if courses.courses[course_name][session_name].lecturer:
+                    courses.courses[course_name][session_name].lecturer += f", {session.get('lecturer')}"
+                else:
+                    courses.courses[course_name][session_name].lecturer = session.get("lecturer")
+
+            # Add the session
+            external_id = str(session.get("id", ""))
+            new_session = Scheme.SessionBase(
+                start=session.get("startTime"),
+                end=session.get("endTime"),
+                rooms=self.__clean_room_info(session.get("rooms")),
+                tags=self.__get_tags(session.get("name"), " ".join(session.get("rooms"))),
             )
+            session_exists = False
+            for _, exsitent_session in courses.courses[course_name][session_name].sessions.items():
+                if exsitent_session.start == new_session.start and exsitent_session.end == new_session.end and exsitent_session.rooms == new_session.rooms:
+                    session_exists = True
+                    break
 
-            # Initialize the course in courses if not present
-            if course_name not in courses.data:
-                courses.data[course_name] = CourseData(data=EventData(events=[]), hash="")
+            if not session_exists:
+                courses.courses[course_name][session_name].sessions[external_id] = new_session
 
-            # Add the event to the course
-            courses.data[course_name].data.events.append(event)
             self.progress.update(self.task_id, advance=1)
-
-        # Calculate hashes for each course
-        for course in courses.data.values():
-            course.data.events = self.__remove_duplicate_events(course.data.events, ["start", "end", "summary", "location"])
-            course.hash = dict_hash(course.data.model_dump())
 
         self.progress.remove_task(self.task_id)
         return courses

@@ -75,7 +75,7 @@ class District(Base):
     country_id = Column(Integer, ForeignKey("countries.country_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
-    country = relationship("Country", back_populates="districts")
+    country = relationship("Country", back_populates="districts", uselist=False)
     cities = relationship("City", cascade="save-update", back_populates="district")
 
     def as_dict_complete(self):

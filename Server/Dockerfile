@@ -1,26 +1,22 @@
 # syntax=docker/dockerfile:1
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
+# Use Python 3.12 slim as the base image for reduced size and security.
+FROM python:3.12-slim as base
 
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
-ARG PYTHON_VERSION=3.11.9
-FROM python:${PYTHON_VERSION}-slim as base
-
-# Prevents Python from writing pyc files.
+# Prevent Python from writing .pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
 
-# Keeps Python from buffering stdout and stderr to avoid situations where
-# the application crashes without emitting any logs due to buffering.
+# Ensure stdout and stderr are unbuffered.
 ENV PYTHONUNBUFFERED=1
+
+# Set terminal type.
 ENV TERM=xterm
 
+# Set the working directory inside the container.
 WORKDIR /app
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
+# Create a non-privileged user to run the application.
+# This enhances security by avoiding running as root.
 ARG UID=10001
 RUN adduser \
     --disabled-password \
@@ -31,22 +27,23 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
-# Leverage a bind mount to requirements.txt to avoid having to copy them into
-# into this layer.
+# Install build dependencies and Python packages.
+# Using a cache mount for pip to speed up builds.
+# Using a bind mount for requirements.txt to leverage Docker caching.
 RUN --mount=type=cache,target=/root/.cache/pip \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    --mount=type=bind,source=requirements.txt,target=/app/requirements.txt \
+    python -m pip install --upgrade pip && \
     python -m pip install -r requirements.txt
 
-# Switch to the non-privileged user to run the application.
+# Switch to the non-privileged user.
 USER appuser
 
-# Copy the source code into the container.
+# Copy the application source code into the container.
 COPY . .
 
-# Expose the port that the application listens on.
+# Expose the port that the FastAPI application listens on.
 EXPOSE 8001
 
-# Run the application.
-CMD uvicorn 'main:app' --host=0.0.0.0 --port=8001
+# Define the command to run the FastAPI application with 4 workers and auto-reload.
+# Note: The --reload flag is typically used for development and may not be suitable for production.
+CMD ["fastapi", "run", "--workers", "4", "main.py", "--reload", "--port 8000"]

@@ -1,49 +1,54 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
+version: '3.8'
 
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
 services:
-  server:
-    build:
-      context: .
+  the-student-master-backend:
+    image: registry.gitlab.com/themastercollection/thestudentmaster:latest
     ports:
-      - 8000:8000
+      - "8000:8001"
+    environment:
+      # Set environment variables for the FastAPI application
+      - ENVIRONMENT=prod              
+      - DB_HOST=172.17.0.2
+      - DB_DATABASE=thestudentmaster_dev
 
-# The commented out section below is an example of how to define a PostgreSQL
-# database that your application can use. `depends_on` tells Docker Compose to
-# start the database before your application. The `db-data` volume persists the
-# database data between container restarts. The `db-password` secret is used
-# to set the database password. You must create `db/password.txt` and add
-# a password of your choosing to it before running `docker compose up`.
-#     depends_on:
-#       db:
-#         condition: service_healthy
-#   db:
-#     image: postgres
-#     restart: always
-#     user: postgres
-#     secrets:
-#       - db-password
-#     volumes:
-#       - db-data:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=example
-#       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-#     expose:
-#       - 5432
-#     healthcheck:
-#       test: [ "CMD", "pg_isready" ]
-#       interval: 10s
-#       timeout: 5s
-#       retries: 5
-# volumes:
-#   db-data:
-# secrets:
-#   db-password:
-#     file: db/password.txt
+    secrets:
+      - the_student_master_db_user
+      - the_student_master_db_password
+      - the_student_master_db_cert_password
+      - the_student_master_db_ca_cert
+      - the_student_master_refresh_private_key.pem
+      - the_student_master_refresh_public_key.pem
+      - the_student_master_access_private_key.pem
+      - the_student_master_access_public_key.pem
+      - the_student_master_security_private_key.pem
+      - the_student_master_security_public_key.pem
+    volumes:
+      - db_data:/var/lib/mysql  # Adjust this if needed (e.g., for database backups or persistent data)
+    networks:
+      - db_network
 
+secrets:
+  the_student_master_db_user:
+    external: true
+  the_student_master_db_password:
+    external: true
+  the_student_master_db_cert_password:
+    external: true
+  the_student_master_db_ca_cert:
+    external: true  
+  the_student_master_refresh_private_key.pem:
+    external: true
+  the_student_master_refresh_public_key.pem:
+    external: true
+  the_student_master_access_private_key.pem:
+    external: true
+  the_student_master_access_public_key.pem:
+    external: true
+  the_student_master_security_private_key.pem:
+    external: true
+  the_student_master_security_public_key.pem:
+    external: true
+  
+networks:
+  db_network:
+    external: true
