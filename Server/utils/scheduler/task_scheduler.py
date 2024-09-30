@@ -44,7 +44,7 @@ class TaskScheduler:
             BarColumn(),
             TimeElapsedColumn(),
             console=self.console,
-            transient=True  # Progress bar disappears when completed
+            transient=True,  # Progress bar disappears when completed
         )
 
     def __log(self, message: str, level: str = "info"):
@@ -103,7 +103,6 @@ class TaskScheduler:
         if interval_seconds and cron and run_date:
             raise ValueError("Only one of 'interval_seconds', 'cron', or 'run_date' can be specified.")
 
-
         args = args or []
         kwargs = kwargs or {}
         self.task_blocked_by[task_id] = blocked_by or []
@@ -144,7 +143,7 @@ class TaskScheduler:
                     if self.verbose:
                         self.__log(
                             f"Task '{task_id}' is blocked by task '{block_task}' scheduled to run at {next_run}",
-                            level="warning"
+                            level="warning",
                         )
                     return
 
@@ -192,7 +191,7 @@ class TaskScheduler:
         elif run_date:
             trigger = DateTrigger(run_date)
             self.__log(f"Task '{task_id}' scheduled to run at {run_date}.", level="info")
-        
+
         if not trigger:
             raise ValueError("No trigger specified for the task.")
 
@@ -203,7 +202,7 @@ class TaskScheduler:
             id=task_id,
             args=args,
             kwargs=kwargs,
-            replace_existing=False  # Prevent replacing existing jobs with the same ID
+            replace_existing=False,  # Prevent replacing existing jobs with the same ID
         )
 
         if on_startup:

@@ -9,7 +9,6 @@ from config.general import DEFAULT_TIMEZONE, ENVIRONMENT
 from config.db_certs import generate_client_cert
 
 
-
 # Generate a client certificate if it is the first boot
 first_boot = os.getenv("FIRST_BOOT", "true").lower() == "true"
 if first_boot:
@@ -53,7 +52,7 @@ elif ENVIRONMENT == "prod":
         with open("/run/secrets/the_student_master_db_cert_password", "r") as file:
             cert_password = file.read().strip()
             ssl_args["ssl"]["passphrase"] = cert_password
-   
+
         ssl_args["ssl"]["ca"] = "/run/secrets/the_student_master_db_ca_cert"
     except FileNotFoundError as e:
         raise RuntimeError("Database user and password secrets not found") from e

@@ -10,7 +10,7 @@ from sqlalchemy import (
     CheckConstraint,
     UniqueConstraint,
     DateTime,
-    UUID
+    UUID,
 )
 from sqlalchemy.orm import validates, relationship
 import json
@@ -127,7 +127,9 @@ class Course(Base):
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", back_populates="courses", uselist=False)  # Many-to-one
-    lectures = relationship("Lecture", back_populates="course", cascade="all, delete", passive_deletes=True)  # One-to-many
+    lectures = relationship(
+        "Lecture", back_populates="course", cascade="all, delete", passive_deletes=True
+    )  # One-to-many
 
 
 class Lecture(Base):
@@ -140,7 +142,10 @@ class Lecture(Base):
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     course = relationship("Course", back_populates="lectures", uselist=False)  # Many-to-one
-    sessions = relationship("Session", back_populates="lecture", cascade="all, delete", passive_deletes=True)  # One-to-many
+    sessions = relationship(
+        "Session", back_populates="lecture", cascade="all, delete", passive_deletes=True
+    )  # One-to-many
+
 
 class Session(Base):
     __tablename__ = "calendar_native_sessions"
@@ -176,13 +181,14 @@ class Session(Base):
 
     def generate_sha1_hash(self):
         # Konvertiere start_time und end_time zu Strings
-        start_str = self.start_time.isoformat() if isinstance(self.start_time, datetime.datetime) else str(self.start_time)
+        start_str = (
+            self.start_time.isoformat() if isinstance(self.start_time, datetime.datetime) else str(self.start_time)
+        )
         end_str = self.end_time.isoformat() if isinstance(self.end_time, datetime.datetime) else str(self.end_time)
 
         # Kombiniere start_time und end_time, encodiere und generiere SHA-1 Hash
         hash_input = f"{start_str}{end_str}".encode("utf-8")
         return hashlib.sha1(hash_input).hexdigest()
-
 
 
 class SessionRoom(Base):
@@ -241,5 +247,3 @@ class Equipment(Base):
     __tablename__ = "equipment"
     equipment_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     equipment_name = Column(String(255), nullable=False, unique=True)
-
-

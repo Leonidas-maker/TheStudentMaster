@@ -33,7 +33,6 @@ from config.general import MAX_COURSE_NAME_LENGTH
 ###########################################################################
 
 
-
 def get_backend_ids(db: Session):
     """Function to get backend IDs for calendar updates."""
     backends = db.query(m_calendar.CalendarBackend).all()
@@ -515,7 +514,6 @@ def prepareCalendarTables(db: Session):
             db.add(m_calendar.Tag(tag_name=tag))
 
     db.commit()
-
 
 
 ###########################################################################
@@ -1001,7 +999,7 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int, console
                     m_calendar.Session.external_id.in_(site_data.deleted_sessions)
                 ).delete(synchronize_session=False)
             db.flush()
-     
+
     except Exception as e:
         # Handle any errors by updating the progress bar and printing the error
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
@@ -1087,7 +1085,6 @@ async def update_custom_calendars(db: Session, progress, task_id, backend: m_cal
 ###########################################################################
 
 
-
 # ======================================================== #
 # ===================== Adder/Updater ==================== #
 # ======================================================== #
@@ -1160,7 +1157,6 @@ def add_native_calendar_to_user(
         db.commit()
         return calendar_native
     return None
-
 
 
 def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):

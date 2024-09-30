@@ -122,56 +122,72 @@ def fetch_calendar_hash(
 
 from sqlalchemy.orm import aliased
 
+
 def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
     # Check if start time is before end time
     if start_time >= end_time:
         raise HTTPException(status_code=400, detail="Start time must be before end time.")
-    
+
     # Check if university exists
     university = db.query(m_calendar.University).filter_by(university_uuid=university_uuid).first()
 
     if not university:
         raise HTTPException(status_code=404, detail="University not found.")
-    
+
     # Subquery to find all rooms that are occupied in the given time range
-    subquery = select(m_calendar.SessionRoom.room_id).join(m_calendar.Session).filter(
-        m_calendar.Session.start_time < end_time,
-        m_calendar.Session.end_time > start_time
+    subquery = (
+        select(m_calendar.SessionRoom.room_id)
+        .join(m_calendar.Session)
+        .filter(m_calendar.Session.start_time < end_time, m_calendar.Session.end_time > start_time)
     )
 
     # Find all free rooms in the university (rooms not in the subquery)
-    free_rooms = db.query(m_calendar.Room).filter(
-        m_calendar.Room.university_id == university.university_id,
-        m_calendar.Room.room_id.notin_(subquery)  # Use the subquery explicitly as a select()
-    ).all()
+    free_rooms = (
+        db.query(m_calendar.Room)
+        .filter(
+            m_calendar.Room.university_id == university.university_id,
+            m_calendar.Room.room_id.notin_(subquery),  # Use the subquery explicitly as a select()
+        )
+        .all()
+    )
 
     if not free_rooms:
-        raise HTTPException(status_code=404, detail="No free rooms found in the specified time range for this university.")
-    
+        raise HTTPException(
+            status_code=404, detail="No free rooms found in the specified time range for this university."
+        )
+
     # Get room IDs for the free rooms
     free_room_ids = [room.room_id for room in free_rooms]
 
     # Fetch the first and last booking times for each free room in a single query
     session_alias = aliased(m_calendar.Session)
-    session_data = db.query(
-        m_calendar.SessionRoom.room_id,
-        func.min(session_alias.start_time).label('last_booked'),
-        func.max(session_alias.end_time).label('next_booked')
-    ).join(session_alias, m_calendar.SessionRoom.session_id == session_alias.session_id).filter(
-        m_calendar.SessionRoom.room_id.in_(free_room_ids)
-    ).group_by(m_calendar.SessionRoom.room_id).all()
+    session_data = (
+        db.query(
+            m_calendar.SessionRoom.room_id,
+            func.min(session_alias.start_time).label("last_booked"),
+            func.max(session_alias.end_time).label("next_booked"),
+        )
+        .join(session_alias, m_calendar.SessionRoom.session_id == session_alias.session_id)
+        .filter(m_calendar.SessionRoom.room_id.in_(free_room_ids))
+        .group_by(m_calendar.SessionRoom.room_id)
+        .all()
+    )
 
     # Map session data to room IDs
-    session_map = {data.room_id: {"last_booked": data.last_booked, "next_booked": data.next_booked} for data in session_data}
+    session_map = {
+        data.room_id: {"last_booked": data.last_booked, "next_booked": data.next_booked} for data in session_data
+    }
 
     # Create the response with room names and first/last booking times
     response = []
     for room in free_rooms:
         session_info = session_map.get(room.room_id, {"last_booked": None, "next_booked": None})
-        response.append(s_calendar.RoomAvailabilityResponse(
-            room_name=room.room_name,
-            last_booked=session_info["last_booked"],
-            next_booked=session_info["next_booked"]
-        ))
-    
+        response.append(
+            s_calendar.RoomAvailabilityResponse(
+                room_name=room.room_name,
+                last_booked=session_info["last_booked"],
+                next_booked=session_info["next_booked"],
+            )
+        )
+
     return response

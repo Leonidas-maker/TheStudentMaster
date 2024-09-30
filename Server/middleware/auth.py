@@ -162,7 +162,7 @@ def load_key(
                 key = load_pem_public_key(key_file.read(), backend=default_backend())
         else:
             raise ValueError("Invalid file_name")
-        
+
     elif ENVIRONMENT == "prod":
         if "private" in file_name:
             try:
@@ -201,7 +201,11 @@ def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_ke
 def get_tokens_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
-    if ENVIRONMENT == "dev" and not (folder_path / "refresh_private_key.pem").exists() and not (folder_path / "access_private_key.pem").exists():
+    if (
+        ENVIRONMENT == "dev"
+        and not (folder_path / "refresh_private_key.pem").exists()
+        and not (folder_path / "access_private_key.pem").exists()
+    ):
         generate_keys()
 
     # Get the refresh private key

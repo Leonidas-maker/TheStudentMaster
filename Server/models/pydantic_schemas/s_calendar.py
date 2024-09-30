@@ -7,6 +7,7 @@ import hashlib
 
 from config.general import DEFAULT_TIMEZONE
 
+
 ###########################################################################
 ########################## Database Add / Update ##########################
 ###########################################################################
@@ -17,20 +18,21 @@ class EquipmentBase(BaseModel):
     """Represents a piece of equipment in a room."""
 
     name: str
-    
+
+
 class EquipmentCreate(EquipmentBase):
     """Represents a piece of equipment in a room."""
 
     pass
 
+
 class Equipment(EquipmentBase):
     """Represents a piece of equipment in a room."""
+
     id: int
-    
+
     class Config:
         from_attributes = True
-
-
 
 
 # ======================================================== #
@@ -43,10 +45,11 @@ class RoomBase(BaseModel):
     capacity: int
     description: str
 
+
 class RoomCreate(RoomBase):
     """Represents a room in the university."""
 
-    equipment: Union[List[str] , List[Equipment]]
+    equipment: Union[List[str], List[Equipment]]
 
 
 class Room(RoomBase):
@@ -54,29 +57,31 @@ class Room(RoomBase):
 
     equipment: List[str]
 
+
 # ======================================================== #
 # ======================== Session ======================= #
 # ======================================================== #
 class SessionBase(BaseModel):
     """Represents a session in the university."""
+
     start: datetime
     end: datetime
     rooms: Optional[List[str]] = None
     tags: Optional[List[str]] = None
 
-    @field_validator('start', 'end', mode='before')
+    @field_validator("start", "end", mode="before")
     def parse_datetime(cls, value):
         if isinstance(value, str):
             dt = parser.parse(value)
             if dt.tzinfo is None:
-                dt = pytz.utc.localize(dt)  
+                dt = pytz.utc.localize(dt)
             return dt.astimezone(DEFAULT_TIMEZONE)
         elif isinstance(value, datetime):
             return value.astimezone(DEFAULT_TIMEZONE)
         else:
             raise ValueError(f"Invalid type for 'start' or 'end': {type(value)}")
-        
-    @field_serializer('start', 'end')
+
+    @field_serializer("start", "end")
     def serialize_datetime(self, value: datetime, _info) -> str:
         if isinstance(value, datetime):
             return value.astimezone(DEFAULT_TIMEZONE).isoformat()
@@ -91,14 +96,15 @@ class SessionBase(BaseModel):
 
 class SessionCreateUpdate(SessionBase):
     """Represents a session in the university."""
+
     external_id: str
 
     # Hash the start and end times to create a unique identifier
-    @field_validator('external_id', mode='before')
+    @field_validator("external_id", mode="before")
     def hash_times(cls, value: str, values: Dict[str, any]) -> str:
         if value is None:
-            start = values.get('start')
-            end = values.get('end')
+            start = values.get("start")
+            end = values.get("end")
             if start and end:
                 return hashlib.md5(f"{start}{end}".encode()).hexdigest()
             else:
@@ -111,8 +117,9 @@ class SessionCreateUpdate(SessionBase):
 # ======================================================== #
 class LectureBase(BaseModel):
     """Represents a lecture in a course."""
+
     lecturer: str
-    
+
 
 class LectureCreate(LectureBase):
     """
@@ -120,8 +127,10 @@ class LectureCreate(LectureBase):
 
     The 'sessions' field is a dictionary where the keys are the external IDs or hashes of the timetable entries.
     """
+
     name: str
     sessions: List[SessionCreateUpdate]
+
 
 # class LectureUpdate(LectureBase):
 #     """
@@ -136,8 +145,10 @@ class LectureCreate(LectureBase):
 #     updated_sessions: Optional[Dict[str, SessionBase]] = None
 #     deleted_sessions: Optional[List[str]] = None
 
+
 class Lecture(LectureBase):
     """Represents a lecture in a course."""
+
     name: str
 
 
@@ -146,7 +157,9 @@ class Lecture(LectureBase):
 # ======================================================== #
 class CourseBase(BaseModel):
     """Represents a course in the university."""
+
     name: str
+
 
 class CourseCreate(CourseBase):
     """
@@ -156,6 +169,7 @@ class CourseCreate(CourseBase):
     """
 
     lectures: List[LectureCreate]
+
 
 # class CourseUpdate(BaseModel):
 #     """
@@ -168,14 +182,16 @@ class CourseCreate(CourseBase):
 #     new_lectures:  List[LectureCreate] = None
 #     updated_lectures: Optional[Dict[str, LectureUpdate]] = None
 #     deleted_lectures: Optional[List[str]] = None
-    
+
 
 ###########################################################################
 ########################### Scraper/Fetcher Base ##########################
 ###########################################################################
 
+
 class DHBWLecture(LectureBase):
     """Represents a lecture in a course."""
+
     sessions: Dict[str, SessionBase]
     lecturer: str
 
@@ -194,13 +210,13 @@ class DHBWCourses(BaseModel):
         courses_create = []
         for course_name, lectures_dict in self.courses.items():
             lectures_create = [
-                lecture.to_lecture_create(lecture_name)
-                for lecture_name, lecture in lectures_dict.items()
+                lecture.to_lecture_create(lecture_name) for lecture_name, lecture in lectures_dict.items()
             ]
             course_create = CourseCreate(name=course_name, lectures=lectures_create)
             courses_create.append(course_create)
         return courses_create
-    
+
+
 class DHBWCourseUpdate(DHBWCourses):
     deleted_sessions: List[str] = []
 
@@ -271,9 +287,11 @@ class ResAvailableNativeCalendars(BaseModel):
     university_uuid: UUID4
     course_names: List[str]
 
+
 class ResEventDescription(BaseModel):
     tags: List[str] = []
     lecturer: str = ""
+
 
 class ResEvent(BaseModel):
     start: str
@@ -281,6 +299,7 @@ class ResEvent(BaseModel):
     summary: str
     location: str
     description: ResEventDescription
+
 
 class ResEventData(BaseModel):
     X_WR_TIMEZONE: str = DEFAULT_TIMEZONE.zone
@@ -330,6 +349,7 @@ class CourseData(BaseModel):
 
     data: EventData
     hash: str
+
 
 class RoomAvailabilityResponse(BaseModel):
     room_name: str

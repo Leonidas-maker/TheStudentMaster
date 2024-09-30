@@ -5,7 +5,6 @@ import asyncio
 from typing import List, Dict
 
 
-
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
 import models.pydantic_schemas.s_calendar as Scheme
 from config.general import DEFAULT_TIMEZONE, MAX_COURSE_NAME_LENGTH
@@ -45,7 +44,10 @@ class DHBWAppFetcher:
     def __get_tags(self, lecture_name: str, room_str: str) -> List[str]:
         tags = []
         lecture_name_lower = lecture_name.lower()
-        if any((online_keyword in lecture_name_lower or online_keyword in room_str) for online_keyword in self.online_keywords):
+        if any(
+            (online_keyword in lecture_name_lower or online_keyword in room_str)
+            for online_keyword in self.online_keywords
+        ):
             tags.append("online")
         elif "hybrid" in lecture_name_lower:
             tags.append("hybrid")
@@ -90,7 +92,6 @@ class DHBWAppFetcher:
             if updated_sites.get(site).deleted_sessions:
                 updated_sites[site].deleted_sessions = []
 
-
             # Prepare the session
             session = Scheme.SessionBase(
                 start=lecture_input.get("startTime"),
@@ -98,7 +99,7 @@ class DHBWAppFetcher:
                 rooms=self.__clean_room_info(lecture_input.get("rooms")),
                 tags=self.__get_tags(lecture_input.get("name"), " ".join(lecture_input.get("rooms"))),
             )
-            
+
             # Add the event to the appropriate type and course
             if _type == "deleted":
                 updated_sites.get(site).deleted_sessions.append(session_external_id)
@@ -122,16 +123,15 @@ class DHBWAppFetcher:
                         updated_sites.get(site).courses[course_name][lecture_name].lecturer = lecture_name
 
                 updated_sites.get(site).courses[course_name][lecture_name].sessions[session_external_id] = session
-                
+
             self.progress.update(self.task_id, advance=1)
         return updated_sites
 
-
-    def __process_sync_info(self, sync_info: dict, updated_courses: Dict[str, Scheme.DHBWCourseUpdate]) -> Dict[str, Scheme.DHBWCourseUpdate]:
+    def __process_sync_info(
+        self, sync_info: dict, updated_courses: Dict[str, Scheme.DHBWCourseUpdate]
+    ) -> Dict[str, Scheme.DHBWCourseUpdate]:
         if sync_info.get("newLectures"):
-            updated_courses = self.__convert_to_site_course_models(
-                sync_info.get("newLectures"), "new", updated_courses
-            )
+            updated_courses = self.__convert_to_site_course_models(sync_info.get("newLectures"), "new", updated_courses)
 
         if sync_info.get("updatedLectures"):
             updated_courses = self.__convert_to_site_course_models(
@@ -143,7 +143,7 @@ class DHBWAppFetcher:
                 sync_info.get("removedLectures"), "deleted", updated_courses
             )
         return updated_courses
-    
+
     # ======================================================== #
     # ======================== Getters ======================= #
     # ======================================================== #
@@ -154,7 +154,7 @@ class DHBWAppFetcher:
 
         This function retrieves and returns available DHBW sources from the DHBW API.
 
-        :return: List of available DHBW sources.        
+        :return: List of available DHBW sources.
         """
 
         response = requests.get("https://api.dhbw.dev/sites")
@@ -167,7 +167,6 @@ class DHBWAppFetcher:
             source.get("site") for source in sources if source.get("lectures") in ["active", "partial", "beta"]
         ]
         return available_sources
-
 
     async def get_updated_calendars(self) -> Dict[str, Scheme.DHBWCourseUpdate]:
         """
@@ -223,8 +222,6 @@ class DHBWAppFetcher:
 
         return updated_courses
 
-    
-
     def get_all_calendars(self, site: str) -> Scheme.DHBWCourses:
         response = requests.get(f"https://api.dhbw.app/rapla/{site}/lectures")
         if response.status_code != 200:
@@ -244,7 +241,7 @@ class DHBWAppFetcher:
             # Get the course name
             course_name = session.get("course").replace(f"{site.upper()}-", "")[:MAX_COURSE_NAME_LENGTH]
             session_name = session.get("name")[:MAX_COURSE_NAME_LENGTH]
-            
+
             # Initialize the course if not present
             if not courses.courses.get(course_name):
                 courses.courses[course_name] = {}
@@ -257,7 +254,10 @@ class DHBWAppFetcher:
                 )
 
             # Update the lecturer
-            if session.get("lecturer") and session.get("lecturer") not in courses.courses[course_name][session_name].lecturer:
+            if (
+                session.get("lecturer")
+                and session.get("lecturer") not in courses.courses[course_name][session_name].lecturer
+            ):
                 if courses.courses[course_name][session_name].lecturer:
                     courses.courses[course_name][session_name].lecturer += f", {session.get('lecturer')}"
                 else:
@@ -273,7 +273,11 @@ class DHBWAppFetcher:
             )
             session_exists = False
             for _, exsitent_session in courses.courses[course_name][session_name].sessions.items():
-                if exsitent_session.start == new_session.start and exsitent_session.end == new_session.end and exsitent_session.rooms == new_session.rooms:
+                if (
+                    exsitent_session.start == new_session.start
+                    and exsitent_session.end == new_session.end
+                    and exsitent_session.rooms == new_session.rooms
+                ):
                     session_exists = True
                     break
 

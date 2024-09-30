@@ -98,9 +98,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
                 # >> End country check <<
 
                 # Create new district
-                district_db = m_general.District(
-                    district=new_address.district, country=country_db
-                )
+                district_db = m_general.District(district=new_address.district, country=country_db)
                 new_db_objects.append(district_db)
             # >> End district check <<
 
@@ -121,7 +119,7 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
         postal_code=postal_code_db,
     )
     new_db_objects.append(new_address)
-    
+
     db.add_all(new_db_objects)
     db.flush()
     return new_address
