@@ -126,7 +126,7 @@ async def lifespan(app: FastAPI):
         blocked_by=[],
         with_progress=False,
     )
-    
+
     task_scheduler.add_task(
         "canteen_clean_menus",
         clean_canteen_menus,
@@ -136,7 +136,7 @@ async def lifespan(app: FastAPI):
         blocked_by=["canteen"],
         with_progress=False,
     )
-    
+
     task_scheduler.start(run_startup_tasks=True)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
