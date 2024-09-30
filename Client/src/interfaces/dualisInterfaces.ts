@@ -30,9 +30,17 @@ interface GradeData {
   ects: string;
   status: string;
   detail: string;
+  detailGrade: Array<{ semester: string; name: string; exam: string; date: string; grade: string }>;
+}
+
+interface GpaSemesterData {
+  semester: string;
+  name: string;
+  grade: string;
+  ects: string;
 }
 
 // ====================================================== //
 // ================== Interfaces export ================= //
 // ====================================================== //
-export { ModuleData, GpaData, EctsData, SemesterData, GradeData };
+export { ModuleData, GpaData, EctsData, SemesterData, GradeData, GpaSemesterData };

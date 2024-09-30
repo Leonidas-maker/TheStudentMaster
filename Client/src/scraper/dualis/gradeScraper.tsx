@@ -1,146 +1,164 @@
 import { Parser } from "htmlparser2";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { GradeData } from "../../interfaces/dualisInterfaces";
+import { GradeData, GpaSemesterData } from "../../interfaces/dualisInterfaces";
 
 export const filterGrade = (
-  html: Array<{ name: string; html: string }>,
-  setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
+    html: Array<{ name: string; html: string }>,
+    setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
+    setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
 ) => {
-  let gradeList: GradeData[] = [];
+    let gradeList: GradeData[] = [];
+    let gpaSemesterList: GpaSemesterData[] = [];
 
-  let number = "";
-  let name = "";
-  let grade = "";
-  let ects = "";
-  let status = "";
-  let detail = "";
-  let currentTrIndex = 0;
-  let currentTdIndex = 0;
-  let currentThIndex = 0;
-  let currentThead = false;
-  let validTr = false;
-  let lastTr = false;
-  let insideScriptTag = false;
-  let scriptContent = "";
+    let number = "";
+    let name = "";
+    let grade = "";
+    let ects = "";
+    let status = "";
+    let detail = "";
+    let insideTboday = false;
+    let lastTr = false;
+    let currentTdIndex = 0;
+    let currentThIndex = 0;
+    let insideScriptTag = false;
+    let scriptContent = "";
 
-  const parser = new Parser({
-    onopentag(name, attribs) {
-      if (name === "thead") {
-        currentThead = true;
-      }
+    const parser = new Parser({
+        onopentag(name, attribs) {
+            if (name === "tbody") {
+                insideTboday = true;
+            }
 
-      if (name === "tr" && attribs.class !== "tbsubhead") {
-        validTr = true;
-      }
+            if (name === "th" && insideTboday && attribs.colspan === "2") {
+                lastTr = true;
+            }
 
-      if (name === "th" && validTr && attribs.colspan === "2") {
-        lastTr = true;
-      }
+            if (name === "script") {
+                insideScriptTag = true;
+                scriptContent = "";
+            }
+        },
+        ontext(text) {
+            const cleanText = text.trim()
 
-      if (name === "script") {
-        insideScriptTag = true;
-        scriptContent = "";
-      }
-    },
-    ontext(text) {
-      const cleanText = text.trim();
+            if (!cleanText || !insideTboday) return;
 
-      if (insideScriptTag) {
-        scriptContent += cleanText;
-        return;
-      }
+            if (insideScriptTag) {
+                scriptContent += cleanText;
+                return;
+            }
 
-      if (!cleanText || !validTr || currentThead) return;
+            if (!lastTr) {
+                switch (currentTdIndex) {
+                    case 0:
+                        number = cleanText;
+                        break;
+                    case 1:
+                        name = cleanText;
+                        break;
+                    case 2:
+                        grade = cleanText;
+                        break;
+                    case 3:
+                        ects = cleanText;
+                        break;
+                    case 4:
+                        status = cleanText;
+                        break;
+                    case 5:
+                        detail = cleanText;
+                        break;
+                }
+            }
 
-      if (validTr && !lastTr && !currentThead) {
-        switch (currentTdIndex) {
-          case 0:
-            number = cleanText;
-            //console.debug("Number: ", number);
-            break;
-          case 1:
-            name = cleanText;
-            //console.debug("Name: ", name);
-            break;
-          case 2:
-            grade = cleanText;
-            //console.debug("Grade: ", grade);
-            break;
-          case 3:
-            ects = cleanText;
-            //console.debug("Ects: ", ects);
-            break;
-          case 4:
-            status = cleanText;
-            //console.debug("Status: ", status);
-            break;
-        }
-      }
-    },
-    onclosetag(tagname) {
-      if (tagname === "td") {
-        currentTdIndex++;
-      }
+            if (lastTr) {
+                switch (currentThIndex) {
+                    case 0:
+                        name = cleanText;
+                        break;
+                    case 1:
+                        grade = cleanText;
+                        break;
+                    case 2:
+                        ects = cleanText;
+                        break;
+                }
+            }
+        },
+        onclosetag(tagname) {
+            if (tagname === "tbody") {
+                insideTboday = false;
+                currentTdIndex = 0;
+                currentThIndex = 0;
+            }
 
-      if (tagname === "th") {
-        currentThIndex++;
-      }
+            if (tagname === "td" && insideTboday) {
+                currentTdIndex++;
+            }
 
-      if (tagname === "tr") {
-        if (validTr && !lastTr && number && name && grade && ects) {
-          gradeList.push({
-            number,
-            name,
-            grade,
-            ects,
-            status,
-            detail,
-          });
+            if (tagname === "th" && insideTboday && lastTr) {
+                currentThIndex++;
+            }
 
-          number = "";
-          name = "";
-          grade = "";
-          ects = "";
-          status = "";
-          detail = "";
-        }
+            if (tagname === "tr" && insideTboday && !lastTr) {
+                lastTr = false;
+                currentTdIndex = 0;
+                gradeList.push({
+                    number: number,
+                    name: name,
+                    grade: grade,
+                    ects: ects,
+                    status: status,
+                    detail: detail,
+                    detailGrade: []
+                });
 
-        validTr = false;
-        lastTr = false;
-        currentTrIndex++;
-        currentTdIndex = 0;
-        currentThIndex = 0;
-      }
+                number = "";
+                name = "";
+                grade = "";
+                ects = "";
+                status = "";
+                detail = "";
+            }
 
-      if (tagname === "thead") {
-        currentThead = false;
-      }
+            if (tagname === "tr" && insideTboday && lastTr) {
+                lastTr = false;
+                gpaSemesterList.push({
+                    semester: "",
+                    name: name,
+                    grade: grade,
+                    ects: ects,
+                });
 
-      if (tagname === "script" && scriptContent.includes("dl_popUp")) {
-        console.debug("JavaScript dl_popUp detected in script tag.");
+                name = "";
+                grade = "";
+                ects = "";
+            }
 
-        console.debug("Full Script Content: ", JSON.stringify(scriptContent));
+            if (tagname === "tr" && lastTr) {
+                currentTdIndex = 0;
+                lastTr = false;
+            }
 
-        const urlMatch = scriptContent.match(/dl_popUp\s*\(\s*"([^"]+)"\s*,/);
+            if (tagname === "script") {
+                if (scriptContent.includes("dl_popUp")) {
+                    // Extract the script content for the detail URL
+                    const urlMatch = scriptContent.match(/dl_popUp\s*\(\s*"([^"]+)"\s*,/);
+                    detail = urlMatch && urlMatch[1] ? urlMatch[1] : "No URL found";
+                }
+                insideScriptTag = false;
+            }
+        },
+    });
 
-        if (urlMatch && urlMatch[1]) {
-          detail = urlMatch[1];
-          console.debug("Extracted URL from script: ", detail);
-        } else {
-          detail = "No URL found";
-          console.debug("No URL found in script content.");
-        }
+    html.forEach((item) => {
+        parser.write(item.html);
 
-        insideScriptTag = false;
-      }
-    },
-  });
+        gpaSemesterList[gpaSemesterList.length - 1].semester = item.name;
+    });
+    parser.end();
 
-  html.forEach((item) => {
-    parser.write(item.html);
-  });
-  parser.end();
-
-  setGradeData((prevData) => [...prevData, ...gradeList]);
-};
+    setGradeData((prevData) => [...prevData, ...gradeList]);
+    setGpaSemesterData((prevData) => [...prevData, ...gpaSemesterList]);
+};  

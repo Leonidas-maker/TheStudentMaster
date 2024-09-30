@@ -31,8 +31,10 @@ import {
   EctsData,
   SemesterData,
   GradeData,
+  GpaSemesterData
 } from "../../interfaces/dualisInterfaces";
 import { filterGrade } from "../../scraper/dualis/gradeScraper";
+import { set } from 'lodash';
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -55,6 +57,7 @@ const Dualis: React.FC = () => {
   const [error, setError] = useState("");
   const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
   const [gradeData, setGradeData] = useState<GradeData[]>([]);
+  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>([]);
   const [gpaData, setGpaData] = useState<GpaData>({
     gpaTotal: "",
     gpaSubject: "",
@@ -71,7 +74,9 @@ const Dualis: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
-  const [naviagtedThroughSemesters, setNavigatedThroughSemesters] =
+  const [navigatedThroughSemesters, setNavigatedThroughSemesters] =
+    useState(false);
+  const [navigatedThroughGradeDetails, setNavigatedThroughGradeDetails] =
     useState(false);
 
   // Function to save login credentials
@@ -119,7 +124,7 @@ const Dualis: React.FC = () => {
     if (saveLogin) {
       loadCredentials();
     } else {
-      setIsLoginLoading(false); // Set loading state to false if saveLogin is disabled
+      setIsLoginLoading(false);
     }
   }, [saveLogin]);
 
@@ -171,7 +176,7 @@ const Dualis: React.FC = () => {
       const authArgs = extractAuthArguments(response.headers["refresh"]);
       setAuthArguments(authArgs);
 
-      setProgress(0.2);
+      setProgress(0.1);
       setError("");
       await navigateToPerformanceOverview(
         extractAuthArguments(response.headers["refresh"]),
@@ -195,15 +200,22 @@ const Dualis: React.FC = () => {
     if (
       semesterData.semester.length > 0 &&
       authArguments &&
-      !naviagtedThroughSemesters
+      !navigatedThroughSemesters
     ) {
       navigateThroughSemesters(authArguments, semesterData.semester);
       setNavigatedThroughSemesters(true);
     }
   }, [semesterData.semester, authArguments]);
 
+  useEffect(() => {
+    if (gradeData.length > 0 && authArguments && !navigatedThroughGradeDetails) {
+      navigateThroughGradeDetails(gradeData);
+      setNavigatedThroughGradeDetails(true);
+    }
+  }, [gradeData, authArguments]);
+
   const extractAuthArguments = (refreshHeader: string) => {
-    setProgress(0.1);
+    setProgress(0.05);
     if (refreshHeader) {
       return refreshHeader.slice(84).replace("-N000000000000000", "");
     }
@@ -211,22 +223,20 @@ const Dualis: React.FC = () => {
   };
 
   const navigateToPerformanceOverview = async (authArguments: string) => {
-    setProgress(0.3);
+    setProgress(0.25);
     try {
       const performanceUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=STUDENT_RESULT&ARGUMENTS=${authArguments},-N000310,-N0,-N000000000000000,-N000000000000000,-N000000000000000,-N0,-N000000000000000`;
       const response = await axiosInstance.get(performanceUrl);
       const content = response.data;
 
-      // Set HTML content
       setHtmlContent(content);
 
-      // Parse HTML content and filter the required data
       filterPerformanceOverview(content, setModuleData);
-      setProgress(0.33);
+      setProgress(0.26);
       filterGPA(content, setGpaData);
-      setProgress(0.36);
+      setProgress(0.28);
       filterECTS(content, setEctsData);
-      setProgress(0.4);
+      setProgress(0.3);
     } catch (err) {
       setError(
         "An error occurred while navigating to the performance overview. Please try again.",
@@ -236,18 +246,16 @@ const Dualis: React.FC = () => {
   };
 
   const navigateToExamResults = async (authArguments: string) => {
-    setProgress(0.5);
+    setProgress(0.35);
     try {
       const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
       const response = await axiosInstance.get(examResultsUrl);
       const content = response.data;
 
-      // Set HTML content
       setHtmlContent(content);
 
-      // Parse HTML content and filter the required data
       filterSemester(content, setSemesterData);
-      setProgress(0.6);
+      setProgress(0.4);
     } catch (err) {
       setError(
         "An error occurred while navigating to the exam results. Please try again.",
@@ -260,7 +268,7 @@ const Dualis: React.FC = () => {
     authArguments: string,
     semesterArray: Array<{ name: string; value: string }>,
   ) => {
-    setProgress(0.7);
+    setProgress(0.45);
     try {
       let allSemesterData: Array<{ name: string; html: string }> = [];
 
@@ -272,11 +280,11 @@ const Dualis: React.FC = () => {
         allSemesterData.push({ name: sem.name, html: content });
 
         const progressUpdate =
-          0.8 + (0.2 * (semesterArray.indexOf(sem) + 1)) / semesterArray.length;
+          0.45 + (0.25 * (semesterArray.indexOf(sem) + 1)) / semesterArray.length;
         setProgress(progressUpdate);
       }
 
-      filterGrade(allSemesterData, setGradeData);
+      filterGrade(allSemesterData, setGradeData, setGpaSemesterData);
 
       setHtmlContent(JSON.stringify(allSemesterData));
     } catch (err) {
@@ -285,9 +293,35 @@ const Dualis: React.FC = () => {
       );
       console.error(err);
     }
+  };
 
-    setProgress(1);
-    setLoading(false);
+  const navigateThroughGradeDetails = async (gradeData: GradeData[]) => {
+    setProgress(0.75);
+    try {
+      let updatedGradeData = [...gradeData];
+  
+      for (let i = 0; i < updatedGradeData.length; i++) {
+        const grade = updatedGradeData[i];
+  
+        const detailUrl = `${BASE_URL}${grade.detail}`;
+        
+        const response = await axiosInstance.get(detailUrl);
+        const content = response.data;
+  
+        const progressUpdate = 0.75 + (0.25 * (i + 1)) / updatedGradeData.length;
+        setProgress(progressUpdate);
+      }
+  
+      setGradeData(updatedGradeData);
+      setHtmlContent(JSON.stringify(updatedGradeData));
+  
+      setProgress(1);
+    } catch (err) {
+      setError("An error occurred while navigating through the grade details. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Wait for login data to load (this is very fast so it will most likely not be shown)
@@ -327,6 +361,14 @@ const Dualis: React.FC = () => {
       </View>
       {loading && <Progress.Bar progress={progress} width={null} />}
       {error ? <Text className="text-red-500 mt-4">{error}</Text> : null}
+      {gpaSemesterData.map((semester, index) => (
+        <View key={index} className="mb-4">
+          <Text>Semester: {semester.semester}</Text>
+          <Text>{semester.name}</Text>
+          <Text>GPA: {semester.grade}</Text>
+          <Text>ECTS: {semester.ects}</Text>
+        </View>
+      ))}
       {gradeData.length > 0 ? (
         <View>
           <Heading text="Noten" />
@@ -346,11 +388,11 @@ const Dualis: React.FC = () => {
       <View className="mt-4 p-4 border border-gray-300 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <Text>{semester.name}</Text>
-                <Text>{semester.value}</Text>
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Text>{semester.name}</Text>
+              <Text>{semester.value}</Text>
+            </View>
+          ))
           : null}
         <Text>ECTS: {ectsData.ectsSum}</Text>
         <Text>ECTS benötigt: {ectsData.ectsTotal}</Text>
@@ -358,15 +400,15 @@ const Dualis: React.FC = () => {
         <Text>Hauptfach-GPA: {gpaData.gpaSubject}</Text>
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
-              <View key={index} className="mb-4">
-                <Text className="text-lg font-semibold">
-                  {module.number} - {module.name}
-                </Text>
-                <Text>ECTS: {module.ects}</Text>
-                <Text>Note: {module.grade}</Text>
-                <Text>{module.passed ? "Bestanden" : ""}</Text>
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Text className="text-lg font-semibold">
+                {module.number} - {module.name}
+              </Text>
+              <Text>ECTS: {module.ects}</Text>
+              <Text>Note: {module.grade}</Text>
+              <Text>{module.passed ? "Bestanden" : ""}</Text>
+            </View>
+          ))
           : null}
       </View>
     </ScrollView>
