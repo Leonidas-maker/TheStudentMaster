@@ -33,6 +33,7 @@ from config.general import MAX_COURSE_NAME_LENGTH
 ###########################################################################
 
 
+
 def get_backend_ids(db: Session):
     """Function to get backend IDs for calendar updates."""
     backends = db.query(m_calendar.CalendarBackend).all()
@@ -42,6 +43,7 @@ def get_backend_ids(db: Session):
 def map_dhbw_app_site_to_university_name(site: str) -> str | None:
     """
     Function to map DHBW.APP sites to university names.
+
 
     This function maps the DHBW.APP site codes to the corresponding university names.
 
@@ -459,6 +461,7 @@ def prepareCalendarTables(db: Session):
     """
     Function to prepare calendar tables by adding initial data
 
+
     This function adds initial data to the calendar tables if they are empty.
 
     Args:
@@ -512,6 +515,7 @@ def prepareCalendarTables(db: Session):
             db.add(m_calendar.Tag(tag_name=tag))
 
     db.commit()
+
 
 
 ###########################################################################
@@ -1013,6 +1017,7 @@ async def update_custom_calendars(db: Session, progress, task_id, backend: m_cal
     """
     Function to update custom calendars for a specific backend.
 
+
     This function fetches updates for all custom calendars associated with the specified backend and updates the database accordingly.
 
     Args:
@@ -1080,6 +1085,7 @@ async def update_custom_calendars(db: Session, progress, task_id, backend: m_cal
 ###########################################################################
 ######################## Calendar_Users Management ########################
 ###########################################################################
+
 
 
 # ======================================================== #
@@ -1156,6 +1162,7 @@ def add_native_calendar_to_user(
     return None
 
 
+
 def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):
     """Function to add a custom calendar to a user.
     This function adds a new custom calendar to a user's calendar list.
@@ -1227,6 +1234,7 @@ def get_calendar(
 ) -> m_calendar.CalendarCustom | None:
     """
     Function to get a user's calendar.
+
 
     This function fetches a user's calendar based on the user ID.
 

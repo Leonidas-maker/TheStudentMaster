@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
 from utils.helpers.hashing import dict_hash
 
+
 # TODO Max size of source
 class CalendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
     def __init__(
