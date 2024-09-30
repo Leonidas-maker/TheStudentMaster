@@ -86,6 +86,29 @@ def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
     except Exception as e:
         print(e)
         db.rollback()
+        
+        
+def clean_canteen_menus(db: Session):
+    """This function deletes all menu items that are older than the current date.
+
+    Args:
+        db (Session): database session
+        progress (Progress): progress bar
+        task_id (TaskID): task id
+    """
+    try:
+        # get all menu items
+        menu_items = db.query(m_canteen.Menu).all()
+
+        # loop through all menu items
+        for menu_item in menu_items:
+            # check if menu item is older than current date
+            if menu_item.serving_date < datetime.now():
+                db.delete(menu_item)
+        db.commit()
+    except Exception as e:
+        print(e)
+        db.rollback()
 
 
 # ======================================================== #
