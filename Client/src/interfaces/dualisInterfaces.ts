@@ -30,9 +30,9 @@ interface GradeData {
   ects: string;
   status: string;
   detail: string;
+  semester: string;
   detailGrade: Array<{
     semester: string;
-    name: string;
     exam: string;
     date: string;
     grade: string;

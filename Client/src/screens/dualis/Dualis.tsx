@@ -34,7 +34,7 @@ import {
   GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
 import { filterGrade } from "../../scraper/dualis/gradeScraper";
-import { set } from "lodash";
+import { filterDetailGrade } from "../../scraper/dualis/detailGradeScraper";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -313,13 +313,17 @@ const Dualis: React.FC = () => {
         const response = await axiosInstance.get(detailUrl);
         const content = response.data;
 
+        const detailGradeData = filterDetailGrade(content, grade);
+
+        updatedGradeData[i] = detailGradeData;
+
         const progressUpdate =
           0.75 + (0.25 * (i + 1)) / updatedGradeData.length;
         setProgress(progressUpdate);
       }
 
       setGradeData(updatedGradeData);
-      setHtmlContent(JSON.stringify(updatedGradeData));
+      setHtmlContent(JSON.stringify(updatedGradeData, null, 2));
 
       setProgress(1);
     } catch (err) {
@@ -327,10 +331,11 @@ const Dualis: React.FC = () => {
         "An error occurred while navigating through the grade details. Please try again.",
       );
       console.error(err);
-    } finally {
-      setLoading(false);
     }
+    console.log(JSON.stringify(gradeData, null, 2));
+    setLoading(false);
   };
+
 
   // Wait for login data to load (this is very fast so it will most likely not be shown)
   if (isLoginLoading) {
@@ -389,6 +394,7 @@ const Dualis: React.FC = () => {
               <Text>Note: {grade.grade}</Text>
               <Text>Status: {grade.status}</Text>
               <Text>Detail: {grade.detail}</Text>
+              <Text>Semester: {grade.semester}</Text>
             </View>
           ))}
         </View>
@@ -396,11 +402,11 @@ const Dualis: React.FC = () => {
       <View className="mt-4 p-4 border border-gray-300 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <Text>{semester.name}</Text>
-                <Text>{semester.value}</Text>
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Text>{semester.name}</Text>
+              <Text>{semester.value}</Text>
+            </View>
+          ))
           : null}
         <Text>ECTS: {ectsData.ectsSum}</Text>
         <Text>ECTS benötigt: {ectsData.ectsTotal}</Text>
@@ -408,15 +414,15 @@ const Dualis: React.FC = () => {
         <Text>Hauptfach-GPA: {gpaData.gpaSubject}</Text>
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
-              <View key={index} className="mb-4">
-                <Text className="text-lg font-semibold">
-                  {module.number} - {module.name}
-                </Text>
-                <Text>ECTS: {module.ects}</Text>
-                <Text>Note: {module.grade}</Text>
-                <Text>{module.passed ? "Bestanden" : ""}</Text>
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Text className="text-lg font-semibold">
+                {module.number} - {module.name}
+              </Text>
+              <Text>ECTS: {module.ects}</Text>
+              <Text>Note: {module.grade}</Text>
+              <Text>{module.passed ? "Bestanden" : ""}</Text>
+            </View>
+          ))
           : null}
       </View>
     </ScrollView>
