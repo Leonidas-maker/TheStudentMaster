@@ -9,7 +9,6 @@ from urllib.parse import quote_plus
 from config.general import DEFAULT_TIMEZONE, ENVIRONMENT
 
 
-
 if ENVIRONMENT == "dev":
     # Load database configuration from a config file
     configPath = Path(os.getenv("CONFIG_PATH", Path(__file__).parent.parent.absolute() / "config.ini"))
@@ -24,13 +23,13 @@ if ENVIRONMENT == "dev":
     encoded_db_password = quote_plus(db_password)
 
     ssl_args = {
-    "ssl": {
-        "cert": "./config/certs/client-cert.pem",
-        "key": "./config/certs/client-key.pem",
-        "check_hostname": False,
-        "ca": "./config/certs/ca-cert.pem",
+        "ssl": {
+            "cert": "./config/certs/client-cert.pem",
+            "key": "./config/certs/client-key.pem",
+            "check_hostname": False,
+            "ca": "./config/certs/ca-cert.pem",
+        }
     }
-}
 
 elif ENVIRONMENT == "prod":
     # Extract database connection details from the environment variables
@@ -41,13 +40,13 @@ elif ENVIRONMENT == "prod":
     # Get Docker secrets for the database user and password
     try:
         ssl_args = {
-    "ssl": {
-        "cert": "/run/secrets/tsm_db_cert",
-        "key": "/run/secrets/tsm_db_key",
-        "check_hostname": False,
-        "ca": "/run/secrets/tsm_mariadb_ca_cert",
-    }
-}
+            "ssl": {
+                "cert": "/run/secrets/tsm_db_cert",
+                "key": "/run/secrets/tsm_db_key",
+                "check_hostname": False,
+                "ca": "/run/secrets/tsm_mariadb_ca_cert",
+            }
+        }
         with open("/run/secrets/tsm_db_password", "r") as file:
             db_password = file.read().strip()
             encoded_db_password = quote_plus(db_password)
