@@ -345,7 +345,7 @@ const Dualis: React.FC = () => {
       </View>
     );
   }
-  
+
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Bei Dualis anmelden" />
@@ -429,7 +429,7 @@ const Dualis: React.FC = () => {
           : null}
       </View>
     </ScrollView>
-  );  
+  );
 };
 
 export default Dualis;

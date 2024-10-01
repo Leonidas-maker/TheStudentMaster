@@ -20,7 +20,7 @@ export const loginDualis = async (
   extractAuthArguments: (header: string) => string,
   navigateToPerformanceOverview: (authArgs: string) => Promise<void>,
   navigateToExamResults: (authArgs: string) => Promise<void>,
-  saveLogin: boolean
+  saveLogin: boolean,
 ) => {
   try {
     const url = `${BASE_URL}/scripts/mgrqispi.dll`;
@@ -32,7 +32,7 @@ export const loginDualis = async (
     formData.append("PRGNAME", "LOGINCHECK");
     formData.append(
       "ARGUMENTS",
-      "clino,usrname,pass,menuno,menu_type,browser,platform"
+      "clino,usrname,pass,menuno,menu_type,browser,platform",
     );
     formData.append("clino", "000000000000001");
     formData.append("menuno", "000324");
