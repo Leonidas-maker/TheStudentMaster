@@ -108,7 +108,7 @@ async def lifespan(app: FastAPI):
         with_progress=False,
     )
 
-    task_scheduler.start(run_startup_tasks=False)
+    task_scheduler.start(run_startup_tasks=True)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
@@ -156,9 +156,3 @@ app.include_router(user.users_router, prefix="/user", tags=["user"])
 app.include_router(auth.auth_router, prefix="/auth", tags=["auth"])
 app.include_router(canteen.canteen_router, prefix="/canteen", tags=["canteen"])
 app.include_router(calendar.calendar_router, prefix="/calendar", tags=["calendar"])
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run("main:app", workers=4, host="0.0.0.0", port=8000, reload=True)

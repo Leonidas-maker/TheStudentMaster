@@ -143,7 +143,8 @@ def generate_ecdsa_keys(curve: ec.EllipticCurve):
 
 # Function to save a key to a file
 def save_key(key: bytes, file_name: str, folder_path: Path):
-    with (folder_path / file_name).open("wb") as key_file:
+    file = folder_path / f"{file_name}.pem"
+    with file.open("wb") as key_file:
         key_file.write(key)
 
 
@@ -154,30 +155,19 @@ def load_key(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ):
     if ENVIRONMENT == "dev":
-        if "private" in file_name:
-            with (folder_path / file_name).open("rb") as key_file:
+        try:
+            file = folder_path / f"{file_name}.pem"
+            with file.open("rb") as key_file:
                 key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
-        elif "public" in file_name:
-            with (folder_path / file_name).open("rb") as key_file:
-                key = load_pem_public_key(key_file.read(), backend=default_backend())
-        else:
-            raise ValueError("Invalid file_name")
+        except FileNotFoundError as e:
+            raise RuntimeError(f"Private key: {file_name} not found") from e
 
     elif ENVIRONMENT == "prod":
-        if "private" in file_name:
-            try:
-                with open(f"/run/secrets/the_student_master_{file_name}", "rb") as key_file:
-                    key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
-            except FileNotFoundError as e:
-                raise RuntimeError(f"Private key: the_student_master_{file_name} not found in secrets") from e
-        elif "public" in file_name:
-            try:
-                with open(f"/run/secrets/the_student_master_{file_name}", "rb") as key_file:
-                    key = load_pem_public_key(key_file.read(), backend=default_backend())
-            except FileNotFoundError as e:
-                raise RuntimeError(f"Public key: the_student_master_{file_name} not found in secrets") from e
-        else:
-            raise ValueError("Invalid file_name")
+        try:
+            with open(f"/run/secrets/tsm_{file_name}", "rb") as key_file:
+                key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
+        except FileNotFoundError as e:
+            raise RuntimeError(f"Private key: tsm_{file_name} not found in secrets") from e
 
     return key
 
@@ -186,10 +176,10 @@ def load_key(
 def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys"):
     access_private_key, access_public_key = generate_ecdsa_keys(ec.SECP256R1())
     refresh_private_key, refresh_public_key = generate_ecdsa_keys(ec.SECP521R1())
-    save_key(access_private_key, "access_private_key.pem", folder_path)
-    save_key(access_public_key, "access_public_key.pem", folder_path)
-    save_key(refresh_private_key, "refresh_private_key.pem", folder_path)
-    save_key(refresh_public_key, "refresh_public_key.pem", folder_path)
+    save_key(access_private_key, "access_private_key", folder_path)
+    save_key(access_public_key, "access_public_key", folder_path)
+    save_key(refresh_private_key, "refresh_private_key", folder_path)
+    save_key(refresh_public_key, "refresh_public_key", folder_path)
 
 
 # ======================================================== #
@@ -198,7 +188,7 @@ def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_ke
 
 
 # Get the private keys for tokens, generate if not exist
-def get_tokens_private(
+def get_keys_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
     if (
@@ -209,10 +199,10 @@ def get_tokens_private(
         generate_keys()
 
     # Get the refresh private key
-    refresh_private_key = load_key("refresh_private_key.pem")
+    refresh_private_key = load_key("refresh_private_key")
 
     # Get the access private key
-    access_private_key = load_key("access_private_key.pem")
+    access_private_key = load_key("access_private_key")
 
     return refresh_private_key, access_private_key
 
@@ -223,9 +213,9 @@ def get_security_token_private(
 ) -> ec.EllipticCurvePrivateKey:
     if ENVIRONMENT == "dev" and not (folder_path / "security_private_key.pem").exists():
         security_private_key, security_public_key = generate_ecdsa_keys(ec.SECP256R1())
-        save_key(security_private_key, "security_private_key.pem", folder_path)
-        save_key(security_public_key, "security_public_key.pem", folder_path)
-    security_private_key = load_key("security_private_key.pem")
+        save_key(security_private_key, "security_private_key", folder_path)
+        save_key(security_public_key, "security_public_key", folder_path)
+    security_private_key = load_key("security_private_key")
     return security_private_key
 
 
@@ -234,11 +224,11 @@ def get_refresh_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if ENVIRONMENT == "dev" and not (folder_path / "refresh_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "refresh_public_key").exists():
         generate_keys()
 
     # Get the refresh public key
-    public_key = load_key("refresh_public_key.pem")
+    public_key = load_key("refresh_public_key")
 
     return public_key
 
@@ -248,11 +238,11 @@ def get_access_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if ENVIRONMENT == "dev" and not (folder_path / "access_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "access_public_key").exists():
         generate_keys()
 
     # Get the access public key
-    public_key = load_key("access_public_key.pem")
+    public_key = load_key("access_public_key")
 
     return public_key
 
@@ -262,11 +252,11 @@ def get_security_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if ENVIRONMENT == "dev" and not (folder_path / "security_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "security_public_key").exists():
         generate_keys()
 
     # Get the access public key
-    public_key = load_key("security_public_key.pem")
+    public_key = load_key("security_public_key")
 
     return public_key
 
@@ -514,7 +504,7 @@ def create_tokens(
         raise HTTPException(status_code=403, detail="Too many active temporary instances")
 
     # Get the private keys and create the JTI
-    refresh_private_key, access_private_key = get_tokens_private()
+    refresh_private_key, access_private_key = get_keys_private()
     refresh_jti = uuid.uuid4()
     access_jti = uuid.uuid4()
 

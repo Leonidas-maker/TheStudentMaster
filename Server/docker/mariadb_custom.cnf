@@ -1,0 +1,4 @@
+[mysqld]
+ssl-ca=/run/secrets/mariadb_ca_cert
+ssl-cert=/run/secrets/mariadb_server_cert
+ssl-key=/run/secrets/mariadb_server_key

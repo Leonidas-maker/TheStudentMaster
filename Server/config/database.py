@@ -4,25 +4,11 @@ import configparser
 from pathlib import Path
 import os
 from rich.console import Console
+from urllib.parse import quote_plus
 
 from config.general import DEFAULT_TIMEZONE, ENVIRONMENT
-from config.db_certs import generate_client_cert
 
 
-# Generate a client certificate if it is the first boot
-first_boot = os.getenv("FIRST_BOOT", "true").lower() == "true"
-if first_boot:
-    console = Console()
-    generate_client_cert(console)
-    os.environ["FIRST_BOOT"] = "false"
-
-ssl_args = {
-    "ssl": {
-        "cert": "./config/certs/client-cert.pem",
-        "key": "./config/certs/client-key.pem",
-        "check_hostname": False,
-    }
-}
 
 if ENVIRONMENT == "dev":
     # Load database configuration from a config file
@@ -35,32 +21,46 @@ if ENVIRONMENT == "dev":
     db_user = config["DATABASE"]["user"]
     db_password = config["DATABASE"]["password"]
     db_database = config["DATABASE"]["database"]
-    ssl_args["ssl"]["passphrase"] = "devpassword"
-    ssl_args["ssl"]["ca"] = "./config/certs/ca-cert.pem"
+    encoded_db_password = quote_plus(db_password)
+
+    ssl_args = {
+    "ssl": {
+        "cert": "./config/certs/client-cert.pem",
+        "key": "./config/certs/client-key.pem",
+        "check_hostname": False,
+        "ca": "./config/certs/ca-cert.pem",
+    }
+}
 
 elif ENVIRONMENT == "prod":
     # Extract database connection details from the environment variables
-    host = os.getenv("DB_HOST")
-    database = os.getenv("DB_DATABASE")
+    db_host = os.getenv("DB_HOST")
+    db_database = os.getenv("DB_DATABASE")
+    db_user = os.getenv("DB_USER")
 
     # Get Docker secrets for the database user and password
     try:
-        with open("/run/secrets/the_student_master_db_user", "r") as file:
-            db_user = file.read().strip()
-        with open("/run/secrets/the_student_master_db_password", "r") as file:
+        ssl_args = {
+    "ssl": {
+        "cert": "/run/secrets/tsm_db_cert",
+        "key": "/run/secrets/tsm_db_key",
+        "check_hostname": False,
+        "ca": "/run/secrets/tsm_mariadb_ca_cert",
+    }
+}
+        with open("/run/secrets/tsm_db_password", "r") as file:
             db_password = file.read().strip()
-        with open("/run/secrets/the_student_master_db_cert_password", "r") as file:
+            encoded_db_password = quote_plus(db_password)
+        with open("/run/secrets/tsm_db_cert_password", "r") as file:
             cert_password = file.read().strip()
             ssl_args["ssl"]["passphrase"] = cert_password
-
-        ssl_args["ssl"]["ca"] = "/run/secrets/the_student_master_db_ca_cert"
     except FileNotFoundError as e:
         raise RuntimeError("Database user and password secrets not found") from e
 else:
     raise RuntimeError("Invalid environment, must be either dev or prod")
 
 # Create the database URL and SQLAlchemy engine
-SQLALCHEMY_DATABASE_URL = f"mariadb+pymysql://{db_user}:{db_password}@{db_host}/{db_database}?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URL = f"mariadb+pymysql://{db_user}:{encoded_db_password}@{db_host}/{db_database}?charset=utf8mb4"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=ssl_args, pool_pre_ping=True)
 
 

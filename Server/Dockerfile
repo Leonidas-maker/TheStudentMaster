@@ -21,7 +21,7 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
+    --home "/home/appuser" \ 
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
@@ -35,6 +35,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     python -m pip install --upgrade pip && \
     python -m pip install -r requirements.txt
 
+# Create necessary directories and assign permissions to appuser
+RUN mkdir -p /app/config/certs /home/appuser/.cache/fastapi-cdn-host && \
+    chown -R appuser:appuser /app/config/certs /home/appuser/.cache
+
 # Switch to the non-privileged user.
 USER appuser
 
@@ -46,4 +50,4 @@ EXPOSE 8001
 
 # Define the command to run the FastAPI application with 4 workers and auto-reload.
 # Note: The --reload flag is typically used for development and may not be suitable for production.
-CMD ["fastapi", "run", "--workers", "4", "main.py", "--reload", "--port 8000"]
+CMD ["fastapi", "run", "main.py", "--workers", "4", "--port", "8001", "--host", "0.0.0.0"]
