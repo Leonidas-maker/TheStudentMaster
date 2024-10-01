@@ -20,6 +20,7 @@ import OverviewStack from "./OverviewStack";
 import Dashboard from "../screens/dashboard/Dashboard";
 import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
+import Login from "../screens/accountManagement/login/Login";
 
 // Create BottomTabNavigator
 const Tab = createBottomTabNavigator();
@@ -101,6 +102,22 @@ const HomeBottomTabs: React.FC = () => {
                 );
               } else {
                 return <MealPlanSVG width={size} height={size} fill={color} />;
+              }
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Dualis"
+          component={Dualis}
+          options={{
+            headerTitle: "TheStudentMaster",
+            tabBarIcon: ({ color, size, focused }) => {
+              if (focused) {
+                return (
+                  <ActiveDualisSVG width={size} height={size} fill={color} />
+                );
+              } else {
+                return <DualisSVG width={size} height={size} fill={color} />;
               }
             },
           }}

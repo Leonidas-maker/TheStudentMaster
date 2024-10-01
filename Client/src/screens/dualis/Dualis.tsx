@@ -35,6 +35,7 @@ import {
 } from "../../interfaces/dualisInterfaces";
 import { filterGrade } from "../../scraper/dualis/gradeScraper";
 import { filterDetailGrade } from "../../scraper/dualis/detailGradeScraper";
+import Subheading from "../../components/textFields/Subheading";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -332,7 +333,6 @@ const Dualis: React.FC = () => {
       );
       console.error(err);
     }
-    console.log(JSON.stringify(gradeData, null, 2));
     setLoading(false);
   };
 
@@ -341,11 +341,11 @@ const Dualis: React.FC = () => {
     return (
       <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Lade Anmeldedaten...</Text>
+        <DefaultText text="Lade Anmeldedaten..." />
       </View>
     );
   }
-
+  
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <Heading text="Bei Dualis anmelden" />
@@ -372,60 +372,64 @@ const Dualis: React.FC = () => {
         <DefaultButton text="Login" onPress={login} />
       </View>
       {loading && <Progress.Bar progress={progress} width={null} />}
-      {error ? <Text className="text-red-500 mt-4">{error}</Text> : null}
-      {gpaSemesterData.map((semester, index) => (
-        <View key={index} className="mb-4">
-          <Text>Semester: {semester.semester}</Text>
-          <Text>{semester.name}</Text>
-          <Text>GPA: {semester.grade}</Text>
-          <Text>ECTS: {semester.ects}</Text>
-        </View>
-      ))}
+      {error ? <DefaultText text={error} /> : null}
+      <Heading text="Noten" />
       {gradeData.length > 0 ? (
         <View>
-          <Heading text="Noten" />
           {gradeData.map((grade, index) => (
             <View key={index} className="mb-4">
-              <Text className="text-lg font-semibold">
-                {grade.number} - {grade.name}
-              </Text>
-              <Text>ECTS: {grade.ects}</Text>
-              <Text>Note: {grade.grade}</Text>
-              <Text>Status: {grade.status}</Text>
-              <Text>Detail: {grade.detail}</Text>
-              <Text>Semester: {grade.semester}</Text>
+              <Subheading text={`${grade.number} - ${grade.name}`} />
+              <DefaultText text={`ECTS: ${grade.ects}`} />
+              <DefaultText text={`Note: ${grade.grade}`} />
+              <DefaultText text={`Status: ${grade.status}`} />
+              <DefaultText text={`Detail: ${grade.detail}`} />
+              <DefaultText text={`Semester: ${grade.semester}`} />
+              {grade.detailGrade.map((detail, detailIndex) => (
+                <View key={detailIndex} className="mb-4">
+                  <DefaultText text={detail.semester} />
+                  <DefaultText text={detail.exam} />
+                  <DefaultText text={detail.date} />
+                  <DefaultText text={detail.grade} />
+                </View>
+              ))}
             </View>
           ))}
         </View>
       ) : null}
-      <View className="mt-4 p-4 border border-gray-300 rounded w-full">
+      {gpaSemesterData.map((semester, index) => (
+        <View key={index} className="mb-4">
+          <DefaultText text={`Semester: ${semester.semester}`} />
+          <DefaultText text={semester.name} />
+          <DefaultText text={`GPA: ${semester.grade}`} />
+          <DefaultText text={`ECTS: ${semester.ects}`} />
+        </View>
+      ))}
+      <View className="mt-4 p-4 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
               <View key={index} className="mb-4">
-                <Text>{semester.name}</Text>
-                <Text>{semester.value}</Text>
+                <DefaultText text={semester.name} />
+                <DefaultText text={semester.value} />
               </View>
             ))
           : null}
-        <Text>ECTS: {ectsData.ectsSum}</Text>
-        <Text>ECTS benötigt: {ectsData.ectsTotal}</Text>
-        <Text>Gesamt-GPA: {gpaData.gpaTotal}</Text>
-        <Text>Hauptfach-GPA: {gpaData.gpaSubject}</Text>
+        <DefaultText text={`ECTS: ${ectsData.ectsSum}`} />
+        <DefaultText text={`ECTS benötigt: ${ectsData.ectsTotal}`} />
+        <DefaultText text={`Gesamt-GPA: ${gpaData.gpaTotal}`} />
+        <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
               <View key={index} className="mb-4">
-                <Text className="text-lg font-semibold">
-                  {module.number} - {module.name}
-                </Text>
-                <Text>ECTS: {module.ects}</Text>
-                <Text>Note: {module.grade}</Text>
-                <Text>{module.passed ? "Bestanden" : ""}</Text>
+                <Subheading text={`${module.number} - ${module.name}`} />
+                <DefaultText text={`ECTS: ${module.ects}`} />
+                <DefaultText text={`Note: ${module.grade}`} />
+                <DefaultText text={module.passed ? "Bestanden" : ""} />
               </View>
             ))
           : null}
       </View>
     </ScrollView>
-  );
+  );  
 };
 
 export default Dualis;
