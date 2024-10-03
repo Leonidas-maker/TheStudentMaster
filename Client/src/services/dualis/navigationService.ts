@@ -63,28 +63,28 @@ export const navigateToPerformanceOverview = async (
 };
 
 export const navigateToExamResults = async (
-    authArguments: string,
-    setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
-    setProgress: (progress: number) => void,
-    setError: (msg: string) => void,
-  ) => {
-    setProgress(0.35);
-    try {
-      const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
-      const response = await axiosInstance.get(examResultsUrl);
-      const content = response.data;
-  
-      // Directly filter and update the semesterData state
-      filterSemester(content, setSemesterData);
-  
-      setProgress(0.4);
-    } catch (err) {
-      setError(
-        "An error occurred while navigating to the exam results. Please try again.",
-      );
-      console.error(err);
-    }
-  };
+  authArguments: string,
+  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
+  setProgress: (progress: number) => void,
+  setError: (msg: string) => void,
+) => {
+  setProgress(0.35);
+  try {
+    const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
+    const response = await axiosInstance.get(examResultsUrl);
+    const content = response.data;
+
+    // Directly filter and update the semesterData state
+    filterSemester(content, setSemesterData);
+
+    setProgress(0.4);
+  } catch (err) {
+    setError(
+      "An error occurred while navigating to the exam results. Please try again.",
+    );
+    console.error(err);
+  }
+};
 
 export const navigateThroughSemesters = async (
   authArguments: string,
@@ -112,7 +112,6 @@ export const navigateThroughSemesters = async (
 
     // Pass both setGradeData and setGpaSemesterData to filterGrade
     filterGrade(allSemesterData, setGradeData, setGpaSemesterData);
-
   } catch (err) {
     setError(
       "An error occurred while navigating through the semesters. Please try again.",
