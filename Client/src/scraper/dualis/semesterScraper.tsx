@@ -46,6 +46,7 @@ export const filterSemester = (
   parser.write(html);
   parser.end();
 
+  // Directly update the state with the new semester data
   setSemesterData({
     semester: semester,
   });

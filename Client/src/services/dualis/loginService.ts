@@ -1,5 +1,9 @@
 import axios from "axios";
 
+import { navigateToPerformanceOverview, navigateToExamResults } from "./navigationService";
+
+import { ModuleData, GpaData, EctsData, SemesterData } from "../../interfaces/dualisInterfaces";
+
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
 
@@ -11,16 +15,26 @@ const axiosInstance = axios.create({
   },
 });
 
+// Extract auth arguments from the refresh header
+export const extractAuthArguments = (refreshHeader: string) => {
+  if (refreshHeader) {
+    return refreshHeader.slice(84).replace("-N000000000000000", "");
+  }
+  return "";
+};
+
 export const loginDualis = async (
   username: string,
   password: string,
   saveCredentials: () => void,
   setError: (msg: string) => void,
   setAuthArguments: (authArgs: string) => void,
-  extractAuthArguments: (header: string) => string,
-  navigateToPerformanceOverview: (authArgs: string) => Promise<void>,
-  navigateToExamResults: (authArgs: string) => Promise<void>,
-  saveLogin: boolean,
+  setModuleData: React.Dispatch<React.SetStateAction<ModuleData[]>>,
+  setGpaData: React.Dispatch<React.SetStateAction<GpaData>>,
+  setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
+  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
+  setProgress: (progress: number) => void,
+  saveLogin: boolean
 ) => {
   try {
     const url = `${BASE_URL}/scripts/mgrqispi.dll`;
@@ -56,8 +70,8 @@ export const loginDualis = async (
     const authArgs = extractAuthArguments(response.headers["refresh"]);
     setAuthArguments(authArgs);
 
-    await navigateToPerformanceOverview(authArgs);
-    await navigateToExamResults(authArgs);
+    await navigateToPerformanceOverview(authArgs, setModuleData, setGpaData, setEctsData, setProgress, setError);
+    await navigateToExamResults(authArgs, setSemesterData, setProgress, setError);
 
     // Save credentials after successful login
     if (saveLogin) {

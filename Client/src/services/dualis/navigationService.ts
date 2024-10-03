@@ -27,7 +27,6 @@ const axiosInstance = axios.create({
 
 export const navigateToPerformanceOverview = async (
   authArguments: string,
-  setHtmlContent: (html: string) => void,
   setModuleData: React.Dispatch<React.SetStateAction<ModuleData[]>>,
   setGpaData: React.Dispatch<React.SetStateAction<GpaData>>,
   setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
@@ -40,7 +39,6 @@ export const navigateToPerformanceOverview = async (
     const response = await axiosInstance.get(performanceUrl);
     const content = response.data;
 
-    setHtmlContent(content);
     setModuleData((prevModules) => {
       filterPerformanceOverview(content, (modules) => modules);
       return prevModules;
@@ -65,38 +63,34 @@ export const navigateToPerformanceOverview = async (
 };
 
 export const navigateToExamResults = async (
-  authArguments: string,
-  setHtmlContent: (html: string) => void,
-  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
-  setProgress: (progress: number) => void,
-  setError: (msg: string) => void,
-) => {
-  setProgress(0.35);
-  try {
-    const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
-    const response = await axiosInstance.get(examResultsUrl);
-    const content = response.data;
-
-    setHtmlContent(content);
-    setSemesterData((prevSemester) => {
-      filterSemester(content, (semester) => semester);
-      return prevSemester;
-    });
-    setProgress(0.4);
-  } catch (err) {
-    setError(
-      "An error occurred while navigating to the exam results. Please try again.",
-    );
-    console.error(err);
-  }
-};
+    authArguments: string,
+    setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
+    setProgress: (progress: number) => void,
+    setError: (msg: string) => void,
+  ) => {
+    setProgress(0.35);
+    try {
+      const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
+      const response = await axiosInstance.get(examResultsUrl);
+      const content = response.data;
+  
+      // Directly filter and update the semesterData state
+      filterSemester(content, setSemesterData);
+  
+      setProgress(0.4);
+    } catch (err) {
+      setError(
+        "An error occurred while navigating to the exam results. Please try again.",
+      );
+      console.error(err);
+    }
+  };
 
 export const navigateThroughSemesters = async (
   authArguments: string,
   semesterArray: Array<{ name: string; value: string }>,
-  setHtmlContent: (html: string) => void,
   setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
-  setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>, // This was missing
+  setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
 ) => {
@@ -119,7 +113,6 @@ export const navigateThroughSemesters = async (
     // Pass both setGradeData and setGpaSemesterData to filterGrade
     filterGrade(allSemesterData, setGradeData, setGpaSemesterData);
 
-    setHtmlContent(JSON.stringify(allSemesterData));
   } catch (err) {
     setError(
       "An error occurred while navigating through the semesters. Please try again.",
@@ -130,7 +123,6 @@ export const navigateThroughSemesters = async (
 
 export const navigateThroughGradeDetails = async (
   gradeData: GradeData[],
-  setHtmlContent: (html: string) => void,
   setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
@@ -155,7 +147,6 @@ export const navigateThroughGradeDetails = async (
     }
 
     setGradeData((prevGradeData) => updatedGradeData);
-    setHtmlContent(JSON.stringify(updatedGradeData, null, 2));
     setProgress(1);
   } catch (err) {
     setError(
