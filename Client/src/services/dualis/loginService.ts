@@ -1,17 +1,5 @@
 import axios from "axios";
 
-import {
-  navigateToPerformanceOverview,
-  navigateToExamResults,
-} from "./navigationService";
-
-import {
-  ModuleData,
-  GpaData,
-  EctsData,
-  SemesterData,
-} from "../../interfaces/dualisInterfaces";
-
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
 
@@ -37,11 +25,6 @@ export const loginDualis = async (
   saveCredentials: () => void,
   setError: (msg: string) => void,
   setAuthArguments: (authArgs: string) => void,
-  setModuleData: React.Dispatch<React.SetStateAction<ModuleData[]>>,
-  setGpaData: React.Dispatch<React.SetStateAction<GpaData>>,
-  setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
-  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
-  setProgress: (progress: number) => void,
   saveLogin: boolean,
 ) => {
   try {
@@ -77,21 +60,6 @@ export const loginDualis = async (
     // Extract auth arguments and save them
     const authArgs = extractAuthArguments(response.headers["refresh"]);
     setAuthArguments(authArgs);
-
-    await navigateToPerformanceOverview(
-      authArgs,
-      setModuleData,
-      setGpaData,
-      setEctsData,
-      setProgress,
-      setError,
-    );
-    await navigateToExamResults(
-      authArgs,
-      setSemesterData,
-      setProgress,
-      setError,
-    );
 
     // Save credentials after successful login
     if (saveLogin) {

@@ -31,20 +31,11 @@ import {
 import Subheading from "../../components/textFields/Subheading";
 import { loginDualis } from "../../services/dualis/loginService";
 import {
+  navigateToPerformanceOverview,
+  navigateToExamResults,
   navigateThroughSemesters,
   navigateThroughGradeDetails,
 } from "../../services/dualis/navigationService";
-
-// Define the base URL for the Dualis API
-const BASE_URL = "https://dualis.dhbw.de";
-
-// Create an axios instance with specific configuration
-const axiosInstance = axios.create({
-  maxRedirects: 5,
-  validateStatus: function (status) {
-    return status >= 200 && status < 300;
-  },
-});
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -52,7 +43,6 @@ const axiosInstance = axios.create({
 const Dualis: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [htmlContent, setHtmlContent] = useState("");
   const [error, setError] = useState("");
   const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
   const [gradeData, setGradeData] = useState<GradeData[]>([]);
@@ -148,17 +138,47 @@ const Dualis: React.FC = () => {
       saveCredentials,
       setError,
       setAuthArguments,
-      setModuleData,
-      setGpaData,
-      setEctsData,
-      setSemesterData,
-      setProgress,
       saveLogin,
     );
   };
 
   useEffect(() => {
+    const handlePerformanceOverviewNavigation = async () => {
+      console.debug();
+      if (authArguments) {
+        await navigateToPerformanceOverview(
+          authArguments,
+          setModuleData,
+          setGpaData,
+          setEctsData,
+          setProgress,
+          setError,
+        );
+      }
+    };
+
+    handlePerformanceOverviewNavigation();
+  }, [authArguments]);
+
+  useEffect(() => {
+    const handleExamResultsNavigation = async () => {
+      console.debug();
+      if (authArguments) {
+        await navigateToExamResults(
+          authArguments,
+          setSemesterData,
+          setProgress,
+          setError,
+        );
+      }
+    };
+
+    handleExamResultsNavigation();
+  }, [authArguments]);
+
+  useEffect(() => {
     const handleSemesterNavigation = async () => {
+      console.debug(semesterData.semester.length, authArguments, navigatedThroughSemesters);
       if (
         semesterData.semester.length > 0 &&
         authArguments &&
@@ -181,6 +201,7 @@ const Dualis: React.FC = () => {
 
   useEffect(() => {
     const handleGradeDetailsNavigation = async () => {
+      console.debug(gradeData.length, authArguments, navigatedThroughGradeDetails);
       if (
         gradeData.length > 0 &&
         authArguments &&
@@ -271,11 +292,11 @@ const Dualis: React.FC = () => {
       <View className="mt-4 p-4 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <DefaultText text={semester.name} />
-                <DefaultText text={semester.value} />
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <DefaultText text={semester.name} />
+              <DefaultText text={semester.value} />
+            </View>
+          ))
           : null}
         <DefaultText text={`ECTS: ${ectsData.ectsSum}`} />
         <DefaultText text={`ECTS benötigt: ${ectsData.ectsTotal}`} />
@@ -283,13 +304,13 @@ const Dualis: React.FC = () => {
         <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
-              <View key={index} className="mb-4">
-                <Subheading text={`${module.number} - ${module.name}`} />
-                <DefaultText text={`ECTS: ${module.ects}`} />
-                <DefaultText text={`Note: ${module.grade}`} />
-                <DefaultText text={module.passed ? "Bestanden" : ""} />
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Subheading text={`${module.number} - ${module.name}`} />
+              <DefaultText text={`ECTS: ${module.ects}`} />
+              <DefaultText text={`Note: ${module.grade}`} />
+              <DefaultText text={module.passed ? "Bestanden" : ""} />
+            </View>
+          ))
           : null}
       </View>
     </ScrollView>
