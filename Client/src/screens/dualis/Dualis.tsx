@@ -1,7 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, ActivityIndicator } from "react-native";
-import axios from "axios";
 import * as Progress from "react-native-progress";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
@@ -144,7 +143,6 @@ const Dualis: React.FC = () => {
 
   useEffect(() => {
     const handlePerformanceOverviewNavigation = async () => {
-      console.debug();
       if (authArguments) {
         await navigateToPerformanceOverview(
           authArguments,
@@ -162,7 +160,6 @@ const Dualis: React.FC = () => {
 
   useEffect(() => {
     const handleExamResultsNavigation = async () => {
-      console.debug();
       if (authArguments) {
         await navigateToExamResults(
           authArguments,
@@ -178,11 +175,6 @@ const Dualis: React.FC = () => {
 
   useEffect(() => {
     const handleSemesterNavigation = async () => {
-      console.debug(
-        semesterData.semester.length,
-        authArguments,
-        navigatedThroughSemesters,
-      );
       if (
         semesterData.semester.length > 0 &&
         authArguments &&
@@ -205,11 +197,6 @@ const Dualis: React.FC = () => {
 
   useEffect(() => {
     const handleGradeDetailsNavigation = async () => {
-      console.debug(
-        gradeData.length,
-        authArguments,
-        navigatedThroughGradeDetails,
-      );
       if (
         gradeData.length > 0 &&
         authArguments &&
