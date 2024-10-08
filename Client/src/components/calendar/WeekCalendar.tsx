@@ -32,11 +32,12 @@ import WeekSelector from "../selector/WeekSelector";
 import { EventTimeProps } from "../../interfaces/calendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
-if (Platform.OS === "android") {
-  if (UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-  }
-}
+//! Disabled because it causes a crash on Android
+// if (Platform.OS === "android") {
+//   if (UIManager.setLayoutAnimationEnabledExperimental) {
+//     UIManager.setLayoutAnimationEnabledExperimental(true);
+//   }
+// }
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -56,8 +57,12 @@ const WeekCalendar: React.FC = () => {
   // ===================== Animations ===================== //
   // ====================================================== //
   // Defines the animation for the transition between weeks (animation: easeInEaseOut)
+  //! Disabled animation on Android because it causes a crash
   const animateTransition = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (Platform.OS === "android") {
+    } else {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
   };
 
   useFocusEffect(

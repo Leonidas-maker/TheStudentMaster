@@ -6,6 +6,15 @@ TheStudentMaster is a project developed to facilitate the daily lives of student
 
 ---
 
+## 📲 Download TheStudentMaster
+
+TheStudentMaster is available on both iOS and Android platforms. Download the app using the following links:
+
+- [Download on iOS](https://thestudentmaster.de/get/ios)
+- [Download on Android](https://thestudentmaster.de/get/android)
+
+---
+
 ## 🌟 Planned Features
 
 - **🗓️ Timetable Management**: Manage your timetables, check lecture times, and quickly capture changes.
