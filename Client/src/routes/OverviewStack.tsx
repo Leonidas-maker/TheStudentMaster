@@ -25,6 +25,9 @@ import VerifyMfa from "../screens/accountManagement/mfa/VerifyMfa";
 import NewPassword from "../screens/accountManagement/forgotPassword/NewPassword";
 import VerifyForgot from "../screens/accountManagement/forgotPassword/VerifyForgot";
 import BackupMfa from "../screens/accountManagement/mfa/BackupMfa";
+import DualisLogin from "../screens/dualis/DualisLogin";
+import DualisLoad from "../screens/dualis/DualisLoad";
+import DualisSemester from "../screens/dualis/DualisSemester";
 
 // Create Stack
 const Stack = createStackNavigator();
@@ -104,6 +107,9 @@ const OverviewStack: React.FC = () => {
         <Stack.Screen name="NewPassword" component={NewPassword} />
         <Stack.Screen name="VerifyForgot" component={VerifyForgot} />
         <Stack.Screen name="BackupMfa" component={BackupMfa} />
+        <Stack.Screen name="DualisLogin" component={DualisLogin} />
+        <Stack.Screen name="DualisLoad" component={DualisLoad} />
+        <Stack.Screen name="DualisSemester" component={DualisSemester} />
       </Stack.Navigator>
     </>
   );

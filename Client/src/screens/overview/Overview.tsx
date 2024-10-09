@@ -260,6 +260,38 @@ const Overview: React.FC = () => {
   ];
 
   // ====================================================== //
+  // =================== DualisNavigator ================== //
+  // ====================================================== //
+  const handleDualisLoginPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisLogin" });
+  };
+
+  const handleDualisLoadPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisLoad" });
+  };
+
+  const handleDualisPerformancePress = () => {
+    navigation.navigate("OverviewStack", { screen: "Dualis" });
+  }
+
+  const handleDualisSemesterPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisSemester" });
+  };
+
+  const dualisTitle = "Dualis Screens";
+
+  const onPressDualisFunctions = [
+    handleDualisLoginPress,
+    handleDualisLoadPress,
+    handleDualisPerformancePress,
+    handleDualisSemesterPress,
+  ];
+
+  const dualisTexts = ["Login", "Load", "Performance Overview", "Semester View"];
+
+  const dualisIcons = ["apps", "apps", "apps", "apps"];
+
+  // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   // Returns the navigators and the current app version
@@ -278,6 +310,12 @@ const Overview: React.FC = () => {
         texts={accountTexts}
         iconNames={accountIconNames}
       /> */}
+      <Navigator
+        title={dualisTitle}
+        onPressFunctions={onPressDualisFunctions}
+        texts={dualisTexts}
+        iconNames={dualisIcons}
+      />
       <Navigator
         title={overviewTitle}
         onPressFunctions={onPressOverviewFunctions}
