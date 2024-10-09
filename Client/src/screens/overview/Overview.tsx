@@ -272,7 +272,7 @@ const Overview: React.FC = () => {
 
   const handleDualisPerformancePress = () => {
     navigation.navigate("OverviewStack", { screen: "Dualis" });
-  }
+  };
 
   const handleDualisSemesterPress = () => {
     navigation.navigate("OverviewStack", { screen: "DualisSemester" });
@@ -287,7 +287,12 @@ const Overview: React.FC = () => {
     handleDualisSemesterPress,
   ];
 
-  const dualisTexts = ["Login", "Load", "Performance Overview", "Semester View"];
+  const dualisTexts = [
+    "Login",
+    "Load",
+    "Performance Overview",
+    "Semester View",
+  ];
 
   const dualisIcons = ["apps", "apps", "apps", "apps"];
 
