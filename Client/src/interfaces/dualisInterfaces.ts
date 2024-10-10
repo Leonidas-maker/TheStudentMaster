@@ -1,4 +1,4 @@
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp } from "@react-navigation/native";
 
 // ====================================================== //
 // ================ Interfaces defintions =============== //
