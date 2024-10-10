@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, ActivityIndicator } from "react-native";
 import * as Progress from "react-native-progress";
+import { useRoute, RouteProp } from "@react-navigation/native"; // Import useRoute
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../components/textFields/DefaultText";
@@ -20,6 +21,7 @@ import {
   secureRemoveData,
 } from "../../components/storageManager/secureStorageManager";
 import {
+  DualisRouteParams,
   ModuleData,
   GpaData,
   EctsData,
@@ -40,23 +42,26 @@ import {
 // ====================== Component ===================== //
 // ====================================================== //
 const Dualis: React.FC = () => {
+  const route = useRoute<RouteProp<{ params: DualisRouteParams }, 'params'>>();
+
+  const {
+    moduleData: routeModuleData,
+    gpaData: routeGpaData,
+    ectsData: routeEctsData,
+    semesterData: routeSemesterData,
+    gradeData: routeGradeData,
+    gpaSemesterData: routeGpaSemesterData,
+  } = route.params;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
-  const [gradeData, setGradeData] = useState<GradeData[]>([]);
-  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>([]);
-  const [gpaData, setGpaData] = useState<GpaData>({
-    gpaTotal: "",
-    gpaSubject: "",
-  });
-  const [ectsData, setEctsData] = useState<EctsData>({
-    ectsTotal: "",
-    ectsSum: "",
-  });
-  const [semesterData, setSemesterData] = useState<SemesterData>({
-    semester: [],
-  });
+  const [moduleData, setModuleData] = useState<Array<ModuleData>>(routeModuleData || []);
+  const [gradeData, setGradeData] = useState<GradeData[]>(routeGradeData || []);
+  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>(routeGpaSemesterData || []);
+  const [gpaData, setGpaData] = useState<GpaData>(routeGpaData || { gpaTotal: "", gpaSubject: "" });
+  const [ectsData, setEctsData] = useState<EctsData>(routeEctsData || { ectsTotal: "", ectsSum: "" });
+  const [semesterData, setSemesterData] = useState<SemesterData>(routeSemesterData || { semester: [] });
   const [saveLogin, setSaveLogin] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -287,11 +292,11 @@ const Dualis: React.FC = () => {
       <View className="mt-4 p-4 rounded w-full">
         {semesterData.semester.length > 0
           ? semesterData.semester.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <DefaultText text={semester.name} />
-                <DefaultText text={semester.value} />
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <DefaultText text={semester.name} />
+              <DefaultText text={semester.value} />
+            </View>
+          ))
           : null}
         <DefaultText text={`ECTS: ${ectsData.ectsSum}`} />
         <DefaultText text={`ECTS benötigt: ${ectsData.ectsTotal}`} />
@@ -299,13 +304,13 @@ const Dualis: React.FC = () => {
         <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
         {moduleData.length > 0
           ? moduleData.map((module, index) => (
-              <View key={index} className="mb-4">
-                <Subheading text={`${module.number} - ${module.name}`} />
-                <DefaultText text={`ECTS: ${module.ects}`} />
-                <DefaultText text={`Note: ${module.grade}`} />
-                <DefaultText text={module.passed ? "Bestanden" : ""} />
-              </View>
-            ))
+            <View key={index} className="mb-4">
+              <Subheading text={`${module.number} - ${module.name}`} />
+              <DefaultText text={`ECTS: ${module.ects}`} />
+              <DefaultText text={`Note: ${module.grade}`} />
+              <DefaultText text={module.passed ? "Bestanden" : ""} />
+            </View>
+          ))
           : null}
       </View>
     </ScrollView>

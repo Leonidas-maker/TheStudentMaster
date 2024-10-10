@@ -1,6 +1,17 @@
+import { RouteProp } from '@react-navigation/native';
+
 // ====================================================== //
 // ================ Interfaces defintions =============== //
 // ====================================================== //
+interface DualisRouteParams {
+  moduleData: ModuleData[];
+  gpaData: GpaData;
+  ectsData: EctsData;
+  semesterData: SemesterData;
+  gradeData: GradeData[];
+  gpaSemesterData: GpaSemesterData[];
+}
+
 interface ModuleData {
   number: string;
   name: string;
@@ -50,6 +61,7 @@ interface GpaSemesterData {
 // ================== Interfaces export ================= //
 // ====================================================== //
 export {
+  DualisRouteParams,
   ModuleData,
   GpaData,
   EctsData,

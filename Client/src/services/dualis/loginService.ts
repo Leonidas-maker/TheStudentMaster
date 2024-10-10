@@ -1,4 +1,5 @@
 import axios from "axios";
+import { secureSaveData } from "../../components/storageManager/secureStorageManager";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -60,6 +61,7 @@ export const loginDualis = async (
     // Extract auth arguments and save them
     const authArgs = extractAuthArguments(response.headers["refresh"]);
     setAuthArguments(authArgs);
+    secureSaveData("dualisAuthArgs", authArgs);
 
     // Save credentials after successful login
     if (saveLogin) {
