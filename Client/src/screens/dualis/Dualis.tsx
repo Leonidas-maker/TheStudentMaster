@@ -103,11 +103,11 @@ const Dualis: React.FC = () => {
         <View className="mt-4 p-4 rounded w-full">
           {semesterData.semester.length > 0
             ? semesterData.semester.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <DefaultText text={semester.name} />
-                <DefaultText text={semester.value} />
-              </View>
-            ))
+                <View key={index} className="mb-4">
+                  <DefaultText text={semester.name} />
+                  <DefaultText text={semester.value} />
+                </View>
+              ))
             : null}
           <DefaultText text={`ECTS: ${ectsData.ectsSum}`} />
           <DefaultText text={`ECTS benötigt: ${ectsData.ectsTotal}`} />
@@ -115,13 +115,13 @@ const Dualis: React.FC = () => {
           <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
           {moduleData.length > 0
             ? moduleData.map((module, index) => (
-              <View key={index} className="mb-4">
-                <Subheading text={`${module.number} - ${module.name}`} />
-                <DefaultText text={`ECTS: ${module.ects}`} />
-                <DefaultText text={`Note: ${module.grade}`} />
-                <DefaultText text={module.passed ? "Bestanden" : ""} />
-              </View>
-            ))
+                <View key={index} className="mb-4">
+                  <Subheading text={`${module.number} - ${module.name}`} />
+                  <DefaultText text={`ECTS: ${module.ects}`} />
+                  <DefaultText text={`Note: ${module.grade}`} />
+                  <DefaultText text={module.passed ? "Bestanden" : ""} />
+                </View>
+              ))
             : null}
         </View>
       </ScrollView>
