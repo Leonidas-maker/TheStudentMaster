@@ -39,20 +39,16 @@ export const navigateToPerformanceOverview = async (
     const response = await axiosInstance.get(performanceUrl);
     const content = response.data;
 
-    setModuleData((prevModules) => {
-      filterPerformanceOverview(content, (modules) => modules);
-      return prevModules;
-    });
+    // Set the filtered module data directly
+    filterPerformanceOverview(content, setModuleData);
     setProgress(0.26);
-    setGpaData((prevGpa) => {
-      filterGPA(content, (gpa) => gpa);
-      return prevGpa;
-    });
+
+    // Set the filtered GPA data directly
+    filterGPA(content, setGpaData);
     setProgress(0.28);
-    setEctsData((prevEcts) => {
-      filterECTS(content, (ects) => ects);
-      return prevEcts;
-    });
+
+    // Set the filtered ECTS data directly
+    filterECTS(content, setEctsData);
     setProgress(0.3);
   } catch (err) {
     setError(

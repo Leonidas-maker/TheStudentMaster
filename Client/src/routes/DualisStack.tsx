@@ -5,12 +5,6 @@ import { useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 // ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
-import Settings from "../screens/settings/Settings";
-import Imprint from "../screens/imprint/Imprint";
-import ResponsibleDisclosure from "../screens/responsibleDisclosure/ResponsibleDisclosure";
-import Credits from "../screens/licenses/Licenses";
-import Support from "../screens/support/Support";
-import BugReport from "../screens/bugReport/BugReport";
 import DualisLogin from "../screens/dualis/DualisLogin";
 import DualisLoad from "../screens/dualis/DualisLoad";
 import DualisSemester from "../screens/dualis/DualisSemester";
