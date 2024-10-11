@@ -1,6 +1,15 @@
 import axios from "axios";
 import { secureSaveData } from "../../components/storageManager/secureStorageManager";
 
+import {
+  ModuleData,
+  GpaData,
+  EctsData,
+  SemesterData,
+  GradeData,
+  GpaSemesterData,
+} from "../../interfaces/dualisInterfaces";
+
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
 
@@ -18,6 +27,18 @@ export const extractAuthArguments = (refreshHeader: string) => {
     return refreshHeader.slice(84).replace("-N000000000000000", "");
   }
   return "";
+};
+
+export const logoutDualis = async (
+  authArguments: string,
+) => {
+  const url = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=LOGOUT&ARGUMENTS=${authArguments},-N001`;
+
+  await axiosInstance.get(url);
+  // For debug purposes
+  //const response = await axiosInstance.get(url);
+  // const content = response.data;
+  // console.log(content);
 };
 
 export const loginDualis = async (

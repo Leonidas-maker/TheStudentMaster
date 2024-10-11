@@ -1,13 +1,13 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useEffect, useState } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Pressable } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~~~ Import screens ~~~~~~~~~~~ //
 import DualisLogin from "../screens/dualis/DualisLogin";
 import DualisLoad from "../screens/dualis/DualisLoad";
-import DualisSemester from "../screens/dualis/DualisSemester";
 import Dualis from "../screens/dualis/Dualis";
 
 // Create Stack
@@ -34,6 +34,9 @@ const DualisStack: React.FC = () => {
       setIsLight(false);
     }
   }, [colorScheme]);
+
+  // Set the icon color based on the color scheme
+  const iconColor = isLight ? "#000000" : "#FFFFFF";
 
   // Set the colors based on the color scheme
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
@@ -69,15 +72,6 @@ const DualisStack: React.FC = () => {
         <Stack.Screen
           name="DualisLoad"
           component={DualisLoad}
-          options={{
-            headerShown: true,
-            headerBackTitle: "Weiteres",
-            headerTitle: "Dualis",
-          }}
-        />
-        <Stack.Screen
-          name="DualisSemester"
-          component={DualisSemester}
           options={{
             headerShown: true,
             headerBackTitle: "Weiteres",

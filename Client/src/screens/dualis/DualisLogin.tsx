@@ -20,21 +20,6 @@ import {
 } from "../../components/storageManager/secureStorageManager";
 
 import { loginDualis } from "../../services/dualis/loginService";
-import {
-  navigateToPerformanceOverview,
-  navigateToExamResults,
-  navigateThroughSemesters,
-  navigateThroughGradeDetails,
-} from "../../services/dualis/navigationService";
-
-import {
-  ModuleData,
-  GpaData,
-  EctsData,
-  SemesterData,
-  GradeData,
-  GpaSemesterData,
-} from "../../interfaces/dualisInterfaces";
 
 const DualisLogin: React.FC = () => {
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
@@ -48,24 +33,6 @@ const DualisLogin: React.FC = () => {
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
-  const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
-  const [gradeData, setGradeData] = useState<GradeData[]>([]);
-  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>([]);
-  const [gpaData, setGpaData] = useState<GpaData>({
-    gpaTotal: "",
-    gpaSubject: "",
-  });
-  const [ectsData, setEctsData] = useState<EctsData>({
-    ectsTotal: "",
-    ectsSum: "",
-  });
-  const [semesterData, setSemesterData] = useState<SemesterData>({
-    semester: [],
-  });
-  const [navigatedThroughSemesters, setNavigatedThroughSemesters] =
-    useState(false);
-  const [navigatedThroughGradeDetails, setNavigatedThroughGradeDetails] =
-    useState(false);
 
   // Function to handle login
   const login = async () => {
@@ -81,9 +48,10 @@ const DualisLogin: React.FC = () => {
       saveLogin,
     );
 
-    navigation.navigate("Dualis", {
-      screen: "DualisLoad",
-    });
+    navigation.reset({
+        index: 0,
+        routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
+      });
   };
 
   // useEffect(() => {
@@ -167,8 +135,8 @@ const DualisLogin: React.FC = () => {
   }
 
   return (
-    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
-      <View className="mt-10">
+    <View className="h-screen bg-light_primary dark:bg-dark_primary">
+      <View className="mt-12">
         <Heading text="Bei Dualis anmelden" />
       </View>
       <View className="items-center">
@@ -194,7 +162,7 @@ const DualisLogin: React.FC = () => {
         <DefaultButton text="Login" onPress={login} />
       </View>
       {error ? <DefaultText text={error} /> : null}
-    </ScrollView>
+    </View>
   );
 };
 

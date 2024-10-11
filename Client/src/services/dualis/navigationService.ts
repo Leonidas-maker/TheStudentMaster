@@ -13,6 +13,7 @@ import {
   GradeData,
   GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
+import { logoutDualis } from "./loginService";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -142,6 +143,7 @@ export const navigateThroughGradeDetails = async (
     }
 
     setGradeData((prevGradeData) => updatedGradeData);
+
     setProgress(1);
   } catch (err) {
     setError(
