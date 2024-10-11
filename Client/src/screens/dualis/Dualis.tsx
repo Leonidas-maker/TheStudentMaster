@@ -6,10 +6,7 @@ import { useRoute, RouteProp } from "@react-navigation/native"; // Import useRou
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DefaultText from "../../components/textFields/DefaultText";
-import TextFieldInput from "../../components/textInputs/TextFieldInput";
-import DefaultButton from "../../components/buttons/DefaultButton";
 import Heading from "../../components/textFields/Heading";
-import OptionSwitch from "../../components/switch/OptionSwitch";
 import {
   asyncSaveData,
   asyncLoadData,
@@ -243,29 +240,6 @@ const Dualis: React.FC = () => {
 
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
-      <Heading text="Bei Dualis anmelden" />
-      <View className="items-center">
-        <TextFieldInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-        <TextFieldInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <OptionSwitch
-          title="Login Optionen"
-          texts={["Anmeldedaten speichern"]}
-          iconNames={["update"]}
-          onValueChanges={[toggleSaveLogin]}
-          values={[saveLogin]}
-        />
-        <DefaultButton text="Login" onPress={login} />
-      </View>
       {loading && <Progress.Bar progress={progress} width={null} />}
       {error ? <DefaultText text={error} /> : null}
       <Heading text="Noten" />

@@ -8,7 +8,6 @@ import { StatusBar } from "expo-status-bar";
 import Dashboard from "../screens/dashboard/Dashboard";
 import Loading from "../screens/loading/Loading";
 import Overview from "../screens/overview/Overview";
-import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
@@ -25,9 +24,6 @@ import VerifyMfa from "../screens/accountManagement/mfa/VerifyMfa";
 import NewPassword from "../screens/accountManagement/forgotPassword/NewPassword";
 import VerifyForgot from "../screens/accountManagement/forgotPassword/VerifyForgot";
 import BackupMfa from "../screens/accountManagement/mfa/BackupMfa";
-import DualisLogin from "../screens/dualis/DualisLogin";
-import DualisLoad from "../screens/dualis/DualisLoad";
-import DualisSemester from "../screens/dualis/DualisSemester";
 
 // Create Stack
 const Stack = createStackNavigator();
@@ -84,7 +80,6 @@ const OverviewStack: React.FC = () => {
         />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Loading" component={Loading} />
-        <Stack.Screen name="Dualis" component={Dualis} />
         <Stack.Screen name="MealPlan" component={MealPlan} />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Imprint" component={Imprint} />
@@ -107,9 +102,6 @@ const OverviewStack: React.FC = () => {
         <Stack.Screen name="NewPassword" component={NewPassword} />
         <Stack.Screen name="VerifyForgot" component={VerifyForgot} />
         <Stack.Screen name="BackupMfa" component={BackupMfa} />
-        <Stack.Screen name="DualisLogin" component={DualisLogin} />
-        <Stack.Screen name="DualisLoad" component={DualisLoad} />
-        <Stack.Screen name="DualisSemester" component={DualisSemester} />
       </Stack.Navigator>
     </>
   );
