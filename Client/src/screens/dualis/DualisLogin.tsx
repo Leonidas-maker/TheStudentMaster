@@ -49,9 +49,9 @@ const DualisLogin: React.FC = () => {
     );
 
     navigation.reset({
-        index: 0,
-        routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
-      });
+      index: 0,
+      routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
+    });
   };
 
   // useEffect(() => {

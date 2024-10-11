@@ -53,7 +53,8 @@ const Dualis: React.FC = () => {
   const [semesterData, setSemesterData] = useState<SemesterData>(
     routeSemesterData || { semester: [] },
   );
-  const [selectedSemester, setSelectedSemester] = useState<string>("Leistungsübersicht");
+  const [selectedSemester, setSelectedSemester] =
+    useState<string>("Leistungsübersicht");
   const [isLight, setIsLight] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
@@ -80,19 +81,21 @@ const Dualis: React.FC = () => {
     ];
   };
 
-  const filteredGradeData = selectedSemester === "Leistungsübersicht"
-    ? gradeData
-    : gradeData.filter(grade => grade.semester === selectedSemester);
+  const filteredGradeData =
+    selectedSemester === "Leistungsübersicht"
+      ? gradeData
+      : gradeData.filter((grade) => grade.semester === selectedSemester);
 
-  const filteredGpaSemesterData = selectedSemester === "Leistungsübersicht"
-    ? gpaSemesterData
-    : gpaSemesterData.filter(gpa => gpa.semester === selectedSemester);
+  const filteredGpaSemesterData =
+    selectedSemester === "Leistungsübersicht"
+      ? gpaSemesterData
+      : gpaSemesterData.filter((gpa) => gpa.semester === selectedSemester);
 
   const handleLogout = () => {
     // Reset all state to empty or default values
     setModuleData([]);
-    setGpaData({ gpaTotal: '', gpaSubject: '' });
-    setEctsData({ ectsTotal: '', ectsSum: '' });
+    setGpaData({ gpaTotal: "", gpaSubject: "" });
+    setEctsData({ ectsTotal: "", ectsSum: "" });
     setSemesterData({ semester: [] });
     setGradeData([]);
     setGpaSemesterData([]);
@@ -114,9 +117,7 @@ const Dualis: React.FC = () => {
 
     navigation.setOptions({
       headerRight: () => (
-        <Pressable
-          onPress={handleLogout}
-        >
+        <Pressable onPress={handleLogout}>
           <Icon
             name="logout"
             size={30}
@@ -152,18 +153,19 @@ const Dualis: React.FC = () => {
             <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
             {moduleData.length > 0
               ? moduleData.map((module, index) => (
-                <View key={index} className="mb-4">
-                  <Subheading text={`${module.number} - ${module.name}`} />
-                  <DefaultText text={`ECTS: ${module.ects}`} />
-                  <DefaultText text={`Note: ${module.grade}`} />
-                  <DefaultText text={module.passed ? "Bestanden" : ""} />
-                </View>
-              ))
+                  <View key={index} className="mb-4">
+                    <Subheading text={`${module.number} - ${module.name}`} />
+                    <DefaultText text={`ECTS: ${module.ects}`} />
+                    <DefaultText text={`Note: ${module.grade}`} />
+                    <DefaultText text={module.passed ? "Bestanden" : ""} />
+                  </View>
+                ))
               : null}
           </View>
         ) : null}
 
-        {filteredGradeData.length > 0 && selectedSemester !== "Leistungsübersicht" ? (
+        {filteredGradeData.length > 0 &&
+        selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGradeData.map((grade, index) => (
               <View key={index} className="mb-4">
@@ -186,7 +188,8 @@ const Dualis: React.FC = () => {
           </View>
         ) : null}
 
-        {filteredGpaSemesterData.length > 0 && selectedSemester !== "Leistungsübersicht" ? (
+        {filteredGpaSemesterData.length > 0 &&
+        selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGpaSemesterData.map((semester, index) => (
               <View key={index} className="mb-4">

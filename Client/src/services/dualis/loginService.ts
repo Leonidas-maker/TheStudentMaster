@@ -29,9 +29,7 @@ export const extractAuthArguments = (refreshHeader: string) => {
   return "";
 };
 
-export const logoutDualis = async (
-  authArguments: string,
-) => {
+export const logoutDualis = async (authArguments: string) => {
   const url = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=LOGOUT&ARGUMENTS=${authArguments},-N001`;
 
   await axiosInstance.get(url);
