@@ -47,15 +47,7 @@ class University(Base):
 ################################### User ##################################
 ###########################################################################
 class UserCalendar(Base):
-    __tablename__ = "calendar_users"
-    calendar_users_id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False, unique=True)
-
-    custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.calendar_custom_id"), nullable=True)
-    native_calendar_id = Column(Integer, ForeignKey("calendar_native_courses.course_id"), nullable=True)
-
-    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
-
+    __tablename__ = "user_calendar"
     __table_args__ = (
         CheckConstraint(
             "(custom_calendar_id IS NOT NULL AND native_calendar_id IS NULL) OR "
@@ -63,6 +55,19 @@ class UserCalendar(Base):
             name="chk_one_calendar_id",
         ),
     )
+
+    calendar_users_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False, unique=True, index=True)
+
+    custom_calendar_id = Column(Integer, ForeignKey("calendar_custom.calendar_custom_id"), nullable=True)
+    native_calendar_id = Column(Integer, ForeignKey("calendar_native_courses.course_id"), nullable=True)
+
+    last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
+
+    course = relationship("Course", uselist=False)
+    custom_calendar = relationship("CalendarCustom", uselist=False)
+
+   
 
 
 class CalendarBackend(Base):
@@ -109,8 +114,8 @@ class CalendarCustom(Base):
 
     @validates("refresh_interval")
     def validate_refresh_interval(self, key, interval):
-        if interval % 15 != 0 or interval > 120:
-            raise ValueError("Refresh interval must be divisible by 15 and no greater than 120 minutes.")
+        if interval % 10 != 0 or interval > 120:
+            raise ValueError("Refresh interval must be divisible by 10 and no greater than 120 minutes.")
         return interval
 
 
@@ -123,19 +128,19 @@ class Course(Base):
     __tablename__ = "calendar_native_courses"
     course_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     course_name = Column(String(255), nullable=False)
-    university_id = Column(Integer, ForeignKey("university.university_id", ondelete="CASCADE"), nullable=False)
+    university_id = Column(Integer, ForeignKey("university.university_id"), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", back_populates="courses", uselist=False)  # Many-to-one
     lectures = relationship(
-        "Lecture", back_populates="course", cascade="all, delete", passive_deletes=True
+        "Lecture", back_populates="course", cascade="all, delete-orphan"
     )  # One-to-many
 
 
 class Lecture(Base):
     __tablename__ = "calendar_native_lectures"
     lecture_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False)
+    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id",  ondelete="CASCADE"), nullable=False)
 
     lecture_name = Column(String(255), nullable=False)
     lecturer = Column(String(255), nullable=True)
@@ -143,7 +148,7 @@ class Lecture(Base):
 
     course = relationship("Course", back_populates="lectures", uselist=False)  # Many-to-one
     sessions = relationship(
-        "Session", back_populates="lecture", cascade="all, delete", passive_deletes=True
+        "Session", back_populates="lecture", cascade="all, delete-orphan"
     )  # One-to-many
 
 
@@ -158,8 +163,8 @@ class Session(Base):
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     lecture = relationship("Lecture", back_populates="sessions")
-    rooms = relationship("SessionRoom", back_populates="session", cascade="all, delete", passive_deletes=True)
-    tags = relationship("SessionTag", back_populates="session", cascade="all, delete", passive_deletes=True)
+    rooms = relationship("SessionRoom", back_populates="session", cascade="all, delete-orphan")
+    tags = relationship("SessionTag", back_populates="session", cascade="all, delete-orphan")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -204,7 +209,7 @@ class SessionRoom(Base):
 class SessionTag(Base):
     __tablename__ = "calendar_native_session_tag"
     session_tag_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id"), nullable=False)
+    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id",  ondelete="CASCADE"), nullable=False)
     tag_id = Column(Integer, ForeignKey("calendar_tags.tag_id"), nullable=False)
 
     session = relationship("Session", back_populates="tags")  # Many-to-one, uselist=False not needed
@@ -230,7 +235,7 @@ class Room(Base):
 
     # These are collections, so remove uselist=False
     sessions = relationship("SessionRoom", back_populates="room")
-    room_equipment = relationship("RoomEquipment", back_populates="room", cascade="all, delete")
+    room_equipment = relationship("RoomEquipment", back_populates="room", cascade="all, delete-orphan")
 
 
 class RoomEquipment(Base):

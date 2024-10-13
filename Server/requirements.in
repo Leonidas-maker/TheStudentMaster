@@ -16,3 +16,4 @@ icalendar
 cryptography
 pyotp
 PyJWT
+fastapi-cache2

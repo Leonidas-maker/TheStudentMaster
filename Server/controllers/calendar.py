@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session, joinedload, defer, load_only, selectinload
+from sqlalchemy.orm import Session, joinedload, defer, load_only, selectinload, aliased
 from fastapi import HTTPException, Response
 import uuid
 from typing import List
@@ -12,7 +12,7 @@ from models.pydantic_schemas import s_calendar, s_general
 from config.general import DEFAULT_TIMEZONE_RESPONSE
 
 
-def fetch_available_calendars(db: Session) -> List[s_calendar.ResAvailableNativeCalendars]:
+def get_available_calendars(db: Session) -> List[s_calendar.ResAvailableNativeCalendars]:
     # Using GROUP_CONCAT in MySQL to group course names in the query itself
     result = (
         db.query(
@@ -38,7 +38,7 @@ def fetch_available_calendars(db: Session) -> List[s_calendar.ResAvailableNative
     return response
 
 
-def fetch_calendar_by_university_and_course(
+def get_calendar_by_university_and_course(
     db: Session, university_uuid: uuid.UUID, course_name: str, response: Response
 ) -> s_calendar.ResCalendar:
     course_name = course_name.replace("_", " ")
@@ -101,7 +101,7 @@ def fetch_calendar_by_university_and_course(
     return res_calendar
 
 
-def fetch_calendar_hash(
+def get_calendar_hash(
     db: Session,
     university_uuid: uuid.UUID,
     course_name: str,
@@ -117,10 +117,11 @@ def fetch_calendar_hash(
         .first()
     )
 
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
     return {"message": course.last_modified.isoformat()}
 
-
-from sqlalchemy.orm import aliased
 
 
 def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
@@ -191,3 +192,43 @@ def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime
         )
 
     return response
+
+
+def get_user_calendar(
+    db: Session, user_id: int, with_university: bool = False, with_data: bool = False
+) -> m_calendar.CalendarCustom | None:
+    """
+    Function to get a user's calendar.
+
+
+    This function fetches a user's calendar based on the user ID.
+
+    Args:
+        db (Session): Database session
+        user_id (int): User ID for which to get the calendar
+        with_university (bool, optional): Flag to include university data in the response. Defaults to False.
+        with_data (bool, optional): Flag to include calendar data in the response. Defaults to False.
+    """
+
+    # Query the user's calendar
+    query = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user_id).first()
+
+    if not query:
+        raise HTTPException(status_code=404, detail="Calendar not found")
+     
+
+    # Load university data if requested
+    if with_university:
+        query = query.options(joinedload(m_calendar.UserCalendar.university))
+
+    # Load calendar data if requested
+    if with_data:
+        query = query.options(joinedload(m_calendar.UserCalendar.calendar))
+
+    result = query.first()
+
+    if not result:
+        raise HTTPException(status_code=404, detail="Calendar not found")
+
+    # Execute the query
+    return result

@@ -1,25 +1,21 @@
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, declarative_base
-import configparser
-from pathlib import Path
 import os
 from rich.console import Console
 from urllib.parse import quote_plus
 
-from config.general import DEFAULT_TIMEZONE, ENVIRONMENT
+from config.general import DEFAULT_TIMEZONE, ENVIRONMENT, Config
 
 
 if ENVIRONMENT == "dev":
     # Load database configuration from a config file
-    configPath = Path(os.getenv("CONFIG_PATH", Path(__file__).parent.parent.absolute() / "config.ini"))
-    config = configparser.ConfigParser()
-    config.read(configPath)
+    server_config = Config()
 
     # Extract database connection details from the configuration
-    db_host = config["DATABASE"]["host"]
-    db_user = config["DATABASE"]["user"]
-    db_password = config["DATABASE"]["password"]
-    db_database = config["DATABASE"]["database"]
+    db_host = server_config.get("DATABASE", "host")
+    db_user = server_config.get("DATABASE", "user")
+    db_password = server_config.get("DATABASE", "password")
+    db_database = server_config.get("DATABASE", "database")
     encoded_db_password = quote_plus(db_password)
 
     ssl_args = {

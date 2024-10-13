@@ -26,11 +26,30 @@ from models.pydantic_schemas import s_general, s_calendar
 from utils.calendar.dhbw_app_fetcher import DHBWAppFetcher
 from utils.calendar.calendar_wrapper import CalendarWrapper
 from utils.helpers.hashing import dict_hash
-from config.general import MAX_COURSE_NAME_LENGTH
+from config.general import MAX_COURSE_NAME_LENGTH, COURSE_HISTORY_DAYS, DEFAULT_TIMEZONE
+
 
 ###########################################################################
 ############################# Helper Functions ############################
 ###########################################################################
+def is_lecture_sessions_to_delete(sessions: List[m_calendar.Session], min_percent=50):
+    """
+    Function to check if a lecture has a high percentage of sessions in the future
+
+    :param sessions (List[m_calendar.Session]): List of sessions
+    :param min_percent (int): Minimum percentage of sessions to delete
+
+    :return: True if the percentage of future sessions is higher than the minimum percentage, False otherwise
+    """
+    if len(sessions) == 0:
+        return False
+
+    sessions_to_delete = 0
+    for session in sessions:
+        if session.start_time < datetime.datetime.now() - datetime.timedelta(days=COURSE_HISTORY_DAYS):
+            sessions_to_delete += 1
+
+    return (sessions_to_delete / len(sessions)) * 100 < min_percent
 
 
 def get_backend_ids(db: Session):
@@ -238,7 +257,7 @@ def create_lectures(
 
     for Lecture_create in Lectures_create:
         new_lecture = m_calendar.Lecture(
-            lecture_name=Lecture_create.name[:MAX_COURSE_NAME_LENGTH],
+            lecture_name=Lecture_create.name.strip()[:MAX_COURSE_NAME_LENGTH],
             lecturer=Lecture_create.lecturer,
             course=course,
         )
@@ -389,7 +408,6 @@ def update_session_tags_rooms(
     new_session_rooms: List[m_calendar.SessionRoom] = []
 
     delete_session_tags: List[str] = []
-    delete_session_rooms: List[str] = []
 
     new_rooms: List[m_calendar.Room] = []
 
@@ -408,10 +426,10 @@ def update_session_tags_rooms(
 
     # Check rooms
     for room in sessions_db.rooms:
-        if room.room not in input_rooms:
+        if room.room.room_name not in input_rooms:
             db.delete(room)
         else:
-            input_rooms.discard(room.room)
+            input_rooms.discard(room.room.room_name)
 
     for room_name in input_rooms:
         room = rooms_dict.get(room_name)
@@ -425,7 +443,7 @@ def update_session_tags_rooms(
             new_session_room = m_calendar.SessionRoom(session=sessions_db, room=new_room)
             new_session_rooms.append(new_session_room)
 
-    return new_rooms, new_session_tags, new_session_rooms
+    return new_rooms, new_session_tags, new_session_rooms, delete_session_tags
 
 
 def delete_sessions(db: Session, session_id: Union[int, List[int]] = None, external_id: Union[str, List[str]] = None):
@@ -456,7 +474,7 @@ def delete_sessions(db: Session, session_id: Union[int, List[int]] = None, exter
 ###########################################################################
 ############################ Startup functions ############################
 ###########################################################################
-def prepareCalendarTables(db: Session):
+async def prepareCalendarTables(db: Session):
     """
     Function to prepare calendar tables by adding initial data
 
@@ -473,18 +491,20 @@ def prepareCalendarTables(db: Session):
                 db.add(m_calendar.CalendarBackend(backend_name=backend, is_custom_available=False))
             else:
                 db.add(m_calendar.CalendarBackend(backend_name=backend))
-
     with open(
         "./data/address_lists/ger_univercity.json", "r", encoding="utf-8"
     ) as f:  # TODO: Change path --> not relative
-        data = json.load(f)
+        data:list = json.load(f)
+
+    existing_universities = set(
+        university[0] for university in db.query(m_calendar.University.university_name).all()
+    )
 
     for university in data:
         university_address = None
+        university_name = university.get("name")
         if (
-            db.query(m_calendar.University)
-            .filter(m_calendar.University.university_name == university.get("name"))
-            .first()
+            university_name in existing_universities
         ):
             continue
         if university.get("address1"):
@@ -531,7 +551,7 @@ def dhbw_course_db_update_create_convert(
     progress: Progress,
     task_id: int,
     delete_old: bool = True,
-):
+) -> Union[Table, None]:
     """
     Function to convert DHBW courses to CourseUpdate objects.
 
@@ -541,6 +561,9 @@ def dhbw_course_db_update_create_convert(
     :param tags_dict: Dictionary mapping tag names to Tag objects
     :param progress: Progress tracking object
     :param task_id: ID des aktuellen Tasks für Progress Tracking
+    :param delete_old: Flag to delete missing courses, lectures, and sessions
+
+    :return: Table if delete_old is false, None otherwise
     """
     query_options = [
         joinedload(m_calendar.Course.lectures)
@@ -580,6 +603,8 @@ def dhbw_course_db_update_create_convert(
     new_session_rooms_db: List[m_calendar.SessionRoom] = []
     new_rooms_db: List[m_calendar.Room] = []
 
+    delete_session_tags: List[str] = []
+
     updated_lectures = 0
     updated_sessions = 0
 
@@ -602,7 +627,7 @@ def dhbw_course_db_update_create_convert(
         # Process each lecture in the database
         for lecture_db in lectures_db:
             if not lectures_input.get(lecture_db.lecture_name):
-                if delete_old:
+                if delete_old and (len(lecture_db.sessions) == 0 or is_lecture_sessions_to_delete(lecture_db.sessions)):
                     db.delete(lecture_db)
                     updated_course_ids.add(course_db.course_id)
                     deleted_lectures += 1
@@ -625,7 +650,11 @@ def dhbw_course_db_update_create_convert(
             # Process each session in the database
             for session_db in sessions_db:
                 if not sessions_input.get(session_db.external_id):
-                    if delete_old:
+                    if delete_old and (
+                        session_db.start_time > datetime.datetime.now()
+                        or session_db.start_time
+                        < datetime.datetime.now() - datetime.timedelta(days=COURSE_HISTORY_DAYS)
+                    ):
                         db.delete(session_db)
                         updated_course_ids.add(course_db.course_id)
                         deleted_sessions += 1
@@ -652,7 +681,7 @@ def dhbw_course_db_update_create_convert(
 
                 # Check if the tags and rooms are changed
                 if tags_input != tags_db_names or rooms_input != rooms_db_names:
-                    rooms, session_tags, session_rooms = update_session_tags_rooms(
+                    rooms, session_tags, session_rooms, del_session_tags = update_session_tags_rooms(
                         db,
                         university_id,
                         session_db,
@@ -666,6 +695,8 @@ def dhbw_course_db_update_create_convert(
                     new_session_tags_db.extend(session_tags)
                     new_session_rooms_db.extend(session_rooms)
                     new_rooms_db.extend(rooms)
+
+                    delete_session_tags.extend(del_session_tags)
 
                     updated_course_ids.add(course_db.course_id)
                     updated_sessions += 1
@@ -697,7 +728,9 @@ def dhbw_course_db_update_create_convert(
         courses.courses.pop(course_db.course_name, None)
     # End of existent_courses loop
 
-    db.flush()
+    # Delete old session tags
+    if delete_session_tags:
+        db.query(m_calendar.SessionTag).filter(m_calendar.SessionTag.session_tag_id.in_(delete_session_tags)).delete()
 
     # Get the remaining courses
     new_courses = courses.to_courses_create()
@@ -810,7 +843,7 @@ def dhbw_course_db_update_create_convert(
     )
 
     # Close add transaction
-    db.commit()
+    db.flush()
 
     # ======================================================== #
     # =================== Console Feedback =================== #
@@ -875,11 +908,14 @@ def dhbw_course_db_update_create_convert(
     if deleted_sessions > 0:
         table.add_row("[red]Deleted[/red]", "Sessions", str(deleted_sessions))
         was_deleted = True
-    if not was_deleted:
+    if not was_deleted and delete_old:
         table.add_row("[red]Deleted[/red]", "None", "0")
 
-    # Print the table to the console
-    console.print(table)
+    if delete_old:
+        # Print the table to the console
+        console.print(table)
+    else:
+        return table
 
 
 async def refresh_all_dhbw_calendars(db: Session, console: Console, progress: Progress, task_id: int):
@@ -925,11 +961,17 @@ async def refresh_all_dhbw_calendars(db: Session, console: Console, progress: Pr
             )
 
             # Delete all courses that are not in the fetched data
-            db.query(m_calendar.Course).filter(
-                m_calendar.Course.university_id == university.university_id,
-                ~m_calendar.Course.course_name.in_(calenders.courses.keys()),
-            ).delete(synchronize_session="fetch")
-            db.flush()
+            del_courses = (
+                db.query(m_calendar.Course)
+                .filter(
+                    m_calendar.Course.university_id == university.university_id,
+                    ~m_calendar.Course.course_name.in_(calenders.courses.keys()),
+                )
+                .all()
+            )
+
+            for course in del_courses:
+                db.delete(course)
 
             # Update the courses in the database
             dhbw_course_db_update_create_convert(
@@ -970,9 +1012,8 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int, console
         task_id (int): Task ID for the progress bar
     """
     try:
-        fetcher = DHBWAppFetcher(progress=Progress())
+        fetcher = DHBWAppFetcher(progress=progress)
         new_sites_data: Dict[str, s_calendar.DHBWCourseUpdate] = await fetcher.get_updated_calendars()
-
         if not new_sites_data:
             return True
         tags_dict = {tag.tag_name: tag for tag in db.query(m_calendar.Tag).all()}
@@ -983,7 +1024,7 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int, console
             )
             if not university:
                 continue
-            dhbw_course_db_update_create_convert(
+            table = dhbw_course_db_update_create_convert(
                 db,
                 university.university_id,
                 site_data.to_dhbw_courses(),
@@ -994,11 +1035,29 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int, console
                 delete_old=False,
             )
 
+            deleted_sessions_count = 0
             if len(site_data.deleted_sessions) > 0:
-                db.query(m_calendar.Session).filter(
-                    m_calendar.Session.external_id.in_(site_data.deleted_sessions)
-                ).delete(synchronize_session=False)
-            db.flush()
+                sessions = (
+                    db.query(m_calendar.Session)
+                    .filter(m_calendar.Session.external_id.in_(site_data.deleted_sessions))
+                    .all()
+                )
+                
+                for session in sessions:
+                    db_start_time = session.start_time
+                    db_start_time = db_start_time.replace(tzinfo=DEFAULT_TIMEZONE)
+
+                    if (
+                        db_start_time > datetime.datetime.now(DEFAULT_TIMEZONE)
+                        or db_start_time < datetime.datetime.now(DEFAULT_TIMEZONE) - datetime.timedelta(days=COURSE_HISTORY_DAYS)
+                    ):
+                        db.delete(session)
+                        deleted_sessions_count += 1
+
+            table.add_row("[red]Deleted[/red]", "Sessions", f"{deleted_sessions_count}/{len(site_data.deleted_sessions)}")
+            console.print(table)
+
+            db.commit()
 
     except Exception as e:
         # Handle any errors by updating the progress bar and printing the error
@@ -1135,13 +1194,12 @@ def add_native_calendar_to_user(
 
     This function adds a new native calendar to a user's calendar list.
 
-    Args:
-        db (Session): Database session
-        user_id (int): User ID for which to add the calendar
-        course_name (int): Name of the course for the calendar
-        university_uuid (uuid.UUID): UUID of the university for the calendar
+    :param db: SQLAlchemy session object
+    :param user_id: ID of the user to add the calendar to
+    :param course_name: Name of the course to add
+    :param university_id: ID of the
     """
-    calendar_native = (
+    course = (
         db.query(m_calendar.Course)
         .join(m_calendar.University)
         .filter(
@@ -1152,16 +1210,20 @@ def add_native_calendar_to_user(
     )
 
     # Check if calendar exists
-    if calendar_native:
-        add_update_user_calendar(db, user_id, native_calendar_id=calendar_native.calendar_native_id)
+    if course:
+        add_update_user_calendar(db, user_id, native_calendar_id=course.course_id)
         db.commit()
-        return calendar_native
+        return course
     return None
 
 
 def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: s_calendar.CalendarCustomCreate):
-    """Function to add a custom calendar to a user.
-    This function adds a new custom calendar to a user's calendar list.
+    """
+    Function to add a custom calendar to a user.
+
+    :param db: SQLAlchemy session object
+    :param user_id: ID of the user to add the calendar to
+    :param new_custom_calendar: Pydantic model object containing the custom calendar data
 
     """
     # Check if course name does not contain profanity
@@ -1220,61 +1282,6 @@ def add_custom_calendar_to_user(db: Session, user_id: int, new_custom_calendar: 
         return custom_calendar
     else:
         raise HTTPException(status_code=400, detail="Invalid backend source")
-
-
-# ======================================================== #
-# ======================== Getter ======================== #
-# ======================================================== #
-def get_calendar(
-    db: Session, user_id: int, with_university: bool = False, with_data: bool = False
-) -> m_calendar.CalendarCustom | None:
-    """
-    Function to get a user's calendar.
-
-
-    This function fetches a user's calendar based on the user ID.
-
-    Args:
-        db (Session): Database session
-        user_id (int): User ID for which to get the calendar
-        with_university (bool, optional): Flag to include university data in the response. Defaults to False.
-        with_data (bool, optional): Flag to include calendar data in the response. Defaults to False.
-    """
-
-    # query_options = []
-    # user_calendar = db.query(m_calendar.UserCalendar).filter(m_calendar.UserCalendar.user_id == user_id).first()
-
-    # # Check if user has a calendar
-    # if user_calendar:
-    #     if user_calendar.native_calendar_id:
-    #         if with_university:
-    #             query_options += [joinedload(m_calendar.CalendarNative.university)]
-    #         if not with_data:
-    #             query_options += [defer(m_calendar.CalendarNative.data)]
-
-    #         # Get native calendar
-    #         calendar = (
-    #             db.query(m_calendar.CalendarNative)
-    #             .options(*query_options)
-    #             .filter(m_calendar.CalendarNative.calendar_native_id == user_calendar.native_calendar_id)
-    #             .first()
-    #         )
-    #     else:
-    #         if with_university:
-    #             query_options += [joinedload(m_calendar.CalendarCustom.university)]
-    #         if not with_data:
-    #             query_options += [defer(m_calendar.CalendarCustom.data)]
-    #         # Get custom calendar
-    #         calendar = (
-    #             db.query(m_calendar.CalendarCustom)
-    #             .options(*query_options)
-    #             .filter(m_calendar.CalendarCustom.calendar_custom_id == user_calendar.custom_calendar_id)
-    #             .first()
-    #         )
-    #     return calendar
-
-    # # Return None if user has no calendar
-    return None
 
 
 # ======================================================== #

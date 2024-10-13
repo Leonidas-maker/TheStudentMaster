@@ -1,15 +1,22 @@
 # ~~~~~~~~~~~~ External Modules ~~~~~~~~~~~ #
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
+from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 import asyncio
 from fastapi_cdn_host import monkey_patch
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
+from config.globals import globals
 from config.database import engine
+from config.general import Config, ENVIRONMENT
+
+server_config = Config()
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
-from middleware.database import get_async_db, get_db
+from middleware.database import get_async_db
+from middleware.stats import init_stats
 
 from middleware.general import clean_address
 from middleware.calendar import (
@@ -22,12 +29,13 @@ from middleware.calendar import (
 from middleware.canteen import create_canteens, update_canteen_menus, clean_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
+from models.pydantic_schemas import s_stats
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth
+from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth, m_stats
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
-from routes import user, auth, canteen, calendar, static
+from routes import user, auth, canteen, calendar, static, stats
 
 from utils.scheduler.task_scheduler import TaskScheduler
 
@@ -36,6 +44,8 @@ m_user.Base.metadata.create_all(bind=engine)
 m_auth.Base.metadata.create_all(bind=engine)
 m_calendar.Base.metadata.create_all(bind=engine)
 m_canteen.Base.metadata.create_all(bind=engine)
+m_stats.Base.metadata.create_all(bind=engine)
+
 
 # ======================================================== #
 # ================= Startup/Shutdown Code ================ #
@@ -46,27 +56,33 @@ task_scheduler = TaskScheduler(verbose=True)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # ~~~~~~~~~ Code to run on startup ~~~~~~~~ #
+    # Init FastAPICache
+    FastAPICache.init(InMemoryBackend())
+
     async with get_async_db() as db:
         await asyncio.to_thread(create_canteens, db)
 
     async with get_async_db() as db:
-        await asyncio.to_thread(prepareCalendarTables, db)
+        print("Preparing calendar tables...")
+        await prepareCalendarTables(db)
+        print("Preparing stats...")
+        await init_stats(db)
 
-    async with get_async_db() as db:
         backends = db.query(m_calendar.CalendarBackend).all()
 
-    task_scheduler.add_task(
-        "canteen",
-        update_canteen_menus,
-        cron="*/15 6-18 * * 1-5",  # Every 15 minutes from 6am to 6pm on weekdays
-        blocked_by=[],
-        on_startup=False,
-    )
+    # task_scheduler.add_task(
+    #     "canteen",
+    #     update_canteen_menus,
+    #     cron="*/20 6-18 * * 1-5",  # Every 15 minutes from 6am to 6pm on weekdays
+    #     blocked_by=[],
+    #     on_startup=True,
+    #     with_progress=True,
+    # )
 
     task_scheduler.add_task(
         "calendar_dhbw_refresh",
         refresh_all_dhbw_calendars,
-        cron="0 0 */7 * *",  # Every 7 days
+        cron="0 12 * * Sat",  # Every 7 days
         on_startup=True,
         with_console=True,
     )
@@ -76,7 +92,6 @@ async def lifespan(app: FastAPI):
         update_all_dhbw_calendars,
         cron="*/20 * * * *",  # Every 20 minutes
         blocked_by=["calendar_dhbw_refresh"],
-        on_startup=True,
         with_console=True,
     )
 
@@ -108,15 +123,15 @@ async def lifespan(app: FastAPI):
         with_progress=False,
     )
 
-    task_scheduler.add_task(
-        "canteen_clean_menus",
-        clean_canteen_menus,
-        interval_seconds=60 * 60 * 12,  # 12 hours
-        # start_time=6,
-        # end_time=18,
-        blocked_by=["canteen"],
-        with_progress=False,
-    )
+    # task_scheduler.add_task(
+    #     "canteen_clean_menus",
+    #     clean_canteen_menus,
+    #     interval_seconds=60 * 60 * 12,  # 12 hours
+    #     # start_time=6,
+    #     # end_time=18,
+    #     blocked_by=["canteen"],
+    #     with_progress=False,
+    # )
 
     task_scheduler.start(run_startup_tasks=True)
 
@@ -127,8 +142,6 @@ async def lifespan(app: FastAPI):
 
     # ~~~~~~~~ End of code to run on shutdown ~~~~~~~~ #
 
-
-from fastapi import FastAPI
 
 with open("app_description.md", "r", encoding="utf-8") as file:
     description_content = file.read()
@@ -159,10 +172,32 @@ async def root():
 
 
 # ======================================================== #
+# ======================= Analytics ====================== #
+# ======================================================== #
+# TODO Implement the analytics middleware
+
+
+# ======================================================== #
 # ======================== Router ======================== #
 # ======================================================== #
+
+
+@app.middleware("http")
+async def check_route_availability(request: Request, call_next):
+    base_path = request.url.path.replace("/api", "").strip("/").split("/")[0]
+    route_status = globals.server_stats_cache.get(base_path, {})
+
+    if route_status.get("status", "online") != "online" or route_status.get("maintenance", False):
+        headers = {"Retry-After": "1800"}
+        return JSONResponse(status_code=503, headers=headers, content={"message": "Service temporarily unavailable"})
+
+    response = await call_next(request)
+    return response
+
+
 static.configure_static(app)
 app.include_router(user.users_router, prefix="/user", tags=["user"])
 app.include_router(auth.auth_router, prefix="/auth", tags=["auth"])
 app.include_router(canteen.canteen_router, prefix="/canteen", tags=["canteen"])
 app.include_router(calendar.calendar_router, prefix="/calendar", tags=["calendar"])
+app.include_router(stats.stats_router, prefix="/stats", tags=["stats"])

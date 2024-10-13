@@ -11,7 +11,7 @@ from models.pydantic_schemas import s_user, s_calendar, s_general, s_canteen
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_db
 from middleware.auth import check_access_token, check_password
-from middleware.calendar import get_calendar
+from controllers.calendar import get_user_calendar
 from middleware.canteen import get_canteen, get_menu_for_canteen
 
 # ~~~~~~~~~~~~~~ Controllers ~~~~~~~~~~~~~~ #
@@ -84,7 +84,7 @@ def add_user_calendar(
 @users_router.get("/calendar", response_model=s_calendar.ResCalendar)
 def get_user_calendars(access_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     user = check_access_token(db, access_token)
-    calendar = get_calendar(db, user.user_id, with_university=True, with_data=True)
+    calendar = get_user_calendar(db, user.user_id, with_university=True, with_data=True)
 
     if calendar:
         res_calendar = s_calendar.ResCalendar(

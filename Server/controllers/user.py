@@ -118,8 +118,15 @@ def update_user_calendar(
     db: Session,
     user: m_user.User,
     new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate,
-):
-    # Add a new calendar to the user based on the type of calendar provided
+)-> s_calendar.ResCalendar:
+    """
+    Function to update a user's calendar
+
+    :param db: Database session
+    :param user: User object
+    :param new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate object
+    """
+
     if isinstance(new_user_calendar, s_calendar.NativeCalenderIdentifier):
         calendar = add_native_calendar_to_user(
             db, user.user_id, new_user_calendar.course_name, new_user_calendar.university_uuid
