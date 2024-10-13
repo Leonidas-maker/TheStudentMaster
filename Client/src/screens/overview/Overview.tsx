@@ -267,7 +267,7 @@ const Overview: React.FC = () => {
   };
 
   const handleDualisLoadPress = () => {
-    navigation.navigate("OverviewStack", { screen: "DualisLoad" });
+    navigation.navigate("OverviewStack", { screen: "DualisDummy" });
   };
 
   const handleDualisPerformancePress = () => {

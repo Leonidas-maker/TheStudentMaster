@@ -13,7 +13,6 @@ import {
   GradeData,
   GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
-import { logoutDualis } from "./loginService";
 
 // Define the base URL for the Dualis API
 const BASE_URL = "https://dualis.dhbw.de";
@@ -33,8 +32,10 @@ export const navigateToPerformanceOverview = async (
   setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.25);
+  setLoad("Leistungsübersicht")
   try {
     const performanceUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=STUDENT_RESULT&ARGUMENTS=${authArguments},-N000310,-N0,-N000000000000000,-N000000000000000,-N000000000000000,-N0,-N000000000000000`;
     const response = await axiosInstance.get(performanceUrl);
@@ -64,8 +65,10 @@ export const navigateToExamResults = async (
   setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.35);
+  setLoad("Semester")
   try {
     const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
     const response = await axiosInstance.get(examResultsUrl);
@@ -90,12 +93,15 @@ export const navigateThroughSemesters = async (
   setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.45);
+  setLoad("Semester Daten");
   try {
     let allSemesterData: Array<{ name: string; html: string }> = [];
 
     for (const sem of semesterArray) {
+      setLoad(sem.name);
       const semesterUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N${sem.value},-N000307`;
       const response = await axiosInstance.get(semesterUrl);
       const content = response.data;
@@ -123,12 +129,15 @@ export const navigateThroughGradeDetails = async (
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoading: (loading: boolean) => void,
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.75);
+  setLoad("Semester Details");
   try {
     let updatedGradeData = [...gradeData];
 
     for (let i = 0; i < updatedGradeData.length; i++) {
+      setLoad(updatedGradeData[i].name);
       const grade = updatedGradeData[i];
 
       const detailUrl = `${BASE_URL}${grade.detail}`;
