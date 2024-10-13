@@ -11,15 +11,15 @@ COURSE_HISTORY_DAYS = 90
 
 # Only needed for first database setup
 ROUTE_VERSIONS_BASE = {
-    "main": "1.0.2", # This is the frontend version
+    "main": "1.0.2",  # This is the frontend version
     "calendar": "1.0.0",
     "canteen": "1.0.0",
     "user": "1.0.0",
-    "auth": "1.0.0"
+    "auth": "1.0.0",
 }
 
 
-class Config():
+class Config:
     def __init__(self):
         configPath = Path(os.getenv("CONFIG_PATH", Path(__file__).parent.parent.absolute() / "config.ini"))
         config = configparser.ConfigParser()

@@ -212,7 +212,7 @@ def get_keys_private(
 
     # Get the access private key
     access_private_key = load_key("access_private_key")
-    
+
     return refresh_private_key, access_private_key
 
 
@@ -393,8 +393,9 @@ def verify_access_token(db: Session, token: str):
     public_key = get_access_token_public()
     try:
         options = {"verify_aud": False}  # TODO Change this to True
-        payload = jwt.decode(token, public_key,  algorithms=["ES256"], options=options, issuer="https://www.thestudentmaster.de")
-        
+        payload = jwt.decode(
+            token, public_key, algorithms=["ES256"], options=options, issuer="https://www.thestudentmaster.de"
+        )
 
         # Check if the JTI is valid
         if not check_jti(
@@ -544,7 +545,7 @@ def create_tokens(
     else:
         token_exp = unix_timestamp(minutes=15)
         payload = {
-            "iss": "https://www.thestudentmaster.de", 
+            "iss": "https://www.thestudentmaster.de",
             "sub": user_uuid,
             "aud": "webapplication",
             "exp": token_exp,

@@ -67,8 +67,6 @@ class UserCalendar(Base):
     course = relationship("Course", uselist=False)
     custom_calendar = relationship("CalendarCustom", uselist=False)
 
-   
-
 
 class CalendarBackend(Base):
     __tablename__ = "calendar_backend"
@@ -132,24 +130,20 @@ class Course(Base):
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", back_populates="courses", uselist=False)  # Many-to-one
-    lectures = relationship(
-        "Lecture", back_populates="course", cascade="all, delete-orphan"
-    )  # One-to-many
+    lectures = relationship("Lecture", back_populates="course", cascade="all, delete-orphan")  # One-to-many
 
 
 class Lecture(Base):
     __tablename__ = "calendar_native_lectures"
     lecture_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id",  ondelete="CASCADE"), nullable=False)
+    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False)
 
     lecture_name = Column(String(255), nullable=False)
     lecturer = Column(String(255), nullable=True)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     course = relationship("Course", back_populates="lectures", uselist=False)  # Many-to-one
-    sessions = relationship(
-        "Session", back_populates="lecture", cascade="all, delete-orphan"
-    )  # One-to-many
+    sessions = relationship("Session", back_populates="lecture", cascade="all, delete-orphan")  # One-to-many
 
 
 class Session(Base):
@@ -209,7 +203,7 @@ class SessionRoom(Base):
 class SessionTag(Base):
     __tablename__ = "calendar_native_session_tag"
     session_tag_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id",  ondelete="CASCADE"), nullable=False)
+    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False)
     tag_id = Column(Integer, ForeignKey("calendar_tags.tag_id"), nullable=False)
 
     session = relationship("Session", back_populates="tags")  # Many-to-one, uselist=False not needed

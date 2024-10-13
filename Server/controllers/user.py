@@ -118,7 +118,7 @@ def update_user_calendar(
     db: Session,
     user: m_user.User,
     new_user_calendar: s_calendar.NativeCalenderIdentifier | s_calendar.CalendarCustomCreate,
-)-> s_calendar.ResCalendar:
+) -> s_calendar.ResCalendar:
     """
     Function to update a user's calendar
 

@@ -13,6 +13,7 @@ from config.general import DEFAULT_TIMEZONE, MAX_COURSE_NAME_LENGTH
 ############################## DHBWAppFetcher #############################
 ###########################################################################
 
+
 class DHBWAppFetcher:
     """
     A class to fetch and process DHBW calendar data from the DHBW API.
@@ -228,9 +229,14 @@ class DHBWAppFetcher:
                 )
 
             # Update lecturer information
-            if lecture_input.get("lecturer") and lecture_input.get("lecturer") not in updated_sites[site].courses[course_name][lecture_name].lecturer:
+            if (
+                lecture_input.get("lecturer")
+                and lecture_input.get("lecturer") not in updated_sites[site].courses[course_name][lecture_name].lecturer
+            ):
                 if updated_sites[site].courses[course_name][lecture_name].lecturer:
-                    updated_sites[site].courses[course_name][lecture_name].lecturer += f", {lecture_input.get('lecturer')}"
+                    updated_sites[site].courses[course_name][
+                        lecture_name
+                    ].lecturer += f", {lecture_input.get('lecturer')}"
                 else:
                     updated_sites[site].courses[course_name][lecture_name].lecturer = lecture_input.get("lecturer")
 

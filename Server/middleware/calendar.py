@@ -494,18 +494,14 @@ async def prepareCalendarTables(db: Session):
     with open(
         "./data/address_lists/ger_univercity.json", "r", encoding="utf-8"
     ) as f:  # TODO: Change path --> not relative
-        data:list = json.load(f)
+        data: list = json.load(f)
 
-    existing_universities = set(
-        university[0] for university in db.query(m_calendar.University.university_name).all()
-    )
+    existing_universities = set(university[0] for university in db.query(m_calendar.University.university_name).all())
 
     for university in data:
         university_address = None
         university_name = university.get("name")
-        if (
-            university_name in existing_universities
-        ):
+        if university_name in existing_universities:
             continue
         if university.get("address1"):
             new_address = s_general.AddressCreate(
@@ -1042,19 +1038,20 @@ async def update_all_dhbw_calendars(db: Session, progress, task_id: int, console
                     .filter(m_calendar.Session.external_id.in_(site_data.deleted_sessions))
                     .all()
                 )
-                
+
                 for session in sessions:
                     db_start_time = session.start_time
                     db_start_time = db_start_time.replace(tzinfo=DEFAULT_TIMEZONE)
 
-                    if (
-                        db_start_time > datetime.datetime.now(DEFAULT_TIMEZONE)
-                        or db_start_time < datetime.datetime.now(DEFAULT_TIMEZONE) - datetime.timedelta(days=COURSE_HISTORY_DAYS)
-                    ):
+                    if db_start_time > datetime.datetime.now(DEFAULT_TIMEZONE) or db_start_time < datetime.datetime.now(
+                        DEFAULT_TIMEZONE
+                    ) - datetime.timedelta(days=COURSE_HISTORY_DAYS):
                         db.delete(session)
                         deleted_sessions_count += 1
 
-            table.add_row("[red]Deleted[/red]", "Sessions", f"{deleted_sessions_count}/{len(site_data.deleted_sessions)}")
+            table.add_row(
+                "[red]Deleted[/red]", "Sessions", f"{deleted_sessions_count}/{len(site_data.deleted_sessions)}"
+            )
             console.print(table)
 
             db.commit()

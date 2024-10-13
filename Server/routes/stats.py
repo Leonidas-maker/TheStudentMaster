@@ -11,6 +11,7 @@ from controllers.stats import get_stats
 
 stats_router = APIRouter()
 
+
 @stats_router.get("/all")
 @cache(expire=120)
 async def api_get_stats(db: Session = Depends(get_db)) -> s_stats.ServerStatus:

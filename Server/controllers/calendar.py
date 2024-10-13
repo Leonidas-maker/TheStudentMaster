@@ -123,7 +123,6 @@ def get_calendar_hash(
     return {"message": course.last_modified.isoformat()}
 
 
-
 def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
     # Check if start time is before end time
     if start_time >= end_time:
@@ -215,7 +214,6 @@ def get_user_calendar(
 
     if not query:
         raise HTTPException(status_code=404, detail="Calendar not found")
-     
 
     # Load university data if requested
     if with_university:
