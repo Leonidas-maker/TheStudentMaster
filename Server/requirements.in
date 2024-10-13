@@ -1,7 +1,6 @@
 fastapi[standard]
 fastapi-mail
 alt-profanity-check
-APScheduler
 bcrypt
 beautifulsoup4
 SQLAlchemy
@@ -17,3 +16,4 @@ cryptography
 pyotp
 PyJWT
 fastapi-cache2
+redis

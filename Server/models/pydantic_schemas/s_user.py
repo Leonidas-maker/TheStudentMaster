@@ -6,18 +6,16 @@ from datetime import datetime
 from .s_general import AddressCreate, CompleteAdress
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
-from middleware.general import only_one
+from utils.helpers.logic import only_one
+
 
 ###########################################################################
 ############################# Pydantic models #############################
 ###########################################################################
 
-
 # ======================================================== #
 # ===================== UserSecurity ===================== #
 # ======================================================== #
-
-
 class User2FA(BaseModel):
     _2fa_id: Optional[int]
     user_id: int

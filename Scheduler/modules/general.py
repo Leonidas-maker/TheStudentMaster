@@ -1,20 +1,18 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import union
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
-from models.pydantic_schemas import s_general
+from schemes import s_general
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models.sql_models import m_general, m_user, m_calendar, m_canteen
-
-
+from models import m_general, m_user, m_calendar, m_canteen
 
 ###########################################################################
 ####################### Database specific functions #######################
 ###########################################################################
 
-
 # Function to create a new address in the database
-def create_address(db: Session, new_address: s_general.AddressCreate) -> s_general.Address:
+def create_address(db: Session, new_address: s_general.AddressCreate) -> m_general.Address:
     if not new_address:
         raise ValueError("Address is required")
 
@@ -107,3 +105,41 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> s_gener
     db.add_all(new_db_objects)
     db.flush()
     return new_address
+
+
+# Function to clean up unused addresses from the database
+def clean_address(db: Session) -> int:
+    # Addresses used by University Table (calendar)
+    native_address_1_subquery = (
+        db.query(m_general.Address.address_id)
+        .join(m_calendar.University)
+        .filter(m_calendar.University.address_id == m_general.Address.address_id)
+    )
+
+    # Addresses used by Canteen Table
+    native_address_2_subquery = (
+        db.query(m_general.Address.address_id)
+        .join(m_canteen.Canteen)
+        .filter(m_canteen.Canteen.address_id == m_general.Address.address_id)
+    )
+
+    # Addresses used by User Table
+    user_address_subquery = (
+        db.query(m_general.Address.address_id)
+        .join(m_user.User)
+        .filter(m_user.User.address_id == m_general.Address.address_id)
+    )
+
+    # Combine all subqueries
+    all_subquery = union(native_address_1_subquery, native_address_2_subquery, user_address_subquery).alias(
+        "all_addresses"
+    )
+
+    # Delete all addresses that are not in any of the subqueries
+    delete_count = (
+        db.query(m_general.Address)
+        .filter(m_general.Address.address_id.notin_(all_subquery.element))
+        .delete(synchronize_session=False)
+    )
+    db.commit()
+    return delete_count

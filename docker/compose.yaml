@@ -1,6 +1,35 @@
 version: "3.8"
 
 services:
+  scheduler-service:
+    image: registry.gitlab.com/themastercollection/thestudentmaster/scheduler-service:beta
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - ENVIRONMENT=prod
+      - DB_HOST=mariadb
+      - DB_DATABASE=prod
+      - DB_USER=prod_user
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    secrets:
+      - tsm_db_password
+      - tsm_db_cert
+      - tsm_db_key
+      - tsm_db_cert_password
+      - tsm_mariadb_ca_cert
+    networks:
+      - tsm_db_network
+    ports:
+      - "8002:8002"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    depends_on:
+      - mariadb
+
   backend:
     image: registry.gitlab.com/themastercollection/thestudentmaster:beta
     deploy:
@@ -13,6 +42,8 @@ services:
       - DB_HOST=mariadb
       - DB_DATABASE=prod
       - DB_USER=prod_user
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
     secrets:
       - tsm_db_password
@@ -26,14 +57,19 @@ services:
       - tsm_access_public_key
       - tsm_security_private_key
       - tsm_security_public_key
+      - tsm_redis_password
     networks:
       - tsm_db_network
+      - tsm_redis_network
       - tsm_shared_overlay
     dns:
       - 8.8.8.8
       - 1.1.1.1
     ports:
       - "8001:8001"
+    depends_on:
+      - mariadb
+      - redis
 
   mariadb:
     image: registry.gitlab.com/themastercollection/thestudentmaster:mariadb
@@ -68,6 +104,25 @@ services:
         target: /etc/mysql/conf.d/my_custom.cnf
     ports:
       - "3306:3306"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    secrets:
+      - tsm_redis_password
+    configs:
+      - source: tsm_redis_start_script
+        target: /usr/local/bin/redis_start.sh
+        mode: 0775
+    command: bash -c "/usr/local/bin/redis_start.sh"
+    volumes:
+      - tsm_redis_data:/data
+    networks:
+      - tsm_redis_network
 
 secrets:
   tsm_db_password:
@@ -110,6 +165,8 @@ secrets:
     external: true
   tsm_mariadb_key:
     external: true
+  tsm_redis_password:
+    external: true
 
 configs:
   tsm_mariadb_init_sh:
@@ -117,6 +174,8 @@ configs:
   tsm_mariadb_init_users_sql:
     external: true
   tsm_mariadb_config:
+    external: true
+  tsm_redis_start_script:
     external: true
 
 networks:
@@ -127,6 +186,14 @@ networks:
       driver: default
       config:
         - subnet: 10.20.0.0/24
+  tsm_redis_network:
+    driver: overlay
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.30.0.0/24
+
   tsm_shared_overlay:
     attachable: true
     internal: true
@@ -137,4 +204,6 @@ networks:
 
 volumes:
   tsm_mariadb_data:
-
+    driver: local
+  tsm_redis_data:
+    driver: local

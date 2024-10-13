@@ -4,9 +4,10 @@ from rich.progress import Progress
 import asyncio
 from typing import List, Dict
 import json
+import time
 
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
-import models.pydantic_schemas.s_calendar as Scheme
+import schemes.s_calendar as Scheme
 from config.general import DEFAULT_TIMEZONE, MAX_COURSE_NAME_LENGTH
 
 ###########################################################################
@@ -365,7 +366,7 @@ class DHBWAppFetcher:
         ]
         return available_sources
 
-    async def get_updated_calendars(self) -> Dict[str, Scheme.DHBWCourseUpdate]:
+    def get_updated_calendars(self) -> Dict[str, Scheme.DHBWCourseUpdate]:
         """
         Fetches updated calendars from the DHBW API and processes synchronization information.
 
@@ -390,7 +391,7 @@ class DHBWAppFetcher:
                 return {}
             elif sync_status.get("status") == "running":
                 # Wait for synchronization to complete
-                await asyncio.sleep(20)
+                time.sleep(20)
             else:
                 is_synced = True
 
