@@ -35,7 +35,7 @@ export const navigateToPerformanceOverview = async (
   setLoad: (load: string) => void,
 ) => {
   setProgress(0.25);
-  setLoad("Leistungsübersicht")
+  setLoad("Leistungsübersicht");
   try {
     const performanceUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=STUDENT_RESULT&ARGUMENTS=${authArguments},-N000310,-N0,-N000000000000000,-N000000000000000,-N000000000000000,-N0,-N000000000000000`;
     const response = await axiosInstance.get(performanceUrl);
@@ -68,7 +68,7 @@ export const navigateToExamResults = async (
   setLoad: (load: string) => void,
 ) => {
   setProgress(0.35);
-  setLoad("Semester")
+  setLoad("Semester");
   try {
     const examResultsUrl = `${BASE_URL}/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
     const response = await axiosInstance.get(examResultsUrl);
