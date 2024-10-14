@@ -34,7 +34,7 @@ export const navigateToPerformanceOverview = async (
   setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.25);
   setLoad("Leistungsübersicht");
@@ -56,7 +56,7 @@ export const navigateToPerformanceOverview = async (
     setProgress(0.3);
   } catch (err) {
     setError(
-      "An error occurred while navigating to the performance overview. Please try again."
+      "An error occurred while navigating to the performance overview. Please try again.",
     );
     console.error(err);
   }
@@ -67,7 +67,7 @@ export const navigateToExamResults = async (
   setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.35);
   setLoad("Semester");
@@ -82,7 +82,7 @@ export const navigateToExamResults = async (
     setProgress(0.4);
   } catch (err) {
     setError(
-      "An error occurred while navigating to the exam results. Please try again."
+      "An error occurred while navigating to the exam results. Please try again.",
     );
     console.error(err);
   }
@@ -95,7 +95,7 @@ export const navigateThroughSemesters = async (
   setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.45);
   setLoad("Semester Daten");
@@ -104,7 +104,7 @@ export const navigateThroughSemesters = async (
 
     // Mapping each semester request into an array of promises
     const promises = semesterArray.map(async (sem, i) => {
-      await sleep(i/2 * 10);
+      await sleep((i / 2) * 10);
 
       const semesterUrl = `/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N${sem.value},-N000307`;
       const response = await axiosInstance.get(semesterUrl);
@@ -125,7 +125,7 @@ export const navigateThroughSemesters = async (
     filterGrade(allSemesterData, setGradeData, setGpaSemesterData);
   } catch (err) {
     setError(
-      "An error occurred while navigating through the semesters. Please try again."
+      "An error occurred while navigating through the semesters. Please try again.",
     );
     console.error(err);
   }
@@ -137,14 +137,14 @@ export const navigateThroughGradeDetails = async (
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoading: (loading: boolean) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ) => {
   setProgress(0.75);
   setLoad("Semester Details");
   try {
     let updatedGradeData = [...gradeData];
     const promises = updatedGradeData.map(async (grade, i) => {
-      await sleep(i/2 * 10);
+      await sleep((i / 2) * 10);
 
       const detailUrl = `${grade.detail}`;
       const response = await axiosInstance.get(detailUrl);
@@ -168,7 +168,7 @@ export const navigateThroughGradeDetails = async (
     setProgress(1);
   } catch (err) {
     setError(
-      "An error occurred while navigating through the grade details. Please try again."
+      "An error occurred while navigating through the grade details. Please try again.",
     );
     console.error(err);
   }

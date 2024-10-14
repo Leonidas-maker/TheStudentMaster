@@ -113,7 +113,6 @@ const Settings: React.FC = () => {
     };
     fetchData();
   }, []);
-  
 
   // ====================================================== //
   // ===================== Functions ====================== //
@@ -127,7 +126,7 @@ const Settings: React.FC = () => {
   // Handle the university select and gets data from backend
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
-    if (!activateCallback) return
+    if (!activateCallback) return;
     const selectedUni = calendars.find(
       (calendar) => calendar.university_name === selectedValue,
     );
@@ -156,7 +155,7 @@ const Settings: React.FC = () => {
   // Handle the course select and gets data from backend
   // Sets progress and loading state
   const handleCourseSelect = async (selectedValue: string) => {
-    if (!activateCallback) return
+    if (!activateCallback) return;
     setLoading(true);
     setProgress(0.25);
     setSelectedCourse(selectedValue);
