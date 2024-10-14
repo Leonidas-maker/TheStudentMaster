@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Pressable, useColorScheme } from "react-native";
+import { View, ScrollView, Pressable, useColorScheme, Text } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -19,6 +19,13 @@ import {
 import Subheading from "../../components/textFields/Subheading";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { useNavigation } from "@react-navigation/native";
+import DualisOverviewText from "../../components/textFields/dualisTextFields/DualisOverviewText";
+import DualisOverviewDescText from "../../components/textFields/dualisTextFields/DualisOverviewDescText";
+import DualisModuleText from "../../components/textFields/dualisTextFields/DualisModuleText";
+import DualisHeaderModuleText from "../../components/textFields/dualisTextFields/DualisHeaderModuleText";
+import DualisHeaderDescText from "../../components/textFields/dualisTextFields/DualisHeaderDescText";
+import DualisNumberText from "../../components/textFields/dualisTextFields/DualisNumberText";
+import DualisDetailText from "../../components/textFields/dualisTextFields/DualisDetailText";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -63,6 +70,9 @@ const Dualis: React.FC = () => {
 
   // Set the icon color based on the color scheme
   const iconColor = isLight ? "#FFFFFF" : "#000000";
+  const checkColor = isLight ? "#497740" : "#629F56";
+  // Colors from the background, so the check icon is not visible and the dimensions are right
+  const placeholderColor = isLight ? "#E8EBF7" : "#1E1E24";
 
   // Function to get available semesters and add "Leistungsübersicht" as the first option
   const getSemesterDropdownValues = () => {
@@ -131,41 +141,67 @@ const Dualis: React.FC = () => {
 
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
-      <View className="mt-5">
-        <Heading text="Noten" />
-      </View>
-      <Dropdown
-        setSelected={setSelectedSemester}
-        values={getSemesterDropdownValues()}
-        placeholder="Semester auswählen"
-        save="value"
-        defaultOption={{
-          key: "Leistungsübersicht",
-          value: "Leistungsübersicht",
-        }}
-      />
+      {/* <View className="mt-5">
+        <Heading text={`${selectedSemester}`} />
+      </View> */}
       <ScrollView>
         {selectedSemester === "Leistungsübersicht" ? (
-          <View className="mt-4 p-4 rounded w-full">
-            <DefaultText text={`ECTS: ${ectsData.ectsSum}`} />
-            <DefaultText text={`ECTS benötigt: ${ectsData.ectsTotal}`} />
-            <DefaultText text={`Gesamt-GPA: ${gpaData.gpaTotal}`} />
-            <DefaultText text={`Hauptfach-GPA: ${gpaData.gpaSubject}`} />
-            {moduleData.length > 0
-              ? moduleData.map((module, index) => (
-                  <View key={index} className="mb-4">
-                    <Subheading text={`${module.number} - ${module.name}`} />
-                    <DefaultText text={`ECTS: ${module.ects}`} />
-                    <DefaultText text={`Note: ${module.grade}`} />
-                    <DefaultText text={module.passed ? "Bestanden" : ""} />
+          <View>
+            <View className="mt-4 w-full">
+              <Heading text="Übersicht" />
+              <View className="flex-row p-2 pl-5 items-end">
+                <DualisOverviewText text={`${gpaData.gpaTotal}`} />
+                <DualisOverviewDescText text="Gesamt-GPA" />
+              </View>
+              <View className="flex-row p-2 pl-5 items-end">
+                <DualisOverviewText text={`${gpaData.gpaSubject}`} />
+                <DualisOverviewDescText text="Hauptfach-GPA" />
+              </View>
+              <View className="flex-row p-2 pl-5 items-end">
+                <DualisOverviewText text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`} />
+                <DualisOverviewDescText text="ECTS" />
+              </View>
+              <View className="py-4">
+                <Heading text="Studienergebnisse" />
+              </View>
+              {moduleData.length > 0 ? (
+                <View>
+                  <View className="flex-row items-center justify-between flex-wrap m-2">
+                    <DualisHeaderModuleText text="Modul" />
+                    <DualisHeaderDescText text="ECTS" />
+                    <DualisHeaderDescText text="Note" />
+                    <View className="w-1/10 items-end px-3">
+                      <Icon name="check" size={20} color={placeholderColor} />
+                    </View>
                   </View>
-                ))
-              : null}
+
+                  {moduleData.map((module, index) => (
+                    <View key={index} className="mx-2">
+                      <View className="flex-row items-center justify-between flex-wrap">
+                        <View className="flex-1">
+                          <DualisNumberText text={`${module.number}`}/>
+                          <DualisModuleText text={`${module.name}`} />
+                        </View>
+                        <DualisDetailText text={`${module.ects}`} />
+                        <DualisDetailText text={`${module.grade}`} />
+                        <View className="w-1/10 items-end px-3">
+                          {module.passed && <Icon name="check" size={20} color={checkColor} />}
+                        </View>
+                      </View>
+
+                      {index < moduleData.length - 1 && (
+                        <View className="border-b dark:border-light_primary border-dark_primary my-2" />
+                      )}
+                    </View>
+                  ))}
+                </View>
+              ) : null}
+            </View>
           </View>
         ) : null}
 
         {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGradeData.map((grade, index) => (
               <View key={index} className="mb-4">
@@ -189,7 +225,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGpaSemesterData.map((semester, index) => (
               <View key={index} className="mb-4">
@@ -202,6 +238,18 @@ const Dualis: React.FC = () => {
           </View>
         ) : null}
       </ScrollView>
+      <View className="mb-1">
+        <Dropdown
+          setSelected={setSelectedSemester}
+          values={getSemesterDropdownValues()}
+          placeholder="Semester auswählen"
+          save="value"
+          defaultOption={{
+            key: "Leistungsübersicht",
+            value: "Leistungsübersicht",
+          }}
+        />
+      </View>
     </View>
   );
 };
