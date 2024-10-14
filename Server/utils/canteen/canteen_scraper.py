@@ -25,7 +25,7 @@ def fetch_menu(
                 return fetch_menu_stw_ma(canteen_short_name, week_offset)
             except Exception as e:
                 # Error handling for other canteens' menu fetch
-                print("Error fetching Menu, fetch_menu_stw_ma")
+                print("Error fetching Menu, fetch_menu_stw_ma", canteen_short_name, week_offset)
                 print(e)
                 return {}
 
@@ -56,7 +56,8 @@ def fetch_menu_dhbw_eppel(
     friday = monday + timedelta(days=4)
 
     # Construct URL for the menu
-    url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Speisenausgabe+DHBW+Eppelheim-date-2024%25252d03%25252d{date}-view-week.html"
+    url = "https://www.stw-ma.de/essen-trinken/speiseplaene/speisenausgabe-eppelheim/"
+    # url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Speisenausgabe+DHBW+Eppelheim-date-2024%25252d03%25252d{date}-view-week.html"
 
     # Fetch and parse the menu page
     response = requests.get(url)
@@ -119,6 +120,8 @@ def fetch_menu_stw_ma(
     week_offset: int,
 ) -> dict:
 
+    no_menu_list = ["Für den heutigen Tag steht kein Angebot zur Verfügung."]
+
     # * check input
     # check week_offset
     if not isinstance(week_offset, int):
@@ -135,9 +138,9 @@ def fetch_menu_stw_ma(
         raise ValueError("canteen_short_name must be a string")
 
     # get dates
-    date = datetime.now().day + 7 * week_offset
-    day = f"0{date}" if date < 10 else f"{date}"
-    month = f"0{datetime.now().month}" if datetime.now().month < 10 else f"{datetime.now().month}"
+    date = datetime.now() + timedelta(days=7 * week_offset)
+    day = f"0{date.day}" if date.day < 10 else f"{date.day}"
+    month = f"0{date.month}" if date.month < 10 else f"{date.month}"
     year = f"{datetime.now().year}"
 
     # get dates for the week
@@ -154,23 +157,21 @@ def fetch_menu_stw_ma(
     # get url for canteen_id
     match canteen_short_name:
         case "schlossmensa":
-            url = (
-                f"https://www.stw-ma.de/men%C3%BCplan_schlossmensa-date-{year}%25252d{month}%25252d{day}-view-week.html"
-            )
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=610&date={year}-{month}-{day}&lang=de"
         case "greens":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/greenes%C2%B2-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=710&date={year}-{month}-{day}&lang=de"
         case "mensawagon":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/mensawagon-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=709&date={year}-{month}-{day}&lang=de"  # no menu available
         case "hochschule_mannheim":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Hochschule+Mannheim-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=611&date={year}-{month}-{day}&lang=de"
         case "cafeteria_musikhochschule":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Cafeteria+Musikhochschule-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=714&date={year}-{month}-{day}&lang=de"
         case "popakademie":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/CAFE+33-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=717&date={year}-{month}-{day}&lang=de"
         case "mensaria_metropol":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Metropol-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=613&date={year}-{month}-{day}&lang=de"
         case "mensaria_wohlgelegen":
-            url = f"https://www.stw-ma.de/Essen+_+Trinken/Speisepl%C3%A4ne/Mensaria+Wohlgelegen-date-{year}%25252d{month}%25252d{day}-view-week.html"
+            url = f"https://www.stw-ma.de/essen-trinken/speiseplaene/wochenansicht?location=614&date={year}-{month}-{day}&lang=de"
         case _:
             raise ValueError("Invalid canteen_id").add_note(
                 "canteen_id must be one of the following: schlossmensa, greens, mensawagon, hochschule_mannheim, cafeteria_musikhochschule, popakademie, mensaria_metropol, mensaria_wohlgelegen, dhbw_eppelheim"
@@ -213,6 +214,11 @@ def fetch_menu_stw_ma(
         raw_price_list = remove_empty_strings(raw_price_list)
         menu_prices = ["Montag"]
         for j in range(0, len(raw_price_list), 2):
+            # check if there is no menu for that day
+            if raw_price_list[0] in no_menu_list:
+                menu_prices = ["Kein Angebot"]
+                break
+
             # catch errors from the website regarding price
             if not re.match(r"(Portion|Glas|pro 100g): \d+,\d{2} €", f"{raw_price_list[j+1]}: {raw_price_list[j]}"):
                 # if quantity is missing, add it
@@ -227,9 +233,12 @@ def fetch_menu_stw_ma(
             menu_prices.append(f"{raw_price_list[j+1]}: {raw_price_list[j]}")
 
         # check if menu items and prices match
-        if not len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names):
+        if (
+            not (len(menu_items) == len(menu_prices) and len(menu_items) == len(menu_names))
+            and not menu_prices[0] == "Kein Angebot"
+        ):
             print("Error: Length of menu items and prices do not match")
-            return
+            return {}
 
         # create menu dictionary
         list_items_prices = list()

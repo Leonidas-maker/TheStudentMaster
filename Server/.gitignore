@@ -1,7 +1,0 @@
-config.ini
-config_docker.ini
-certs
-jwt_keys
-tmp
-__pycache__
-.pytest_cache

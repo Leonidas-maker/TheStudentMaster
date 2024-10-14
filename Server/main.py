@@ -20,7 +20,7 @@ from middleware.calendar import (
     update_custom_calendars,
     clean_custom_calendars,
 )
-from middleware.canteen import create_canteens, update_canteen_menus
+from middleware.canteen import create_canteens, update_canteen_menus, clean_canteen_menus
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 
@@ -127,7 +127,17 @@ async def lifespan(app: FastAPI):
         with_progress=False,
     )
 
-    task_scheduler.start(run_startup_tasks=False)
+    task_scheduler.add_task(
+        "canteen_clean_menus",
+        clean_canteen_menus,
+        interval_seconds=60 * 60 * 12,  # 12 hours
+        # start_time=6,
+        # end_time=18,
+        blocked_by=["canteen"],
+        with_progress=False,
+    )
+
+    task_scheduler.start(run_startup_tasks=True)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
