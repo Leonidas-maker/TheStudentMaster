@@ -160,9 +160,7 @@ const Overview: React.FC = () => {
 
   const moduleTitle = "Weitere Funktionen";
 
-  const onPressModuleFunctions = [
-    handleMealPlanPress,
-  ];
+  const onPressModuleFunctions = [handleMealPlanPress];
 
   const moduleTexts = ["Essensplan"];
 

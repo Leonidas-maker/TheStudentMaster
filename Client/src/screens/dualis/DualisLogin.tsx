@@ -205,7 +205,11 @@ const DualisLogin: React.FC = () => {
             onValueChanges={[toggleSaveLogin]}
             values={[saveLogin]}
           />
-          <DefaultButton text="Login" onPress={login} disabled={disableButton} />
+          <DefaultButton
+            text="Login"
+            onPress={login}
+            disabled={disableButton}
+          />
         </View>
         {error ? <DefaultText text={error} /> : null}
       </View>

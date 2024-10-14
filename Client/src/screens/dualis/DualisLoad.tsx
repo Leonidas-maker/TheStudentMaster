@@ -139,11 +139,11 @@ const DualisLoad: React.FC = () => {
           setLoading,
           setLoad,
         );
-  
+
         logoutDualis(authArguments);
       }
     };
-  
+
     handleGradeDetailsNavigation();
   }, [gradeData, authArguments]);
 
@@ -162,7 +162,7 @@ const DualisLoad: React.FC = () => {
                 ectsData,
                 semesterData,
                 gradeData,
-                gpaSemesterData, 
+                gpaSemesterData,
               },
             },
           },
@@ -170,7 +170,7 @@ const DualisLoad: React.FC = () => {
       });
     }
   }, [gpaSemesterData, navigatedThroughGradeDetails]);
-  
+
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">
       <Heading text="Lade Dualis Daten" />

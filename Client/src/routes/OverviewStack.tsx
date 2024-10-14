@@ -80,9 +80,11 @@ const OverviewStack: React.FC = () => {
         />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Loading" component={Loading} />
-        <Stack.Screen name="MealPlan" component={MealPlan} options={
-          { headerShown: true, headerTitle: "Essensplan" }
-        } />
+        <Stack.Screen
+          name="MealPlan"
+          component={MealPlan}
+          options={{ headerShown: true, headerTitle: "Essensplan" }}
+        />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Imprint" component={Imprint} />
         <Stack.Screen name="Credits" component={Credits} />

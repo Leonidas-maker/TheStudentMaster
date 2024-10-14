@@ -151,7 +151,8 @@ const Dualis: React.FC = () => {
         <Heading text={`${selectedSemester}`} />
       </View> */}
       <ScrollView>
-        {selectedSemester.length > 1 && selectedSemester === "Leistungsübersicht" ? (
+        {selectedSemester.length > 1 &&
+        selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -211,7 +212,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
             {filteredGpaSemesterData.map((semester, index) => (
@@ -230,7 +231,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />
@@ -243,7 +244,13 @@ const Dualis: React.FC = () => {
                     <DualisModuleText text={`${grade.name}`} />
                   </View>
                   <DualisDetailText text={`${grade.ects}`} />
-                  <DualisDetailText text={grade.grade !== "noch nicht gesetzt" ? `${grade.grade}` : "—"} />
+                  <DualisDetailText
+                    text={
+                      grade.grade !== "noch nicht gesetzt"
+                        ? `${grade.grade}`
+                        : "—"
+                    }
+                  />
                   <View className="w-1/10 items-end px-3">
                     {grade.status ? (
                       <Icon name="check" size={20} color={checkColor} />
