@@ -151,7 +151,7 @@ const Dualis: React.FC = () => {
         <Heading text={`${selectedSemester}`} />
       </View> */}
       <ScrollView>
-        {selectedSemester === "Leistungsübersicht" ? (
+        {selectedSemester.length > 1 && selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -210,39 +210,66 @@ const Dualis: React.FC = () => {
           </View>
         ) : null}
 
-        {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
-          <View>
-            {filteredGradeData.map((grade, index) => (
-              <View key={index} className="mb-4">
-                <Subheading text={`${grade.number} - ${grade.name}`} />
-                <DefaultText text={`ECTS: ${grade.ects}`} />
-                <DefaultText text={`Note: ${grade.grade}`} />
-                <DefaultText text={`Status: ${grade.status}`} />
-                <DefaultText text={`Detail: ${grade.detail}`} />
-                <DefaultText text={`Semester: ${grade.semester}`} />
-                {grade.detailGrade.map((detail, detailIndex) => (
-                  <View key={detailIndex} className="mb-4">
-                    <DefaultText text={detail.semester} />
-                    <DefaultText text={detail.exam} />
-                    <DefaultText text={detail.date} />
-                    <DefaultText text={detail.grade} />
-                  </View>
-                ))}
+        {filteredGpaSemesterData.length > 0 &&
+          selectedSemester !== "Leistungsübersicht" ? (
+          <View className="mt-4 w-full">
+            <Heading text="Übersicht" />
+            {filteredGpaSemesterData.map((semester, index) => (
+              <View key={index} className="">
+                <View className="flex-row p-2 pl-5 items-end">
+                  <DualisOverviewText text={`${semester.grade}`} />
+                  <DualisOverviewDescText text="Semester-GPA" />
+                </View>
+                <View className="flex-row p-2 pl-5 items-end">
+                  <DualisOverviewText text={`${semester.ects}`} />
+                  <DualisOverviewDescText text="Semester-ECTS" />
+                </View>
               </View>
             ))}
           </View>
         ) : null}
 
-        {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
-          <View>
-            {filteredGpaSemesterData.map((semester, index) => (
-              <View key={index} className="mb-4">
-                <DefaultText text={`Semester: ${semester.semester}`} />
-                <DefaultText text={semester.name} />
-                <DefaultText text={`GPA: ${semester.grade}`} />
-                <DefaultText text={`ECTS: ${semester.ects}`} />
+        {filteredGradeData.length > 0 &&
+          selectedSemester !== "Leistungsübersicht" ? (
+          <View className="w-full">
+            <View className="py-4">
+              <Heading text="Ergebnisse" />
+            </View>
+            {filteredGradeData.map((grade, index) => (
+              <View key={index} className="mx-4">
+                <View className="flex-row items-center justify-between flex-wrap">
+                  <View className="flex-1">
+                    <DualisNumberText text={`${grade.number}`} />
+                    <DualisModuleText text={`${grade.name}`} />
+                  </View>
+                  <DualisDetailText text={`${grade.ects}`} />
+                  <DualisDetailText text={grade.grade !== "noch nicht gesetzt" ? `${grade.grade}` : "—"} />
+                  <View className="w-1/10 items-end px-3">
+                    {grade.status ? (
+                      <Icon name="check" size={20} color={checkColor} />
+                    ) : (
+                      <View style={{ width: 20, height: 20 }} />
+                    )}
+                  </View>
+                </View>
+                {grade.detailGrade.map((detail, detailIndex) => (
+                  <View key={detailIndex}>
+                    <View className="flex-row items-center justify-between flex-wrap mt-2">
+                      <View className="flex-1">
+                        <DefaultText text={detail.exam} />
+                        <DefaultText text={detail.semester} />
+                      </View>
+                      <DefaultText text={detail.date} />
+                      <DefaultText text={detail.grade} />
+                      <View className="w-1/10 items-end px-3">
+                        <View style={{ width: 20, height: 20 }} />
+                      </View>
+                    </View>
+                  </View>
+                ))}
+                {index < filteredGradeData.length - 1 && (
+                  <View className="border-b dark:border-light_primary border-dark_primary my-2" />
+                )}
               </View>
             ))}
           </View>

@@ -139,37 +139,42 @@ const DualisLoad: React.FC = () => {
           setLoading,
           setLoad,
         );
-
+  
         logoutDualis(authArguments);
-
-        navigation.reset({
-          index: 0,
-          routes: [
-            {
-              name: "Dualis",
-              params: {
-                screen: "DualisPerfomance",
-                params: {
-                  moduleData,
-                  gpaData,
-                  ectsData,
-                  semesterData,
-                  gradeData,
-                  gpaSemesterData,
-                },
-              },
-            },
-          ],
-        });
       }
     };
-
+  
     handleGradeDetailsNavigation();
   }, [gradeData, authArguments]);
+
+  useEffect(() => {
+    if (gpaSemesterData.length > 0 && navigatedThroughGradeDetails) {
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: "Dualis",
+            params: {
+              screen: "DualisPerfomance",
+              params: {
+                moduleData,
+                gpaData,
+                ectsData,
+                semesterData,
+                gradeData,
+                gpaSemesterData, 
+              },
+            },
+          },
+        ],
+      });
+    }
+  }, [gpaSemesterData, navigatedThroughGradeDetails]);
+  
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">
       <Heading text="Lade Dualis Daten" />
-      <Subheading text="Dies kann bis zu 20 Sekunden dauern..." />
+      <Subheading text="Dies kann einige Sekunden dauern..." />
 
       <View className="justify-center w-[80%]">
         {loading && (

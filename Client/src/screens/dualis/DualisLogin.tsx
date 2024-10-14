@@ -41,6 +41,7 @@ const DualisLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
   const [isLight, setIsLight] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
@@ -51,6 +52,7 @@ const DualisLogin: React.FC = () => {
 
   // Function to handle login
   const login = async () => {
+    setDisableButton(true);
     setLoading(true);
     setProgress(0);
 
@@ -203,7 +205,7 @@ const DualisLogin: React.FC = () => {
             onValueChanges={[toggleSaveLogin]}
             values={[saveLogin]}
           />
-          <DefaultButton text="Login" onPress={login} />
+          <DefaultButton text="Login" onPress={login} disabled={disableButton} />
         </View>
         {error ? <DefaultText text={error} /> : null}
       </View>

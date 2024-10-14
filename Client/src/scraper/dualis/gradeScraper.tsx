@@ -15,7 +15,7 @@ export const filterGrade = (
   let name = "";
   let grade = "";
   let ects = "";
-  let status = "";
+  let passed = false;
   let detail = "";
   let insideTboday = false;
   let lastTr = false;
@@ -65,7 +65,9 @@ export const filterGrade = (
             ects = cleanText;
             break;
           case 4:
-            status = cleanText;
+            if (cleanText === "bestanden") {
+              passed = true;
+            }
             break;
           case 5:
             detail = cleanText;
@@ -110,7 +112,7 @@ export const filterGrade = (
           name: name,
           grade: grade,
           ects: ects,
-          status: status,
+          status: passed,
           detail: detail,
           semester: currentSemester,
           detailGrade: [],
@@ -130,7 +132,7 @@ export const filterGrade = (
           semester: currentSemester,
           name: name,
           grade: grade,
-          ects: ects,
+          ects: ects.split(",")[0],
         });
 
         name = "";

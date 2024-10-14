@@ -155,20 +155,18 @@ const Overview: React.FC = () => {
   };
 
   const handleMealPlanPress = () => {
-    navigation.navigate("OverviewStack", { screen: "MealPlan" });
+    navigation.navigate("MealPlan");
   };
 
-  const moduleTitle = "Weitere Module";
+  const moduleTitle = "Weitere Funktionen";
 
   const onPressModuleFunctions = [
-    handleDashboardPress,
-    handleDualisPress,
     handleMealPlanPress,
   ];
 
-  const moduleTexts = ["Dashboard", "Dualis", "Meal Plan"];
+  const moduleTexts = ["Essensplan"];
 
-  const moduleIconNames = ["dashboard", "school", "restaurant"];
+  const moduleIconNames = ["restaurant"];
 
   // ====================================================== //
   // ================== OverviewNavigator ================= //
@@ -315,12 +313,12 @@ const Overview: React.FC = () => {
         texts={accountTexts}
         iconNames={accountIconNames}
       /> */}
-      <Navigator
+      {/* <Navigator
         title={dualisTitle}
         onPressFunctions={onPressDualisFunctions}
         texts={dualisTexts}
         iconNames={dualisIcons}
-      />
+      /> */}
       <Navigator
         title={overviewTitle}
         onPressFunctions={onPressOverviewFunctions}

@@ -37,7 +37,7 @@ interface GradeData {
   name: string;
   grade: string;
   ects: string;
-  status: string;
+  status: boolean;
   detail: string;
   semester: string;
   detailGrade: Array<{
