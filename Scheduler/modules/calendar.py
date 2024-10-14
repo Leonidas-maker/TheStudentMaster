@@ -488,9 +488,7 @@ def prepareCalendarTables(db: Session):
                 db.add(m_calendar.CalendarBackend(backend_name=backend, is_custom_available=False))
             else:
                 db.add(m_calendar.CalendarBackend(backend_name=backend))
-    with open(
-        "./data/ger_univercity.json", "r", encoding="utf-8"
-    ) as f:  # TODO: Change path --> not relative
+    with open("./data/ger_univercity.json", "r", encoding="utf-8") as f:  # TODO: Change path --> not relative
         data: list = json.load(f)
 
     existing_universities = set(university[0] for university in db.query(m_calendar.University.university_name).all())
@@ -1131,6 +1129,7 @@ def update_custom_calendars(db: Session, progress, task_id, backend: m_calendar.
         # Handle any errors by updating the progress bar and printing the error
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
         print(e)
+
 
 # ======================================================== #
 # ========================= Utils ======================== #

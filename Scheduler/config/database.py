@@ -79,7 +79,9 @@ def create_engine_with_retries(url, connect_args, max_retries, wait_seconds):
             return engine
         except OperationalError as e:
             retries += 1
-            console.log(f"[red]Database connection failed. Retrying {retries}/{max_retries} in {wait_seconds} seconds...")
+            console.log(
+                f"[red]Database connection failed. Retrying {retries}/{max_retries} in {wait_seconds} seconds..."
+            )
             time.sleep(wait_seconds)
     raise RuntimeError("Could not connect to the database after multiple retries.")
 

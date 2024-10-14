@@ -21,9 +21,11 @@ from models.pydantic_schemas import s_general, s_calendar
 
 calendar_router = APIRouter()
 
+
 @calendar_router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars])
 async def api_get_available_calendars(db: Session = Depends(get_db)):
     return await get_available_calendars(db)
+
 
 @calendar_router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar)
 async def api_get_calendar(

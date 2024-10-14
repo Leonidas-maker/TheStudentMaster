@@ -154,6 +154,7 @@ def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen
         return False
     return new_canteen
 
+
 def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     if not dish:
         raise ValueError("Parameter dish is required")

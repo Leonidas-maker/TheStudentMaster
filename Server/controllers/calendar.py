@@ -40,6 +40,7 @@ async def get_available_calendars(db: Session) -> List[s_calendar.ResAvailableNa
 
     return response
 
+
 @cache(expire=60, key_builder=custom_key_builder)
 async def get_calendar_by_university_and_course(
     db: Session, university_uuid: uuid.UUID, course_name: str, response: Response
@@ -104,6 +105,7 @@ async def get_calendar_by_university_and_course(
 
     return res_calendar
 
+
 @cache(expire=60, key_builder=custom_key_builder)
 async def get_calendar_hash(
     db: Session,
@@ -126,8 +128,11 @@ async def get_calendar_hash(
 
     return {"message": course.last_modified.isoformat()}
 
+
 @cache(expire=60, key_builder=custom_key_builder)
-async def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
+async def get_free_rooms(
+    db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime
+) -> List[str]:
     # Check if start time is before end time
     if start_time >= end_time:
         raise HTTPException(status_code=400, detail="Start time must be before end time.")

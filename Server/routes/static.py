@@ -11,4 +11,3 @@ def configure_static(app: FastAPI):
     # @app.get("/favicon.ico", include_in_schema=False)
     # async def favicon():
     #     return FileResponse("public/static/favicon.ico")
-       

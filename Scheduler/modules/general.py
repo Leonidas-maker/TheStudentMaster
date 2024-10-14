@@ -11,6 +11,7 @@ from models import m_general, m_user, m_calendar, m_canteen
 ####################### Database specific functions #######################
 ###########################################################################
 
+
 # Function to create a new address in the database
 def create_address(db: Session, new_address: s_general.AddressCreate) -> m_general.Address:
     if not new_address:

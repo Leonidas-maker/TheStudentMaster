@@ -5,6 +5,7 @@ from functools import reduce
 ########################## Basic logic functions ##########################
 ###########################################################################
 
+
 # Function to perform XOR operation on multiple arguments
 def xor(*args) -> bool:
     return reduce(xor_, map(bool, args))

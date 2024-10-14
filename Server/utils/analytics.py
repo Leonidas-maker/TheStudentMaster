@@ -28,9 +28,9 @@ def log_request(
     global _requests, _last_posted
 
     # Extract 'path', 'method', and 'log_entry' from request_data
-    path = request_data.pop('path', None)
-    method = request_data.pop('method', None)
-    log_entry = request_data.pop('log_entry', None)
+    path = request_data.pop("path", None)
+    method = request_data.pop("method", None)
+    log_entry = request_data.pop("log_entry", None)
     if path is None or method is None or log_entry is None:
         logger.error("Request data must contain 'path', 'method', and 'log_entry'")
         return
@@ -38,12 +38,8 @@ def log_request(
     key = (path, method)
 
     if key not in _requests:
-        _requests[key] = {
-            'path': path,
-            'method': method,
-            'api_request_logs': []
-        }
-    _requests[key]['api_request_logs'].append(log_entry)
+        _requests[key] = {"path": path, "method": method, "api_request_logs": []}
+    _requests[key]["api_request_logs"].append(log_entry)
 
     now = datetime.now()
     if (now - _last_posted).total_seconds() > 30.0:
@@ -67,7 +63,7 @@ def _post_requests(
     if url is None:
         logger.debug("Aborting post to server: Server URL is not set.")
         return
-    
+
     try:
         response = requests.post(
             url,

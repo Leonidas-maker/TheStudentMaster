@@ -10,7 +10,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.types import ASGIApp
-from user_agents import parse  
+from user_agents import parse
 
 from utils.analytics import log_request, logger
 
@@ -30,13 +30,11 @@ class Analytics(BaseHTTPMiddleware):
 
         # Initialize Anonip if privacy level is 1
         if self.config.privacy_level == 1:
-            self.anonip = Anonip() 
+            self.anonip = Anonip()
         else:
             self.anonip = None
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         start = time()
         response = await call_next(request)
         duration = time() - start
@@ -68,9 +66,7 @@ class Analytics(BaseHTTPMiddleware):
         user_agent_str = self.config.get_user_agent(request)
         if user_agent_str:
             user_agent = parse(user_agent_str)
-            device_type = (
-                "Mobile" if user_agent.is_mobile else "Desktop" if user_agent.is_pc else "Unknown"
-            )
+            device_type = "Mobile" if user_agent.is_mobile else "Desktop" if user_agent.is_pc else "Unknown"
             return {
                 "device_type": device_type,
                 "os": user_agent.os.family,

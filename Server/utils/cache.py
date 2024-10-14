@@ -29,12 +29,9 @@ def custom_key_builder(func, *args, **kwargs):
             for k, v in arg_value.items():
                 if not isinstance(v, (Session, Response, Request)) and not arg_name.startswith("_"):
                     serializable_args.append(f"{arg_name}={v}")
-        elif (
-            not isinstance(arg_value, (Session, Response, Request))
-            and not arg_name.startswith("_")
-        ):
+        elif not isinstance(arg_value, (Session, Response, Request)) and not arg_name.startswith("_"):
             serializable_args.append(f"{arg_name}={arg_value}")
-   
+
     # Generate a unique string based on function name and serializable arguments
     cache_key_str = f"{func.__module__}:{func.__name__}:{serializable_args}"
 

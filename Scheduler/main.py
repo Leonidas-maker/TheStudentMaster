@@ -6,8 +6,6 @@ from models import m_calendar, m_general, m_user, m_canteen
 from config.database import SessionLocal, engine
 
 
-
-
 def main():
     m_general.Base.metadata.create_all(bind=engine)
     m_user.Base.metadata.create_all(bind=engine)
@@ -16,7 +14,7 @@ def main():
 
     task_scheduler = TaskScheduler(verbose=True)
 
-    db = SessionLocal() 
+    db = SessionLocal()
     canteen.create_canteens(db)
     print("Preparing calendar tables...")
     calendar.prepareCalendarTables(db)
@@ -96,5 +94,6 @@ def main():
     except (KeyboardInterrupt, SystemExit):
         task_scheduler.stop()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

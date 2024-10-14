@@ -7,7 +7,6 @@ from models.pydantic_schemas import s_general
 from models.sql_models import m_general, m_user, m_calendar, m_canteen
 
 
-
 ###########################################################################
 ####################### Database specific functions #######################
 ###########################################################################
