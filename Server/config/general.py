@@ -16,6 +16,7 @@ ROUTE_VERSIONS_BASE = {
     "canteen": "1.0.0",
     "user": "1.0.0",
     "auth": "1.0.0",
+    "dualis": "1.0.0",
 }
 
 

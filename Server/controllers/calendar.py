@@ -5,14 +5,17 @@ from typing import List
 from sqlalchemy import func, and_, select
 from fastapi.responses import JSONResponse
 from datetime import datetime
+from fastapi_cache.decorator import cache
 
 
 from models.sql_models import m_calendar
 from models.pydantic_schemas import s_calendar, s_general
 from config.general import DEFAULT_TIMEZONE_RESPONSE
+from utils.cache import custom_key_builder
 
 
-def get_available_calendars(db: Session) -> List[s_calendar.ResAvailableNativeCalendars]:
+@cache(expire=120, key_builder=custom_key_builder)
+async def get_available_calendars(db: Session) -> List[s_calendar.ResAvailableNativeCalendars]:
     # Using GROUP_CONCAT in MySQL to group course names in the query itself
     result = (
         db.query(
@@ -37,10 +40,11 @@ def get_available_calendars(db: Session) -> List[s_calendar.ResAvailableNativeCa
 
     return response
 
-
-def get_calendar_by_university_and_course(
+@cache(expire=60, key_builder=custom_key_builder)
+async def get_calendar_by_university_and_course(
     db: Session, university_uuid: uuid.UUID, course_name: str, response: Response
 ) -> s_calendar.ResCalendar:
+    print("get_calendar_by_university_and_course")
     course_name = course_name.replace("_", " ")
 
     querry_options = [
@@ -100,8 +104,8 @@ def get_calendar_by_university_and_course(
 
     return res_calendar
 
-
-def get_calendar_hash(
+@cache(expire=60, key_builder=custom_key_builder)
+async def get_calendar_hash(
     db: Session,
     university_uuid: uuid.UUID,
     course_name: str,
@@ -122,8 +126,8 @@ def get_calendar_hash(
 
     return {"message": course.last_modified.isoformat()}
 
-
-def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
+@cache(expire=60, key_builder=custom_key_builder)
+async def get_free_rooms(db: Session, university_uuid: uuid.UUID, start_time: datetime, end_time: datetime) -> List[str]:
     # Check if start time is before end time
     if start_time >= end_time:
         raise HTTPException(status_code=400, detail="Start time must be before end time.")

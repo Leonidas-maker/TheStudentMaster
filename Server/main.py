@@ -20,6 +20,7 @@ server_config = Config()
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.database import get_async_db
 from middleware.stats import init_stats
+from middleware.analytics import Analytics, Config as AnalyticsConfig
 
 # ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from models.pydantic_schemas import s_stats
@@ -59,6 +60,9 @@ async def lifespan(app: FastAPI):
     elif ENVIRONMENT == "dev":
         FastAPICache.init(InMemoryBackend())
 
+    async with get_async_db() as db:
+        init_stats(db)
+
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield
     # ~~~~~~~~ Code to run on shutdown ~~~~~~~~ #
@@ -93,8 +97,15 @@ async def root():
 # ======================================================== #
 # ======================= Analytics ====================== #
 # ======================================================== #
-# TODO Implement the analytics middleware
+config = AnalyticsConfig()
+config.server_url = "http://localhost:8000"
+config.privacy_level = 1
 
+app.add_middleware(
+    Analytics,
+    api_key="Ypb1sI3LLbkQbj5KDzuF2qiOXa0QT8ZnNzR84Db1h5Q",
+    config=config,
+)
 
 # ======================================================== #
 # ====================== Middleware ====================== #

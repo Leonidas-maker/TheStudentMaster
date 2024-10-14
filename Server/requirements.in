@@ -17,3 +17,7 @@ pyotp
 PyJWT
 fastapi-cache2
 redis
+pyyaml 
+ua-parser 
+user-agents
+anonip

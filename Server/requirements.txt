@@ -10,6 +10,8 @@ alt-profanity-check==1.5.2
     # via -r .\requirements.in
 annotated-types==0.7.0
     # via pydantic
+anonip==1.1.0
+    # via -r .\requirements.in
 anyio==4.6.0
     # via
     #   asyncer
@@ -138,7 +140,9 @@ python-multipart==0.0.12
 pytz==2024.2
     # via -r .\requirements.in
 pyyaml==6.0.2
-    # via uvicorn
+    # via
+    #   -r .\requirements.in
+    #   uvicorn
 redis==5.1.1
     # via -r .\requirements.in
 requests==2.32.3
@@ -185,8 +189,14 @@ tzdata==2024.2
     # via
     #   icalendar
     #   pendulum
+ua-parser==0.18.0
+    # via
+    #   -r .\requirements.in
+    #   user-agents
 urllib3==2.2.3
     # via requests
+user-agents==2.2.0
+    # via -r .\requirements.in
 uvicorn[standard]==0.31.0
     # via
     #   -r .\requirements.in
