@@ -12,7 +12,9 @@ const DualisNumberText: React.FC<TextProps> = ({ text }) => {
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
-  return <Text className="text-md font-bold text-black dark:text-white">{text}</Text>;
+  return (
+    <Text className="text-md font-bold text-black dark:text-white">{text}</Text>
+  );
 };
 
 export default DualisNumberText;

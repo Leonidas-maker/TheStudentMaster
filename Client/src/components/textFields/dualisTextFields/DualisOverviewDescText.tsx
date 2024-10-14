@@ -12,7 +12,9 @@ const DualisOverviewDescText: React.FC<TextProps> = ({ text }) => {
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
-  return <Text className="text-2xl pl-5 text-black dark:text-white">{text}</Text>;
+  return (
+    <Text className="text-2xl pl-5 text-black dark:text-white">{text}</Text>
+  );
 };
 
 export default DualisOverviewDescText;

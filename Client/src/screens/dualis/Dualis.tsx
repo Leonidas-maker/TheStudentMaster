@@ -1,6 +1,12 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, Pressable, useColorScheme, Text } from "react-native";
+import {
+  View,
+  ScrollView,
+  Pressable,
+  useColorScheme,
+  Text,
+} from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -158,7 +164,9 @@ const Dualis: React.FC = () => {
                 <DualisOverviewDescText text="Hauptfach-GPA" />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
-                <DualisOverviewText text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`} />
+                <DualisOverviewText
+                  text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`}
+                />
                 <DualisOverviewDescText text="ECTS" />
               </View>
               <View className="py-4">
@@ -179,13 +187,15 @@ const Dualis: React.FC = () => {
                     <View key={index} className="mx-2">
                       <View className="flex-row items-center justify-between flex-wrap">
                         <View className="flex-1">
-                          <DualisNumberText text={`${module.number}`}/>
+                          <DualisNumberText text={`${module.number}`} />
                           <DualisModuleText text={`${module.name}`} />
                         </View>
                         <DualisDetailText text={`${module.ects}`} />
                         <DualisDetailText text={`${module.grade}`} />
                         <View className="w-1/10 items-end px-3">
-                          {module.passed && <Icon name="check" size={20} color={checkColor} />}
+                          {module.passed && (
+                            <Icon name="check" size={20} color={checkColor} />
+                          )}
                         </View>
                       </View>
 
@@ -201,7 +211,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGradeData.map((grade, index) => (
               <View key={index} className="mb-4">
@@ -225,7 +235,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View>
             {filteredGpaSemesterData.map((semester, index) => (
               <View key={index} className="mb-4">

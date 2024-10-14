@@ -12,7 +12,11 @@ const DualisDetailText: React.FC<TextProps> = ({ text }) => {
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
-  return <Text className="text-lg w-1/6 text-center text-black dark:text-white">{text}</Text>;
+  return (
+    <Text className="text-lg w-1/6 text-center text-black dark:text-white">
+      {text}
+    </Text>
+  );
 };
 
 export default DualisDetailText;

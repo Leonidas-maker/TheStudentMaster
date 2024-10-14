@@ -172,7 +172,13 @@ const DualisLoad: React.FC = () => {
       <Subheading text="Dies kann bis zu 20 Sekunden dauern..." />
 
       <View className="justify-center w-[80%]">
-        {loading && <Progress.Bar progress={progress} width={null} animationType="timing" />}
+        {loading && (
+          <Progress.Bar
+            progress={progress}
+            width={null}
+            animationType="timing"
+          />
+        )}
       </View>
 
       <Subheading text={`Lade ${load}...`} />
