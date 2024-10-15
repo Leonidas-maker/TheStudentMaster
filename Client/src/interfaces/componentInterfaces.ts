@@ -63,6 +63,7 @@ interface DropdownProps {
   inputStyles?: ViewStyle;
   notFound?: string;
   save?: "value" | "key" | undefined;
+  defaultOption?: { key: any; value: any };
 }
 interface NavigatorProps {
   title: string;

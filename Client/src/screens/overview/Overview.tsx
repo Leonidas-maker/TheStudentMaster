@@ -155,20 +155,16 @@ const Overview: React.FC = () => {
   };
 
   const handleMealPlanPress = () => {
-    navigation.navigate("OverviewStack", { screen: "MealPlan" });
+    navigation.navigate("MealPlan");
   };
 
-  const moduleTitle = "Weitere Module";
+  const moduleTitle = "Weitere Funktionen";
 
-  const onPressModuleFunctions = [
-    handleDashboardPress,
-    handleDualisPress,
-    handleMealPlanPress,
-  ];
+  const onPressModuleFunctions = [handleMealPlanPress];
 
-  const moduleTexts = ["Dashboard", "Dualis", "Meal Plan"];
+  const moduleTexts = ["Essensplan"];
 
-  const moduleIconNames = ["dashboard", "school", "restaurant"];
+  const moduleIconNames = ["restaurant"];
 
   // ====================================================== //
   // ================== OverviewNavigator ================= //
@@ -260,23 +256,66 @@ const Overview: React.FC = () => {
   ];
 
   // ====================================================== //
+  // =================== DualisNavigator ================== //
+  // ====================================================== //
+  const handleDualisLoginPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisLogin" });
+  };
+
+  const handleDualisLoadPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisDummy" });
+  };
+
+  const handleDualisPerformancePress = () => {
+    navigation.navigate("OverviewStack", { screen: "Dualis" });
+  };
+
+  const handleDualisSemesterPress = () => {
+    navigation.navigate("OverviewStack", { screen: "DualisSemester" });
+  };
+
+  const dualisTitle = "Dualis Screens";
+
+  const onPressDualisFunctions = [
+    handleDualisLoginPress,
+    handleDualisLoadPress,
+    handleDualisPerformancePress,
+    handleDualisSemesterPress,
+  ];
+
+  const dualisTexts = [
+    "Login",
+    "Load",
+    "Performance Overview",
+    "Semester View",
+  ];
+
+  const dualisIcons = ["apps", "apps", "apps", "apps"];
+
+  // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   // Returns the navigators and the current app version
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       {/* <ProfileView /> */}
-      {/* <Navigator
+      <Navigator
         title={moduleTitle}
         onPressFunctions={onPressModuleFunctions}
         texts={moduleTexts}
         iconNames={moduleIconNames}
-      /> */}
+      />
       {/* <Navigator
         title={accountTitle}
         onPressFunctions={onPressAccountFunctions}
         texts={accountTexts}
         iconNames={accountIconNames}
+      /> */}
+      {/* <Navigator
+        title={dualisTitle}
+        onPressFunctions={onPressDualisFunctions}
+        texts={dualisTexts}
+        iconNames={dualisIcons}
       /> */}
       <Navigator
         title={overviewTitle}

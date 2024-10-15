@@ -16,6 +16,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   search = false,
   notFound = "Keine Internetverbindung oder keine Daten vorhanden",
   save = "value",
+  defaultOption = { key: "", value: "" },
 }) => {
   // ====================================================== //
   // ======================= States ======================= //
@@ -63,6 +64,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         dropdownTextStyles={dropdownTextStyles}
         inputStyles={inputStyles}
         notFoundText={notFound}
+        defaultOption={defaultOption}
       />
     </View>
   );
