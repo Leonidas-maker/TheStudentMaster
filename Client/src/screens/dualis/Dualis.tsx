@@ -154,7 +154,7 @@ const Dualis: React.FC = () => {
       </View> */}
       <ScrollView>
         {selectedSemester.length > 1 &&
-          selectedSemester === "Leistungsübersicht" ? (
+        selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -214,7 +214,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
             {filteredGpaSemesterData.map((semester, index) => (
@@ -233,7 +233,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />
