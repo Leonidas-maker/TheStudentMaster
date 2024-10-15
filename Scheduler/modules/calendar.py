@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, joinedload, defer, load_only
-from sqlalchemy import select, update
+from sqlalchemy import select, update, and_
 import json
 import datetime
 from typing import Union, List, Dict, Tuple
@@ -1008,6 +1008,7 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int, console: Cons
         if not new_sites_data:
             return True
         tags_dict = {tag.tag_name: tag for tag in db.query(m_calendar.Tag).all()}
+
         for site_name, site_data in new_sites_data.items():
             university_name = map_dhbw_app_site_to_university_name(site_name)
             university = (
@@ -1027,30 +1028,49 @@ def update_all_dhbw_calendars(db: Session, progress, task_id: int, console: Cons
             )
 
             deleted_sessions_count = 0
-            if len(site_data.deleted_sessions) > 0:
+            if len(site_data.deleted_sessions.keys()) > 0:
+                session_ids = []
+                course_names = []
+                for course_name, course_external_ids in site_data.deleted_sessions.items():
+                    course_names.append(course_name)
+                    session_ids.extend(course_external_ids)
+
                 sessions = (
                     db.query(m_calendar.Session)
-                    .filter(m_calendar.Session.external_id.in_(site_data.deleted_sessions))
+                    .join(m_calendar.Lecture, m_calendar.Lecture.lecture_id == m_calendar.Session.lecture_id)
+                    .join(
+                        m_calendar.Course,
+                        and_(
+                            m_calendar.Course.course_id == m_calendar.Lecture.course_id,
+                            m_calendar.Course.course_name.in_(course_names),
+                            m_calendar.Course.university_id == university.university_id,
+                        ),
+                    )
+                    .filter(
+                        m_calendar.Session.external_id.not_in(session_ids),
+                    )
                     .all()
                 )
 
                 for session in sessions:
                     db_start_time = session.start_time
                     db_start_time = db_start_time.replace(tzinfo=DEFAULT_TIMEZONE)
-
-                    if db_start_time > datetime.datetime.now(DEFAULT_TIMEZONE) or db_start_time < datetime.datetime.now(
-                        DEFAULT_TIMEZONE
-                    ) - datetime.timedelta(days=COURSE_HISTORY_DAYS):
-                        db.delete(session)
+                    if (
+                        db_start_time > datetime.datetime.now(DEFAULT_TIMEZONE)
+                        and db_start_time < datetime.datetime.now(DEFAULT_TIMEZONE) + datetime.timedelta(days=90)
+                    ) or db_start_time < datetime.datetime.now(DEFAULT_TIMEZONE) - datetime.timedelta(
+                        days=COURSE_HISTORY_DAYS
+                    ):
+                        # db.delete(session)
                         deleted_sessions_count += 1
-
-            table.add_row(
-                "[red]Deleted[/red]", "Sessions", f"{deleted_sessions_count}/{len(site_data.deleted_sessions)}"
-            )
+            if deleted_sessions_count > 0:
+                table.add_row("[red]Deleted[/red]", "Sessions", f"{deleted_sessions_count}")
+            else:
+                table.add_row("[red]Deleted[/red]", "None", "0")
             console.print(table)
 
             db.commit()
-
+        return True
     except Exception as e:
         # Handle any errors by updating the progress bar and printing the error
         progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)

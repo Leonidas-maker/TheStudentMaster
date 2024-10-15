@@ -196,53 +196,35 @@ class DHBWAppFetcher:
             if not lecture_input.get("course") or not lecture_input.get("name") or not lecture_input.get("id"):
                 continue
 
+            
+
             # Extract site and course name
             splitted_course = lecture_input.get("course").split("-")
             site = splitted_course[0]
             course_name = "-".join(splitted_course[1:])[:MAX_COURSE_NAME_LENGTH]
 
-            session_external_id = str(lecture_input.get("id"))
-            lecture_name = lecture_input.get("name").strip()[:MAX_COURSE_NAME_LENGTH]
-
             # Initialize site in updated_sites if not present
-            if site not in updated_sites.keys():
-                updated_sites[site] = Scheme.DHBWCourseUpdate(courses={})
+            if not updated_sites.get(site):
+                updated_sites[site] = Scheme.DHBWCourseUpdate(courses={}, deleted_sessions={})
 
-            # Initialize the deleted sessions list if not present
-            if updated_sites.get(site).deleted_sessions is None:
-                updated_sites[site].deleted_sessions = []
-
-            # Prepare the session object
-            session = Scheme.SessionBase(
-                start=lecture_input.get("startTime"),
-                end=lecture_input.get("endTime"),
-                rooms=self.__clean_room_info(lecture_input.get("rooms")),
-                tags=self.__get_tags(lecture_input.get("name"), " ".join(lecture_input.get("rooms"))),
-            )
-
-            # Initialize course and lecture if not present
-            if not updated_sites[site].courses.get(course_name):
+            if updated_sites[site].courses.get(course_name):
+                continue
+            else:
                 updated_sites[site].courses[course_name] = {}
-            if not updated_sites[site].courses[course_name].get(lecture_name):
-                updated_sites[site].courses[course_name][lecture_name] = Scheme.DHBWLecture(
-                    lecturer="",
-                    sessions={},
-                )
 
-            # Update lecturer information
-            if (
-                lecture_input.get("lecturer")
-                and lecture_input.get("lecturer") not in updated_sites[site].courses[course_name][lecture_name].lecturer
-            ):
-                if updated_sites[site].courses[course_name][lecture_name].lecturer:
-                    updated_sites[site].courses[course_name][
-                        lecture_name
-                    ].lecturer += f", {lecture_input.get('lecturer')}"
-                else:
-                    updated_sites[site].courses[course_name][lecture_name].lecturer = lecture_input.get("lecturer")
+            response = requests.get(f"https://api.dhbw.app/rapla/lectures/{lecture_input.get("course")}")
+
+            if response.status_code != 200:
+                print(f"Failed to fetch DHBW calendar for {lecture_input.get('course')}")
+                continue
+
+            sessions = response.json()
+
+            # Convert fetched sessions into structured format
+            structured_sessions: Scheme.DHBWCourses = self.__convert_sessions_to_dhbw_course(sessions, site)
 
             # Add session to lecture sessions
-            updated_sites[site].courses[course_name][lecture_name].sessions[session_external_id] = session
+            updated_sites[site].courses[course_name] = structured_sessions.courses[course_name]
 
         return updated_sites
 
@@ -264,12 +246,19 @@ class DHBWAppFetcher:
         for lecture_input in lectures_input:
             # Extract site from the course identifier
             site = lecture_input.get("lecture").get("course").split("-")[0]
+            course_name = "-".join(lecture_input.get("lecture").get("course").split("-")[1:])
+            lecture_name = lecture_input.get("lecture").get("name").strip()[:MAX_COURSE_NAME_LENGTH]
+
             if not updated_sessions.get(site):
                 updated_sessions[site] = []
+
+            if updated_sites.get(site) and updated_sites.get(site).courses.get(course_name, {}).get(lecture_name):
+                continue
 
             # Skip if the course has already been processed
             if lecture_input.get("lecture").get("course") in proccessed_courses:
                 continue
+
             # Fetch the latest sessions for the course
             response = requests.get(f"https://api.dhbw.app/rapla/lectures/{lecture_input.get('lecture').get('course')}")
             if response.status_code != 200:
@@ -284,7 +273,7 @@ class DHBWAppFetcher:
         for site, sessions in updated_sessions.items():
             structured_sessions: Scheme.DHBWCourses = self.__convert_sessions_to_dhbw_course(sessions, site)
             if not updated_sites.get(site):
-                updated_sites[site] = Scheme.DHBWCourseUpdate(courses=structured_sessions.courses, deleted_sessions=[])
+                updated_sites[site] = Scheme.DHBWCourseUpdate(courses=structured_sessions.courses, deleted_sessions={})
                 continue
 
             if not updated_sites.get(site).courses:
@@ -314,12 +303,36 @@ class DHBWAppFetcher:
         """
         # Extract site from the first lecture input
         site = lectures_input[0].get("course").split("-")[0]
-        # Collect external IDs of deleted sessions
-        external_ids = [str(lecture_input.get("id")) for lecture_input in lectures_input]
+        
+        fetched_courses = []
+        actual_ids = {}
+
+        for lecture_input in lectures_input:
+            course_name = "-".join(lecture_input.get("course").split("-")[1:])
+
+            if updated_sites.get(site):
+                if updated_sites.get(site).courses.get(course_name):
+                    external_ids = []
+                    for _, lecture_data in updated_sites.get(site).courses.get(course_name).items():
+                        external_ids.extend(lecture_data.sessions.keys())
+
+                    actual_ids[course_name] = external_ids
+                    continue
+
+            if lecture_input.get("course") not in fetched_courses:
+                response = requests.get(f"https://api.dhbw.app/rapla/lectures/{lecture_input.get("course")}")
+                if response.status_code != 200:
+                    print(f"Failed to fetch DHBW calendar for {lecture_input.get('course')}")
+                    continue
+                
+                sessions = response.json()
+                actual_ids[course_name] = [str(session.get("id")) for session in sessions]
+
+
         if not updated_sites.get(site):
-            updated_sites[site] = Scheme.DHBWCourseUpdate(courses={}, deleted_sessions=external_ids)
+            updated_sites[site] = Scheme.DHBWCourseUpdate(courses={}, deleted_sessions=actual_ids)
         else:
-            updated_sites[site].deleted_sessions.extend(external_ids)
+            updated_sites[site].deleted_sessions = actual_ids
 
         return updated_sites
 

@@ -45,6 +45,7 @@ def main():
         cron="*/20 * * * *",  # Every 20 minutes
         blocked_by=["calendar_dhbw_refresh"],
         with_console=True,
+        on_startup=False,
     )
 
     for backend in backends:

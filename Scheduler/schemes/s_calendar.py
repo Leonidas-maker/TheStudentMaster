@@ -218,7 +218,7 @@ class DHBWCourses(BaseModel):
 
 
 class DHBWCourseUpdate(DHBWCourses):
-    deleted_sessions: List[str] = []
+    deleted_sessions: Dict[str, List[str]] = {}
 
     def to_dhbw_courses(self) -> DHBWCourses:
         return DHBWCourses(courses=self.courses)
