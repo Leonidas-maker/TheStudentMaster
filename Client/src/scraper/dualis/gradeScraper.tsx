@@ -122,7 +122,6 @@ export const filterGrade = (
         name = "";
         grade = "";
         ects = "";
-        status = "";
         detail = "";
       }
 

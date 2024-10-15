@@ -32,6 +32,8 @@ import DualisHeaderModuleText from "../../components/textFields/dualisTextFields
 import DualisHeaderDescText from "../../components/textFields/dualisTextFields/DualisHeaderDescText";
 import DualisNumberText from "../../components/textFields/dualisTextFields/DualisNumberText";
 import DualisDetailText from "../../components/textFields/dualisTextFields/DualisDetailText";
+import DualisModuleDetailText from "../../components/textFields/dualisTextFields/DualisModuleDetailText";
+import DualisExamDetailText from "../../components/textFields/dualisTextFields/DualisExamDetailText";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -152,7 +154,7 @@ const Dualis: React.FC = () => {
       </View> */}
       <ScrollView>
         {selectedSemester.length > 1 &&
-        selectedSemester === "Leistungsübersicht" ? (
+          selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -201,7 +203,7 @@ const Dualis: React.FC = () => {
                       </View>
 
                       {index < moduleData.length - 1 && (
-                        <View className="border-b dark:border-light_primary border-dark_primary my-2" />
+                        <View className="border-b dark:border-light_secondary border-dark_secondary my-2" />
                       )}
                     </View>
                   ))}
@@ -212,7 +214,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
             {filteredGpaSemesterData.map((semester, index) => (
@@ -231,13 +233,21 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />
             </View>
+            <View className="flex-row items-center justify-between flex-wrap m-2">
+              <DualisHeaderModuleText text="Modul" />
+              <DualisHeaderDescText text="ECTS" />
+              <DualisHeaderDescText text="Note" />
+              <View className="w-1/10 items-end px-3">
+                <Icon name="check" size={20} color={placeholderColor} />
+              </View>
+            </View>
             {filteredGradeData.map((grade, index) => (
-              <View key={index} className="mx-4">
+              <View key={index} className="mx-2">
                 <View className="flex-row items-center justify-between flex-wrap">
                   <View className="flex-1">
                     <DualisNumberText text={`${grade.number}`} />
@@ -263,11 +273,21 @@ const Dualis: React.FC = () => {
                   <View key={detailIndex}>
                     <View className="flex-row items-center justify-between flex-wrap mt-2">
                       <View className="flex-1">
-                        <DefaultText text={detail.exam} />
-                        <DefaultText text={detail.semester} />
+                        <DualisModuleDetailText text={detail.exam} />
+                        {detail.semester ? (
+                          <DualisModuleDetailText text={detail.semester} />
+                        ) : null}
+                        {detail.date ? (
+                          <DualisModuleDetailText text={detail.date} />
+                        ) : null}
                       </View>
-                      <DefaultText text={detail.date} />
-                      <DefaultText text={detail.grade} />
+                      <DualisExamDetailText
+                        text={
+                          grade.grade !== "noch nicht gesetzt"
+                            ? `${detail.grade}`
+                            : "—"
+                        }
+                      />
                       <View className="w-1/10 items-end px-3">
                         <View style={{ width: 20, height: 20 }} />
                       </View>
@@ -275,7 +295,7 @@ const Dualis: React.FC = () => {
                   </View>
                 ))}
                 {index < filteredGradeData.length - 1 && (
-                  <View className="border-b dark:border-light_primary border-dark_primary my-2" />
+                  <View className="border-b dark:border-light_secondary border-dark_secondary my-2" />
                 )}
               </View>
             ))}

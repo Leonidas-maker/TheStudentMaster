@@ -33,7 +33,7 @@ export const filterDetailGrade = (html: string, gradeData: GradeData) => {
           semester = cleanText;
           break;
         case 1:
-          exam = cleanText;
+          exam = cleanText.substring(0, cleanText.indexOf(")") + 1).trim();
           break;
         case 2:
           date = cleanText;
