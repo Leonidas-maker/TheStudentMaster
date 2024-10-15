@@ -31,7 +31,10 @@ import Days from "./Days";
 import WeekSelector from "../selector/WeekSelector";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { CalendarProps, EventTimeProps } from "../../interfaces/calendarInterfaces";
+import {
+  CalendarProps,
+  EventTimeProps,
+} from "../../interfaces/calendarInterfaces";
 
 // Important for LayoutAnimation on Android according to the docs
 //! Disabled because it causes a crash on Android
@@ -84,37 +87,43 @@ const WeekCalendar: React.FC = () => {
 
           try {
             await fetchCalendars(setCalendars);
-        
-            const currentCalendar = await AsyncStorage.getItem("selectedUniversity");
-        
-            if (currentCalendar) {
-                const calendarObject = JSON.parse(currentCalendar); 
-                const selectedUniversityName = calendarObject.name; 
-        
-                const matchingCalendar = calendars.find(calendar => calendar.university_name === selectedUniversityName);
-        
-                if (matchingCalendar) {
-                    const newSelectedUniversity = {
-                        name: selectedUniversityName,
-                        uuid: matchingCalendar.university_uuid, 
-                    };
-        
-                    await AsyncStorage.setItem("selectedUniversity", JSON.stringify(newSelectedUniversity));
 
-                    loadEvents();
-                } else {
-                    throw new Error("No matching calendar found.");
-                }
+            const currentCalendar =
+              await AsyncStorage.getItem("selectedUniversity");
+
+            if (currentCalendar) {
+              const calendarObject = JSON.parse(currentCalendar);
+              const selectedUniversityName = calendarObject.name;
+
+              const matchingCalendar = calendars.find(
+                (calendar) =>
+                  calendar.university_name === selectedUniversityName,
+              );
+
+              if (matchingCalendar) {
+                const newSelectedUniversity = {
+                  name: selectedUniversityName,
+                  uuid: matchingCalendar.university_uuid,
+                };
+
+                await AsyncStorage.setItem(
+                  "selectedUniversity",
+                  JSON.stringify(newSelectedUniversity),
+                );
+
+                loadEvents();
+              } else {
+                throw new Error("No matching calendar found.");
+              }
             } else {
-                throw new Error("No selected university found.");
+              throw new Error("No selected university found.");
             }
-        
-        } catch (error) {
+          } catch (error) {
             console.error("Error setting uuid new", error);
 
             await AsyncStorage.removeItem("selectedUniversity");
             await AsyncStorage.removeItem("selectedCourse");
-        }
+          }
         }
         setProgress(1);
         setLoading(false);
@@ -125,15 +134,15 @@ const WeekCalendar: React.FC = () => {
         let missingCourse = false;
 
         await getSelectedUniversity(
-          () => { },
-          () => { },
+          () => {},
+          () => {},
           (missing) => {
             missingUniversity = missing;
           },
         );
         await getSelectedCourse(
-          () => { },
-          () => { },
+          () => {},
+          () => {},
           (missing) => {
             missingCourse = missing;
           },
