@@ -26,6 +26,7 @@ import {
   EventTimeProps,
   CalendarProps,
 } from "../../interfaces/calendarInterfaces";
+import { set } from "lodash";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 type SchemeType = "light" | "dark" | "system";
@@ -53,6 +54,8 @@ const Settings: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const [activateCallback, setActivateCallback] = useState(false);
 
   // ~~~~~~~~~~~~~~~~ Theme ~~~~~~~~~~~~~~~~ //
   // Get the theme and set the theme
@@ -88,6 +91,7 @@ const Settings: React.FC = () => {
   // ====================================================== //
   useEffect(() => {
     const fetchData = async () => {
+      setActivateCallback(false);
       setLoading(true);
       setProgress(0.25);
       await fetchCalendars(setCalendars);
@@ -105,8 +109,8 @@ const Settings: React.FC = () => {
       );
       setProgress(1);
       setLoading(false);
+      setActivateCallback(true);
     };
-
     fetchData();
   }, []);
 
@@ -122,6 +126,7 @@ const Settings: React.FC = () => {
   // Handle the university select and gets data from backend
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
+    if (!activateCallback) return;
     const selectedUni = calendars.find(
       (calendar) => calendar.university_name === selectedValue,
     );
@@ -150,12 +155,12 @@ const Settings: React.FC = () => {
   // Handle the course select and gets data from backend
   // Sets progress and loading state
   const handleCourseSelect = async (selectedValue: string) => {
+    if (!activateCallback) return;
     setLoading(true);
     setProgress(0.25);
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
     setProgress(0.5);
-    setPlaceholderCourse(selectedValue);
     const selectedUni = await AsyncStorage.getItem("selectedUniversity");
     if (selectedUni) {
       const { uuid } = JSON.parse(selectedUni);
