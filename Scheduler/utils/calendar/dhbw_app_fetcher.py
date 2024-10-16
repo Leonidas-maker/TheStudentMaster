@@ -196,8 +196,6 @@ class DHBWAppFetcher:
             if not lecture_input.get("course") or not lecture_input.get("name") or not lecture_input.get("id"):
                 continue
 
-            
-
             # Extract site and course name
             splitted_course = lecture_input.get("course").split("-")
             site = splitted_course[0]
@@ -304,7 +302,7 @@ class DHBWAppFetcher:
         """
         # Extract site from the first lecture input
         site = lectures_input[0].get("course").split("-")[0]
-        
+
         fetched_courses = []
         actual_ids = {}
 
@@ -325,10 +323,9 @@ class DHBWAppFetcher:
                 if response.status_code != 200:
                     print(f"Failed to fetch DHBW calendar for {lecture_input.get('course')}")
                     continue
-                
+
                 sessions = response.json()
                 actual_ids[course_name] = [str(session.get("id")) for session in sessions]
-
 
         if not updated_sites.get(site):
             updated_sites[site] = Scheme.DHBWCourseUpdate(courses={}, deleted_sessions=actual_ids)
