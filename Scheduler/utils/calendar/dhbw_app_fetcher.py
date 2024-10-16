@@ -31,8 +31,7 @@ class DHBWAppFetcher:
         """
         Initializes the DHBWAppFetcher with a progress tracker.
 
-        Args:
-            progress (Progress): An instance of Rich's Progress for displaying progress bars.
+        :param progress (Progress): An instance of Rich's Progress for displaying progress bars.
         """
         self.exam_keywords = [
             "klausur",
@@ -62,12 +61,9 @@ class DHBWAppFetcher:
         """
         Converts a list of session dictionaries into a structured DHBWCourses object.
 
-        Args:
-            sessions (List[dict]): List of session data dictionaries.
-            site (str): Site identifier (e.g., "KA", "VS", etc.)
-
-        Returns:
-            Scheme.DHBWCourses: Structured courses data.
+        :param sessions (List[dict]): List of session data dictionaries.
+        :param site (str): Site identifier (e.g., "KA", "VS", etc.)
+        return: Scheme.DHBWCourses: Structured courses data.
         """
         # Add progress tracking for processing sessions
         self.task_id = self.progress.add_task(
@@ -136,12 +132,9 @@ class DHBWAppFetcher:
         """
         Determines tags for a session based on lecture name and room information.
 
-        Args:
-            lecture_name (str): Name of the lecture.
-            room_str (str): String containing room information.
-
-        Returns:
-            List[str]: A list of tags associated with the session.
+        :param lecture_name (str): Name of the lecture.
+        :param room_str (str): String containing room information.
+        retrurn: List[str]: A list of tags associated with the session.
         """
         tags = []
         lecture_name_lower = lecture_name.lower()
@@ -168,11 +161,8 @@ class DHBWAppFetcher:
         """
         Cleans and formats the room information from a list of room strings.
 
-        Args:
-            rooms (List[str]): List of room strings to clean.
-
-        Returns:
-            List[str]: List of cleaned room strings.
+        :param rooms (List[str]): List of room strings to clean.
+        return: List[str]: List of cleaned room strings.
         """
         # Remove unnecessary prefixes and trim whitespace
         cleaned_rooms = [room.replace("VL-Raum", "").replace("Unterrichtsraum", "").strip() for room in rooms]
@@ -184,12 +174,9 @@ class DHBWAppFetcher:
         """
         Processes new lectures and updates the updated_sites dictionary with new sessions.
 
-        Args:
-            lectures_input (List[dict]): List of new lecture data dictionaries.
-            updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with new sessions.
-
-        Returns:
-            Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with new sessions added.
+        :param lectures_input (List[dict]): List of new lecture data dictionaries.
+        :param updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with new sessions.
+        return: Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with new sessions added.
         """
         for lecture_input in lectures_input:
             # Skip if essential data is missing
@@ -233,12 +220,9 @@ class DHBWAppFetcher:
         """
         Processes updated lectures and updates the updated_sites dictionary with updated sessions.
 
-        Args:
-            lectures_input (List[dict]): List of updated lecture data dictionaries.
-            updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with updated sessions.
-
-        Returns:
-            Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with updated sessions added.
+        :param lectures_input (List[dict]): List of updated lecture data dictionaries.
+        :param updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with updated sessions.
+        return: Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with updated sessions added.
         """
         updated_sessions = {}
         proccessed_courses = []
@@ -293,12 +277,9 @@ class DHBWAppFetcher:
         """
         Processes removed lectures and updates the updated_sites dictionary with deleted session IDs.
 
-        Args:
-            lectures_input (List[dict]): List of removed lecture data dictionaries.
-            updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with deleted session IDs.
-
-        Returns:
-            Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with deleted sessions recorded.
+        :param ectures_input (List[dict]): List of removed lecture data dictionaries.
+        :param updated_sites (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with deleted session IDs.
+        :return Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with deleted sessions recorded.
         """
         # Extract site from the first lecture input
         site = lectures_input[0].get("course").split("-")[0]
@@ -340,12 +321,9 @@ class DHBWAppFetcher:
         """
         Processes synchronization information from the DHBW API and updates the updated_courses dictionary.
 
-        Args:
-            sync_info (dict): Synchronization information containing new, updated, and removed lectures.
-            updated_courses (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with synchronization data.
-
-        Returns:
-            Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with synchronization data processed.
+        :param sync_info (dict): Synchronization information containing new, updated, and removed lectures.
+        :param updated_courses (Dict[str, Scheme.DHBWCourseUpdate]): Dictionary to update with synchronization data.
+        :return: Dict[str, Scheme.DHBWCourseUpdate]: Updated dictionary with synchronization data processed.
         """
         if sync_info.get("newLectures"):
             updated_courses = self.__get_new_sessions(sync_info.get("newLectures"), updated_courses)
@@ -363,8 +341,7 @@ class DHBWAppFetcher:
         """
         Fetches available DHBW sources from the DHBW API.
 
-        Returns:
-            List[str]: List of available DHBW sources.
+        :return: List[str]: List of available DHBW sources.
         """
         response = requests.get("https://api.dhbw.app/sites")
         if response.status_code != 200:
@@ -383,8 +360,7 @@ class DHBWAppFetcher:
 
         This function waits for the latest synchronization to complete if it is currently running.
 
-        Returns:
-            Dict[str, Scheme.DHBWCourseUpdate]: Updated calendar data structured in a dictionary.
+        :return: Dict[str, Scheme.DHBWCourseUpdate]: Updated calendar data structured in a dictionary.
         """
         is_synced = False
 
@@ -429,11 +405,8 @@ class DHBWAppFetcher:
         """
         Fetches all calendar data for a given site from the DHBW API and processes it.
 
-        Args:
-            site (str): Site identifier (e.g., "KA", "VS", etc.)
-
-        Returns:
-            Scheme.DHBWCourses: Structured courses data.
+        :param site: Site identifier (e.g., "KA", "VS", etc.)
+        :return:   Scheme.DHBWCourses: Structured courses data.
         """
         response = requests.get(f"https://api.dhbw.app/rapla/{site}/lectures")
         if response.status_code != 200:

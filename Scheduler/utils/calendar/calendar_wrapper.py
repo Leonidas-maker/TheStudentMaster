@@ -10,14 +10,32 @@ from bs4 import BeautifulSoup
 from utils.helpers.hashing import dict_hash
 
 
-# TODO Max size of source
+# TODO Refactor the code because dhbw-mannheim is provided by the dhbw.app fetcher
 class CalendarWrapper:  # * source_model could be provided (only for threading and visual purposes)
+    """
+    This class is deprecated and will refactored in the future
+    CalendarWrapper class to handle the different calendar sources (iCalendar, Rapla)
+
+    Attributes:
+        backend (str): The backend of the calendar (iCalendar, Rapla)
+        type (str): The type of the calendar (custom, dhbw-mannheim)
+        source (Dict[str, str] | str): The source of the calendar (URL or ID)
+    """
+
     def __init__(
         self,
         backend: str,
         type: str = "custom",
         source: Dict[str, str] | str = None,
     ):
+        """
+        Constructor for the CalendarWrapper class
+
+        :param backend: The backend of the calendar (iCalendar, Rapla)
+        :param type: The type of the calendar (custom, dhbw-mannheim)
+        :param source: The source of the calendar (URL or ID)
+        """
+
         if backend not in ["iCalendar", "Rapla"]:
             raise ValueError("Invalid backend")
         if type not in ["custom", "dhbw-mannheim"]:
@@ -47,19 +65,43 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
     # ========================= Main ========================= #
     # ======================================================== #
     def get_type(self) -> str:
+        """
+        Returns the type of the calendar
+
+        :return: str
+        """
         return self.type.capitalize()
 
     def set_type(self, type: str):
+        """
+        Sets the type of the calendar
+
+        :param type: The type of the calendar (custom, dhbw-mannheim)
+        """
+
         if type not in ["custom", "dhbw-mannheim"]:
             raise ValueError("Invalid type")
         self.type = type
 
     def set_backend(self, backend: str):
+        """
+        Sets the backend of the calendar
+
+        :param backend: The backend of the calendar (iCalendar, Rapla)
+        """
+
         if backend not in ["iCalendar", "Rapla"]:
             raise ValueError("Invalid backend")
         self.backend = backend
 
     def get_data(self, source: Dict[str, str] | str = None):
+        """
+        Gets the data from the calendar source
+
+        :param source: The source of the calendar (URL or ID)
+        :return: Dict[str, any]
+        """
+
         if source is None:
             if self.source is None:
                 raise ValueError("No source provided!")
@@ -83,6 +125,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
     # ======================================================== #
 
     def __ical_get_source_url(self, source) -> str:
+        """
+        Gets the source URL for the iCalendar
+
+        :param source: The source of the calendar (URL or ID)
+        :return: str - The source URL
+        """
+
         match self.type:
             case "custom":
                 source_url = source
@@ -94,6 +143,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
         return source_url
 
     def __ical_convert_to_json(self, ical) -> Dict[str, Any]:
+        """
+        Converts the iCalendar data to JSON
+
+        :param ical: The iCalendar data
+        :return: Dict[str, Any] - The JSON data
+        """
+
         # * str(event.get()) because they return vText
 
         cal = Calendar.from_ical(ical)
@@ -135,6 +191,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
         return jsonIcal
 
     def __ical_get_data_single(self, source: str) -> Dict[str, any]:
+        """
+        Gets the data from the iCalendar source
+
+        :param source: The source of the calendar (URL or ID)
+        :return: Dict[str, any] - The data
+        """
+
         source_url = self.__ical_get_source_url(source)
         data = requests.get(source_url, stream=True).content.decode("utf-8")
 
@@ -146,6 +209,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
         return None
 
     def __ical_get_data_multiple(self, ical_sources: dict) -> Dict[str, any]:
+        """
+        Gets the data from multiple iCalendar sources
+
+        :param ical_sources: The sources of the calendar (URL or ID)
+        :return: Dict[str, any] - The data
+        """
+
         ical_data = {}
 
         download_error = []
@@ -161,6 +231,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
     # ======================================================== #
 
     def __rapla_scrape_source(self, rapla_url: str) -> Dict[str, any]:
+        """
+        Scrapes the data from the Rapla source
+
+        :param rapla_url: The source of the calendar (URL)
+        :return: Dict[str, any] - The data
+        """
+
         regex_color = re.compile(r"background-color:\s*(#[0-9a-fA-F]+)")
         page = requests.get(rapla_url)
         content = page.text.replace("<br/>", "\n")
@@ -279,6 +356,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
         return event_json
 
     def __rapla_get_data_single(self, source: str) -> Dict[str, any]:
+        """
+        Gets the data from the Rapla source
+
+        :param source: The source of the calendar (URL)
+        :return: Dict[str, any] - The data
+        """
+
         try:
             data = self.__rapla_scrape_source(source)
         except Exception as e:
@@ -292,6 +376,13 @@ class CalendarWrapper:  # * source_model could be provided (only for threading a
             return None
 
     def __rapla_get_data_multiple(self, rapla_sources: Dict[str, str]) -> Dict[str, any]:
+        """
+        Gets the data from multiple Rapla sources
+
+        :param rapla_sources: The sources of the calendar (URL)
+        :return: Dict[str, any] - The data
+        """
+
         rapla_data = {}
 
         download_error = []
