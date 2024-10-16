@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
         FastAPICache.init(InMemoryBackend())
 
     async with get_async_db() as db:
-        init_stats(db)
+        await init_stats(db)
 
     # ~~~~~~~~ End of code to run on startup ~~~~~~~~ #
     yield

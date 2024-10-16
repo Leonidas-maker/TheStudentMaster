@@ -126,7 +126,7 @@ class Course(Base):
     __tablename__ = "calendar_native_courses"
     course_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     course_name = Column(String(255), nullable=False)
-    university_id = Column(Integer, ForeignKey("university.university_id"), nullable=False)
+    university_id = Column(Integer, ForeignKey("university.university_id"), nullable=False, index=True)
     last_modified = Column(TIMESTAMP, nullable=False, server_default=func.now(), onupdate=func.current_timestamp())
 
     university = relationship("University", back_populates="courses", uselist=False)  # Many-to-one
@@ -136,7 +136,7 @@ class Course(Base):
 class Lecture(Base):
     __tablename__ = "calendar_native_lectures"
     lecture_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False)
+    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False, index=True)
 
     lecture_name = Column(String(255), nullable=False)
     lecturer = Column(String(255), nullable=True)
@@ -149,7 +149,7 @@ class Lecture(Base):
 class Session(Base):
     __tablename__ = "calendar_native_sessions"
     session_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    lecture_id = Column(Integer, ForeignKey("calendar_native_lectures.lecture_id", ondelete="CASCADE"), nullable=False)
+    lecture_id = Column(Integer, ForeignKey("calendar_native_lectures.lecture_id", ondelete="CASCADE"), nullable=False, index=True)
     start_time = Column(DateTime(timezone=True), nullable=False)
     end_time = Column(DateTime(timezone=True), nullable=False)
     external_id = Column(String(40), nullable=False)  # External ID
@@ -193,8 +193,8 @@ class Session(Base):
 class SessionRoom(Base):
     __tablename__ = "calendar_native_session_room"
     session_room_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False)
-    room_id = Column(Integer, ForeignKey("university_rooms.room_id"), nullable=False)
+    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True)
+    room_id = Column(Integer, ForeignKey("university_rooms.room_id"), nullable=False, index=True)
 
     session = relationship("Session", back_populates="rooms")  # Many-to-one, uselist=False not needed
     room = relationship("Room", back_populates="sessions")  # Many-to-one, uselist=False not needed
@@ -203,8 +203,8 @@ class SessionRoom(Base):
 class SessionTag(Base):
     __tablename__ = "calendar_native_session_tag"
     session_tag_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False)
-    tag_id = Column(Integer, ForeignKey("calendar_tags.tag_id"), nullable=False)
+    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True)
+    tag_id = Column(Integer, ForeignKey("calendar_tags.tag_id"), nullable=False, index=True)
 
     session = relationship("Session", back_populates="tags")  # Many-to-one, uselist=False not needed
     tag = relationship("Tag")  # Many-to-one

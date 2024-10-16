@@ -77,7 +77,7 @@ class DHBWAppFetcher:
         courses = Scheme.DHBWCourses(courses={})
         for session in sessions:
             # Extract course name and lecture name, applying max length limits
-            course_name = session.get("course").replace(f"{site.upper()}-", "")[:MAX_COURSE_NAME_LENGTH]
+            course_name = "-".join(session.get("course").split("-")[1:])[:MAX_COURSE_NAME_LENGTH]
             lecture_name = session.get("name").strip()[:MAX_COURSE_NAME_LENGTH]
 
             # Initialize course in courses dict if not present
@@ -223,8 +223,9 @@ class DHBWAppFetcher:
             # Convert fetched sessions into structured format
             structured_sessions: Scheme.DHBWCourses = self.__convert_sessions_to_dhbw_course(sessions, site)
 
-            # Add session to lecture sessions
-            updated_sites[site].courses[course_name] = structured_sessions.courses[course_name]
+            if structured_sessions.courses.get(course_name):
+                # Add session to lecture sessions
+                updated_sites[site].courses[course_name] = structured_sessions.courses[course_name]
 
         return updated_sites
 
