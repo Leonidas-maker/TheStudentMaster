@@ -136,7 +136,9 @@ class Course(Base):
 class Lecture(Base):
     __tablename__ = "calendar_native_lectures"
     lecture_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False, index=True)
+    course_id = Column(
+        Integer, ForeignKey("calendar_native_courses.course_id", ondelete="CASCADE"), nullable=False, index=True
+    )
 
     lecture_name = Column(String(255), nullable=False)
     lecturer = Column(String(255), nullable=True)
@@ -149,7 +151,9 @@ class Lecture(Base):
 class Session(Base):
     __tablename__ = "calendar_native_sessions"
     session_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    lecture_id = Column(Integer, ForeignKey("calendar_native_lectures.lecture_id", ondelete="CASCADE"), nullable=False, index=True)
+    lecture_id = Column(
+        Integer, ForeignKey("calendar_native_lectures.lecture_id", ondelete="CASCADE"), nullable=False, index=True
+    )
     start_time = Column(DateTime(timezone=True), nullable=False)
     end_time = Column(DateTime(timezone=True), nullable=False)
     external_id = Column(String(40), nullable=False)  # External ID
@@ -193,7 +197,9 @@ class Session(Base):
 class SessionRoom(Base):
     __tablename__ = "calendar_native_session_room"
     session_room_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True)
+    session_id = Column(
+        Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True
+    )
     room_id = Column(Integer, ForeignKey("university_rooms.room_id"), nullable=False, index=True)
 
     session = relationship("Session", back_populates="rooms")  # Many-to-one, uselist=False not needed
@@ -203,7 +209,9 @@ class SessionRoom(Base):
 class SessionTag(Base):
     __tablename__ = "calendar_native_session_tag"
     session_tag_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True)
+    session_id = Column(
+        Integer, ForeignKey("calendar_native_sessions.session_id", ondelete="CASCADE"), nullable=False, index=True
+    )
     tag_id = Column(Integer, ForeignKey("calendar_tags.tag_id"), nullable=False, index=True)
 
     session = relationship("Session", back_populates="tags")  # Many-to-one, uselist=False not needed
