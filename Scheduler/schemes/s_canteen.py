@@ -2,6 +2,7 @@ from pydantic import BaseModel, field_validator, field_serializer
 from typing import List, Dict
 from datetime import datetime
 
+
 class CanteenMenu(BaseModel):
     """
     Represents a menu item in a canteen, including details like name, descriptions, price, quantity,
