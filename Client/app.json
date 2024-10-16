@@ -2,7 +2,7 @@
   "expo": {
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "orientation": "default",
     "icon": "./public/logo/TheStudentMaster.png",
     "userInterfaceStyle": "automatic",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
-      "buildNumber": "1"
+      "buildNumber": "3"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.schuetze1000.TheStudentMaster",
-      "versionCode": 1
+      "versionCode": 3
     },
     "web": {
       "favicon": "./public/logo/TheStudentMaster.png"

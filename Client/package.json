@@ -1,6 +1,6 @@
 {
   "name": "test",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "./src/App.tsx",
   "scripts": {
     "start": "expo start",
@@ -20,11 +20,12 @@
     "axios": "^1.6.8",
     "axios-jwt": "^4.0.2",
     "date-fns": "^3.4.0",
-    "expo": "~51.0.28",
+    "expo": "~51.0.37",
     "expo-constants": "~16.0.2",
     "expo-screen-orientation": "~7.0.5",
     "expo-secure-store": "~13.0.2",
     "expo-status-bar": "~1.12.1",
+    "htmlparser2": "^9.1.0",
     "i18next-chained-backend": "^4.6.2",
     "i18next-http-backend": "^2.5.0",
     "intl-pluralrules": "^2.0.1",
