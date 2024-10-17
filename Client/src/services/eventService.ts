@@ -26,7 +26,7 @@ const fetchEvents = async (forceFetch = false): Promise<EventTimeProps[]> => {
     const { uuid } = JSON.parse(selectedUniversity); // Parse selected university data
     let lastFetchHash = await AsyncStorage.getItem("lastFetchHash"); // Get last fetch hash from storage
     const hashResponse = await axios.get(
-      `/calendar/${uuid}/${selectedCourse}/hash`
+      `/calendar/${uuid}/${selectedCourse}/hash`,
     ); // Fetch the current hash for the selected course
     const currentHash = hashResponse.data.message; // Extract hash from the response
 
@@ -62,7 +62,7 @@ const fetchEvents = async (forceFetch = false): Promise<EventTimeProps[]> => {
 
 // Function to fetch events without waiting for the last fetch time
 const fetchEventsWithoutWait = async (
-  setEvents: (events: EventTimeProps[]) => void
+  setEvents: (events: EventTimeProps[]) => void,
 ) => {
   try {
     const selectedUniversity = await AsyncStorage.getItem("selectedUniversity"); // Get selected university from storage
@@ -95,7 +95,7 @@ const fetchEventsWithoutWait = async (
 
 // Function to load events from storage and update the state
 const loadEventsFromStorage = async (
-  setEvents: (events: EventTimeProps[]) => void
+  setEvents: (events: EventTimeProps[]) => void,
 ) => {
   try {
     const storedEvents = await AsyncStorage.getItem("events"); // Get stored events from storage
@@ -105,7 +105,7 @@ const loadEventsFromStorage = async (
           ...event,
           start: new Date(event.start),
           end: new Date(event.end),
-        })
+        }),
       ); // Parse and format event dates
       setEvents(parsedEvents); // Update state with parsed events
     }

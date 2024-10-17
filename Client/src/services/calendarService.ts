@@ -7,7 +7,6 @@ import { CalendarProps } from "../interfaces/calendarInterfaces";
 
 // Function to fetch available calendars and update the state
 const fetchCalendars = async (): Promise<CalendarProps[]> => {
-
   const response = await axios.get("/calendar/available_calendars"); // Make a GET request to fetch calendars
   return response.data; // Return the fetched calendar data
 };

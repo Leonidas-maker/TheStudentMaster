@@ -92,21 +92,23 @@ const WeekCalendar: React.FC = () => {
           }
         } catch (error) {
           if (axios.isAxiosError(error)) {
-            if (error.response?.status !== 404 && error.response?.status !== 422) {	
+            if (
+              error.response?.status !== 404 &&
+              error.response?.status !== 422
+            ) {
               throw new Error("Error fetching events");
             }
             try {
               const fetchedCalendars = await fetchCalendars();
-              const currentCalendar = await AsyncStorage.getItem(
-                "selectedUniversity"
-              );
+              const currentCalendar =
+                await AsyncStorage.getItem("selectedUniversity");
 
               if (fetchedCalendars.length > 0 && currentCalendar) {
                 const calendarObject = JSON.parse(currentCalendar);
                 const selectedUniversityName = calendarObject.name;
                 const matchingCalendar = fetchedCalendars.find(
                   (calendar) =>
-                    calendar.university_name === selectedUniversityName
+                    calendar.university_name === selectedUniversityName,
                 );
 
                 if (matchingCalendar) {
@@ -116,7 +118,7 @@ const WeekCalendar: React.FC = () => {
                   };
                   await AsyncStorage.setItem(
                     "selectedUniversity",
-                    JSON.stringify(newSelectedUniversity)
+                    JSON.stringify(newSelectedUniversity),
                   );
 
                   const fetchedEvents = await fetchEvents(true);
@@ -138,7 +140,7 @@ const WeekCalendar: React.FC = () => {
               await AsyncStorage.removeItem("selectedUniversity");
               await AsyncStorage.removeItem("selectedCourse");
               await AsyncStorage.removeItem("events");
-              
+
               Alert.alert(
                 "Calendar nicht verfügbar",
                 "Der gewählte Kalender ist nicht verfügbar. Bitte wählen Sie einen neuen Kalender aus.",
@@ -155,7 +157,7 @@ const WeekCalendar: React.FC = () => {
                     style: "default",
                   },
                 ],
-                { cancelable: false }
+                { cancelable: false },
               );
             }
           } else {
@@ -175,14 +177,14 @@ const WeekCalendar: React.FC = () => {
           () => {},
           (missing) => {
             missingUniversity = missing;
-          }
+          },
         );
         await getSelectedCourse(
           () => {},
           () => {},
           (missing) => {
             missingCourse = missing;
-          }
+          },
         );
 
         if (missingUniversity || missingCourse) {
@@ -202,14 +204,14 @@ const WeekCalendar: React.FC = () => {
                 style: "default",
               },
             ],
-            { cancelable: false }
+            { cancelable: false },
           );
         }
       };
 
       loadEvents();
       checkSelections();
-    }, [navigation])
+    }, [navigation]),
   );
 
   // ====================================================== //

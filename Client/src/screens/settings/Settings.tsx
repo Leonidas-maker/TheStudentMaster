@@ -97,7 +97,7 @@ const Settings: React.FC = () => {
       const availableCalendars = await fetchCalendars();
       if (availableCalendars.length > 0) {
         setCalendars(availableCalendars);
-      }      
+      }
 
       setProgress(0.5);
       await getSelectedUniversity(
