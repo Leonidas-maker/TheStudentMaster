@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
-      "buildNumber": "3"
+      "buildNumber": "5"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.schuetze1000.TheStudentMaster",
-      "versionCode": 3
+      "versionCode": 5
     },
     "web": {
       "favicon": "./public/logo/TheStudentMaster.png"
