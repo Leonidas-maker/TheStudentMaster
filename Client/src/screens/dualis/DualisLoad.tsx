@@ -76,7 +76,7 @@ const DualisLoad: React.FC = () => {
           setEctsData,
           setProgress,
           setError,
-          setLoad,
+          setLoad
         );
       }
     };
@@ -92,7 +92,7 @@ const DualisLoad: React.FC = () => {
           setSemesterData,
           setProgress,
           setError,
-          setLoad,
+          setLoad
         );
       }
     };
@@ -115,7 +115,7 @@ const DualisLoad: React.FC = () => {
           setGpaSemesterData,
           setProgress,
           setError,
-          setLoad,
+          setLoad
         );
       }
     };
@@ -137,7 +137,7 @@ const DualisLoad: React.FC = () => {
           setProgress,
           setError,
           setLoading,
-          setLoad,
+          setLoad
         );
 
         logoutDualis(authArguments);

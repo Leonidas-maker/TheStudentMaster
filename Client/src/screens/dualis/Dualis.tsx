@@ -42,32 +42,16 @@ const Dualis: React.FC = () => {
   const route = useRoute<RouteProp<{ params: DualisRouteParams }, "params">>();
 
   const {
-    moduleData: routeModuleData,
-    gpaData: routeGpaData,
-    ectsData: routeEctsData,
-    semesterData: routeSemesterData,
-    gradeData: routeGradeData,
-    gpaSemesterData: routeGpaSemesterData,
+    moduleData,
+    gpaData,
+    ectsData,
+    semesterData,
+    gradeData,
+    gpaSemesterData,
   } = route.params;
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
 
-  const [moduleData, setModuleData] = useState<Array<ModuleData>>(
-    routeModuleData || [],
-  );
-  const [gradeData, setGradeData] = useState<GradeData[]>(routeGradeData || []);
-  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>(
-    routeGpaSemesterData || [],
-  );
-  const [gpaData, setGpaData] = useState<GpaData>(
-    routeGpaData || { gpaTotal: "", gpaSubject: "" },
-  );
-  const [ectsData, setEctsData] = useState<EctsData>(
-    routeEctsData || { ectsTotal: "", ectsSum: "" },
-  );
-  const [semesterData, setSemesterData] = useState<SemesterData>(
-    routeSemesterData || { semester: [] },
-  );
   const [selectedSemester, setSelectedSemester] =
     useState<string>("Leistungsübersicht");
   const [isLight, setIsLight] = useState(false);
@@ -110,14 +94,6 @@ const Dualis: React.FC = () => {
       : gpaSemesterData.filter((gpa) => gpa.semester === selectedSemester);
 
   const handleLogout = () => {
-    // Reset all state to empty or default values
-    setModuleData([]);
-    setGpaData({ gpaTotal: "", gpaSubject: "" });
-    setEctsData({ ectsTotal: "", ectsSum: "" });
-    setSemesterData({ semester: [] });
-    setGradeData([]);
-    setGpaSemesterData([]);
-
     // Navigate to the login screen after logout
     navigation.reset({
       index: 0,

@@ -6,15 +6,10 @@ import axios from "axios";
 import { CalendarProps } from "../interfaces/calendarInterfaces";
 
 // Function to fetch available calendars and update the state
-const fetchCalendars = async (
-  setCalendars: (events: CalendarProps[]) => void,
-) => {
-  try {
-    const response = await axios.get("/calendar/available_calendars"); // Make a GET request to fetch calendars
-    setCalendars(response.data); // Update the state with fetched calendar data
-  } catch (err) {
-    console.log("Failed to load calendars", err); // Log any errors that occur
-  }
+const fetchCalendars = async (): Promise<CalendarProps[]> => {
+
+  const response = await axios.get("/calendar/available_calendars"); // Make a GET request to fetch calendars
+  return response.data; // Return the fetched calendar data
 };
 
 // This function is used to get the selected university from the storage
