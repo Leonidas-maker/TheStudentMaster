@@ -3,9 +3,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { GradeData, GpaSemesterData } from "../../interfaces/dualisInterfaces";
 
-export const filterGrade = (
-  html: Array<{ name: string; html: string }>,
-) => {
+export const filterGrade = (html: Array<{ name: string; html: string }>) => {
   let gradeList: GradeData[] = [];
   let gpaSemesterList: GpaSemesterData[] = [];
 

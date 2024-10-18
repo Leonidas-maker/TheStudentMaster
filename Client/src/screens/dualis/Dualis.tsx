@@ -86,12 +86,16 @@ const Dualis: React.FC = () => {
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
       ? gradeData.current
-      : gradeData.current.filter((grade) => grade.semester === selectedSemester);
+      : gradeData.current.filter(
+          (grade) => grade.semester === selectedSemester,
+        );
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
       ? gpaSemesterData.current
-      : gpaSemesterData.current.filter((gpa) => gpa.semester === selectedSemester);
+      : gpaSemesterData.current.filter(
+          (gpa) => gpa.semester === selectedSemester,
+        );
 
   const handleLogout = () => {
     // Navigate to the login screen after logout

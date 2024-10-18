@@ -142,7 +142,7 @@ const DualisLoad: React.FC = () => {
                       ectsData: ectsData,
                       semesterData: semesterData,
                       gradeData: gradeData,
-                      gpaSemesterData:  gpaSemesterData,
+                      gpaSemesterData: gpaSemesterData,
                     },
                   },
                 },

@@ -4,9 +4,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { ModuleData } from "../../interfaces/dualisInterfaces";
 
-export const filterPerformanceOverview = (
-  html: string,
-) => {
+export const filterPerformanceOverview = (html: string) => {
   const extractedModules: Array<ModuleData> = [];
   let currentModule: ModuleData = {
     number: "",

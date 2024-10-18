@@ -32,7 +32,11 @@ export const navigateToPerformanceOverview = async (
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
-): Promise<{ moduleData: ModuleData[]; gpaData: GpaData; ectsData: EctsData }> => {
+): Promise<{
+  moduleData: ModuleData[];
+  gpaData: GpaData;
+  ectsData: EctsData;
+}> => {
   setProgress(0.25);
   setLoad("Leistungsübersicht");
   try {
@@ -59,7 +63,11 @@ export const navigateToPerformanceOverview = async (
     );
     console.error(err);
 
-    return { moduleData: [], gpaData: { gpaTotal: "", gpaSubject: "" }, ectsData: { ectsTotal: "", ectsSum: "" } };
+    return {
+      moduleData: [],
+      gpaData: { gpaTotal: "", gpaSubject: "" },
+      ectsData: { ectsTotal: "", ectsSum: "" },
+    };
   }
 };
 
@@ -68,7 +76,7 @@ export const navigateToExamResults = async (
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
-):Promise<SemesterData> => {
+): Promise<SemesterData> => {
   setProgress(0.35);
   setLoad("Semester");
   try {

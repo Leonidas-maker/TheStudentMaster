@@ -4,9 +4,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { GpaData } from "../../interfaces/dualisInterfaces";
 
-export const filterGPA = (
-  html: string,
-) => {
+export const filterGPA = (html: string) => {
   let gpaTotal = "";
   let gpaSubject = "";
   let currentTableIndex = 0;

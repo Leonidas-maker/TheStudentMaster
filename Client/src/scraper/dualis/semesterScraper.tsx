@@ -4,9 +4,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { SemesterData } from "../../interfaces/dualisInterfaces";
 
-export const filterSemester = (
-  html: string,
-) => {
+export const filterSemester = (html: string) => {
   let semester: Array<{ name: string; value: string }> = [];
   let insideSelect = false;
   let currentValue = "";

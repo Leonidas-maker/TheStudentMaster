@@ -4,9 +4,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { EctsData } from "../../interfaces/dualisInterfaces";
 
-export const filterECTS = (
-  html: string,
-) => {
+export const filterECTS = (html: string) => {
   let ectsTotal = "";
   let ectsSum = "";
   let currentTdIndex = 0;
