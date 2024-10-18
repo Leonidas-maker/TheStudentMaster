@@ -1,5 +1,5 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
@@ -55,7 +55,7 @@ const Settings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  let activateCallback = false;
+  let activateCallback = useRef(false);
 
   // ~~~~~~~~~~~~~~~~ Theme ~~~~~~~~~~~~~~~~ //
   // Get the theme and set the theme
@@ -91,7 +91,7 @@ const Settings: React.FC = () => {
   // ====================================================== //
   useEffect(() => {
     const fetchData = async () => {
-      activateCallback = false;
+      activateCallback.current = false;
       setLoading(true);
       setProgress(0.25);
       const availableCalendars = await fetchCalendars();
@@ -114,7 +114,7 @@ const Settings: React.FC = () => {
 
       setProgress(1);
       setLoading(false);
-      activateCallback = true;
+      activateCallback.current = true;
     };
     fetchData();
   }, []);
@@ -131,7 +131,7 @@ const Settings: React.FC = () => {
   // Handle the university select and gets data from backend
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
-    if (!activateCallback) return;
+    if (!activateCallback.current) return;
     const selectedUni = calendars.find(
       (calendar) => calendar.university_name === selectedValue,
     );
@@ -153,7 +153,7 @@ const Settings: React.FC = () => {
   // Handle the course select and gets data from backend
   // Sets progress and loading state
   const handleCourseSelect = async (selectedValue: string) => {
-    if (!activateCallback) return;
+    if (!activateCallback.current) return;
     setLoading(true);
     setProgress(0.25);
     setSelectedCourse(selectedValue);

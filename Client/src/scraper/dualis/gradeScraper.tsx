@@ -5,8 +5,6 @@ import { GradeData, GpaSemesterData } from "../../interfaces/dualisInterfaces";
 
 export const filterGrade = (
   html: Array<{ name: string; html: string }>,
-  setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
-  setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
 ) => {
   let gradeList: GradeData[] = [];
   let gpaSemesterList: GpaSemesterData[] = [];
@@ -162,6 +160,8 @@ export const filterGrade = (
   });
   parser.end();
 
-  setGradeData((prevData) => [...prevData, ...gradeList]);
-  setGpaSemesterData((prevData) => [...prevData, ...gpaSemesterList]);
+  //setGradeData((prevData) => [...prevData, ...gradeList]);
+  //setGpaSemesterData((prevData) => [...prevData, ...gpaSemesterList]);
+
+  return { gradeData: gradeList, gpaSemesterData: gpaSemesterList };
 };

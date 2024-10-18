@@ -6,7 +6,6 @@ import { EctsData } from "../../interfaces/dualisInterfaces";
 
 export const filterECTS = (
   html: string,
-  setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
 ) => {
   let ectsTotal = "";
   let ectsSum = "";
@@ -32,7 +31,7 @@ export const filterECTS = (
 
       if (insideEctsTable && currentTdIndex === 0 && level00Index === 5) {
         const extractedNumber = cleanText.match(/(\d+)/)?.[0];
-        ectsTotal = extractedNumber;
+        if (extractedNumber) ectsTotal = extractedNumber;
       }
     },
     onclosetag(tagname) {
@@ -55,9 +54,5 @@ export const filterECTS = (
 
   parser.write(html);
   parser.end();
-
-  setEctsData({
-    ectsTotal: ectsTotal,
-    ectsSum: ectsSum,
-  });
+  return { ectsTotal, ectsSum };
 };

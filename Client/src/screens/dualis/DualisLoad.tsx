@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import * as Progress from "react-native-progress";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
 import Heading from "../../components/textFields/Heading";
@@ -30,146 +30,135 @@ const DualisLoad: React.FC = () => {
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
 
-  const [authArguments, setAuthArguments] = useState<string>("");
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [moduleData, setModuleData] = useState<Array<ModuleData>>([]);
-  const [gradeData, setGradeData] = useState<GradeData[]>([]);
-  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>([]);
-  const [gpaData, setGpaData] = useState<GpaData>({
-    gpaTotal: "",
-    gpaSubject: "",
-  });
-  const [ectsData, setEctsData] = useState<EctsData>({
-    ectsTotal: "",
-    ectsSum: "",
-  });
-  const [semesterData, setSemesterData] = useState<SemesterData>({
-    semester: [],
-  });
-  const [navigatedThroughSemesters, setNavigatedThroughSemesters] =
-    useState(false);
-  const [navigatedThroughGradeDetails, setNavigatedThroughGradeDetails] =
-    useState(false);
+
+  const moduleData = useRef<Array<ModuleData>>([]);
+  const gradeData = useRef<Array<GradeData>>([]);
+  const gpaSemesterData = useRef<Array<GpaSemesterData>>([]);
+  const gpaData = useRef<GpaData>({ gpaTotal: "", gpaSubject: "" });
+  const ectsData = useRef<EctsData>({ ectsTotal: "", ectsSum: "" });
+  const semesterData = useRef<SemesterData>({ semester: [] });
+
   const [load, setLoad] = useState("");
 
-  useEffect(() => {
-    setLoading(true);
-    setProgress(0);
-    const loadAuthArgs = async () => {
-      const authArguments = await secureLoadData("dualisAuthArgs");
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      const runAsync = async () => {
+        setLoading(true);
+        setProgress(0);
 
-      if (authArguments) setAuthArguments(authArguments);
-    };
+        // Load authArguments from secure storage
+        const authArgs = await secureLoadData("dualisAuthArgs");
+        if (!authArgs) {
+          setError("Authentication arguments not found.");
+          setLoading(false);
+          return;
+        }
 
-    loadAuthArgs();
-  }, []);
-
-  useEffect(() => {
-    const handlePerformanceOverviewNavigation = async () => {
-      if (authArguments) {
-        await navigateToPerformanceOverview(
-          authArguments,
-          setModuleData,
-          setGpaData,
-          setEctsData,
+        // Navigate to Performance Overview
+        const perfData = await navigateToPerformanceOverview(
+          authArgs,
           setProgress,
           setError,
           setLoad,
         );
-      }
-    };
+        if (perfData) {
+          moduleData.current = perfData.moduleData;
+          gpaData.current = perfData.gpaData;
+          ectsData.current = perfData.ectsData;
+        } else {
+          setLoading(false);
+          return;
+        }
 
-    handlePerformanceOverviewNavigation();
-  }, [authArguments]);
-
-  useEffect(() => {
-    const handleExamResultsNavigation = async () => {
-      if (authArguments) {
-        await navigateToExamResults(
-          authArguments,
-          setSemesterData,
+        // Navigate to Exam Results
+        const semData = await navigateToExamResults(
+          authArgs,
           setProgress,
           setError,
           setLoad,
         );
-      }
-    };
+        if (semData) {
+          semesterData.current = semData;
+        } else {
+          setLoading(false);
+          return;
+        }
 
-    handleExamResultsNavigation();
-  }, [authArguments]);
+        // Navigate through Semesters
+        if (semesterData.current.semester.length > 0) {
+          const semResults = await navigateThroughSemesters(
+            authArgs,
+            semesterData.current.semester,
+            setProgress,
+            setError,
+            setLoad,
+          );
+          if (semResults) {
+            gradeData.current = semResults.gradeData;
+            gpaSemesterData.current = semResults.gpaSemesterData;
+          } else {
+            setLoading(false);
+            return;
+          }
+        }
 
-  useEffect(() => {
-    const handleSemesterNavigation = async () => {
-      if (
-        semesterData.semester.length > 0 &&
-        authArguments &&
-        !navigatedThroughSemesters
-      ) {
-        setNavigatedThroughSemesters(true);
-        await navigateThroughSemesters(
-          authArguments,
-          semesterData.semester,
-          setGradeData,
-          setGpaSemesterData,
-          setProgress,
-          setError,
-          setLoad,
-        );
-      }
-    };
+        // Navigate through Grade Details
+        if (gradeData.current.length > 0) {
+          const updatedGradeData = await navigateThroughGradeDetails(
+            gradeData.current,
+            setProgress,
+            setError,
+            setLoad,
+          );
+          if (updatedGradeData) {
+            gradeData.current = updatedGradeData;
+          } else {
+            setLoading(false);
+            return;
+          }
+          logoutDualis(authArgs);
+        }
 
-    handleSemesterNavigation();
-  }, [semesterData.semester, authArguments]);
+        // Update states
+        if (isActive) {
+          setLoading(false);
 
-  useEffect(() => {
-    const handleGradeDetailsNavigation = async () => {
-      if (
-        gradeData.length > 0 &&
-        authArguments &&
-        !navigatedThroughGradeDetails
-      ) {
-        setNavigatedThroughGradeDetails(true);
-        await navigateThroughGradeDetails(
-          gradeData,
-          setGradeData,
-          setProgress,
-          setError,
-          setLoading,
-          setLoad,
-        );
+          // Navigate to Dualis Performance screen
+          if (gpaSemesterData.current.length > 0) {
+            navigation.reset({
+              index: 0,
+              routes: [
+                {
+                  name: "Dualis",
+                  params: {
+                    screen: "DualisPerfomance",
+                    params: {
+                      moduleData: moduleData,
+                      gpaData: ectsData,
+                      ectsData: ectsData,
+                      semesterData: semesterData,
+                      gradeData: gradeData,
+                      gpaSemesterData:  gpaSemesterData,
+                    },
+                  },
+                },
+              ],
+            });
+          }
+        }
+      };
 
-        logoutDualis(authArguments);
-      }
-    };
+      runAsync();
 
-    handleGradeDetailsNavigation();
-  }, [gradeData, authArguments]);
-
-  useEffect(() => {
-    if (gpaSemesterData.length > 0 && navigatedThroughGradeDetails) {
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: "Dualis",
-            params: {
-              screen: "DualisPerfomance",
-              params: {
-                moduleData,
-                gpaData,
-                ectsData,
-                semesterData,
-                gradeData,
-                gpaSemesterData,
-              },
-            },
-          },
-        ],
-      });
-    }
-  }, [gpaSemesterData, navigatedThroughGradeDetails]);
+      return () => {
+        isActive = false;
+      };
+    }, [navigation]),
+  );
 
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">

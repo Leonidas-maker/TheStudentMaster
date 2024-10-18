@@ -6,7 +6,6 @@ import { ModuleData } from "../../interfaces/dualisInterfaces";
 
 export const filterPerformanceOverview = (
   html: string,
-  setModuleData: React.Dispatch<React.SetStateAction<Array<ModuleData>>>,
 ) => {
   const extractedModules: Array<ModuleData> = [];
   let currentModule: ModuleData = {
@@ -79,5 +78,5 @@ export const filterPerformanceOverview = (
   parser.write(html);
   parser.end();
 
-  setModuleData(extractedModules);
+  return extractedModules;
 };

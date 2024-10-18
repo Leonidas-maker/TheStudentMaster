@@ -6,7 +6,6 @@ import { GpaData } from "../../interfaces/dualisInterfaces";
 
 export const filterGPA = (
   html: string,
-  setGpaData: React.Dispatch<React.SetStateAction<GpaData>>,
 ) => {
   let gpaTotal = "";
   let gpaSubject = "";
@@ -62,9 +61,5 @@ export const filterGPA = (
 
   parser.write(html);
   parser.end();
-
-  setGpaData({
-    gpaTotal: gpaTotal,
-    gpaSubject: gpaSubject,
-  });
+  return { gpaTotal: gpaTotal, gpaSubject: gpaSubject };
 };
