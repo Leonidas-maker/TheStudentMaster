@@ -1,5 +1,11 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
@@ -55,7 +61,7 @@ const Settings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const [activateCallback, setActivateCallback] = useState(false);
+  let activateCallback = useRef(false);
 
   // ~~~~~~~~~~~~~~~~ Theme ~~~~~~~~~~~~~~~~ //
   // Get the theme and set the theme
@@ -91,10 +97,14 @@ const Settings: React.FC = () => {
   // ====================================================== //
   useEffect(() => {
     const fetchData = async () => {
-      setActivateCallback(false);
+      activateCallback.current = false;
       setLoading(true);
       setProgress(0.25);
-      await fetchCalendars(setCalendars);
+      const availableCalendars = await fetchCalendars();
+      if (availableCalendars.length > 0) {
+        setCalendars(availableCalendars);
+      }
+
       setProgress(0.5);
       await getSelectedUniversity(
         setSelectedUniversity,
@@ -107,9 +117,10 @@ const Settings: React.FC = () => {
         setPlaceholderCourse,
         setMissingCourse,
       );
+
       setProgress(1);
       setLoading(false);
-      setActivateCallback(true);
+      activateCallback.current = true;
     };
     fetchData();
   }, []);
@@ -126,7 +137,7 @@ const Settings: React.FC = () => {
   // Handle the university select and gets data from backend
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
-    if (!activateCallback) return;
+    if (!activateCallback.current) return;
     const selectedUni = calendars.find(
       (calendar) => calendar.university_name === selectedValue,
     );
@@ -135,27 +146,20 @@ const Settings: React.FC = () => {
         name: selectedUni.university_name,
         uuid: selectedUni.university_uuid,
       };
-      setLoading(true);
-      setProgress(0.3);
       setSelectedUniversity(selectedUniData);
       await AsyncStorage.setItem(
         "selectedUniversity",
         JSON.stringify(selectedUniData),
       );
-      setProgress(0.6);
-      setPlaceholderUniversity(selectedUni.university_name);
       setSelectedCourse(null);
       setPlaceholderCourse("Select a Course");
-      await fetchEventsWithoutWait(setEvents);
-      setProgress(1);
-      setLoading(false);
     }
   };
 
   // Handle the course select and gets data from backend
   // Sets progress and loading state
   const handleCourseSelect = async (selectedValue: string) => {
-    if (!activateCallback) return;
+    if (!activateCallback.current) return;
     setLoading(true);
     setProgress(0.25);
     setSelectedCourse(selectedValue);
@@ -174,16 +178,18 @@ const Settings: React.FC = () => {
 
   // Dropdown values for the courses
   // Based on the selected university
-  const courseDropdownValues = selectedUniversity
-    ? calendars
-        .find(
-          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-        )
-        ?.course_names.map((course: string) => ({
-          key: course,
-          value: course,
-        })) || []
-    : [];
+  const courseDropdownValues = useMemo(() => {
+    return selectedUniversity
+      ? calendars
+          .find(
+            (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+          )
+          ?.course_names.map((course: string) => ({
+            key: course,
+            value: course,
+          })) || []
+      : [];
+  }, [selectedUniversity, calendars]);
 
   // ====================================================== //
   // ================== Return component ================== //

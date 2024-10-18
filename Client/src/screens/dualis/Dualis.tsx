@@ -1,28 +1,12 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Pressable,
-  useColorScheme,
-  Text,
-} from "react-native";
+import { View, ScrollView, Pressable, useColorScheme } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import DefaultText from "../../components/textFields/DefaultText";
 import Heading from "../../components/textFields/Heading";
-import {
-  DualisRouteParams,
-  ModuleData,
-  GpaData,
-  EctsData,
-  SemesterData,
-  GradeData,
-  GpaSemesterData,
-} from "../../interfaces/dualisInterfaces";
-import Subheading from "../../components/textFields/Subheading";
+import { DualisRouteParams } from "../../interfaces/dualisInterfaces";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { useNavigation } from "@react-navigation/native";
 import DualisOverviewText from "../../components/textFields/dualisTextFields/DualisOverviewText";
@@ -42,49 +26,32 @@ const Dualis: React.FC = () => {
   const route = useRoute<RouteProp<{ params: DualisRouteParams }, "params">>();
 
   const {
-    moduleData: routeModuleData,
-    gpaData: routeGpaData,
-    ectsData: routeEctsData,
-    semesterData: routeSemesterData,
-    gradeData: routeGradeData,
-    gpaSemesterData: routeGpaSemesterData,
+    moduleData,
+    gpaData,
+    ectsData,
+    semesterData,
+    gradeData,
+    gpaSemesterData,
   } = route.params;
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation<any>();
 
-  const [moduleData, setModuleData] = useState<Array<ModuleData>>(
-    routeModuleData || [],
-  );
-  const [gradeData, setGradeData] = useState<GradeData[]>(routeGradeData || []);
-  const [gpaSemesterData, setGpaSemesterData] = useState<GpaSemesterData[]>(
-    routeGpaSemesterData || [],
-  );
-  const [gpaData, setGpaData] = useState<GpaData>(
-    routeGpaData || { gpaTotal: "", gpaSubject: "" },
-  );
-  const [ectsData, setEctsData] = useState<EctsData>(
-    routeEctsData || { ectsTotal: "", ectsSum: "" },
-  );
-  const [semesterData, setSemesterData] = useState<SemesterData>(
-    routeSemesterData || { semester: [] },
-  );
   const [selectedSemester, setSelectedSemester] =
     useState<string>("Leistungsübersicht");
-  const [isLight, setIsLight] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
   const colorScheme = useColorScheme();
 
   // Set the icon color based on the color scheme
-  const iconColor = isLight ? "#FFFFFF" : "#000000";
-  const checkColor = isLight ? "#497740" : "#629F56";
+  const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
+  const checkColor = colorScheme !== "light" ? "#497740" : "#629F56";
   // Colors from the background, so the check icon is not visible and the dimensions are right
-  const placeholderColor = isLight ? "#E8EBF7" : "#1E1E24";
+  const placeholderColor = colorScheme !== "light" ? "#E8EBF7" : "#1E1E24";
 
   // Function to get available semesters and add "Leistungsübersicht" as the first option
   const getSemesterDropdownValues = () => {
-    const semesterOptions = semesterData.semester.map((semester) => ({
+    const semesterOptions = semesterData.current.semester.map((semester) => ({
       key: semester.value,
       value: semester.name,
     }));
@@ -101,23 +68,19 @@ const Dualis: React.FC = () => {
 
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
-      ? gradeData
-      : gradeData.filter((grade) => grade.semester === selectedSemester);
+      ? gradeData.current
+      : gradeData.current.filter(
+          (grade) => grade.semester === selectedSemester,
+        );
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
-      ? gpaSemesterData
-      : gpaSemesterData.filter((gpa) => gpa.semester === selectedSemester);
+      ? gpaSemesterData.current
+      : gpaSemesterData.current.filter(
+          (gpa) => gpa.semester === selectedSemester,
+        );
 
   const handleLogout = () => {
-    // Reset all state to empty or default values
-    setModuleData([]);
-    setGpaData({ gpaTotal: "", gpaSubject: "" });
-    setEctsData({ ectsTotal: "", ectsSum: "" });
-    setSemesterData({ semester: [] });
-    setGradeData([]);
-    setGpaSemesterData([]);
-
     // Navigate to the login screen after logout
     navigation.reset({
       index: 0,
@@ -127,12 +90,6 @@ const Dualis: React.FC = () => {
 
   // Set the header button dynamically
   useEffect(() => {
-    if (colorScheme === "light") {
-      setIsLight(true);
-    } else {
-      setIsLight(false);
-    }
-
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={handleLogout}>
@@ -149,9 +106,6 @@ const Dualis: React.FC = () => {
 
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
-      {/* <View className="mt-5">
-        <Heading text={`${selectedSemester}`} />
-      </View> */}
       <ScrollView>
         {selectedSemester.length > 1 &&
         selectedSemester === "Leistungsübersicht" ? (
@@ -159,23 +113,23 @@ const Dualis: React.FC = () => {
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
               <View className="flex-row p-2 pl-5 items-end">
-                <DualisOverviewText text={`${gpaData.gpaTotal}`} />
+                <DualisOverviewText text={`${gpaData.current.gpaTotal}`} />
                 <DualisOverviewDescText text="Gesamt-GPA" />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
-                <DualisOverviewText text={`${gpaData.gpaSubject}`} />
+                <DualisOverviewText text={`${gpaData.current.gpaSubject}`} />
                 <DualisOverviewDescText text="Hauptfach-GPA" />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
                 <DualisOverviewText
-                  text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`}
+                  text={`${ectsData.current.ectsSum} / ${ectsData.current.ectsTotal}`}
                 />
                 <DualisOverviewDescText text="ECTS" />
               </View>
               <View className="py-4">
                 <Heading text="Studienergebnisse" />
               </View>
-              {moduleData.length > 0 ? (
+              {moduleData.current.length > 0 ? (
                 <View>
                   <View className="flex-row items-center justify-between flex-wrap m-2">
                     <DualisHeaderModuleText text="Modul" />
@@ -186,7 +140,7 @@ const Dualis: React.FC = () => {
                     </View>
                   </View>
 
-                  {moduleData.map((module, index) => (
+                  {moduleData.current.map((module, index) => (
                     <View key={index} className="mx-2">
                       <View className="flex-row items-center justify-between flex-wrap">
                         <View className="flex-1">
@@ -202,7 +156,7 @@ const Dualis: React.FC = () => {
                         </View>
                       </View>
 
-                      {index < moduleData.length - 1 && (
+                      {index < moduleData.current.length - 1 && (
                         <View className="border-b dark:border-light_secondary border-dark_secondary my-2" />
                       )}
                     </View>

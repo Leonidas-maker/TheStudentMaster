@@ -29,13 +29,14 @@ const axiosInstance = axios.create({
 
 export const navigateToPerformanceOverview = async (
   authArguments: string,
-  setModuleData: React.Dispatch<React.SetStateAction<ModuleData[]>>,
-  setGpaData: React.Dispatch<React.SetStateAction<GpaData>>,
-  setEctsData: React.Dispatch<React.SetStateAction<EctsData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
-) => {
+): Promise<{
+  moduleData: ModuleData[];
+  gpaData: GpaData;
+  ectsData: EctsData;
+}> => {
   setProgress(0.25);
   setLoad("Leistungsübersicht");
   try {
@@ -44,31 +45,38 @@ export const navigateToPerformanceOverview = async (
     const content = response.data;
 
     // Set the filtered module data directly
-    filterPerformanceOverview(content, setModuleData);
+    const moduleData = filterPerformanceOverview(content);
     setProgress(0.26);
 
     // Set the filtered GPA data directly
-    filterGPA(content, setGpaData);
+    const gpaData = filterGPA(content);
     setProgress(0.28);
 
     // Set the filtered ECTS data directly
-    filterECTS(content, setEctsData);
+    const ectsData = filterECTS(content);
     setProgress(0.3);
+
+    return { moduleData, gpaData, ectsData };
   } catch (err) {
     setError(
       "An error occurred while navigating to the performance overview. Please try again.",
     );
     console.error(err);
+
+    return {
+      moduleData: [],
+      gpaData: { gpaTotal: "", gpaSubject: "" },
+      ectsData: { ectsTotal: "", ectsSum: "" },
+    };
   }
 };
 
 export const navigateToExamResults = async (
   authArguments: string,
-  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
-) => {
+): Promise<SemesterData> => {
   setProgress(0.35);
   setLoad("Semester");
   try {
@@ -77,26 +85,26 @@ export const navigateToExamResults = async (
     const content = response.data;
 
     // Directly filter and update the semesterData state
-    filterSemester(content, setSemesterData);
+    const semesterData = filterSemester(content);
 
     setProgress(0.4);
+    return semesterData;
   } catch (err) {
     setError(
       "An error occurred while navigating to the exam results. Please try again.",
     );
     console.error(err);
+    return { semester: [] };
   }
 };
 
 export const navigateThroughSemesters = async (
   authArguments: string,
   semesterArray: Array<{ name: string; value: string }>,
-  setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
-  setGpaSemesterData: React.Dispatch<React.SetStateAction<GpaSemesterData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
-) => {
+): Promise<{ gradeData: GradeData[]; gpaSemesterData: GpaSemesterData[] }> => {
   setProgress(0.45);
   setLoad("Semester Daten");
   try {
@@ -121,24 +129,24 @@ export const navigateThroughSemesters = async (
     // Wait for all promises to resolve
     await Promise.all(promises);
 
-    // Pass both setGradeData and setGpaSemesterData to filterGrade
-    filterGrade(allSemesterData, setGradeData, setGpaSemesterData);
+    const { gradeData, gpaSemesterData } = await filterGrade(allSemesterData);
+
+    return { gradeData, gpaSemesterData };
   } catch (err) {
     setError(
       "An error occurred while navigating through the semesters. Please try again.",
     );
     console.error(err);
+    return { gradeData: [], gpaSemesterData: [] };
   }
 };
 
 export const navigateThroughGradeDetails = async (
   gradeData: GradeData[],
-  setGradeData: React.Dispatch<React.SetStateAction<GradeData[]>>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoading: (loading: boolean) => void,
   setLoad: (load: string) => void,
-) => {
+): Promise<GradeData[]> => {
   setProgress(0.75);
   setLoad("Semester Details");
   try {
@@ -161,16 +169,14 @@ export const navigateThroughGradeDetails = async (
 
     // Waiting for all promises to resolve
     const resolvedData = await Promise.all(promises);
-    setGradeData(resolvedData);
-
-    setGradeData((prevGradeData) => updatedGradeData);
 
     setProgress(1);
+    return resolvedData;
   } catch (err) {
     setError(
       "An error occurred while navigating through the grade details. Please try again.",
     );
     console.error(err);
+    return [];
   }
-  setLoading(false);
 };

@@ -4,10 +4,7 @@ import { Parser } from "htmlparser2";
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { SemesterData } from "../../interfaces/dualisInterfaces";
 
-export const filterSemester = (
-  html: string,
-  setSemesterData: React.Dispatch<React.SetStateAction<SemesterData>>,
-) => {
+export const filterSemester = (html: string) => {
   let semester: Array<{ name: string; value: string }> = [];
   let insideSelect = false;
   let currentValue = "";
@@ -46,8 +43,5 @@ export const filterSemester = (
   parser.write(html);
   parser.end();
 
-  // Directly update the state with the new semester data
-  setSemesterData({
-    semester: semester,
-  });
+  return { semester: semester };
 };

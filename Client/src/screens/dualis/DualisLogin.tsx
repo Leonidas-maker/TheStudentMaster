@@ -48,7 +48,7 @@ const DualisLogin: React.FC = () => {
   const colorScheme = useColorScheme();
 
   // Set the icon color based on the color scheme
-  const iconColor = isLight ? "#FFFFFF" : "#000000";
+  const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
 
   // Function to handle login
   const login = async () => {
@@ -84,12 +84,6 @@ const DualisLogin: React.FC = () => {
 
   // Set the header button dynamically
   useEffect(() => {
-    if (colorScheme === "light") {
-      setIsLight(true);
-    } else {
-      setIsLight(false);
-    }
-
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={handleInfoPress}>

@@ -2,12 +2,12 @@
 // ================ Interfaces defintions =============== //
 // ====================================================== //
 interface DualisRouteParams {
-  moduleData: ModuleData[];
-  gpaData: GpaData;
-  ectsData: EctsData;
-  semesterData: SemesterData;
-  gradeData: GradeData[];
-  gpaSemesterData: GpaSemesterData[];
+  moduleData: React.MutableRefObject<ModuleData[]>;
+  gradeData: React.MutableRefObject<GradeData[]>;
+  gpaSemesterData: React.MutableRefObject<GpaSemesterData[]>;
+  gpaData: React.MutableRefObject<GpaData>;
+  ectsData: React.MutableRefObject<EctsData>;
+  semesterData: React.MutableRefObject<SemesterData>;
 }
 
 interface ModuleData {

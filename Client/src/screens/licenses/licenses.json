@@ -280,7 +280,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/marklawlor/nativewind.git",
-    "remoteVersion": "4.1.16",
+    "remoteVersion": "4.1.17",
     "installedVersion": "4.0.36",
     "definedVersion": "^4.0.36",
     "author": "Mark Lawlor https://github.com/marklawlor"
@@ -384,7 +384,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+ssh://git@github.com/awesomejerry/react-native-qrcode-svg.git",
-    "remoteVersion": "6.3.2",
+    "remoteVersion": "6.3.12",
     "installedVersion": "6.3.1",
     "definedVersion": "^6.3.1",
     "author": "awesomejerry"
@@ -462,7 +462,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git://github.com/necolas/react-native-web.git",
-    "remoteVersion": "0.19.12",
+    "remoteVersion": "0.19.13",
     "installedVersion": "0.19.10",
     "definedVersion": "~0.19.6",
     "author": "Nicolas Gallagher"
