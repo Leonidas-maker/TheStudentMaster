@@ -5,24 +5,15 @@ import {
   ScrollView,
   Pressable,
   useColorScheme,
-  Text,
 } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import DefaultText from "../../components/textFields/DefaultText";
 import Heading from "../../components/textFields/Heading";
 import {
   DualisRouteParams,
-  ModuleData,
-  GpaData,
-  EctsData,
-  SemesterData,
-  GradeData,
-  GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
-import Subheading from "../../components/textFields/Subheading";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { useNavigation } from "@react-navigation/native";
 import DualisOverviewText from "../../components/textFields/dualisTextFields/DualisOverviewText";
@@ -54,17 +45,16 @@ const Dualis: React.FC = () => {
 
   const [selectedSemester, setSelectedSemester] =
     useState<string>("Leistungsübersicht");
-  const [isLight, setIsLight] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
   const colorScheme = useColorScheme();
 
   // Set the icon color based on the color scheme
-  const iconColor = isLight ? "#FFFFFF" : "#000000";
-  const checkColor = isLight ? "#497740" : "#629F56";
+  const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
+  const checkColor = colorScheme !== "light" ? "#497740" : "#629F56";
   // Colors from the background, so the check icon is not visible and the dimensions are right
-  const placeholderColor = isLight ? "#E8EBF7" : "#1E1E24";
+  const placeholderColor = colorScheme !== "light" ? "#E8EBF7" : "#1E1E24";
 
   // Function to get available semesters and add "Leistungsübersicht" as the first option
   const getSemesterDropdownValues = () => {
@@ -86,16 +76,12 @@ const Dualis: React.FC = () => {
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
       ? gradeData.current
-      : gradeData.current.filter(
-          (grade) => grade.semester === selectedSemester,
-        );
+      : gradeData.current.filter((grade) => grade.semester === selectedSemester);
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
       ? gpaSemesterData.current
-      : gpaSemesterData.current.filter(
-          (gpa) => gpa.semester === selectedSemester,
-        );
+      : gpaSemesterData.current.filter((gpa) => gpa.semester === selectedSemester);
 
   const handleLogout = () => {
     // Navigate to the login screen after logout
@@ -107,12 +93,6 @@ const Dualis: React.FC = () => {
 
   // Set the header button dynamically
   useEffect(() => {
-    if (colorScheme === "light") {
-      setIsLight(true);
-    } else {
-      setIsLight(false);
-    }
-
     navigation.setOptions({
       headerRight: () => (
         <Pressable onPress={handleLogout}>
@@ -129,9 +109,6 @@ const Dualis: React.FC = () => {
 
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
-      {/* <View className="mt-5">
-        <Heading text={`${selectedSemester}`} />
-      </View> */}
       <ScrollView>
         {selectedSemester.length > 1 &&
         selectedSemester === "Leistungsübersicht" ? (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View } from "react-native";
 import * as Progress from "react-native-progress";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
@@ -138,7 +138,7 @@ const DualisLoad: React.FC = () => {
                     screen: "DualisPerfomance",
                     params: {
                       moduleData: moduleData,
-                      gpaData: ectsData,
+                      gpaData: gpaData,
                       ectsData: ectsData,
                       semesterData: semesterData,
                       gradeData: gradeData,
