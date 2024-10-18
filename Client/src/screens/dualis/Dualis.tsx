@@ -1,19 +1,12 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Pressable,
-  useColorScheme,
-} from "react-native";
+import { View, ScrollView, Pressable, useColorScheme } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Heading from "../../components/textFields/Heading";
-import {
-  DualisRouteParams,
-} from "../../interfaces/dualisInterfaces";
+import { DualisRouteParams } from "../../interfaces/dualisInterfaces";
 import Dropdown from "../../components/dropdown/Dropdown";
 import { useNavigation } from "@react-navigation/native";
 import DualisOverviewText from "../../components/textFields/dualisTextFields/DualisOverviewText";
@@ -76,12 +69,16 @@ const Dualis: React.FC = () => {
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
       ? gradeData.current
-      : gradeData.current.filter((grade) => grade.semester === selectedSemester);
+      : gradeData.current.filter(
+          (grade) => grade.semester === selectedSemester,
+        );
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
       ? gpaSemesterData.current
-      : gpaSemesterData.current.filter((gpa) => gpa.semester === selectedSemester);
+      : gpaSemesterData.current.filter(
+          (gpa) => gpa.semester === selectedSemester,
+        );
 
   const handleLogout = () => {
     // Navigate to the login screen after logout
