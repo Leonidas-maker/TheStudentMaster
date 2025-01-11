@@ -29,7 +29,7 @@ from config.general import MAX_COURSE_NAME_LENGTH, COURSE_HISTORY_DAYS, DEFAULT_
 ###########################################################################
 ############################# Helper Functions ############################
 ###########################################################################
-def is_lecture_sessions_to_delete(sessions: List[m_calendar.Session], min_percent=50):
+def is_lecture_sessions_to_delete(sessions: List[m_calendar.Session], min_percent=80):
     """
     Function to check if a lecture has a high percentage of sessions in the future
 
@@ -46,7 +46,7 @@ def is_lecture_sessions_to_delete(sessions: List[m_calendar.Session], min_percen
         if session.start_time < datetime.datetime.now() - datetime.timedelta(days=COURSE_HISTORY_DAYS):
             sessions_to_delete += 1
 
-    return (sessions_to_delete / len(sessions)) * 100 < min_percent
+    return (sessions_to_delete / len(sessions)) * 100 > min_percent
 
 
 def get_backend_ids(db: Session):
@@ -819,6 +819,7 @@ def dhbw_course_db_update_create_convert(
     db.add_all(
         new_rooms_db + new_courses_db + new_lectures_db + new_sessions_db + new_session_tags_db + new_session_rooms_db
     )
+    db.flush()
 
     # Update course timestamps
     progress.update(

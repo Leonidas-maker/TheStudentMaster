@@ -103,10 +103,9 @@ config.privacy_level = 1
 
 app.add_middleware(
     Analytics,
-    api_key="Ypb1sI3LLbkQbj5KDzuF2qiOXa0QT8ZnNzR84Db1h5Q",
+    api_key="dGhlc3R1ZGVudG1hc3Rlci10ZXN0.jJ3w9AxxQrU5-GlOE2WwTyK3s1F5mT5haf6RDv80mao",
     config=config,
 )
-
 
 # ======================================================== #
 # ====================== Middleware ====================== #
