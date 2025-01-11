@@ -217,9 +217,13 @@ class DHBWAppFetcher:
             except Exception as e:
                 print(e)
                 print("Type structured_sessions.courses: ", type(structured_sessions.courses))
-                print("Type structured_sessions.courses.get(course_name): ", type(structured_sessions.courses.get(course_name)))
-                print("Value structured_sessions.courses.get(course_name): ", structured_sessions.courses.get(course_name))
-
+                print(
+                    "Type structured_sessions.courses.get(course_name): ",
+                    type(structured_sessions.courses.get(course_name)),
+                )
+                print(
+                    "Value structured_sessions.courses.get(course_name): ", structured_sessions.courses.get(course_name)
+                )
 
         return updated_sites
 
