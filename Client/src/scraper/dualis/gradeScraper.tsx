@@ -114,6 +114,7 @@ export const filterGrade = (html: Array<{ name: string; html: string }>) => {
           detailGrade: [],
         });
 
+        passed = false;
         number = "";
         name = "";
         grade = "";
