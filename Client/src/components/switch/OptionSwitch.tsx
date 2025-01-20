@@ -42,7 +42,7 @@ const OptionSwitch: React.FC<OptionSwitchProps> = ({
   // ================== Return component ================== //
   // ====================================================== //
   return (
-    <View className="m-4">
+    <View className="m-4 w-3/4">
       <Text className="text-black dark:text-white text-xl font-bold mb-2">
         {title}
       </Text>

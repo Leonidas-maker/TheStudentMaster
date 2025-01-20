@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View } from "react-native";
+import { View, Alert } from "react-native";
 import * as Progress from "react-native-progress";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
@@ -46,109 +46,112 @@ const DualisLoad: React.FC = () => {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
+      let hasTimedOut = false;
+
+      const timeout = setTimeout(() => {
+        hasTimedOut = true;
+        if (isActive) {
+          Alert.alert(
+            "Da hat etwas nicht funktioniert :(",
+            "Der Ladevorgang dauert länger als erwartet. Du wirst zur Startseite weitergeleitet. Überprüfe deine Internetverbindung und versuche es erneut.",
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Dualis", params: { screen: "DualisLogin" } }],
+                  });
+                },
+              },
+            ]
+          );
+        }
+      }, 20000); // 20 seconds
+
       const runAsync = async () => {
         setLoading(true);
         setProgress(0);
 
-        // Load authArguments from secure storage
-        const authArgs = await secureLoadData("dualisAuthArgs");
-        if (!authArgs) {
-          setError("Authentication arguments not found.");
-          setLoading(false);
-          return;
-        }
+        try {
+          const authArgs = await secureLoadData("dualisAuthArgs");
+          if (!authArgs) throw new Error("Authentication arguments not found.");
 
-        // Navigate to Performance Overview
-        const perfData = await navigateToPerformanceOverview(
-          authArgs,
-          setProgress,
-          setError,
-          setLoad,
-        );
-        if (perfData) {
-          moduleData.current = perfData.moduleData;
-          gpaData.current = perfData.gpaData;
-          ectsData.current = perfData.ectsData;
-        } else {
-          setLoading(false);
-          return;
-        }
-
-        // Navigate to Exam Results
-        const semData = await navigateToExamResults(
-          authArgs,
-          setProgress,
-          setError,
-          setLoad,
-        );
-        if (semData) {
-          semesterData.current = semData;
-        } else {
-          setLoading(false);
-          return;
-        }
-
-        // Navigate through Semesters
-        if (semesterData.current.semester.length > 0) {
-          const semResults = await navigateThroughSemesters(
+          const perfData = await navigateToPerformanceOverview(
             authArgs,
-            semesterData.current.semester,
             setProgress,
             setError,
-            setLoad,
+            setLoad
           );
-          if (semResults) {
-            gradeData.current = semResults.gradeData;
-            gpaSemesterData.current = semResults.gpaSemesterData;
-          } else {
-            setLoading(false);
-            return;
+          if (perfData) {
+            moduleData.current = perfData.moduleData;
+            gpaData.current = perfData.gpaData;
+            ectsData.current = perfData.ectsData;
           }
-        }
 
-        // Navigate through Grade Details
-        if (gradeData.current.length > 0) {
-          const updatedGradeData = await navigateThroughGradeDetails(
-            gradeData.current,
+          const semData = await navigateToExamResults(
+            authArgs,
             setProgress,
             setError,
-            setLoad,
+            setLoad
           );
-          if (updatedGradeData) {
-            gradeData.current = updatedGradeData;
-          } else {
-            setLoading(false);
-            return;
+          if (semData) semesterData.current = semData;
+
+          if (semesterData.current.semester.length > 0) {
+            const semResults = await navigateThroughSemesters(
+              authArgs,
+              semesterData.current.semester,
+              setProgress,
+              setError,
+              setLoad
+            );
+            if (semResults) {
+              gradeData.current = semResults.gradeData;
+              gpaSemesterData.current = semResults.gpaSemesterData;
+            }
           }
+
+          if (gradeData.current.length > 0) {
+            const updatedGradeData = await navigateThroughGradeDetails(
+              gradeData.current,
+              setProgress,
+              setError,
+              setLoad
+            );
+            if (updatedGradeData) gradeData.current = updatedGradeData;
+          }
+
           logoutDualis(authArgs);
-        }
 
-        // Update states
-        if (isActive) {
-          setLoading(false);
+          if (isActive && !hasTimedOut) {
+            clearTimeout(timeout); // Stop the timer if successful
+            setLoading(false);
 
-          // Navigate to Dualis Performance screen
-          if (gpaSemesterData.current.length > 0) {
-            navigation.reset({
-              index: 0,
-              routes: [
-                {
-                  name: "Dualis",
-                  params: {
-                    screen: "DualisPerfomance",
+            if (gpaSemesterData.current.length > 0) {
+              navigation.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: "Dualis",
                     params: {
-                      moduleData: moduleData,
-                      gpaData: gpaData,
-                      ectsData: ectsData,
-                      semesterData: semesterData,
-                      gradeData: gradeData,
-                      gpaSemesterData: gpaSemesterData,
+                      screen: "DualisPerfomance",
+                      params: {
+                        moduleData: moduleData,
+                        gpaData: gpaData,
+                        ectsData: ectsData,
+                        semesterData: semesterData,
+                        gradeData: gradeData,
+                        gpaSemesterData: gpaSemesterData,
+                      },
                     },
                   },
-                },
-              ],
-            });
+                ],
+              });
+            }
           }
+        } catch (err: any) {
+          setError(err.message || "Ein unbekannter Fehler ist aufgetreten.");
+          setLoading(false);
         }
       };
 
@@ -156,8 +159,9 @@ const DualisLoad: React.FC = () => {
 
       return () => {
         isActive = false;
+        clearTimeout(timeout);
       };
-    }, [navigation]),
+    }, [navigation])
   );
 
   return (

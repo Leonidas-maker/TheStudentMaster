@@ -89,5 +89,6 @@ export const loginDualis = async (
   } catch (err) {
     setError("An error occurred. Please try again.");
     console.error(err);
+    throw err;
   }
 };

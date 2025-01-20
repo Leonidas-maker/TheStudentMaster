@@ -5,6 +5,8 @@ import {
   ActivityIndicator,
   useColorScheme,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -25,6 +27,7 @@ import {
   secureLoadData,
   secureRemoveData,
 } from "../../components/storageManager/secureStorageManager";
+import ConnectionMessage from "../../components/message/ConnectionMessage";
 
 import { loginDualis } from "../../services/dualis/loginService";
 
@@ -41,7 +44,7 @@ const DualisLogin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
   const [isLight, setIsLight] = useState(false);
-  const [disableButton, setDisableButton] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
@@ -50,25 +53,32 @@ const DualisLogin: React.FC = () => {
   // Set the icon color based on the color scheme
   const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
 
+  // Dynamically enable/disable the login button
+  const disableButton = !username.trim() || !password.trim() || loading;
+
   // Function to handle login
   const login = async () => {
-    setDisableButton(true);
     setLoading(true);
     setProgress(0);
 
-    await loginDualis(
-      username,
-      password,
-      saveCredentials,
-      setError,
-      setAuthArguments,
-      saveLogin,
-    );
+    try {
+      await loginDualis(
+        username,
+        password,
+        saveCredentials,
+        setError,
+        setAuthArguments,
+        saveLogin,
+      );
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
-    });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
+      });
+    } catch (error) {
+      setConnectionError(true);
+      setLoading(false);
+    }
   };
 
   // useEffect(() => {
@@ -168,7 +178,7 @@ const DualisLogin: React.FC = () => {
   // Wait for login data to load (this is very fast so it will most likely not be shown)
   if (isLoginLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
+      <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#0000ff" />
         <DefaultText text="Lade Anmeldedaten..." />
       </View>
@@ -176,38 +186,43 @@ const DualisLogin: React.FC = () => {
   }
 
   return (
-    <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center">
-      <View>
-        <Heading text="Bei Dualis anmelden" />
-        <View className="items-center">
-          <TextFieldInput
-            placeholder="Username"
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-          />
-          <TextFieldInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          <OptionSwitch
-            title="Login Optionen"
-            texts={["Anmeldedaten speichern"]}
-            iconNames={["update"]}
-            onValueChanges={[toggleSaveLogin]}
-            values={[saveLogin]}
-          />
-          <DefaultButton
-            text="Login"
-            onPress={login}
-            disabled={disableButton}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center">
+        <ConnectionMessage
+          visible={connectionError}
+          setVisible={setConnectionError}
+        />
+        <View>
+          <Heading text="Bei Dualis anmelden" />
+          <View className="items-center">
+            <TextFieldInput
+              placeholder="Username"
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+            />
+            <TextFieldInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <OptionSwitch
+              title="Login Optionen"
+              texts={["Anmeldedaten speichern"]}
+              iconNames={["update"]}
+              onValueChanges={[toggleSaveLogin]}
+              values={[saveLogin]}
+            />
+            <DefaultButton
+              text="Login"
+              onPress={login}
+              disabled={disableButton}
+            />
+          </View>
         </View>
-        {error ? <DefaultText text={error} /> : null}
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

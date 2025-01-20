@@ -36,6 +36,7 @@ import {
   EventTimeProps,
 } from "../../interfaces/calendarInterfaces";
 import axios, { AxiosError } from "axios";
+import ConnectionMessage from "../message/ConnectionMessage";
 
 // Important for LayoutAnimation on Android according to the docs
 //! Disabled because it causes a crash on Android
@@ -57,6 +58,7 @@ const WeekCalendar: React.FC = () => {
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [connectionError, setConnectionError] = useState(false);
   const navigation = useNavigation<any>();
 
   // ====================================================== //
@@ -76,6 +78,7 @@ const WeekCalendar: React.FC = () => {
       const loadEvents = async () => {
         setLoading(true);
         setProgress(0.3);
+        setConnectionError(false);
         await loadEventsFromStorage(setEvents);
         setProgress(0.6);
         // Function to try fetching the new uuid
@@ -96,6 +99,8 @@ const WeekCalendar: React.FC = () => {
               error.response?.status !== 404 &&
               error.response?.status !== 422
             ) {
+              setConnectionError(true);
+              setLoading(false);
               throw new Error("Error fetching events");
             }
             try {
@@ -173,15 +178,15 @@ const WeekCalendar: React.FC = () => {
         let missingCourse = false;
 
         await getSelectedUniversity(
-          () => {},
-          () => {},
+          () => { },
+          () => { },
           (missing) => {
             missingUniversity = missing;
           },
         );
         await getSelectedCourse(
-          () => {},
-          () => {},
+          () => { },
+          () => { },
           (missing) => {
             missingCourse = missing;
           },
@@ -254,6 +259,10 @@ const WeekCalendar: React.FC = () => {
         }}
       >
         <View className="h-full flex-1">
+          <ConnectionMessage
+            visible={connectionError}
+            setVisible={setConnectionError} // Verbindungsfehler setzen und zurücksetzen
+          />
           <WeekSelector
             mode="calendar"
             onBackPress={handleBackPress}
