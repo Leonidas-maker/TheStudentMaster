@@ -60,11 +60,13 @@ const DualisLoad: React.FC = () => {
                 onPress: () => {
                   navigation.reset({
                     index: 0,
-                    routes: [{ name: "Dualis", params: { screen: "DualisLogin" } }],
+                    routes: [
+                      { name: "Dualis", params: { screen: "DualisLogin" } },
+                    ],
                   });
                 },
               },
-            ]
+            ],
           );
         }
       }, 20000); // 20 seconds
@@ -81,7 +83,7 @@ const DualisLoad: React.FC = () => {
             authArgs,
             setProgress,
             setError,
-            setLoad
+            setLoad,
           );
           if (perfData) {
             moduleData.current = perfData.moduleData;
@@ -93,7 +95,7 @@ const DualisLoad: React.FC = () => {
             authArgs,
             setProgress,
             setError,
-            setLoad
+            setLoad,
           );
           if (semData) semesterData.current = semData;
 
@@ -103,7 +105,7 @@ const DualisLoad: React.FC = () => {
               semesterData.current.semester,
               setProgress,
               setError,
-              setLoad
+              setLoad,
             );
             if (semResults) {
               gradeData.current = semResults.gradeData;
@@ -116,7 +118,7 @@ const DualisLoad: React.FC = () => {
               gradeData.current,
               setProgress,
               setError,
-              setLoad
+              setLoad,
             );
             if (updatedGradeData) gradeData.current = updatedGradeData;
           }
@@ -161,7 +163,7 @@ const DualisLoad: React.FC = () => {
         isActive = false;
         clearTimeout(timeout);
       };
-    }, [navigation])
+    }, [navigation]),
   );
 
   return (
