@@ -36,6 +36,7 @@ import {
   CanteenProps,
   MenuDataProps,
 } from "../../interfaces/canteenInterfaces";
+import ConnectionMessage from "../message/ConnectionMessage";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -55,6 +56,7 @@ const MenuPlan: React.FC = () => {
   const [menu, setMenu] = useState<MenuDataProps | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
 
   // ====================================================== //
   // ====================== Variables ===================== //
@@ -83,11 +85,16 @@ const MenuPlan: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       const loadCanteens = async () => {
-        setLoading(true);
-        setProgress(0.5);
-        await fetchCanteens(setCanteenNames);
-        setProgress(1);
-        setLoading(false);
+        try {
+          setLoading(true);
+          setProgress(0.5);
+          await fetchCanteens(setCanteenNames);
+          setProgress(1);
+        } catch (error) {
+          setConnectionError(true);
+        } finally {
+          setLoading(false);
+        }
       };
 
       loadCanteens();
@@ -105,7 +112,12 @@ const MenuPlan: React.FC = () => {
         );
         setProgress(0.6);
         if (canteen) {
-          await fetchCanteenDishes(canteen.key, setMenu);
+          try {
+            await fetchCanteenDishes(canteen.key, setMenu);
+          } catch (error) {
+            setConnectionError(true);
+            setLoading(false);
+          }
         }
         setProgress(1);
         setLoading(false);
@@ -180,6 +192,10 @@ const MenuPlan: React.FC = () => {
   // ====================================================== //
   return (
     <View className="flex-1">
+      <ConnectionMessage
+        visible={connectionError}
+        setVisible={setConnectionError}
+      />
       <WeekSelector
         mode={"menu"}
         onBackPress={handleBackPress}
@@ -205,6 +221,7 @@ const MenuPlan: React.FC = () => {
         values={canteenNames}
         placeholder="Mensa auswählen"
         save="key"
+        search={true}
       />
     </View>
   );

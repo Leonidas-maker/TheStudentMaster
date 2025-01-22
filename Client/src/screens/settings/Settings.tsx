@@ -1,5 +1,11 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Text, View, ScrollView, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
@@ -26,6 +32,7 @@ import {
   EventTimeProps,
   CalendarProps,
 } from "../../interfaces/calendarInterfaces";
+import { set } from "lodash";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 type SchemeType = "light" | "dark" | "system";
@@ -54,22 +61,14 @@ const Settings: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  let activateCallback = useRef(false);
+
   // ~~~~~~~~~~~~~~~~ Theme ~~~~~~~~~~~~~~~~ //
   // Get the theme and set the theme
   const { theme, setTheme } = useTheme();
 
-  // Set the scheme
-  const setScheme = (scheme: SchemeType) => {
-    setTheme(scheme);
-  };
-
   // ~~~~~~~~~~~~~~ Use Color Scheme ~~~~~~~~~~~~~~ //
   const { colorScheme, setColorScheme } = useColorScheme();
-
-  // Set the color scheme
-  useEffect(() => {
-    setColorScheme(theme);
-  }, [theme, setColorScheme]);
 
   // Set if the theme is light or dark
   useEffect(() => {
@@ -88,9 +87,14 @@ const Settings: React.FC = () => {
   // ====================================================== //
   useEffect(() => {
     const fetchData = async () => {
+      activateCallback.current = false;
       setLoading(true);
       setProgress(0.25);
-      await fetchCalendars(setCalendars);
+      const availableCalendars = await fetchCalendars();
+      if (availableCalendars.length > 0) {
+        setCalendars(availableCalendars);
+      }
+
       setProgress(0.5);
       await getSelectedUniversity(
         setSelectedUniversity,
@@ -103,10 +107,11 @@ const Settings: React.FC = () => {
         setPlaceholderCourse,
         setMissingCourse,
       );
+
       setProgress(1);
       setLoading(false);
+      activateCallback.current = true;
     };
-
     fetchData();
   }, []);
 
@@ -122,6 +127,7 @@ const Settings: React.FC = () => {
   // Handle the university select and gets data from backend
   // Sets progress and loading state
   const handleUniversitySelect = async (selectedValue: string) => {
+    if (!activateCallback.current) return;
     const selectedUni = calendars.find(
       (calendar) => calendar.university_name === selectedValue,
     );
@@ -130,32 +136,25 @@ const Settings: React.FC = () => {
         name: selectedUni.university_name,
         uuid: selectedUni.university_uuid,
       };
-      setLoading(true);
-      setProgress(0.3);
       setSelectedUniversity(selectedUniData);
       await AsyncStorage.setItem(
         "selectedUniversity",
         JSON.stringify(selectedUniData),
       );
-      setProgress(0.6);
-      setPlaceholderUniversity(selectedUni.university_name);
       setSelectedCourse(null);
       setPlaceholderCourse("Select a Course");
-      await fetchEventsWithoutWait(setEvents);
-      setProgress(1);
-      setLoading(false);
     }
   };
 
   // Handle the course select and gets data from backend
   // Sets progress and loading state
   const handleCourseSelect = async (selectedValue: string) => {
+    if (!activateCallback.current) return;
     setLoading(true);
     setProgress(0.25);
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
     setProgress(0.5);
-    setPlaceholderCourse(selectedValue);
     const selectedUni = await AsyncStorage.getItem("selectedUniversity");
     if (selectedUni) {
       const { uuid } = JSON.parse(selectedUni);
@@ -169,16 +168,18 @@ const Settings: React.FC = () => {
 
   // Dropdown values for the courses
   // Based on the selected university
-  const courseDropdownValues = selectedUniversity
-    ? calendars
-        .find(
-          (calendar) => calendar.university_uuid === selectedUniversity.uuid,
-        )
-        ?.course_names.map((course: string) => ({
-          key: course,
-          value: course,
-        })) || []
-    : [];
+  const courseDropdownValues = useMemo(() => {
+    return selectedUniversity
+      ? calendars
+          .find(
+            (calendar) => calendar.university_uuid === selectedUniversity.uuid,
+          )
+          ?.course_names.map((course: string) => ({
+            key: course,
+            value: course,
+          })) || []
+      : [];
+  }, [selectedUniversity, calendars]);
 
   // ====================================================== //
   // ================== Return component ================== //
@@ -204,19 +205,19 @@ const Settings: React.FC = () => {
         <Subheading text="Design auswählen" />
         <RadioOption
           label="Light Mode"
-          onPress={() => setScheme("light")}
+          onPress={() => setTheme("light")}
           checked={theme === "light"}
           radioColor={radioColor}
         />
         <RadioOption
           label="Dark Mode"
-          onPress={() => setScheme("dark")}
+          onPress={() => setTheme("dark")}
           checked={theme === "dark"}
           radioColor={radioColor}
         />
         <RadioOption
           label="System Mode"
-          onPress={() => setScheme("system")}
+          onPress={() => setTheme("system")}
           checked={theme === "system"}
           radioColor={radioColor}
         />
