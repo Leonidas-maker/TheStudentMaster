@@ -51,6 +51,7 @@ const fetchCanteens = async (
     setCanteenNames(canteenData); // Update state with fetched canteens
   } catch (error) {
     console.error("Error fetching canteens:", error); // Log any errors that occur
+    throw error;
   }
 };
 
@@ -68,6 +69,7 @@ const fetchCanteenDishes = async (
   } catch (error) {
     console.error("Error fetching canteen dishes:", error); // Log any errors that occur
     setMenu(null); // Set menu to null if an error occurs
+    throw error;
   }
 };
 
