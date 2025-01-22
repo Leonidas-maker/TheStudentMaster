@@ -67,18 +67,8 @@ const Settings: React.FC = () => {
   // Get the theme and set the theme
   const { theme, setTheme } = useTheme();
 
-  // Set the scheme
-  const setScheme = (scheme: SchemeType) => {
-    setTheme(scheme);
-  };
-
   // ~~~~~~~~~~~~~~ Use Color Scheme ~~~~~~~~~~~~~~ //
   const { colorScheme, setColorScheme } = useColorScheme();
-
-  // Set the color scheme
-  useEffect(() => {
-    setColorScheme(theme);
-  }, [theme, setColorScheme]);
 
   // Set if the theme is light or dark
   useEffect(() => {
@@ -215,19 +205,19 @@ const Settings: React.FC = () => {
         <Subheading text="Design auswählen" />
         <RadioOption
           label="Light Mode"
-          onPress={() => setScheme("light")}
+          onPress={() => setTheme("light")}
           checked={theme === "light"}
           radioColor={radioColor}
         />
         <RadioOption
           label="Dark Mode"
-          onPress={() => setScheme("dark")}
+          onPress={() => setTheme("dark")}
           checked={theme === "dark"}
           radioColor={radioColor}
         />
         <RadioOption
           label="System Mode"
-          onPress={() => setScheme("system")}
+          onPress={() => setTheme("system")}
           checked={theme === "system"}
           radioColor={radioColor}
         />
