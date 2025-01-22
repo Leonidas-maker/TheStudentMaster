@@ -9,7 +9,6 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
 
-
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 // Set possible scheme types to light, dark, system
 type SchemeType = "light" | "dark" | "system";
