@@ -27,22 +27,25 @@ def fetch_mensa_data() -> list:
         return []
 
 
-def parse_mensa_data() -> tuple[dict, list]:
+def parse_mensa_data() -> list[tuple[dict, list]]:
     # Fetch the data from the API
     data = fetch_mensa_data()
     # Check if the data is not empty
     if data:
 
+        result = []
         for item in data:
             # parse "mensaInfo"
             mensa_info = parse_mensa_info(mensa_info=item["mensaInfo"])
             # parse "menus"
             dishes = parse_mensa_menus(mensa_menus=item["menus"])
-            return mensa_info, dishes
+            # append the result to the list
+            result.append((mensa_info, dishes))
+        return result
     else:
         # Log an error if the data is empty
         logging.error("No data to parse")
-        return {}, []
+        return [{}, []]
 
 
 def parse_mensa_info(mensa_info: dict) -> dict:
