@@ -342,7 +342,7 @@ def create_sessions(
             lecture=lecture,
             external_id=session_create.external_id,
         )
-        
+
         # Handle tags with deduplication
         if session_create.tags:
             unique_tags = set(session_create.tags)
