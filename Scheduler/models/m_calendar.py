@@ -183,13 +183,11 @@ class Session(Base):
             self.end_time = dt.astimezone(DEFAULT_TIMEZONE)
 
     def generate_sha1_hash(self):
-        # Konvertiere start_time und end_time zu Strings
         start_str = (
             self.start_time.isoformat() if isinstance(self.start_time, datetime.datetime) else str(self.start_time)
         )
         end_str = self.end_time.isoformat() if isinstance(self.end_time, datetime.datetime) else str(self.end_time)
 
-        # Kombiniere start_time und end_time, encodiere und generiere SHA-1 Hash
         hash_input = f"{start_str}{end_str}".encode("utf-8")
         return hashlib.sha1(hash_input).hexdigest()
 
@@ -205,6 +203,8 @@ class SessionRoom(Base):
     session = relationship("Session", back_populates="rooms")  # Many-to-one, uselist=False not needed
     room = relationship("Room", back_populates="sessions")  # Many-to-one, uselist=False not needed
 
+    __table_args__ = (UniqueConstraint("session_id", "room_id", name="uq_session_id_room_id"),)
+
 
 class SessionTag(Base):
     __tablename__ = "calendar_native_session_tag"
@@ -216,6 +216,8 @@ class SessionTag(Base):
 
     session = relationship("Session", back_populates="tags")  # Many-to-one, uselist=False not needed
     tag = relationship("Tag")  # Many-to-one
+
+    __table_args__ = (UniqueConstraint("session_id", "tag_id", name="uq_session_id_tag_id"),)
 
 
 class Tag(Base):

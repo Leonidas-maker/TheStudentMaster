@@ -342,18 +342,20 @@ def create_sessions(
             lecture=lecture,
             external_id=session_create.external_id,
         )
-
-        # Handle tags
+        
+        # Handle tags with deduplication
         if session_create.tags:
-            for tag_name in session_create.tags:
+            unique_tags = set(session_create.tags)
+            for tag_name in unique_tags:
                 tag = tags_dict.get(tag_name)
                 if tag:
                     session_tag = m_calendar.SessionTag(session=new_session, tag=tag)
                     new_session_tags.append(session_tag)
 
-        # Handle rooms
+        # Handle rooms with deduplication
         if session_create.rooms:
-            for room_name in session_create.rooms:
+            unique_rooms = set(session_create.rooms)
+            for room_name in unique_rooms:
                 room = rooms_dict.get(room_name)
                 if room:
                     session_room = m_calendar.SessionRoom(session=new_session, room=room)
