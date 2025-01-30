@@ -1,13 +1,81 @@
-from datetime import datetime
+from datetime import datetime, timezone
+import json
 import logging
+import traceback
 from typing import List
+from modules.general import create_address
+from schemes.s_general import AddressCreate
 from models.m_general import Address
-from Scheduler.utils.canteen.mensa_scraper import get_mensa_data
+from utils.canteen.mensa_scraper import get_mensa_data
 from sqlalchemy.orm import Session
-from Scheduler.models.m_mensa import Mensa, Dish, Menu
+from models.m_mensa import Mensa, Dish, Menu
+from rich.progress import Progress
+from rich.console import Console
+
+def mensa_exists(db: Session, mensa: Mensa) -> bool:
+    # Check if the mensa already exists
+    if db.query(Mensa).filter(Mensa.site == mensa.site).first():
+        return True
+    return False
+
+def mensa_changed(db: Session, mensa: Mensa) -> bool:
+    # Check if the mensa has changed
+    db_mensa = db.query(Mensa).filter(Mensa.site == mensa.site).first()
+    if db_mensa.hash != mensa.hash:
+        return True
+    return False
+
+def dish_exists(db: Session, dish: Dish) -> bool:
+    # Check if the dish already exists
+    if db.query(Dish).filter(Dish.name == dish.name).first():
+        return True
+    return False
+
+def dish_changed(db: Session, dish: Dish) -> bool:
+    # Check if the dish has changed
+    db_dish = db.query(Dish).filter(Dish.name == dish.name).first()
+    if db_dish.hash != dish.hash:
+        return True
+    return False
+
+def menu_exists(db: Session, mensa_id: int, dish_id: int, serving_date: datetime) -> bool:
+    # Check if the menu already exists
+    if db.query(Menu).filter(Menu.mensa_id == mensa_id, Menu.dish_id == dish_id, Menu.serving_date == serving_date).first():
+        return True
+    return False
+
+def menu_changed(db: Session, menu: Menu) -> bool:
+    # Check if the menu has changed
+    db_menu = db.query(Menu).filter(Menu.mensa_id == menu.mensa_id, Menu.dish_id == menu.dish_id, Menu.serving_date == menu.serving_date).first()
+    if db_menu.hash != menu.hash:
+        return True
+    return False
 
 
-def do_it(db: Session):
+def just_do_it(db: Session, progress: Progress, task_id: int) -> None:
+    error_messages = []
+    try:
+        progress.update(task_id, description="[bold green]Mensa[/bold green]: Fetching Mensa...", visible=True)
+
+        do_it(db=db, progress=progress, task_id=task_id)
+
+        progress.update(task_id, description="[bold green]Mensa[/bold green]: Done", visible=False)
+
+        if error_messages:
+            raise ValueError("\n".join(error_messages))
+
+        return True
+
+    except Exception as e:
+        # Handle any errors by updating the progress bar and printing the error
+        error_messages.append(str(e))
+        progress.update(task_id, description=f"[bold red]Error[/bold red]", visible=True)
+        print(e)
+        traceback.print_exc()
+        return False
+
+
+def do_it(db: Session, progress: Progress, task_id: int) -> None:
     # Fetch the data from the API
     data = get_mensa_data()
 
@@ -25,24 +93,27 @@ def do_it(db: Session):
 
 def get_id_from_address(db: Session, raw_address: str) -> int:
     raw_address = raw_address.split("\n")
-    address = Address(
+    new_address = AddressCreate(
         address1=raw_address[0],
-        postal_code_id=[1].split(" ")[0],
+        city=raw_address[1].split(" ")[1],
+        postal_code=raw_address[1].split(" ")[0],
+        country="Germany",
+        district="Baden-Württemberg",
     )
-    db.add(address)
-    db.commit()
-    db.refresh(address)
+    logging.info(f"Creating address: {new_address}")
+    address = create_address(db=db, new_address=new_address)
+    logging.info(f"Address created: {address.address_id}")
     return address.address_id
 
 
 def create_mensa(db: Session, mensa_info: dict) -> int:
-
+    logging.info(f"Creating mensa: {mensa_info['name']}")
     address_id = get_id_from_address(db=db, raw_address=mensa_info["address"])
 
     # Create a new mensa object
     mensa = Mensa(
         site=mensa_info["site"],
-        name=mensa_info["name"],
+        mensa_name=mensa_info["name"],
         canteen_short_name=mensa_info["canteenShortName"],
         address_id=address_id,
         opening_hours=mensa_info["openingHours"],
@@ -50,51 +121,116 @@ def create_mensa(db: Session, mensa_info: dict) -> int:
         menu_url=mensa_info["menuUrl"],
         last_modified=datetime.now(),
     )
-
-    db.add(mensa)
-    db.commit()
-    db.refresh(mensa)
-
-    return mensa.mensa_id
-
+    
+    # Check if the mensa already exists
+    if not mensa_exists(db, mensa):
+        # If not exists: Create the mensa
+        db.add(mensa)
+        db.commit()
+        db.refresh(mensa)
+        return mensa.mensa_id
+    
+    # Check for changes
+    if not mensa_changed(db, mensa):
+        # If no changes: Skip
+        return mensa.mensa_id
+    else:
+        # Update the mensa
+        db.add(mensa)
+        db.commit()
+        db.refresh(mensa)
+        return mensa.mensa_id
+    
 
 def create_dishes(db: Session, courses: List[dict]) -> list[int]:
 
     dish_ids = []
+    try:
+        for course in courses:
+            for dish in course:
+                
+                # Create a new dish object
+                dish_obj = Dish(
+                    name=dish["name"],
+                    image=dish["image"],
+                    dish_type=dish["dish_type"],
+                    price_student=dish["price_student"],
+                    price_employee=dish["price_employee"],
+                    price_guest=dish["price_guest"],
+                    co2_portion=dish["co2_portion"],
+                    co2_100g=dish["co2_100g"],
+                    allergens=json.dumps(dish["allergens"]) if dish["allergens"] else None,
+                    additives=json.dumps(dish["additives"]) if dish["additives"] else None,
+                    last_modified=datetime.now(timezone.utc),
+                )
+                
+                if not dish_exists(db, dish_obj):
+                    # Add the dish
+                    db.add(dish_obj)
+                    db.flush()
+                    db.refresh(dish_obj)
+                    dish_ids.append(dish_obj.dish_id)
+                    continue
+                
+                if not dish_changed(db, dish_obj):
+                    # Skip
+                    dish_ids.append(dish_obj.dish_id)
+                    continue
+                else:
+                    # Update the dish
+                    db.add(dish_obj)
+                    db.flush()
+                    db.refresh(dish_obj)
+                    dish_ids.append(dish_obj.dish_id)
+                    continue
 
-    for course in courses:
-        dish_obj = Dish(
-            name=course["name"],
-            image=course["image"],
-            dish_type=course["dish_type"],
-            price_student=course["price_student"],
-            price_employee=course["price_employee"],
-            price_guest=course["price_guest"],
-            co2_portion=course["co2_portion"],
-            co2_100g=course["co2_100g"],
-            allergens=course["allergens"],
-            additives=course["additives"],
-            last_modified=datetime.now(),
-        )
-        db.add(dish_obj)
         db.commit()
-        db.refresh(dish_obj)
-        dish_ids.append(dish_obj.dish_id)
-
-    return dish_ids
-
+        return dish_ids
+    
+    except Exception as e:
+        logging.error(f"Error creating dishes: {e}")
+        db.rollback()
+        return dish_ids
 
 def create_menu(db: Session, mensa_id: int, dish_ids: List[int], serving_date: datetime):
     ids = []
-    for dish_id in dish_ids:
-        menu = Menu(
-            mensa_id=mensa_id,
-            dish_id=dish_id,
-            serving_date=serving_date,
-            last_modified=datetime.now(),
-        )
-        db.add(menu)
+    
+    try:
+        
+        for dish_id in dish_ids:
+            
+            # Create the menu
+            menu = Menu(
+                mensa_id=mensa_id,
+                dish_id=dish_id,
+                serving_date=datetime.strptime(serving_date, "%Y-%m-%dT%H:%M:%S.%fZ"),
+                last_modified=datetime.now(timezone.utc),
+            )
+            
+            if not menu_exists(db, mensa_id, dish_id, serving_date):
+                # Add the menu
+                db.add(menu)
+                db.flush()
+                db.refresh(menu)
+                ids.append(menu.menu_id)
+                continue
+            
+            if not menu_changed(db, menu):
+                # Skip
+                ids.append(menu.menu_id)
+                continue
+            else:
+                # Update the menu
+                db.add(menu)
+                db.flush()
+                db.refresh(menu)
+                ids.append(menu.menu_id)
+                continue
+            
         db.commit()
-        db.refresh(menu)
-        ids.append(menu.menu_id)
-    return ids
+        return ids
+        
+    except Exception as e:
+        logging.error(f"Error creating menu: {e}")
+        db.rollback()
+        return ids

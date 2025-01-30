@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, DateTime, Float
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, TIMESTAMP, DateTime, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 import hashlib
 
@@ -9,8 +9,8 @@ class Mensa(Base):
     __tablename__ = "mensa"
 
     # Primary key and basic information columns
-    mensa_id = Column(Integer, primary_key=True, index=True)
-    site = Column(Integer, primary_key=True, index=True)
+    mensa_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    site = Column(String(255), primary_key=True, index=True)
     mensa_name = Column(String(255), nullable=False)
     canteen_short_name = Column(String(255))
     address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=False)
@@ -25,9 +25,9 @@ class Mensa(Base):
     address = relationship("Address", cascade="save-update")
     menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="mensa")
 
-    def __init__(self, site, name, canteen_short_name, address_id, opening_hours, info_url, menu_url, last_modified):
+    def __init__(self, site, mensa_name, canteen_short_name, address_id, opening_hours, info_url, menu_url, last_modified):
         self.site = site
-        self.name = name
+        self.mensa_name = mensa_name
         self.canteen_short_name = canteen_short_name
         self.address_id = address_id
         self.opening_hours = opening_hours
@@ -87,6 +87,8 @@ class Mensa(Base):
 
 class Dish(Base):
     __tablename__ = "mensa_dishes"
+    __table_args__ = (UniqueConstraint('name', 'dish_type', 'price_student', 
+                   'price_employee', 'price_guest', name='uq_dish_composite'),)
 
     # Primary key and dish information columns
     dish_id = Column(Integer, primary_key=True, nullable=False)
@@ -105,6 +107,7 @@ class Dish(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     menus_relation = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
+    
 
     def __init__(
         self,
@@ -169,7 +172,7 @@ class Menu(Base):
     mensa = relationship("Mensa", cascade="save-update", uselist=False, back_populates="menus")
     dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menus_relation")
 
-    def __init__(self, mensa_id, dish_id, dish_type, serving_date, last_modified):
+    def __init__(self, mensa_id, dish_id, serving_date, last_modified):
         self.mensa_id = mensa_id
         self.dish_id = dish_id
         self.serving_date = serving_date

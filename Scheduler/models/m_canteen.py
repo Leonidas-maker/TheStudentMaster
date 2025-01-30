@@ -20,7 +20,7 @@ class Canteen(Base):
 
     # Relationship with Address table
     address = relationship("Address", cascade="save-update")
-    menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="canteen")
+    menus = relationship("Canteen_Menu", cascade="save-update", uselist=True, back_populates="canteen")
 
     def __init__(self, canteen_name, canteen_short_name, address_id, image_url=None):
         self.canteen_name = canteen_name
@@ -72,7 +72,7 @@ class Canteen(Base):
         }
 
 
-class Dish(Base):
+class Canteen_Dish(Base):
     __tablename__ = "canteen_dishes"
 
     # Primary key and dish information columns
@@ -82,7 +82,7 @@ class Dish(Base):
     price = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    menu = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
+    menu = relationship("Canteen_Menu", cascade="save-update", uselist=True, back_populates="dish")
 
     def as_dict(self) -> dict:
         return {
@@ -93,7 +93,7 @@ class Dish(Base):
         }
 
 
-class Menu(Base):
+class Canteen_Menu(Base):
     __tablename__ = "canteen_menus"
 
     # Primary key and menu information columns
@@ -106,7 +106,7 @@ class Menu(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     canteen = relationship("Canteen", cascade="save-update", uselist=False, back_populates="menus")
-    dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menu")
+    dish = relationship("Canteen_Dish", cascade="save-update", uselist=False, back_populates="menu")
 
     def as_dict(self) -> dict:
         # Return menu information as a dictionary
