@@ -25,7 +25,9 @@ class Mensa(Base):
     address = relationship("Address", cascade="save-update")
     menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="mensa")
 
-    def __init__(self, site, mensa_name, canteen_short_name, address_id, opening_hours, info_url, menu_url, last_modified):
+    def __init__(
+        self, site, mensa_name, canteen_short_name, address_id, opening_hours, info_url, menu_url, last_modified
+    ):
         self.site = site
         self.mensa_name = mensa_name
         self.canteen_short_name = canteen_short_name
@@ -87,8 +89,11 @@ class Mensa(Base):
 
 class Dish(Base):
     __tablename__ = "mensa_dishes"
-    __table_args__ = (UniqueConstraint('name', 'dish_type', 'price_student', 
-                   'price_employee', 'price_guest', name='uq_dish_composite'),)
+    __table_args__ = (
+        UniqueConstraint(
+            "name", "dish_type", "price_student", "price_employee", "price_guest", name="uq_dish_composite"
+        ),
+    )
 
     # Primary key and dish information columns
     dish_id = Column(Integer, primary_key=True, nullable=False)
@@ -107,7 +112,6 @@ class Dish(Base):
     last_modified = Column(TIMESTAMP, nullable=False)
 
     menus_relation = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
-    
 
     def __init__(
         self,
@@ -178,7 +182,7 @@ class Menu(Base):
         self.serving_date = serving_date
         self.last_modified = last_modified
         self.hash = self.generate_sha1_hash(last_modified)
-        
+
     def generate_sha1_hash(self, last_modified):
         hash_input = f"{last_modified}"
         return hashlib.sha1(hash_input.encode()).hexdigest()

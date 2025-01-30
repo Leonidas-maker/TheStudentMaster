@@ -12,11 +12,13 @@ from models.m_mensa import Mensa, Dish, Menu
 from rich.progress import Progress
 from rich.console import Console
 
+
 def mensa_exists(db: Session, mensa: Mensa) -> bool:
     # Check if the mensa already exists
     if db.query(Mensa).filter(Mensa.site == mensa.site).first():
         return True
     return False
+
 
 def mensa_changed(db: Session, mensa: Mensa) -> bool:
     # Check if the mensa has changed
@@ -25,11 +27,13 @@ def mensa_changed(db: Session, mensa: Mensa) -> bool:
         return True
     return False
 
+
 def dish_exists(db: Session, dish: Dish) -> bool:
     # Check if the dish already exists
     if db.query(Dish).filter(Dish.name == dish.name).first():
         return True
     return False
+
 
 def dish_changed(db: Session, dish: Dish) -> bool:
     # Check if the dish has changed
@@ -38,15 +42,25 @@ def dish_changed(db: Session, dish: Dish) -> bool:
         return True
     return False
 
+
 def menu_exists(db: Session, mensa_id: int, dish_id: int, serving_date: datetime) -> bool:
     # Check if the menu already exists
-    if db.query(Menu).filter(Menu.mensa_id == mensa_id, Menu.dish_id == dish_id, Menu.serving_date == serving_date).first():
+    if (
+        db.query(Menu)
+        .filter(Menu.mensa_id == mensa_id, Menu.dish_id == dish_id, Menu.serving_date == serving_date)
+        .first()
+    ):
         return True
     return False
 
+
 def menu_changed(db: Session, menu: Menu) -> bool:
     # Check if the menu has changed
-    db_menu = db.query(Menu).filter(Menu.mensa_id == menu.mensa_id, Menu.dish_id == menu.dish_id, Menu.serving_date == menu.serving_date).first()
+    db_menu = (
+        db.query(Menu)
+        .filter(Menu.mensa_id == menu.mensa_id, Menu.dish_id == menu.dish_id, Menu.serving_date == menu.serving_date)
+        .first()
+    )
     if db_menu.hash != menu.hash:
         return True
     return False
@@ -89,7 +103,7 @@ def do_it(db: Session, progress: Progress, task_id: int) -> None:
     else:
         # Log an error if the data is empty
         logging.error("No data to parse")
-        
+
 
 def get_id_from_address(db: Session, raw_address: str) -> int:
     raw_address = raw_address.split("\n")
@@ -121,7 +135,7 @@ def create_mensa(db: Session, mensa_info: dict) -> int:
         menu_url=mensa_info["menuUrl"],
         last_modified=datetime.now(),
     )
-    
+
     # Check if the mensa already exists
     if not mensa_exists(db, mensa):
         # If not exists: Create the mensa
@@ -129,7 +143,7 @@ def create_mensa(db: Session, mensa_info: dict) -> int:
         db.commit()
         db.refresh(mensa)
         return mensa.mensa_id
-    
+
     # Check for changes
     if not mensa_changed(db, mensa):
         # If no changes: Skip
@@ -140,7 +154,7 @@ def create_mensa(db: Session, mensa_info: dict) -> int:
         db.commit()
         db.refresh(mensa)
         return mensa.mensa_id
-    
+
 
 def create_dishes(db: Session, courses: List[dict]) -> list[int]:
 
@@ -148,7 +162,7 @@ def create_dishes(db: Session, courses: List[dict]) -> list[int]:
     try:
         for course in courses:
             for dish in course:
-                
+
                 # Create a new dish object
                 dish_obj = Dish(
                     name=dish["name"],
@@ -163,7 +177,7 @@ def create_dishes(db: Session, courses: List[dict]) -> list[int]:
                     additives=json.dumps(dish["additives"]) if dish["additives"] else None,
                     last_modified=datetime.now(timezone.utc),
                 )
-                
+
                 if not dish_exists(db, dish_obj):
                     # Add the dish
                     db.add(dish_obj)
@@ -171,7 +185,7 @@ def create_dishes(db: Session, courses: List[dict]) -> list[int]:
                     db.refresh(dish_obj)
                     dish_ids.append(dish_obj.dish_id)
                     continue
-                
+
                 if not dish_changed(db, dish_obj):
                     # Skip
                     dish_ids.append(dish_obj.dish_id)
@@ -186,19 +200,20 @@ def create_dishes(db: Session, courses: List[dict]) -> list[int]:
 
         db.commit()
         return dish_ids
-    
+
     except Exception as e:
         logging.error(f"Error creating dishes: {e}")
         db.rollback()
         return dish_ids
 
+
 def create_menu(db: Session, mensa_id: int, dish_ids: List[int], serving_date: datetime):
     ids = []
-    
+
     try:
-        
+
         for dish_id in dish_ids:
-            
+
             # Create the menu
             menu = Menu(
                 mensa_id=mensa_id,
@@ -206,7 +221,7 @@ def create_menu(db: Session, mensa_id: int, dish_ids: List[int], serving_date: d
                 serving_date=datetime.strptime(serving_date, "%Y-%m-%dT%H:%M:%S.%fZ"),
                 last_modified=datetime.now(timezone.utc),
             )
-            
+
             if not menu_exists(db, mensa_id, dish_id, serving_date):
                 # Add the menu
                 db.add(menu)
@@ -214,7 +229,7 @@ def create_menu(db: Session, mensa_id: int, dish_ids: List[int], serving_date: d
                 db.refresh(menu)
                 ids.append(menu.menu_id)
                 continue
-            
+
             if not menu_changed(db, menu):
                 # Skip
                 ids.append(menu.menu_id)
@@ -226,10 +241,10 @@ def create_menu(db: Session, mensa_id: int, dish_ids: List[int], serving_date: d
                 db.refresh(menu)
                 ids.append(menu.menu_id)
                 continue
-            
+
         db.commit()
         return ids
-        
+
     except Exception as e:
         logging.error(f"Error creating menu: {e}")
         db.rollback()
