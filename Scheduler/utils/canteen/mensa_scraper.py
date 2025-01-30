@@ -1,7 +1,4 @@
 import requests
-from datetime import datetime, timedelta
-import re
-import asyncio
 import logging
 
 
@@ -27,7 +24,7 @@ def fetch_mensa_data() -> list:
         return []
 
 
-def parse_mensa_data() -> list[tuple[dict, list]]:
+def get_mensa_data() -> list[tuple[dict, list]]:
     # Fetch the data from the API
     data = fetch_mensa_data()
     # Check if the data is not empty
@@ -51,7 +48,7 @@ def parse_mensa_data() -> list[tuple[dict, list]]:
 def parse_mensa_info(mensa_info: dict) -> dict:
     site = mensa_info["site"]
     name = mensa_info["name"]
-    # canteen_short_name = mensa_info["canteenShortName"]
+    canteen_short_name = "_".join(mensa_info["name"].split(" ")).lower()
     address = mensa_info["address"]
     opening_hours = mensa_info["openingHours"]
     info_url = mensa_info["infoUrl"]
@@ -59,7 +56,7 @@ def parse_mensa_info(mensa_info: dict) -> dict:
     return {
         "site": site,
         "name": name,
-        # "canteenShortName": canteen_short_name,
+        "canteenShortName": canteen_short_name,
         "address": address,
         "openingHours": opening_hours,
         "infoUrl": info_url,
@@ -73,9 +70,11 @@ def parse_mensa_menus(mensa_menus: list) -> list:
         menu = dict()
         menu["date"] = item["date"]
         menu["site"] = item["site"]
-        menu["mainCourses"] = parse_mensa_dishes(dishes=item["mainCourses"])
-        menu["sideDishes"] = parse_mensa_dishes(dishes=item["sideOrders"])
-        menu["desserts"] = parse_mensa_dishes(dishes=item["desserts"])
+        courses = list()
+        courses.append(parse_mensa_dishes(dishes=item["mainCourses"]))
+        courses.append(parse_mensa_dishes(dishes=item["sideOrders"]))
+        courses.append(parse_mensa_dishes(dishes=item["desserts"]))
+        menu["courses"] = courses
         menus.append(menu)
 
     return menus
@@ -95,6 +94,10 @@ def parse_mensa_dishes(dishes: list) -> list:
         menu_dish["co2_100g"] = dish["co2100g"]
         menu_dish["allergens"] = dish["allergens"]
         menu_dish["additives"] = dish["additives"]
+        try:
+            menu_dish["image"] = dish["image"]
+        except:
+            menu_dish["image"] = None
 
         result.append(menu_dish)
     return result
@@ -102,6 +105,11 @@ def parse_mensa_dishes(dishes: list) -> list:
 
 if __name__ == "__main__":
     # Fetch the data from the API
-    data = fetch_mensa_data()
-    # Print the data
-    print(parse_mensa_data())
+    try:
+        data = fetch_mensa_data()
+        # Print the data
+        print(get_mensa_data())
+    except Exception as e:
+        logging.error(e)
+        print("An error occurred while fetching the data")
+        

@@ -9,9 +9,9 @@ class Mensa(Base):
     __tablename__ = "mensa"
 
     # Primary key and basic information columns
-    canteen_id = Column(Integer, primary_key=True, index=True)
+    mensa_id = Column(Integer, primary_key=True, index=True)
     site = Column(Integer, primary_key=True, index=True)
-    canteen_name = Column(String(255), nullable=False)
+    mensa_name = Column(String(255), nullable=False)
     canteen_short_name = Column(String(255))
     address_id = Column(Integer, ForeignKey("addresses.address_id"), nullable=False)
     opening_hours = Column(String(255))
@@ -23,7 +23,7 @@ class Mensa(Base):
 
     # Relationship with Address table
     address = relationship("Address", cascade="save-update")
-    menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="canteen")
+    menus = relationship("Menu", cascade="save-update", uselist=True, back_populates="mensa")
 
     def __init__(self, site, name, canteen_short_name, address_id, opening_hours, info_url, menu_url, last_modified):
         self.site = site
@@ -42,28 +42,31 @@ class Mensa(Base):
         return hashlib.sha1(hash_input.encode()).hexdigest()
 
     def as_dict(self) -> dict:
-        # Return basic canteen information as a dictionary
+        # Return basic mensa information as a dictionary
         return {
-            "canteen_id": self.canteen_id,
+            "mensa_id": self.mensa_id,
             "site": self.site,
-            "canteen_name": self.canteen_name,
+            "mensa_name": self.mensa_name,
             "canteen_short_name": self.canteen_short_name,
-            "address_id": self.address_id,
             "opening_hours": self.opening_hours,
+            "address_id": self.address_id,
             "info_url": self.info_url,
             "menu_url": self.menu_url,
             "hash": self.hash,
         }
 
     def as_dict_complete(self) -> dict:
-        # Return complete canteen information including address details
+        # Return complete mensa information including address details
         address = self.address.as_dict_complete()
         return {
-            "canteen_id": self.canteen_id,
+            "mensa_id": self.mensa_id,
             "site": self.site,
-            "canteen_name": self.canteen_name,
+            "mensa_name": self.mensa_name,
             "canteen_short_name": self.canteen_short_name,
+            "opening_hours": self.opening_hours,
             "address_id": self.address_id,
+            "info_url": self.info_url,
+            "menu_url": self.menu_url,
             "hash": self.hash,
             "address": {
                 "address1": address["address1"],
@@ -88,7 +91,7 @@ class Dish(Base):
     # Primary key and dish information columns
     dish_id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(510), nullable=False)
-    image_url = Column(String(255))
+    image = Column(String(255))
     dish_type = Column(String(255))
     price_student = Column(Float)
     price_employee = Column(Float)
@@ -101,13 +104,44 @@ class Dish(Base):
     hash = Column(String(255), nullable=False)
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    menus_relation = relationship("MenuDish", cascade="save-update", uselist=True, back_populates="dish")
+    menus_relation = relationship("Menu", cascade="save-update", uselist=True, back_populates="dish")
+
+    def __init__(
+        self,
+        name,
+        image,
+        dish_type,
+        price_student,
+        price_employee,
+        price_guest,
+        co2_portion,
+        co2_100g,
+        allergens,
+        additives,
+        last_modified,
+    ):
+        self.name = name
+        self.image = image
+        self.dish_type = dish_type
+        self.price_student = price_student
+        self.price_employee = price_employee
+        self.price_guest = price_guest
+        self.co2_portion = co2_portion
+        self.co2_100g = co2_100g
+        self.allergens = allergens
+        self.additives = additives
+        self.hash = self.generate_sha1_hash(last_modified)
+        self.last_modified = last_modified
+
+    def generate_sha1_hash(self, last_modified):
+        hash_input = f"{last_modified}"
+        return hashlib.sha1(hash_input.encode()).hexdigest()
 
     def as_dict(self) -> dict:
         return {
             "dish_id": self.dish_id,
             "description": self.name,
-            "image_url": self.image_url,
+            "image": self.image,
             "dish_type": self.dish_type,
             "price": self.price_student,
             "price_employee": self.price_employee,
@@ -125,33 +159,33 @@ class Menu(Base):
 
     # Primary key and menu information columns
     menu_id = Column(Integer, primary_key=True, index=True)
-    canteen_id = Column(Integer, ForeignKey("mensa.canteen_id"), nullable=False)
+    mensa_id = Column(Integer, ForeignKey("mensa.mensa_id"), nullable=False)
     dish_id = Column(Integer, ForeignKey("mensa_dishes.dish_id"), nullable=False)
-    dish_type = Column(String(255), nullable=False)
     serving_date = Column(DateTime, nullable=False)
-    closed = Column(Boolean, default=False)
+    hash = Column(String(255), nullable=False)
 
     last_modified = Column(TIMESTAMP, nullable=False)
 
-    canteen = relationship("Mensa", cascade="save-update", uselist=False, back_populates="menus")
-    dishes = relationship("MenuDish", cascade="save-update", uselist=False, back_populates="menu")
+    mensa = relationship("Mensa", cascade="save-update", uselist=False, back_populates="menus")
+    dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menus_relation")
+
+    def __init__(self, mensa_id, dish_id, dish_type, serving_date, last_modified):
+        self.mensa_id = mensa_id
+        self.dish_id = dish_id
+        self.serving_date = serving_date
+        self.last_modified = last_modified
+        self.hash = self.generate_sha1_hash(last_modified)
+        
+    def generate_sha1_hash(self, last_modified):
+        hash_input = f"{last_modified}"
+        return hashlib.sha1(hash_input.encode()).hexdigest()
 
     def as_dict(self) -> dict:
         # Return menu information as a dictionary
         return {
             "menu_id": self.menu_id,
-            "canteen_id": self.canteen_id,
+            "mensa_id": self.mensa_id,
             "dish_id": self.dish_id,
-            "dish_type": self.dish_type,
             "serving_date": self.serving_date,
+            "hash": self.hash,
         }
-
-
-class MenuDish(Base):
-    __tablename__ = "menu_dishes"
-
-    menu_dish_id = Column(Integer, primary_key=True)
-    menu_id = Column(Integer, ForeignKey("menus.menu_id"), nullable=False)
-    dish_id = Column(Integer, ForeignKey("dishes.dish_id"), nullable=False)
-
-    dish = relationship("Dish", cascade="save-update", uselist=False, back_populates="menus_relation")
