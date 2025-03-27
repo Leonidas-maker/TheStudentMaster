@@ -1,0 +1,11 @@
+APScheduler
+beautifulsoup4
+SQLAlchemy
+rich
+pytz
+requests
+python-dateutil
+pymysql
+icalendar
+pydantic
+aiohttp

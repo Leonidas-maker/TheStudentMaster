@@ -15,11 +15,13 @@ import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
 import uuid
+import os
 
 from pathlib import Path
 
 # ~~~~~~~~~~~~~~~~~ Config ~~~~~~~~~~~~~~~~ #
 from config.security import *
+from config.general import ENVIRONMENT
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
 from models.sql_models import m_user, m_auth
@@ -29,7 +31,6 @@ from models.pydantic_schemas import s_user, s_auth
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.user import get_user_security, get_user_2fa, get_user
-
 
 ###########################################################################
 ############################## Security Warns #############################
@@ -142,7 +143,8 @@ def generate_ecdsa_keys(curve: ec.EllipticCurve):
 
 # Function to save a key to a file
 def save_key(key: bytes, file_name: str, folder_path: Path):
-    with (folder_path / file_name).open("wb") as key_file:
+    file = folder_path / f"{file_name}.pem"
+    with file.open("wb") as key_file:
         key_file.write(key)
 
 
@@ -152,25 +154,41 @@ def load_key(
     key_password: bytes = None,
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ):
-    if "private" in file_name:
-        with (folder_path / file_name).open("rb") as key_file:
-            key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
-    elif "public" in file_name:
-        with (folder_path / file_name).open("rb") as key_file:
-            key = load_pem_public_key(key_file.read(), backend=default_backend())
-    else:
-        raise ValueError("Invalid file_name")
+    if ENVIRONMENT == "dev":
+        try:
+            file = folder_path / f"{file_name}.pem"
+            if "private" in file_name:
+                with file.open("rb") as key_file:
+                    key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
+            else:
+                with file.open("rb") as key_file:
+                    key = load_pem_public_key(key_file.read(), backend=default_backend())
+        except FileNotFoundError as e:
+            raise RuntimeError(f"Private key: {file_name} not found") from e
+
+    elif ENVIRONMENT == "prod":
+        try:
+            if "privat" in file_name:
+                with open(f"/run/secrets/tsm_{file_name}", "rb") as key_file:
+                    key = load_pem_private_key(key_file.read(), password=key_password, backend=default_backend())
+            else:
+                with open(f"/run/secrets/tsm_{file_name}", "rb") as key_file:
+                    key = load_pem_public_key(key_file.read(), backend=default_backend())
+        except FileNotFoundError as e:
+            raise RuntimeError(f"Private key: tsm_{file_name} not found in secrets") from e
+
     return key
 
 
 # Function to generate keys and save them to files
 def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys"):
+    os.makedirs(folder_path, exist_ok=True)
     access_private_key, access_public_key = generate_ecdsa_keys(ec.SECP256R1())
     refresh_private_key, refresh_public_key = generate_ecdsa_keys(ec.SECP521R1())
-    save_key(access_private_key, "access_private_key.pem", folder_path)
-    save_key(access_public_key, "access_public_key.pem", folder_path)
-    save_key(refresh_private_key, "refresh_private_key.pem", folder_path)
-    save_key(refresh_public_key, "refresh_public_key.pem", folder_path)
+    save_key(access_private_key, "access_private_key", folder_path)
+    save_key(access_public_key, "access_public_key", folder_path)
+    save_key(refresh_private_key, "refresh_private_key", folder_path)
+    save_key(refresh_public_key, "refresh_public_key", folder_path)
 
 
 # ======================================================== #
@@ -179,17 +197,21 @@ def generate_keys(folder_path: Path = Path(__file__).parent.absolute() / "jwt_ke
 
 
 # Get the private keys for tokens, generate if not exist
-def get_tokens_private(
+def get_keys_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> Tuple[ec.EllipticCurvePrivateKey, ec.EllipticCurvePrivateKey]:
-    if not (folder_path / "refresh_private_key.pem").exists() and not (folder_path / "access_private_key.pem").exists():
+    if (
+        ENVIRONMENT == "dev"
+        and not (folder_path / "refresh_private_key.pem").exists()
+        and not (folder_path / "access_private_key.pem").exists()
+    ):
         generate_keys()
 
     # Get the refresh private key
-    refresh_private_key = load_key("refresh_private_key.pem")
+    refresh_private_key = load_key("refresh_private_key")
 
     # Get the access private key
-    access_private_key = load_key("access_private_key.pem")
+    access_private_key = load_key("access_private_key")
 
     return refresh_private_key, access_private_key
 
@@ -198,11 +220,11 @@ def get_tokens_private(
 def get_security_token_private(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePrivateKey:
-    if not (folder_path / "security_private_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "security_private_key.pem").exists():
         security_private_key, security_public_key = generate_ecdsa_keys(ec.SECP256R1())
-        save_key(security_private_key, "security_private_key.pem", folder_path)
-        save_key(security_public_key, "security_public_key.pem", folder_path)
-    security_private_key = load_key("security_private_key.pem")
+        save_key(security_private_key, "security_private_key", folder_path)
+        save_key(security_public_key, "security_public_key", folder_path)
+    security_private_key = load_key("security_private_key")
     return security_private_key
 
 
@@ -211,11 +233,11 @@ def get_refresh_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if not (folder_path / "refresh_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "refresh_public_key.pem").exists():
         generate_keys()
 
     # Get the refresh public key
-    public_key = load_key("refresh_public_key.pem")
+    public_key = load_key("refresh_public_key")
 
     return public_key
 
@@ -225,11 +247,11 @@ def get_access_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if not (folder_path / "access_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "access_public_key.pem").exists():
         generate_keys()
 
     # Get the access public key
-    public_key = load_key("access_public_key.pem")
+    public_key = load_key("access_public_key")
 
     return public_key
 
@@ -239,11 +261,11 @@ def get_security_token_public(
     folder_path: Path = Path(__file__).parent.absolute() / "jwt_keys",
 ) -> ec.EllipticCurvePublicKey:
     folder_path = Path(folder_path)
-    if not (folder_path / "security_public_key.pem").exists():
+    if ENVIRONMENT == "dev" and not (folder_path / "security_public_key.pem").exists():
         generate_keys()
 
     # Get the access public key
-    public_key = load_key("security_public_key.pem")
+    public_key = load_key("security_public_key")
 
     return public_key
 
@@ -371,7 +393,9 @@ def verify_access_token(db: Session, token: str):
     public_key = get_access_token_public()
     try:
         options = {"verify_aud": False}  # TODO Change this to True
-        payload = jwt.decode(token, public_key, algorithms="ES256", options=options)
+        payload = jwt.decode(
+            token, public_key, algorithms=["ES256"], options=options, issuer="https://www.thestudentmaster.de"
+        )
 
         # Check if the JTI is valid
         if not check_jti(
@@ -491,7 +515,7 @@ def create_tokens(
         raise HTTPException(status_code=403, detail="Too many active temporary instances")
 
     # Get the private keys and create the JTI
-    refresh_private_key, access_private_key = get_tokens_private()
+    refresh_private_key, access_private_key = get_keys_private()
     refresh_jti = uuid.uuid4()
     access_jti = uuid.uuid4()
 
@@ -500,7 +524,7 @@ def create_tokens(
     if application_id and isinstance(application_id, uuid.UUID):
         token_exp = unix_timestamp(days=30)
         payload = {
-            "iss": "https://api.theshopmaster.com",  #! Change this to the domain of the api
+            "iss": "https://www.thestudentmaster.de",
             "sub": str(user_uuid),
             "aud": str(application_id),
             "exp": token_exp,
@@ -519,9 +543,9 @@ def create_tokens(
             expiration_time=token_exp,
         )
     else:
-        token_exp = unix_timestamp(minutes=15)  #! More than 15 minutes?
+        token_exp = unix_timestamp(minutes=15)
         payload = {
-            "iss": "https://api.theshopmaster.com",  #! Change this to the domain of the api
+            "iss": "https://www.thestudentmaster.de",
             "sub": user_uuid,
             "aud": "webapplication",
             "exp": token_exp,
@@ -545,7 +569,7 @@ def create_tokens(
     # ~~~~~~~~ Create the access token ~~~~~~~ #
     token_exp = unix_timestamp(minutes=8)
     payload = {
-        "iss": "https://api.theshopmaster.com",  #! Change this to the domain of the api
+        "iss": "https://www.thestudentmaster.de",  #! Change this to the domain of the api
         "sub": user_uuid,
         "aud": str(application_id) if application_id else "webapplication",
         "exp": token_exp,
