@@ -26,15 +26,7 @@ if ENVIRONMENT == "dev":
     db_password = server_config.get("DATABASE", "password")
     db_database = server_config.get("DATABASE", "database")
     encoded_db_password = quote_plus(db_password)
-
-    ssl_args = {
-        "ssl": {
-            "cert": "./config/certs/client-cert.pem",
-            "key": "./config/certs/client-key.pem",
-            "check_hostname": False,
-            "ca": "./config/certs/ca-cert.pem",
-        }
-    }
+    ssl_args = {}
 
 elif ENVIRONMENT == "prod":
     # Extract database connection details from the environment variables

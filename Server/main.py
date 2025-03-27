@@ -29,7 +29,7 @@ from models.pydantic_schemas import s_stats
 from models.sql_models import m_user, m_general, m_canteen, m_calendar, m_auth, m_stats
 
 # ~~~~~~~~~~~~~~~~~ Routes ~~~~~~~~~~~~~~~~ #
-from routes import user, auth, canteen, calendar, static, stats
+from routes import user, auth, canteen, calendar, static, stats, email
 
 m_general.Base.metadata.create_all(bind=engine)
 m_user.Base.metadata.create_all(bind=engine)
@@ -97,15 +97,14 @@ async def root():
 # ======================================================== #
 # ======================= Analytics ====================== #
 # ======================================================== #
-config = AnalyticsConfig()
-config.server_url = "http://localhost:8000"
-config.privacy_level = 1
-
-app.add_middleware(
-    Analytics,
-    api_key="dGhlc3R1ZGVudG1hc3Rlci10ZXN0.jJ3w9AxxQrU5-GlOE2WwTyK3s1F5mT5haf6RDv80mao",
-    config=config,
-)
+# config = AnalyticsConfig()
+# config.server_url = "http://localhost:8000"
+# config.privacy_level = 1
+# app.add_middleware(
+#     Analytics,
+#     api_key="dGhlc3R1ZGVudG1hc3Rlci10ZXN0.jJ3w9AxxQrU5-GlOE2WwTyK3s1F5mT5haf6RDv80mao",
+#     config=config,
+# )
 
 
 # ======================================================== #

@@ -38,7 +38,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-i18next": "^14.1.0",
-    "react-native": "0.76.6",
+    "react-native": "0.76.7",
     "react-native-dropdown-select-list": "^2.0.5",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-progress": "^5.0.1",

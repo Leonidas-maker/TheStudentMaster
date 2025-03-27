@@ -8,3 +8,5 @@ jwt_keys
 tmp
 __pycache__
 .pytest_cache
+yarn.lock
+package-lock.json
