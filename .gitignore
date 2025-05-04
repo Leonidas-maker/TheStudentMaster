@@ -8,4 +8,3 @@ jwt_keys
 tmp
 __pycache__
 .pytest_cache
-.venv

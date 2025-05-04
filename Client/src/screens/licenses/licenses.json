@@ -7,9 +7,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "8.0.5",
-    "installedVersion": "8.0.5",
-    "definedVersion": "~8.0.0",
+    "remoteVersion": "9.0.14",
+    "installedVersion": "9.0.14",
+    "definedVersion": "~9.0.0",
     "author": "n/a"
   },
   {
@@ -20,9 +20,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "3.2.1",
-    "installedVersion": "3.2.1",
-    "definedVersion": "~3.2.1",
+    "remoteVersion": "4.0.1",
+    "installedVersion": "4.0.1",
+    "definedVersion": "~4.0.1",
     "author": "650 Industries, Inc."
   },
   {
@@ -46,7 +46,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/react-native-async-storage/async-storage.git",
-    "remoteVersion": "1.23.1",
+    "remoteVersion": "1.24.0",
     "installedVersion": "1.23.1",
     "definedVersion": "^1.23.1",
     "author": "Krzysztof Borowy <hello@krizzu.dev>"
@@ -72,7 +72,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/react-navigation/react-navigation.git",
-    "remoteVersion": "6.5.20",
+    "remoteVersion": "6.6.1",
     "installedVersion": "6.5.18",
     "definedVersion": "^6.5.18",
     "author": "n/a"
@@ -85,7 +85,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/react-navigation/react-navigation.git",
-    "remoteVersion": "6.1.17",
+    "remoteVersion": "6.1.18",
     "installedVersion": "6.1.17",
     "definedVersion": "^6.1.17",
     "author": "n/a"
@@ -98,7 +98,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/react-navigation/react-navigation.git",
-    "remoteVersion": "6.3.29",
+    "remoteVersion": "6.4.1",
     "installedVersion": "6.3.29",
     "definedVersion": "^6.3.29",
     "author": "n/a"
@@ -111,8 +111,8 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/axios/axios.git",
-    "remoteVersion": "1.7.2",
-    "installedVersion": "1.6.8",
+    "remoteVersion": "1.7.9",
+    "installedVersion": "1.7.9",
     "definedVersion": "^1.6.8",
     "author": "Matt Zabriskie"
   },
@@ -150,9 +150,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "51.0.15",
-    "installedVersion": "51.0.14",
-    "definedVersion": "^51.0.14",
+    "remoteVersion": "52.0.26",
+    "installedVersion": "52.0.26",
+    "definedVersion": "^52.0.0",
     "author": "Expo"
   },
   {
@@ -163,9 +163,22 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "16.0.2",
-    "installedVersion": "16.0.2",
-    "definedVersion": "~16.0.2",
+    "remoteVersion": "17.0.4",
+    "installedVersion": "17.0.4",
+    "definedVersion": "~17.0.4",
+    "author": "650 Industries, Inc."
+  },
+  {
+    "department": "kessler",
+    "relatedTo": "stuff",
+    "name": "expo-screen-orientation",
+    "licensePeriod": "perpetual",
+    "material": "material",
+    "licenseType": "MIT",
+    "link": "git+https://github.com/expo/expo.git",
+    "remoteVersion": "8.0.4",
+    "installedVersion": "8.0.4",
+    "definedVersion": "~8.0.4",
     "author": "650 Industries, Inc."
   },
   {
@@ -176,9 +189,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "13.0.1",
-    "installedVersion": "13.0.1",
-    "definedVersion": "^13.0.1",
+    "remoteVersion": "14.0.1",
+    "installedVersion": "14.0.1",
+    "definedVersion": "~14.0.1",
     "author": "650 Industries, Inc."
   },
   {
@@ -189,10 +202,23 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/expo/expo.git",
-    "remoteVersion": "1.12.1",
-    "installedVersion": "1.12.1",
-    "definedVersion": "~1.12.1",
+    "remoteVersion": "2.0.1",
+    "installedVersion": "2.0.1",
+    "definedVersion": "~2.0.1",
     "author": "650 Industries, Inc."
+  },
+  {
+    "department": "kessler",
+    "relatedTo": "stuff",
+    "name": "htmlparser2",
+    "licensePeriod": "perpetual",
+    "material": "material",
+    "licenseType": "MIT",
+    "link": "git://github.com/fb55/htmlparser2.git",
+    "remoteVersion": "9.1.0",
+    "installedVersion": "9.1.0",
+    "definedVersion": "^9.1.0",
+    "author": "Felix Boehm <me@feedic.com>"
   },
   {
     "department": "kessler",
@@ -215,7 +241,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+ssh://git@github.com/i18next/i18next-http-backend.git",
-    "remoteVersion": "2.5.2",
+    "remoteVersion": "2.7.1",
     "installedVersion": "2.5.0",
     "definedVersion": "^2.5.0",
     "author": "n/a"
@@ -240,8 +266,8 @@
     "licensePeriod": "perpetual",
     "material": "material",
     "licenseType": "MIT",
-    "link": "git+https://github.com/ironSource/license-report.git",
-    "remoteVersion": "6.5.0",
+    "link": "git+https://github.com/kessler/license-report.git",
+    "remoteVersion": "6.7.1",
     "installedVersion": "6.5.0",
     "definedVersion": "^6.5.0",
     "author": "Yaniv Kessler"
@@ -254,7 +280,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/marklawlor/nativewind.git",
-    "remoteVersion": "4.0.36",
+    "remoteVersion": "4.1.23",
     "installedVersion": "4.0.36",
     "definedVersion": "^4.0.36",
     "author": "Mark Lawlor https://github.com/marklawlor"
@@ -267,9 +293,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/facebook/react.git",
-    "remoteVersion": "18.2.0",
-    "installedVersion": "18.2.0",
-    "definedVersion": "18.2.0",
+    "remoteVersion": "18.3.1",
+    "installedVersion": "18.3.1",
+    "definedVersion": "18.3.1",
     "author": "n/a"
   },
   {
@@ -280,9 +306,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/facebook/react.git",
-    "remoteVersion": "18.2.0",
-    "installedVersion": "18.2.0",
-    "definedVersion": "18.2.0",
+    "remoteVersion": "18.3.1",
+    "installedVersion": "18.3.1",
+    "definedVersion": "18.3.1",
     "author": "n/a"
   },
   {
@@ -293,7 +319,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/i18next/react-i18next.git",
-    "remoteVersion": "14.1.2",
+    "remoteVersion": "14.1.3",
     "installedVersion": "14.1.0",
     "definedVersion": "^14.1.0",
     "author": "Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)"
@@ -306,9 +332,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/facebook/react-native.git",
-    "remoteVersion": "0.74.2",
-    "installedVersion": "0.74.2",
-    "definedVersion": "^0.74.2",
+    "remoteVersion": "0.76.6",
+    "installedVersion": "0.76.6",
+    "definedVersion": "0.76.6",
     "author": "n/a"
   },
   {
@@ -332,9 +358,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/software-mansion/react-native-gesture-handler.git",
-    "remoteVersion": "2.16.2",
-    "installedVersion": "2.16.2",
-    "definedVersion": "~2.16.1",
+    "remoteVersion": "2.20.2",
+    "installedVersion": "2.20.2",
+    "definedVersion": "~2.20.2",
     "author": "Krzysztof Magiera krzys.magiera@gmail.com"
   },
   {
@@ -358,7 +384,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+ssh://git@github.com/awesomejerry/react-native-qrcode-svg.git",
-    "remoteVersion": "6.3.1",
+    "remoteVersion": "6.3.14",
     "installedVersion": "6.3.1",
     "definedVersion": "^6.3.1",
     "author": "awesomejerry"
@@ -371,9 +397,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/software-mansion/react-native-reanimated.git",
-    "remoteVersion": "3.10.1",
-    "installedVersion": "3.10.1",
-    "definedVersion": "~3.10.1",
+    "remoteVersion": "3.16.7",
+    "installedVersion": "3.16.7",
+    "definedVersion": "~3.16.1",
     "author": "Krzysztof Magiera krzys.magiera@gmail.com"
   },
   {
@@ -384,9 +410,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/th3rdwave/react-native-safe-area-context.git",
-    "remoteVersion": "4.10.1",
-    "installedVersion": "4.10.1",
-    "definedVersion": "4.10.1",
+    "remoteVersion": "4.12.0",
+    "installedVersion": "4.12.0",
+    "definedVersion": "4.12.0",
     "author": "Janic Duplessis <janicduplessis@gmail.com>"
   },
   {
@@ -397,9 +423,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/software-mansion/react-native-screens.git",
-    "remoteVersion": "3.31.1",
-    "installedVersion": "3.31.1",
-    "definedVersion": "3.31.1",
+    "remoteVersion": "4.4.0",
+    "installedVersion": "4.4.0",
+    "definedVersion": "~4.4.0",
     "author": "Krzysztof Magiera krzys.magiera@gmail.com"
   },
   {
@@ -410,9 +436,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/react-native-community/react-native-svg.git",
-    "remoteVersion": "15.2.0",
-    "installedVersion": "15.2.0",
-    "definedVersion": "15.2.0",
+    "remoteVersion": "15.8.0",
+    "installedVersion": "15.8.0",
+    "definedVersion": "15.8.0",
     "author": "n/a"
   },
   {
@@ -423,7 +449,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git://github.com/oblador/react-native-vector-icons.git",
-    "remoteVersion": "10.1.0",
+    "remoteVersion": "10.2.0",
     "installedVersion": "10.0.3",
     "definedVersion": "^10.0.3",
     "author": "Joel Arvidsson joel@oblador.se"
@@ -436,9 +462,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git://github.com/necolas/react-native-web.git",
-    "remoteVersion": "0.19.12",
-    "installedVersion": "0.19.10",
-    "definedVersion": "~0.19.6",
+    "remoteVersion": "0.19.13",
+    "installedVersion": "0.19.13",
+    "definedVersion": "~0.19.13",
     "author": "Nicolas Gallagher"
   },
   {
@@ -449,7 +475,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "git+https://github.com/tailwindlabs/tailwindcss.git",
-    "remoteVersion": "3.4.4",
+    "remoteVersion": "3.4.17",
     "installedVersion": "3.4.1",
     "definedVersion": "^3.4.1",
     "author": "n/a"
@@ -462,8 +488,8 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "https://github.com/babel/babel.git",
-    "remoteVersion": "7.24.7",
-    "installedVersion": "7.24.0",
+    "remoteVersion": "7.26.0",
+    "installedVersion": "7.26.0",
     "definedVersion": "^7.20.0",
     "author": "The Babel Team (https://babel.dev/team)"
   },
@@ -475,7 +501,7 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-    "remoteVersion": "4.17.5",
+    "remoteVersion": "4.17.14",
     "installedVersion": "4.17.0",
     "definedVersion": "^4.17.0",
     "author": "n/a"
@@ -488,9 +514,9 @@
     "material": "material",
     "licenseType": "MIT",
     "link": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
-    "remoteVersion": "18.2.79",
-    "installedVersion": "18.2.79",
-    "definedVersion": "~18.2.79",
+    "remoteVersion": "18.3.18",
+    "installedVersion": "18.3.18",
+    "definedVersion": "~18.3.12",
     "author": "n/a"
   },
   {

@@ -8,7 +8,6 @@ import { StatusBar } from "expo-status-bar";
 import Dashboard from "../screens/dashboard/Dashboard";
 import Loading from "../screens/loading/Loading";
 import Overview from "../screens/overview/Overview";
-import Dualis from "../screens/dualis/Dualis";
 import MealPlan from "../screens/mealPlan/MealPlan";
 import Settings from "../screens/settings/Settings";
 import Imprint from "../screens/imprint/Imprint";
@@ -81,8 +80,11 @@ const OverviewStack: React.FC = () => {
         />
         <Stack.Screen name="Dashboard" component={Dashboard} />
         <Stack.Screen name="Loading" component={Loading} />
-        <Stack.Screen name="Dualis" component={Dualis} />
-        <Stack.Screen name="MealPlan" component={MealPlan} />
+        <Stack.Screen
+          name="MealPlan"
+          component={MealPlan}
+          options={{ headerShown: true, headerTitle: "Essensplan" }}
+        />
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Imprint" component={Imprint} />
         <Stack.Screen name="Credits" component={Credits} />

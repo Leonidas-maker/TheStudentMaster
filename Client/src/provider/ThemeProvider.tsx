@@ -7,6 +7,7 @@ import React, {
   ReactNode,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useColorScheme } from "nativewind";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 // Set possible scheme types to light, dark, system
@@ -36,6 +37,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // ======================= States ======================= //
   // ====================================================== //
   const [theme, setTheme] = useState<SchemeType>("system");
+  const { colorScheme, setColorScheme } = useColorScheme();
 
   // ====================================================== //
   // ===================== useEffects ===================== //
@@ -55,6 +57,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // Sets theme in local storage
   useEffect(() => {
     AsyncStorage.setItem("theme", theme);
+    setColorScheme(theme);
   }, [theme]);
 
   // ~~~~~~~~~~~~~~~~ Return ~~~~~~~~~~~~~~~ //
