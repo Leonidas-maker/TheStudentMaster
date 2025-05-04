@@ -26,7 +26,6 @@ export default function RootLayout() {
     }
   }, [colorScheme]);
 
-
   // Set the colors based on the color scheme
   const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
   const headerTintColor = isLight ? "#171717" : "#E0E2DB";
@@ -47,10 +46,12 @@ export default function RootLayout() {
             }}
           >
             {/* Tabs-Navigation */}
-            <Stack.Screen name="(tabs)" options={{ headerShown: false, gestureEnabled: false }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
 
             {/* Zusätzliche Screens */}
-
           </Stack>
         </GestureHandlerRootView>
       </SafeAreaProvider>

@@ -13,7 +13,10 @@ export default function Tab() {
   // ================== Return component ================== //
   // ====================================================== //
   return (
-    <SafeAreaView edges={["top"]} className="bg-light_primary dark:bg-dark_primary flex-1">
+    <SafeAreaView
+      edges={["top"]}
+      className="bg-light_primary dark:bg-dark_primary flex-1"
+    >
       <WeekCalendar />
     </SafeAreaView>
   );
