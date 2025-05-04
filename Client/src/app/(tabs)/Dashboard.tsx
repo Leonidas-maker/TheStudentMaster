@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React from "react";
-import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import WeekCalendar from "../../components/calendar/WeekCalendar";
@@ -13,8 +13,8 @@ export default function Tab() {
   // ================== Return component ================== //
   // ====================================================== //
   return (
-    <View className="bg-light_primary dark:bg-dark_primary flex-1">
+    <SafeAreaView edges={["top"]} className="bg-light_primary dark:bg-dark_primary flex-1">
       <WeekCalendar />
-    </View>
+    </SafeAreaView>
   );
 }
