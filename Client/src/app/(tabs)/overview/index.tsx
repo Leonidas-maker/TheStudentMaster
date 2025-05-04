@@ -46,19 +46,13 @@ const Overview: React.FC = () => {
   const accountTitle = "Account Management Screens";
 
   // Sets the press functions
-  const onPressAccountFunctions = [
-    handleDeletePress,
-  ];
+  const onPressAccountFunctions = [handleDeletePress];
 
   // Sets the texts for the navigator
-  const accountTexts = [
-    "Delete Storage",
-  ];
+  const accountTexts = ["Delete Storage"];
 
   // Sets the icons for the navigator
-  const accountIconNames = [
-    "apps",
-  ];
+  const accountIconNames = ["apps"];
 
   // ====================================================== //
   // =================== ModuleNavigator ================== //

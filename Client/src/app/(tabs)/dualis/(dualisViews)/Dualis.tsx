@@ -6,7 +6,14 @@ import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Heading from "../../../../components/textFields/Heading";
-import { ModuleData, GpaData, EctsData, SemesterData, GradeData, GpaSemesterData } from "../../../../interfaces/dualisInterfaces";
+import {
+  ModuleData,
+  GpaData,
+  EctsData,
+  SemesterData,
+  GradeData,
+  GpaSemesterData,
+} from "../../../../interfaces/dualisInterfaces";
 import Dropdown from "../../../../components/dropdown/Dropdown";
 import DualisOverviewText from "../../../../components/textFields/dualisTextFields/DualisOverviewText";
 import DualisOverviewDescText from "../../../../components/textFields/dualisTextFields/DualisOverviewDescText";
@@ -79,16 +86,12 @@ const Dualis: React.FC = () => {
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
       ? gradeData
-      : gradeData.filter(
-        (grade: any) => grade.semester === selectedSemester,
-      );
+      : gradeData.filter((grade: any) => grade.semester === selectedSemester);
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
       ? gpaSemesterData
-      : gpaSemesterData.filter(
-        (gpa: any) => gpa.semester === selectedSemester,
-      );
+      : gpaSemesterData.filter((gpa: any) => gpa.semester === selectedSemester);
 
   const handleLogout = () => {
     // Navigate to the login screen after logout
@@ -115,7 +118,7 @@ const Dualis: React.FC = () => {
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <ScrollView>
         {selectedSemester.length > 1 &&
-          selectedSemester === "Leistungsübersicht" ? (
+        selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -175,7 +178,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
             {filteredGpaSemesterData.map((semester: any, index: number) => (
@@ -194,7 +197,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-          selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />

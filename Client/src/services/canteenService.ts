@@ -39,7 +39,8 @@ const fetchCanteens = async (
     }
 
     // Fetch canteens from the server
-    const response = await axiosInstance.get<CanteenResponseProps[]>("/canteen/all");
+    const response =
+      await axiosInstance.get<CanteenResponseProps[]>("/canteen/all");
     const canteenData = response.data.map((canteen: CanteenResponseProps) => ({
       key: canteen.canteen_short_name,
       value: canteen.canteen_name,

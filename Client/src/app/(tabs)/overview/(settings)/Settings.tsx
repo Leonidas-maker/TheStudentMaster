@@ -152,7 +152,7 @@ const Settings: React.FC = () => {
     if (!activateCallback.current) return;
     setLoading(true);
     setProgress(0.25);
-    if (!selectedValue)  {
+    if (!selectedValue) {
       setLoading(false);
       return;
     }

@@ -53,9 +53,9 @@ export default function RootLayout() {
             {/* Zusätzliche Screens */}
             <Stack.Screen
               name="(calendar)/CalendarCourseSettings"
-              options={{ 
+              options={{
                 presentation: "modal",
-                headerTitle: "Kalender Kurs Einstellungen" 
+                headerTitle: "Kalender Kurs Einstellungen",
               }}
             />
           </Stack>

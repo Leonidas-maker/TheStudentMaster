@@ -58,7 +58,7 @@ const DualisLoad: React.FC = () => {
               {
                 text: "OK",
                 onPress: () => {
-                  router.replace("/(tabs)/dualis")
+                  router.replace("/(tabs)/dualis");
                 },
               },
             ],
