@@ -1,16 +1,16 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
-import { expo } from "../../../app.json";
+import { expo } from "../../../../app.json";
 import { Linking } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import ProfileView from "../../components/profileView/ProfileView";
-import Navigator from "../../components/navigator/Navigator";
-import DefaultText from "../../components/textFields/DefaultText";
+import ProfileView from "../../../components/profileView/ProfileView";
+import Navigator from "../../../components/navigator/Navigator";
+import DefaultText from "../../../components/textFields/DefaultText";
 
 // ====================================================== //
 // ====================== Component ===================== //

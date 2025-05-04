@@ -12,26 +12,26 @@ import { useColorScheme } from "nativewind";
 import * as Progress from "react-native-progress";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import { useTheme } from "../../provider/ThemeProvider";
-import DefaultText from "../../components/textFields/DefaultText";
-import Dropdown from "../../components/dropdown/Dropdown";
-import Subheading from "../../components/textFields/Subheading";
-import RadioOption from "../../components/radioOption/RadioOption";
+import { useTheme } from "../../../../provider/ThemeProvider";
+import DefaultText from "../../../../components/textFields/DefaultText";
+import Dropdown from "../../../../components/dropdown/Dropdown";
+import Subheading from "../../../../components/textFields/Subheading";
+import RadioOption from "../../../../components/radioOption/RadioOption";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
-import { fetchEventsWithoutWait } from "../../services/eventService";
+import { fetchEventsWithoutWait } from "../../../../services/eventService";
 import {
   fetchCalendars,
   getSelectedUniversity,
   getSelectedCourse,
   fetchInitialHash,
-} from "../../services/calendarService";
+} from "../../../../services/calendarService";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import {
   EventTimeProps,
   CalendarProps,
-} from "../../interfaces/calendarInterfaces";
+} from "../../../../interfaces/calendarInterfaces";
 import { set } from "lodash";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //

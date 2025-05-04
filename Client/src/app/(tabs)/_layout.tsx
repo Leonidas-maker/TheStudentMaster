@@ -57,7 +57,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="Dashboard"
+          name="index" // Dashboard
           options={{
             headerTitle: "TheStudentMaster",
             tabBarLabel: "Stundenplan",
@@ -67,20 +67,6 @@ export default function TabLayout() {
                 <ActiveDashboardSVG width={size} height={size} fill={color} />
               ) : (
                 <DashboardSVG width={size} height={size} fill={color} />
-              ),
-          }}
-        />
-        <Tabs.Screen
-          name="dualis"
-          options={{
-            headerTitle: "TheStudentMaster",
-            tabBarLabel: "Dualis",
-            headerShown: false,
-            tabBarIcon: ({ color, size, focused }) =>
-              focused ? (
-                <ActiveDualisSVG width={size} height={size} fill={color} />
-              ) : (
-                <DualisSVG width={size} height={size} fill={color} />
               ),
           }}
         />
@@ -95,6 +81,20 @@ export default function TabLayout() {
                 <ActiveMealPlanSVG width={size} height={size} fill={color} />
               ) : (
                 <MealPlanSVG width={size} height={size} fill={color} />
+              ),
+          }}
+        />
+        <Tabs.Screen
+          name="dualis"
+          options={{
+            headerTitle: "TheStudentMaster",
+            tabBarLabel: "Dualis",
+            headerShown: false,
+            tabBarIcon: ({ color, size, focused }) =>
+              focused ? (
+                <ActiveDualisSVG width={size} height={size} fill={color} />
+              ) : (
+                <DualisSVG width={size} height={size} fill={color} />
               ),
           }}
         />

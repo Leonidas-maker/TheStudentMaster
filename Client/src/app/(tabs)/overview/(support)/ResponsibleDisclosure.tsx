@@ -3,20 +3,19 @@ import React from "react";
 import { View, ScrollView, Linking } from "react-native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import DefaultText from "../../components/textFields/DefaultText";
-import Heading from "../../components/textFields/Heading";
-import DefaultButton from "../../components/buttons/DefaultButton";
-import TextButton from "../../components/buttons/TextButton";
+import DefaultText from "../../../../components/textFields/DefaultText";
+import Heading from "../../../../components/textFields/Heading";
+import TextButton from "../../../../components/buttons/TextButton";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-const Support: React.FC = () => {
+const ResponsibleDisclosure: React.FC = () => {
   // ====================================================== //
   // =================== Press handlers =================== //
   // ====================================================== //
   const handleMailPress = () => {
-    Linking.openURL("mailto:support@thestudentmaster.de");
+    Linking.openURL("mailto:responsible_disclosure@thestudentmaster.de");
   };
 
   // ====================================================== //
@@ -26,14 +25,14 @@ const Support: React.FC = () => {
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       <View className="px-5 py-5">
         <View className="mb-5">
-          <Heading text="Du benötigst Hilfe oder hast eine Frage?" />
+          <Heading text="Du hast eine Sicherheitslücke in unserer App oder unserem Server gefunden?" />
         </View>
         <View className="flex-1 m-5">
           <View className="mb-3">
-            <DefaultText text="Schreib uns bitte eine E-Mail an die unten stehende Adresse und wir werden versuchen dir so schnell wie möglich weiterzuhelfen." />
+            <DefaultText text="Schreib uns bitte eine E-Mail an die unten stehende Adresse mit allen relevanten Informationen und wir werden so schnell wie möglich mit dir in Kontakt treten." />
           </View>
           <TextButton
-            text="support@thestudentmaster.de"
+            text="responsible_disclosure@thestudentmaster.de"
             onPress={handleMailPress}
           />
         </View>
@@ -42,4 +41,4 @@ const Support: React.FC = () => {
   );
 };
 
-export default Support;
+export default ResponsibleDisclosure;

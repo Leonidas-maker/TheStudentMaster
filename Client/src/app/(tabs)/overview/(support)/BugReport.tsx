@@ -3,9 +3,9 @@ import React from "react";
 import { View, ScrollView, Linking } from "react-native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import DefaultText from "../../components/textFields/DefaultText";
-import Heading from "../../components/textFields/Heading";
-import DefaultButton from "../../components/buttons/DefaultButton";
+import DefaultText from "../../../../components/textFields/DefaultText";
+import Heading from "../../../../components/textFields/Heading";
+import DefaultButton from "../../../../components/buttons/DefaultButton";
 
 // ====================================================== //
 // ====================== Component ===================== //

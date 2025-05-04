@@ -3,20 +3,20 @@ import React from "react";
 import { View } from "react-native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import WeekCalendar from "../../components/calendar/WeekCalendar";
+import MenuPlan from "../../../components/menuPlan/MenuPlan";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-const Dashboard: React.FC = () => {
+const MealPlan: React.FC = () => {
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   return (
-    <View className="bg-light_primary dark:bg-dark_primary flex-1">
-      <WeekCalendar />
+    <View className="flex-1 bg-light_primary dark:bg-dark_primary">
+      <MenuPlan />
     </View>
   );
 };
 
-export default Dashboard;
+export default MealPlan;

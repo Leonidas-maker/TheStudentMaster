@@ -3,7 +3,7 @@ import React from "react";
 import { View, ScrollView, Text } from "react-native";
 
 // Import the licenses.json file
-import creditsData from "./licenses.json";
+import creditsData from "../../../../../public/json/licenses.json";
 
 // ====================================================== //
 // ====================== Component ===================== //

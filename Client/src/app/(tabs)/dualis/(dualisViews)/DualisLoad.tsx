@@ -4,16 +4,16 @@ import * as Progress from "react-native-progress";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
-import Heading from "../../../components/textFields/Heading";
-import Subheading from "../../../components/textFields/Subheading";
-import { secureLoadData } from "../../../components/storageManager/secureStorageManager";
+import Heading from "../../../../components/textFields/Heading";
+import Subheading from "../../../../components/textFields/Subheading";
+import { secureLoadData } from "../../../../components/storageManager/secureStorageManager";
 
 import {
   navigateToPerformanceOverview,
   navigateToExamResults,
   navigateThroughSemesters,
   navigateThroughGradeDetails,
-} from "../../../services/dualis/navigationService";
+} from "../../../../services/dualis/navigationService";
 
 import {
   ModuleData,
@@ -22,8 +22,8 @@ import {
   SemesterData,
   GradeData,
   GpaSemesterData,
-} from "../../../interfaces/dualisInterfaces";
-import { logoutDualis } from "../../../services/dualis/loginService";
+} from "../../../../interfaces/dualisInterfaces";
+import { logoutDualis } from "../../../../services/dualis/loginService";
 import { set } from "lodash";
 
 const DualisLoad: React.FC = () => {

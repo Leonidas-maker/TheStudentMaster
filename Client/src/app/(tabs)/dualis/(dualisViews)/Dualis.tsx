@@ -5,19 +5,19 @@ import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import Heading from "../../../components/textFields/Heading";
-import { DualisRouteParams } from "../../../interfaces/dualisInterfaces";
-import Dropdown from "../../../components/dropdown/Dropdown";
+import Heading from "../../../../components/textFields/Heading";
+import { DualisRouteParams } from "../../../../interfaces/dualisInterfaces";
+import Dropdown from "../../../../components/dropdown/Dropdown";
 import { useNavigation } from "@react-navigation/native";
-import DualisOverviewText from "../../../components/textFields/dualisTextFields/DualisOverviewText";
-import DualisOverviewDescText from "../../../components/textFields/dualisTextFields/DualisOverviewDescText";
-import DualisModuleText from "../../../components/textFields/dualisTextFields/DualisModuleText";
-import DualisHeaderModuleText from "../../../components/textFields/dualisTextFields/DualisHeaderModuleText";
-import DualisHeaderDescText from "../../../components/textFields/dualisTextFields/DualisHeaderDescText";
-import DualisNumberText from "../../../components/textFields/dualisTextFields/DualisNumberText";
-import DualisDetailText from "../../../components/textFields/dualisTextFields/DualisDetailText";
-import DualisModuleDetailText from "../../../components/textFields/dualisTextFields/DualisModuleDetailText";
-import DualisExamDetailText from "../../../components/textFields/dualisTextFields/DualisExamDetailText";
+import DualisOverviewText from "../../../../components/textFields/dualisTextFields/DualisOverviewText";
+import DualisOverviewDescText from "../../../../components/textFields/dualisTextFields/DualisOverviewDescText";
+import DualisModuleText from "../../../../components/textFields/dualisTextFields/DualisModuleText";
+import DualisHeaderModuleText from "../../../../components/textFields/dualisTextFields/DualisHeaderModuleText";
+import DualisHeaderDescText from "../../../../components/textFields/dualisTextFields/DualisHeaderDescText";
+import DualisNumberText from "../../../../components/textFields/dualisTextFields/DualisNumberText";
+import DualisDetailText from "../../../../components/textFields/dualisTextFields/DualisDetailText";
+import DualisModuleDetailText from "../../../../components/textFields/dualisTextFields/DualisModuleDetailText";
+import DualisExamDetailText from "../../../../components/textFields/dualisTextFields/DualisExamDetailText";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -70,15 +70,15 @@ const Dualis: React.FC = () => {
     selectedSemester === "Leistungsübersicht"
       ? gradeData.current
       : gradeData.current.filter(
-          (grade) => grade.semester === selectedSemester,
-        );
+        (grade) => grade.semester === selectedSemester,
+      );
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
       ? gpaSemesterData.current
       : gpaSemesterData.current.filter(
-          (gpa) => gpa.semester === selectedSemester,
-        );
+        (gpa) => gpa.semester === selectedSemester,
+      );
 
   const handleLogout = () => {
     // Navigate to the login screen after logout
@@ -108,7 +108,7 @@ const Dualis: React.FC = () => {
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <ScrollView>
         {selectedSemester.length > 1 &&
-        selectedSemester === "Leistungsübersicht" ? (
+          selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
@@ -168,7 +168,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
             {filteredGpaSemesterData.map((semester, index) => (
@@ -187,7 +187,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />

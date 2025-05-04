@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorScheme } from "nativewind";
-import { Appearance } from "react-native";
 
 // ~~~~~~~~~~~~~~~~ Types ~~~~~~~~~~~~~~~~ //
 // Set possible scheme types to light, dark, system
@@ -38,7 +37,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // ======================= States ======================= //
   // ====================================================== //
   const [theme, setTheme] = useState<SchemeType>("system");
-  const { setColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
 
   // ====================================================== //
   // ===================== useEffects ===================== //
@@ -55,31 +54,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     loadTheme();
   }, []);
 
-  // Sets theme in local storage and updates the color scheme
+  // Sets theme in local storage
   useEffect(() => {
-    const applyTheme = async () => {
-      await AsyncStorage.setItem("theme", theme);
-
-      // Handle the theme application based on selection
-      if (theme === "system") {
-        const systemTheme = Appearance.getColorScheme() || "light";
-        setColorScheme(systemTheme);
-      } else {
-        setColorScheme(theme);
-      }
-    };
-
-    applyTheme();
-
-    // Listen for system theme changes if using "system" theme
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      if (theme === "system") {
-        setColorScheme(colorScheme || "light");
-      }
-    });
-
-    return () => subscription.remove();
-  }, [theme, setColorScheme]);
+    AsyncStorage.setItem("theme", theme);
+    setColorScheme(theme);
+  }, [theme]);
 
   // ~~~~~~~~~~~~~~~~ Return ~~~~~~~~~~~~~~~ //
   return (
