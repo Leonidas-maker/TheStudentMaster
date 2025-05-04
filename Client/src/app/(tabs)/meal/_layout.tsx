@@ -37,7 +37,6 @@ export default function MealLayout() {
           headerTitle: "TheStudentMaster",
         }}
       />
-
     </Stack>
   );
 }
