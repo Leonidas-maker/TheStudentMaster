@@ -3,20 +3,18 @@ import React from "react";
 import { View, Text } from "react-native";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
-import WeekCalendar from "../components/calendar/WeekCalendar";
+import WeekCalendar from "../../components/calendar/WeekCalendar";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-const Dashboard: React.FC = () => {
+export default function Tab() {
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   return (
     <View className="bg-light_primary dark:bg-dark_primary flex-1">
-      <Text>Hello, World!</Text>
+      <WeekCalendar />
     </View>
   );
 };
-
-export default Dashboard;

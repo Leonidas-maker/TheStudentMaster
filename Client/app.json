@@ -13,7 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#CBF8FB"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
@@ -28,7 +30,8 @@
       "versionCode": 9
     },
     "web": {
-      "favicon": "./public/logo/TheStudentMaster.png"
+      "favicon": "./public/logo/TheStudentMaster.png",
+      "bundler": "metro"
     },
     "extra": {
       "eas": {
@@ -36,6 +39,12 @@
       }
     },
     "owner": "themastercollection",
-    "plugins": ["expo-secure-store", "expo-router"]
+    "plugins": [
+      "expo-secure-store",
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

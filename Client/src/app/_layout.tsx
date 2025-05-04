@@ -1,0 +1,66 @@
+//! Only relevant for web
+import { Platform } from "react-native";
+if (Platform.OS === "web") {
+    require("../../global.css");
+}
+import { Stack } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
+import { ThemeProvider } from "../provider/ThemeProvider";
+import { useState, useEffect } from "react";
+import { useColorScheme } from "nativewind";
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+//TODO: Add custom logger
+//import "../custom_logger/custom_logger";
+
+export default function RootLayout() {
+    const [isLight, setIsLight] = useState(false);
+
+    // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
+    // Get the current color scheme
+    const { colorScheme } = useColorScheme();
+
+    // Check if the color scheme is light or dark
+    useEffect(() => {
+        if (colorScheme === "light") {
+            setIsLight(true);
+        } else {
+            setIsLight(false);
+        }
+    }, [colorScheme]);
+
+
+    // Set the colors based on the color scheme
+    const backgroundColor = isLight ? "#E8EBF7" : "#1E1E24";
+    const headerTintColor = isLight ? "#171717" : "#E0E2DB";
+
+    return (
+        <ThemeProvider>
+            <SafeAreaProvider>
+                <GestureHandlerRootView>
+                    <NavigationContainer>
+                        <StatusBar style="auto" />
+                        <Stack
+                            initialRouteName="(tabs)"
+                            screenOptions={{
+                                headerShown: true,
+                                headerStyle: {
+                                    backgroundColor: backgroundColor,
+                                },
+                                headerTintColor: headerTintColor,
+                            }}
+                        >
+                            {/* Tabs-Navigation */}
+                            <Stack.Screen name="(tabs)" options={{ headerShown: false, gestureEnabled: false }} />
+
+                            {/* Zusätzliche Screens */}
+
+                        </Stack>
+                    </NavigationContainer>
+                </GestureHandlerRootView>
+            </SafeAreaProvider>
+        </ThemeProvider>
+    );
+}
