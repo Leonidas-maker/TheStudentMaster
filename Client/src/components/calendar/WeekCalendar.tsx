@@ -13,7 +13,7 @@ import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
@@ -59,7 +59,7 @@ const WeekCalendar: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [connectionError, setConnectionError] = useState(false);
-  const navigation = useNavigation<any>();
+  const router = useRouter();
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -157,7 +157,7 @@ const WeekCalendar: React.FC = () => {
                   {
                     text: "Zur Auswahl",
                     onPress: () => {
-                      navigation.navigate("MiscStack", { screen: "Settings" });
+                      router.push("/(calendar)/CalendarCourseSettings");
                     },
                     style: "default",
                   },
@@ -178,15 +178,15 @@ const WeekCalendar: React.FC = () => {
         let missingCourse = false;
 
         await getSelectedUniversity(
-          () => {},
-          () => {},
+          () => { },
+          () => { },
           (missing) => {
             missingUniversity = missing;
           },
         );
         await getSelectedCourse(
-          () => {},
-          () => {},
+          () => { },
+          () => { },
           (missing) => {
             missingCourse = missing;
           },
@@ -204,7 +204,7 @@ const WeekCalendar: React.FC = () => {
               {
                 text: "Zur Auswahl",
                 onPress: () => {
-                  navigation.navigate("MiscStack", { screen: "Settings" });
+                  router.push("/(calendar)/CalendarCourseSettings");
                 },
                 style: "default",
               },
@@ -216,7 +216,7 @@ const WeekCalendar: React.FC = () => {
 
       loadEvents();
       checkSelections();
-    }, [navigation]),
+    }, [router]),
   );
 
   // ====================================================== //

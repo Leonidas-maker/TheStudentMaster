@@ -152,6 +152,10 @@ const Settings: React.FC = () => {
     if (!activateCallback.current) return;
     setLoading(true);
     setProgress(0.25);
+    if (!selectedValue)  {
+      setLoading(false);
+      return;
+    }
     setSelectedCourse(selectedValue);
     await AsyncStorage.setItem("selectedCourse", selectedValue);
     setProgress(0.5);

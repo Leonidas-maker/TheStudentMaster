@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
 import { expo } from "../../../../app.json";
 import { Linking } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
@@ -17,59 +17,12 @@ import DefaultText from "../../../components/textFields/DefaultText";
 // ====================================================== //
 const Overview: React.FC = () => {
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
-  const navigation = useNavigation<any>();
+  const router = useRouter();
 
   // ====================================================== //
   // ================== AccountNavigator ================== //
   // ====================================================== //
   // Defines the press functions
-  const handleLoginPagePress = () => {
-    navigation.navigate("OverviewStack", { screen: "Login" });
-  };
-
-  const handleRegistrationPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Registration" });
-  };
-
-  const handleForgotPress = () => {
-    navigation.navigate("OverviewStack", { screen: "ForgotPassword" });
-  };
-
-  const handleAddMFAPress = () => {
-    navigation.navigate("OverviewStack", { screen: "AddMFA" });
-  };
-
-  const handleVerifyLoginPress = () => {
-    navigation.navigate("OverviewStack", { screen: "VerifyLogin" });
-  };
-
-  const handleVerifyRegistrationPress = () => {
-    navigation.navigate("OverviewStack", { screen: "VerifyRegistration" });
-  };
-
-  const handleVerifyMFAPress = () => {
-    navigation.navigate("OverviewStack", { screen: "VerifyMFA" });
-  };
-
-  const handleNewPasswordPress = () => {
-    navigation.navigate("OverviewStack", { screen: "NewPassword" });
-  };
-
-  const handleVerifyForgotPress = () => {
-    navigation.navigate("OverviewStack", { screen: "VerifyForgot" });
-  };
-
-  const handleProflePress = () => {
-    navigation.navigate("OverviewStack", { screen: "Profile" });
-  };
-
-  const handleBackupPress = () => {
-    navigation.navigate("OverviewStack", { screen: "BackupMFA" });
-  };
-
-  const handleLoadingPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Loading" });
-  };
 
   const handleDeletePress = () => {
     AsyncStorage.removeItem("events");
@@ -94,68 +47,36 @@ const Overview: React.FC = () => {
 
   // Sets the press functions
   const onPressAccountFunctions = [
-    handleLoadingPress,
-    handleLoginPagePress,
-    handleRegistrationPress,
-    handleForgotPress,
-    handleVerifyForgotPress,
-    handleNewPasswordPress,
-    handleAddMFAPress,
-    handleVerifyMFAPress,
-    handleVerifyLoginPress,
-    handleVerifyRegistrationPress,
-    handleBackupPress,
-    handleProflePress,
     handleDeletePress,
   ];
 
   // Sets the texts for the navigator
   const accountTexts = [
-    "Loading",
-    "Login",
-    "Registration",
-    "Forgot Password",
-    "Verify Forgot",
-    "New Password",
-    "Add MFA",
-    "Verify MFA",
-    "Verify Login",
-    "Verify Registration",
-    "Backup MFA",
-    "Profile",
     "Delete Storage",
   ];
 
   // Sets the icons for the navigator
   const accountIconNames = [
-    "hourglass-empty",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
-    "apps",
     "apps",
   ];
 
   // ====================================================== //
   // =================== ModuleNavigator ================== //
   // ====================================================== //
+  //TODO: Change for later use if some modules are disabled
   const handleDashboardPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Dashboard" });
+    // @ts-ignore
+    router.push("/(tabs)/overview/(module)/Dashboard");
   };
 
   const handleDualisPress = () => {
-    navigation.navigate("OverviewStack", { screen: "Dualis" });
+    // @ts-ignore
+    router.push("/(tabs)/overview/(module)/Dualis");
   };
 
   const handleMealPlanPress = () => {
-    navigation.navigate("MealPlan");
+    // @ts-ignore
+    router.push("/(tabs)/overview/(module)/MealPlan");
   };
 
   const moduleTitle = "Weitere Funktionen";
@@ -173,19 +94,19 @@ const Overview: React.FC = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
 
   const handleSettingsPress = () => {
-    navigation.navigate("MiscStack", { screen: "Settings" });
+    router.push("/(tabs)/overview/(settings)/Settings");
   };
 
   const handleImprintPress = () => {
-    navigation.navigate("MiscStack", { screen: "Imprint" });
+    router.push("/(tabs)/overview/(misc)/Imprint");
   };
 
   const handleCreditsPress = () => {
-    navigation.navigate("MiscStack", { screen: "Licenses" });
+    router.push("/(tabs)/overview/(misc)/Licenses");
   };
 
   const handleDisclosurePress = () => {
-    navigation.navigate("MiscStack", { screen: "ResponsibleDisclosure" });
+    router.push("/(tabs)/overview/(support)/ResponsibleDisclosure");
   };
 
   const handleGitLabPress = () => {
@@ -201,11 +122,11 @@ const Overview: React.FC = () => {
   };
 
   const handleSupportPress = () => {
-    navigation.navigate("MiscStack", { screen: "Support" });
+    router.push("/(tabs)/overview/(support)/Support");
   };
 
   const handleBugReportPress = () => {
-    navigation.navigate("MiscStack", { screen: "BugReport" });
+    router.push("/(tabs)/overview/(support)/BugReport");
   };
 
   const overviewTitle = "Weitere Inhalte";
@@ -256,66 +177,23 @@ const Overview: React.FC = () => {
   ];
 
   // ====================================================== //
-  // =================== DualisNavigator ================== //
-  // ====================================================== //
-  const handleDualisLoginPress = () => {
-    navigation.navigate("OverviewStack", { screen: "DualisLogin" });
-  };
-
-  const handleDualisLoadPress = () => {
-    navigation.navigate("OverviewStack", { screen: "DualisDummy" });
-  };
-
-  const handleDualisPerformancePress = () => {
-    navigation.navigate("OverviewStack", { screen: "Dualis" });
-  };
-
-  const handleDualisSemesterPress = () => {
-    navigation.navigate("OverviewStack", { screen: "DualisSemester" });
-  };
-
-  const dualisTitle = "Dualis Screens";
-
-  const onPressDualisFunctions = [
-    handleDualisLoginPress,
-    handleDualisLoadPress,
-    handleDualisPerformancePress,
-    handleDualisSemesterPress,
-  ];
-
-  const dualisTexts = [
-    "Login",
-    "Load",
-    "Performance Overview",
-    "Semester View",
-  ];
-
-  const dualisIcons = ["apps", "apps", "apps", "apps"];
-
-  // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
   // Returns the navigators and the current app version
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       {/* <ProfileView /> */}
-      <Navigator
+      {/* <Navigator
         title={moduleTitle}
         onPressFunctions={onPressModuleFunctions}
         texts={moduleTexts}
         iconNames={moduleIconNames}
-      />
+      /> */}
       {/* <Navigator
         title={accountTitle}
         onPressFunctions={onPressAccountFunctions}
         texts={accountTexts}
         iconNames={accountIconNames}
-      /> */}
-      {/* <Navigator
-        title={dualisTitle}
-        onPressFunctions={onPressDualisFunctions}
-        texts={dualisTexts}
-        iconNames={dualisIcons}
       /> */}
       <Navigator
         title={overviewTitle}

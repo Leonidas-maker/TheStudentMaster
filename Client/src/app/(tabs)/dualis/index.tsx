@@ -8,7 +8,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter, useNavigation } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
@@ -33,7 +33,8 @@ import { loginDualis } from "../../../services/dualis/loginService";
 
 const DualisLogin: React.FC = () => {
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
-  const navigation = useNavigation<any>();
+  const router = useRouter();
+  const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -71,10 +72,7 @@ const DualisLogin: React.FC = () => {
         saveLogin,
       );
 
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "Dualis", params: { screen: "DualisLoad" } }],
-      });
+      router.replace("/(tabs)/dualis/(dualisViews)/DualisLoad");
     } catch (error) {
       setConnectionError(true);
       setLoading(false);

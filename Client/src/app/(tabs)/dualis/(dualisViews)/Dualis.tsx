@@ -1,14 +1,13 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, Pressable, useColorScheme } from "react-native";
-import { useRoute, RouteProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Heading from "../../../../components/textFields/Heading";
-import { DualisRouteParams } from "../../../../interfaces/dualisInterfaces";
+import { ModuleData, GpaData, EctsData, SemesterData, GradeData, GpaSemesterData } from "../../../../interfaces/dualisInterfaces";
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import { useNavigation } from "@react-navigation/native";
 import DualisOverviewText from "../../../../components/textFields/dualisTextFields/DualisOverviewText";
 import DualisOverviewDescText from "../../../../components/textFields/dualisTextFields/DualisOverviewDescText";
 import DualisModuleText from "../../../../components/textFields/dualisTextFields/DualisModuleText";
@@ -23,18 +22,29 @@ import DualisExamDetailText from "../../../../components/textFields/dualisTextFi
 // ====================== Component ===================== //
 // ====================================================== //
 const Dualis: React.FC = () => {
-  const route = useRoute<RouteProp<{ params: DualisRouteParams }, "params">>();
-
-  const {
-    moduleData,
-    gpaData,
-    ectsData,
-    semesterData,
-    gradeData,
-    gpaSemesterData,
-  } = route.params;
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
+  const router = useRouter();
+
+  const params = useLocalSearchParams();
+  const moduleData: ModuleData[] = params.moduleData
+    ? JSON.parse(params.moduleData as string)
+    : [];
+  const gpaData: GpaData = params.gpaData
+    ? JSON.parse(params.gpaData as string)
+    : { gpaTotal: "", gpaSubject: "" };
+  const ectsData: EctsData = params.ectsData
+    ? JSON.parse(params.ectsData as string)
+    : { ectsTotal: "", ectsSum: "" };
+  const semesterData: SemesterData = params.semesterData
+    ? JSON.parse(params.semesterData as string)
+    : { semester: [] };
+  const gradeData: GradeData[] = params.gradeData
+    ? JSON.parse(params.gradeData as string)
+    : [];
+  const gpaSemesterData: GpaSemesterData[] = params.gpaSemesterData
+    ? JSON.parse(params.gpaSemesterData as string)
+    : [];
 
   const [selectedSemester, setSelectedSemester] =
     useState<string>("Leistungsübersicht");
@@ -51,7 +61,7 @@ const Dualis: React.FC = () => {
 
   // Function to get available semesters and add "Leistungsübersicht" as the first option
   const getSemesterDropdownValues = () => {
-    const semesterOptions = semesterData.current.semester.map((semester) => ({
+    const semesterOptions = semesterData.semester.map((semester: any) => ({
       key: semester.value,
       value: semester.name,
     }));
@@ -68,24 +78,21 @@ const Dualis: React.FC = () => {
 
   const filteredGradeData =
     selectedSemester === "Leistungsübersicht"
-      ? gradeData.current
-      : gradeData.current.filter(
-          (grade) => grade.semester === selectedSemester,
-        );
+      ? gradeData
+      : gradeData.filter(
+        (grade: any) => grade.semester === selectedSemester,
+      );
 
   const filteredGpaSemesterData =
     selectedSemester === "Leistungsübersicht"
-      ? gpaSemesterData.current
-      : gpaSemesterData.current.filter(
-          (gpa) => gpa.semester === selectedSemester,
-        );
+      ? gpaSemesterData
+      : gpaSemesterData.filter(
+        (gpa: any) => gpa.semester === selectedSemester,
+      );
 
   const handleLogout = () => {
     // Navigate to the login screen after logout
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Dualis", params: { screen: "DualisLogin" } }],
-    });
+    router.replace("/(tabs)/dualis");
   };
 
   // Set the header button dynamically
@@ -108,28 +115,28 @@ const Dualis: React.FC = () => {
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <ScrollView>
         {selectedSemester.length > 1 &&
-        selectedSemester === "Leistungsübersicht" ? (
+          selectedSemester === "Leistungsübersicht" ? (
           <View>
             <View className="mt-4 w-full">
               <Heading text="Übersicht" />
               <View className="flex-row p-2 pl-5 items-end">
-                <DualisOverviewText text={`${gpaData.current.gpaTotal}`} />
+                <DualisOverviewText text={`${gpaData.gpaTotal}`} />
                 <DualisOverviewDescText text="Gesamt-GPA" />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
-                <DualisOverviewText text={`${gpaData.current.gpaSubject}`} />
+                <DualisOverviewText text={`${gpaData.gpaSubject}`} />
                 <DualisOverviewDescText text="Hauptfach-GPA" />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
                 <DualisOverviewText
-                  text={`${ectsData.current.ectsSum} / ${ectsData.current.ectsTotal}`}
+                  text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`}
                 />
                 <DualisOverviewDescText text="ECTS" />
               </View>
               <View className="py-4">
                 <Heading text="Studienergebnisse" />
               </View>
-              {moduleData.current.length > 0 ? (
+              {moduleData.length > 0 ? (
                 <View>
                   <View className="flex-row items-center justify-between flex-wrap m-2">
                     <DualisHeaderModuleText text="Modul" />
@@ -140,7 +147,7 @@ const Dualis: React.FC = () => {
                     </View>
                   </View>
 
-                  {moduleData.current.map((module, index) => (
+                  {moduleData.map((module: any, index: number) => (
                     <View key={index} className="mx-2">
                       <View className="flex-row items-center justify-between flex-wrap">
                         <View className="flex-1">
@@ -156,7 +163,7 @@ const Dualis: React.FC = () => {
                         </View>
                       </View>
 
-                      {index < moduleData.current.length - 1 && (
+                      {index < moduleData.length - 1 && (
                         <View className="border-b dark:border-light_secondary border-dark_secondary my-2" />
                       )}
                     </View>
@@ -168,10 +175,10 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="mt-4 w-full">
             <Heading text="Übersicht" />
-            {filteredGpaSemesterData.map((semester, index) => (
+            {filteredGpaSemesterData.map((semester: any, index: number) => (
               <View key={index} className="">
                 <View className="flex-row p-2 pl-5 items-end">
                   <DualisOverviewText text={`${semester.grade}`} />
@@ -187,7 +194,7 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+          selectedSemester !== "Leistungsübersicht" ? (
           <View className="w-full">
             <View className="py-4">
               <Heading text="Ergebnisse" />
@@ -200,7 +207,7 @@ const Dualis: React.FC = () => {
                 <Icon name="check" size={20} color={placeholderColor} />
               </View>
             </View>
-            {filteredGradeData.map((grade, index) => (
+            {filteredGradeData.map((grade: any, index: number) => (
               <View key={index} className="mx-2">
                 <View className="flex-row items-center justify-between flex-wrap">
                   <View className="flex-1">
@@ -223,7 +230,7 @@ const Dualis: React.FC = () => {
                     )}
                   </View>
                 </View>
-                {grade.detailGrade.map((detail, detailIndex) => (
+                {grade.detailGrade.map((detail: any, detailIndex: number) => (
                   <View key={detailIndex}>
                     <View className="flex-row items-center justify-between flex-wrap mt-2">
                       <View className="flex-1">

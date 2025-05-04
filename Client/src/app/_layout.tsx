@@ -7,8 +7,7 @@ import { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-//TODO: Add custom logger
-//import "../custom_logger/custom_logger";
+import "../custom_logger/custom_logger";
 
 export default function RootLayout() {
   const [isLight, setIsLight] = useState(false);
@@ -52,6 +51,13 @@ export default function RootLayout() {
             />
 
             {/* Zusätzliche Screens */}
+            <Stack.Screen
+              name="(calendar)/CalendarCourseSettings"
+              options={{ 
+                presentation: "modal",
+                headerTitle: "Kalender Kurs Einstellungen" 
+              }}
+            />
           </Stack>
         </GestureHandlerRootView>
       </SafeAreaProvider>

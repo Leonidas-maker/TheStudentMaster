@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { View, Alert } from "react-native";
 import * as Progress from "react-native-progress";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
 import Heading from "../../../../components/textFields/Heading";
@@ -24,11 +25,10 @@ import {
   GpaSemesterData,
 } from "../../../../interfaces/dualisInterfaces";
 import { logoutDualis } from "../../../../services/dualis/loginService";
-import { set } from "lodash";
 
 const DualisLoad: React.FC = () => {
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
-  const navigation = useNavigation<any>();
+  const router = useRouter();
 
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
@@ -58,12 +58,7 @@ const DualisLoad: React.FC = () => {
               {
                 text: "OK",
                 onPress: () => {
-                  navigation.reset({
-                    index: 0,
-                    routes: [
-                      { name: "Dualis", params: { screen: "DualisLogin" } },
-                    ],
-                  });
+                  router.replace("/(tabs)/dualis")
                 },
               },
             ],
@@ -128,26 +123,17 @@ const DualisLoad: React.FC = () => {
           if (isActive && !hasTimedOut) {
             clearTimeout(timeout); // Stop the timer if successful
             setLoading(false);
-
             if (gpaSemesterData.current.length > 0) {
-              navigation.reset({
-                index: 0,
-                routes: [
-                  {
-                    name: "Dualis",
-                    params: {
-                      screen: "DualisPerfomance",
-                      params: {
-                        moduleData: moduleData,
-                        gpaData: gpaData,
-                        ectsData: ectsData,
-                        semesterData: semesterData,
-                        gradeData: gradeData,
-                        gpaSemesterData: gpaSemesterData,
-                      },
-                    },
-                  },
-                ],
+              router.replace({
+                pathname: "/(tabs)/dualis/(dualisViews)/Dualis",
+                params: {
+                  moduleData: JSON.stringify(moduleData.current),
+                  gpaData: JSON.stringify(gpaData.current),
+                  ectsData: JSON.stringify(ectsData.current),
+                  semesterData: JSON.stringify(semesterData.current),
+                  gradeData: JSON.stringify(gradeData.current),
+                  gpaSemesterData: JSON.stringify(gpaSemesterData.current),
+                },
               });
             }
           }
@@ -163,7 +149,7 @@ const DualisLoad: React.FC = () => {
         isActive = false;
         clearTimeout(timeout);
       };
-    }, [navigation]),
+    }, [router]),
   );
 
   return (

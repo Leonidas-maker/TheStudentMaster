@@ -35,7 +35,7 @@ const ApplyInterceptor = () => {
         originalRequest._retry = true; // Set retry flag to true
         try {
           const newToken = await refreshAuthLogic(); // Refresh the authentication token
-          axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`; // Set the new token in default headers
+          axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${newToken}`; // Set the new token in default headers
           return axiosInstance(originalRequest); // Retry the original request with the new token
         } catch (refreshError) {
           return Promise.reject(refreshError); // Handle token refresh errors

@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import React, { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import { ThemeProvider } from "../../provider/ThemeProvider";

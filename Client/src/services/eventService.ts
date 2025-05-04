@@ -1,6 +1,6 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { axiosInstance } from "./api";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { EventTimeProps } from "../interfaces/calendarInterfaces";
@@ -25,19 +25,19 @@ const fetchEvents = async (forceFetch = false): Promise<EventTimeProps[]> => {
   if (selectedUniversity && selectedCourse) {
     const { uuid } = JSON.parse(selectedUniversity); // Parse selected university data
     let lastFetchHash = await AsyncStorage.getItem("lastFetchHash"); // Get last fetch hash from storage
-    const hashResponse = await axios.get(
+    const hashResponse = await axiosInstance.get(
       `/calendar/${uuid}/${selectedCourse}/hash`,
     ); // Fetch the current hash for the selected course
     const currentHash = hashResponse.data.message; // Extract hash from the response
 
     // If the hash is the same as the last fetch, skip the fetch
-    if (!forceFetch && lastFetchHash && currentHash === lastFetchHash) {
+    if (!forceFetch && lastFetchTime && lastFetchHash && currentHash === lastFetchHash) {
       console.log("No changes in data, skipping fetch.");
       await AsyncStorage.setItem("lastFetchTime", currentTime.toString()); // Update the last fetch time in storage
       return [];
     }
 
-    const response = await axios.get(`/calendar/${uuid}/${selectedCourse}`); // Fetch events for the selected course
+    const response = await axiosInstance.get(`/calendar/${uuid}/${selectedCourse}`); // Fetch events for the selected course
     const data = response.data.data; // Extract data from the response
 
     if (data && Array.isArray(data.events)) {
@@ -71,7 +71,7 @@ const fetchEventsWithoutWait = async (
 
     if (selectedUniversity && selectedCourse) {
       const { uuid } = JSON.parse(selectedUniversity); // Parse selected university data
-      const response = await axios.get(`/calendar/${uuid}/${selectedCourse}`); // Fetch events for the selected course
+      const response = await axiosInstance.get(`/calendar/${uuid}/${selectedCourse}`); // Fetch events for the selected course
       const data = response.data.data; // Extract data from the response
 
       if (data && Array.isArray(data.events)) {
