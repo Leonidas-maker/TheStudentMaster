@@ -6,6 +6,7 @@ import json
 
 # ~~~~~~~~~~~~~~~~~ Utils ~~~~~~~~~~~~~~~~~ #
 from utils.canteen.canteen_scraper import fetch_menu
+from utils.canteen.canteen_dhbwapp import sync_dhbw_menus
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
 from middleware.general import create_address
@@ -56,35 +57,21 @@ def create_canteens(db: Session):
         db.rollback()
 
 
-def update_canteen_menus(db: Session, progress, task_id, week_offset: int = 0):
-    """This function updates the menu for all canteens in the database. This function is used by the repeated update task.
+def update_canteen_menus(db: Session, progress, task_id):
+    """This function updates the canteen menus in the database. This function is used by the repeated update task.
 
     Args:
         db (Session): database session
         progress (Progress): progress bar
         task_id (TaskID): task id
-        week_offset (int, optional): offset by x weeks to the future. maximum value = 3. Defaults to 0.
     """
     try:
-        # get all canteens
-        canteens = db.query(m_canteen.Canteen).all()
-
-        # update progress bar and loop through all canteens
-        progress.update(task_id, total=(len(canteens) * (3 - week_offset)))
-        for canteen_obj in canteens:
-            # for each canteen update the menu for the next 3 weeks
-            for week in range(week_offset, 3):
-                progress.update(
-                    task_id,
-                    description=f"[bold green]Canteen[/bold green] Update {canteen_obj.canteen_name} - Week {week}",
-                )
-                # add canteen menu to database
-                canteen_menu_to_db(db=db, canteen_id=canteen_obj.canteen_id, week_offset=week)
-                db.flush()
-                progress.update(task_id, advance=1)
+        success = sync_dhbw_menus(db, progress, task_id)
+        if not success:
+            raise RuntimeError("sync_dhbw_menus failed")
         db.commit()
     except Exception as e:
-        print(e)
+        print("Error updating DHBW menus:", e)
         db.rollback()
 
 

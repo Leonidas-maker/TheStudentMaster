@@ -83,5 +83,104 @@
     "city": "Eppelheim",
     "district": "Baden-Wuerttemberg",
     "country": "Germany"
+  },
+  {
+    "name": "Mensa Lörrach",
+    "short_name": "mensa_loerrach",
+    "address1": "Hangstraße 46-50",
+    "address2": "",
+    "postal_code": "79539",
+    "city": "Lörrach",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Erzbergerstraße",
+    "short_name": "mensa_erzberger",
+    "address1": "Erzbergerstraße 121",
+    "address2": "",
+    "postal_code": "76133",
+    "city": "Karlsruhe",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa am Bildungscampus",
+    "short_name": "mensa_bildungscampus",
+    "address1": "Bildungscampus 8",
+    "address2": "",
+    "postal_code": "74076",
+    "city": "Heilbronn",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Horb",
+    "short_name": "mensa_horb",
+    "address1": "Florianstraße 15",
+    "address2": "",
+    "postal_code": "72160",
+    "city": "Horb",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa by Tannenhof",
+    "short_name": "mensa_tannenhof",
+    "address1": "Knopfweg 1",
+    "postal_code": "74821",
+    "city": "Mosbach",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa DHBW Heidenheim",
+    "short_name": "mensa_dhbw_heidenheim",
+    "address1": "Marienstraße 20",
+    "address2": "",
+    "postal_code": "89518",
+    "city": "Heidenheim",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Central",
+    "short_name": "mensa_central",
+    "address1": "Ossietzkystraße 3",
+    "address2": "",
+    "postal_code": "70174",
+    "city": "Stuttgart",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Schwenningen",
+    "short_name": "mensa_schwenningen",
+    "address1": "Karlstr. 19",
+    "address2": "",
+    "postal_code": "78054",
+    "city": "Schwenningen",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Ravensburg",
+    "short_name": "mensa_ravensburg",
+    "address1": "Marienplatz 2",
+    "address2": "",
+    "postal_code": "88212",
+    "city": "Ravensburg",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
+  },
+  {
+    "name": "Mensa Fallenbrunnen",
+    "short_name": "mensa_fallenbrunnen",
+    "address1": "Fallenbrunnen 2",
+    "address2": "",
+    "postal_code": "88045",
+    "city": "Friedrichshafen",
+    "district": "Baden-Wuerttemberg",
+    "country": "Germany"
   }
 ]
