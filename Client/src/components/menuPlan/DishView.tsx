@@ -28,7 +28,7 @@ interface DishProps {
       serving_date: string;
     }[];
   } | null;
-  scrollViewRef: React.RefObject<ScrollView>;
+  scrollViewRef: React.RefObject<ScrollView | null>;
   selectedCanteen: string;
   selectedDate: Date;
 }

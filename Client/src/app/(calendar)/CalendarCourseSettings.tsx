@@ -1,4 +1,4 @@
-import Settings from "../(tabs)/overview/(settings)/Settings";
+import CourseSettings from "../(tabs)/overview/(settings)/CourseSettings";
 import { useRouter, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, useColorScheme } from "react-native";
@@ -36,7 +36,7 @@ const CalendarCourseSettings = () => {
     });
   }, [navigation, iconColor]);
 
-  return <Settings />;
+  return <CourseSettings />;
 };
 
 export default CalendarCourseSettings;

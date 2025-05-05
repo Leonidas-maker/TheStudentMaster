@@ -8,6 +8,7 @@ import { useColorScheme } from "nativewind";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import "../custom_logger/custom_logger";
+import "../locales/i18n";
 
 export default function RootLayout() {
   const [isLight, setIsLight] = useState(false);

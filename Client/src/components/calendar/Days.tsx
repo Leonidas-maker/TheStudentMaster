@@ -14,6 +14,11 @@ import {
   getDay,
 } from "date-fns";
 
+import { enUS } from "date-fns/locale/en-US";
+import { de } from "date-fns/locale/de";
+
+import { useTranslation } from "react-i18next";
+
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Hours from "./Hours";
 import Event from "./Event";
@@ -30,6 +35,11 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
   currentDate,
   events,
 }) => {
+  const { i18n } = useTranslation();
+
+  // Checks the current language and sets the locale accordingly
+  const locale = i18n.language === "de" ? de : enUS;
+
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -39,11 +49,23 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
   // State to store the height of the hours container
   const [hoursContainerHeight, setHoursContainerHeight] = useState(0);
 
-  // Sets the start of the current week
-  const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });
-
-  // Sets the end of the current week
-  const endOfWeekDate = endOfWeek(currentDate, { weekStartsOn: 1 });
+  // Sets the start of the current week (dynamically shift if no weekend events)
+  const baseStartOfWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const baseEndOfWeek = endOfWeek(currentDate, { weekStartsOn: 1 });
+  const hasWeekendEvents = events.some(event => {
+    const day = getDay(event.start) === 0 ? 7 : getDay(event.start);
+    return day === 6 || day === 7;
+  });
+  // Only shift to next week if it's already past Friday (Sat/Sun) and there are no weekend events
+  const currentWeekDay = getDay(currentDate);
+  const isPastFriday = currentWeekDay === 6 || currentWeekDay === 0;
+  const shiftWeek = !hasWeekendEvents && isPastFriday;
+  const startOfWeekDate = shiftWeek
+    ? addDays(baseStartOfWeek, 7)
+    : baseStartOfWeek;
+  const endOfWeekDate = shiftWeek
+    ? endOfWeek(startOfWeekDate, { weekStartsOn: 1 })
+    : baseEndOfWeek;
 
   // State to store the hours of the calendar
   const [calenderHours, setCalenderHours] = useState({
@@ -54,10 +76,10 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
   // State to store the number of week days
   const [weekDays, setWeekDays] = useState(5);
 
-  // State to store if it saturday
+  // State to store if it is Saturday or Sunday
   const [isSaturday, setIsSaturday] = useState(false);
+  const [isSunday, setIsSunday] = useState(false);
 
-  //? Maybe we need to do this more efficiently
   // Calculates the calendar hours when the events or the current date changes
   useEffect(() => {
     calculateCalendarData();
@@ -75,9 +97,12 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
       }),
     );
 
-    // Sets calenderHours back to a default value if no events are found
+    // Sets calendarHours and resets weekDays if no events are found in the current week
     if (eventsThisWeek.length === 0) {
       setCalenderHours({ startHour: 8, endHour: 20 });
+      setWeekDays(5);
+      setIsSaturday(false);
+      setIsSunday(false);
       return;
     }
 
@@ -92,13 +117,37 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
       earliestStartHour = Math.min(earliestStartHour, startHour);
       latestEndHour = Math.max(latestEndHour, endHour);
 
-      // Check if the event is on a Saturday and sets the number of week days to 6
-      if (getDay(event.start) === 6) {
+      // Filters events that are within the current week
+      const eventsThisWeek = events.filter((event) =>
+        isWithinInterval(event.start, {
+          start: startOfWeekDate,
+          end: endOfWeekDate,
+        }),
+      );
+
+      // Compute the maximum day of the week for any event in this week
+      let maxDay = 0;
+      eventsThisWeek.forEach((event) => {
+        const day = getDay(event.start) === 0 ? 7 : getDay(event.start);
+        if (day > maxDay) {
+          maxDay = day;
+        }
+      });
+
+      // Set the weekDays state based on the maximum day found:
+      // Sunday (7) -> 7 days, Saturday (6) -> 6 days, otherwise default to 5 days.
+      if (maxDay === 7) {
+        setWeekDays(7);
+        setIsSunday(true);
+        setIsSaturday(false);
+      } else if (maxDay === 6) {
         setWeekDays(6);
         setIsSaturday(true);
+        setIsSunday(false);
       } else {
         setWeekDays(5);
         setIsSaturday(false);
+        setIsSunday(false);
       }
     });
 
@@ -185,10 +234,12 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
               className="flex-1 items-center pt-2 border-l border-light_secondary dark:border-dark_secondary z-10"
             >
               <Text className="text-lg text-black dark:text-white">
-                {format(day, "eee")}
+                {/* Format the weekday using the selected locale */}
+                {format(day, "eee", { locale })}
               </Text>
               <Text className="text-sm text-black dark:text-white">
-                {format(day, "d")}. {format(day, "LLL")}
+                {/* Format the day and month using the selected locale */}
+                {format(day, "d", { locale })}. {format(day, "LLL", { locale })}
               </Text>
               {eventsForDay.map((event, eventIndex) => (
                 <Event
@@ -200,6 +251,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
                   overlapCount={event.overlapCount}
                   overlapIndex={event.overlapIndex}
                   isSaturday={isSaturday}
+                  isSunday={isSunday}
                 />
               ))}
               <View

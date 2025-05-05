@@ -2,7 +2,7 @@
   "expo": {
     "name": "TheStudentMaster",
     "slug": "TheStudentMaster",
-    "version": "1.1.2",
+    "version": "1.2.0",
     "orientation": "default",
     "icon": "./public/logo/TheStudentMaster.png",
     "newArchEnabled": true,
@@ -13,11 +13,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#CBF8FB"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
-      "buildNumber": "9"
+      "buildNumber": "12"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,7 +27,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.schuetze1000.TheStudentMaster",
-      "versionCode": 9
+      "versionCode": 12
     },
     "web": {
       "favicon": "./public/logo/TheStudentMaster.png",
@@ -37,7 +39,10 @@
       }
     },
     "owner": "themastercollection",
-    "plugins": ["expo-secure-store", "expo-router"],
+    "plugins": [
+      "expo-secure-store",
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     }

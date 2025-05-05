@@ -36,6 +36,7 @@ const Event: React.FC<EventProps> = ({
   overlapCount = 1,
   overlapIndex = 0,
   isSaturday,
+  isSunday,
 }) => {
   // ====================================================== //
   // ======================= States ======================= //
@@ -185,7 +186,7 @@ const Event: React.FC<EventProps> = ({
         {eventHeight > MIN_EVENT_HEIGHT_LOCATION &&
           overlapCount === 1 &&
           overlapIndex === 0 &&
-          !isSaturday && (
+          !isSaturday && !isSunday && (
             <>
               <Text className="text-white px-1 text-xs absolute bottom-1">
                 {event.location}
@@ -214,7 +215,9 @@ const Event: React.FC<EventProps> = ({
             </Text>
             <Text className="item-center font-bold text-black dark:text-white">{`Startzeit: ${startTimeString}`}</Text>
             <Text className="item-center font-bold text-black dark:text-white">{`Endzeit: ${endTimeString}`}</Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>
+            {event.location && (
+              <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>
+            )}
             {isWeb && (
               <>
                 <DefaultButton text="Schließen" />

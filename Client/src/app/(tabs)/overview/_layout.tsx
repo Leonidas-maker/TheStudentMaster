@@ -57,6 +57,24 @@ export default function DualisLayout() {
         }}
       />
       <Stack.Screen
+        name="(settings)/ThemeSettings"
+        options={{
+          headerTitle: "Erscheinungsbild",
+        }}
+      />  
+      <Stack.Screen
+        name="(settings)/CourseSettings"
+        options={{
+          headerTitle: "Kurs",
+        }}
+      />  
+      <Stack.Screen
+        name="(settings)/LanguageSettings"
+        options={{
+          headerTitle: "Sprache",
+        }}
+      />  
+      <Stack.Screen
         name="(support)/BugReport"
         options={{
           headerTitle: "Bug Report",

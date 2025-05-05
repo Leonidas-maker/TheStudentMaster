@@ -34,6 +34,7 @@ const Overview: React.FC = () => {
     AsyncStorage.removeItem("menu");
     AsyncStorage.removeItem("lastFetchTimeCanteen");
     AsyncStorage.removeItem("onboarding");
+    AsyncStorage.removeItem("appLanguage");
 
     SecureStore.deleteItemAsync("access_token");
     SecureStore.deleteItemAsync("refresh_token");

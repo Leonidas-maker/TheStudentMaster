@@ -4,21 +4,19 @@ import { View, Text, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
-import { NavigatorProps } from "../../interfaces/componentInterfaces";
+import { OptionSelectorProps } from "../../interfaces/componentInterfaces";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
-const Navigator: React.FC<NavigatorProps> = ({
+const OptionSelector: React.FC<OptionSelectorProps> = ({
   title,
   onPressFunctions,
   texts,
   iconNames,
-  isExternalLink = [],
+  checked,
+  isEmoji = false,
 }) => {
-  // Check if isExternalLink is empty, if so, set all values to false
-  const effectiveIsExternalLink =
-    isExternalLink.length === 0 ? texts.map(() => false) : isExternalLink;
 
   // ====================================================== //
   // ======================= States ======================= //
@@ -31,7 +29,11 @@ const Navigator: React.FC<NavigatorProps> = ({
 
   // Check if the color scheme is light or dark
   useEffect(() => {
-    setIsLight(colorScheme === "light");
+    if (colorScheme === "light") {
+      setIsLight(true);
+    } else {
+      setIsLight(false);
+    }
   }, [colorScheme]);
 
   // Set the icon color based on the color scheme
@@ -52,34 +54,30 @@ const Navigator: React.FC<NavigatorProps> = ({
               onPress={onPressFunctions[index]}
               className="active:opacity-50"
             >
-              <View className="flex-row items-center">
-                {/* Left Icon */}
-                <Icon
-                  name={iconNames[index]}
-                  size={20}
-                  color={iconColor}
-                  style={{ marginRight: 8 }}
-                />
-                {/* Text container to allow wrapping */}
-                <View style={{ flex: 1 }}>
-                  <Text
-                    className="text-black dark:text-white font-bold text-lg"
-                    numberOfLines={0}
-                  >
+              <View className="flex-row justify-between items-center">
+                <View className="flex-row items-center">
+                  {isEmoji ? (
+                    <Text className="text-xl">
+                      {iconNames[index]}
+                    </Text>
+                  ) : (
+                    <Icon
+                      name={iconNames[index]}
+                      size={20}
+                      color={iconColor}
+                    />
+                  )}
+                  <Text className="text-black dark:text-white font-bold text-lg ml-2">
                     {text}
                   </Text>
                 </View>
-                {/* Right Icon */}
-                <Icon
-                  name={
-                    effectiveIsExternalLink[index]
-                      ? "open-in-new"
-                      : "arrow-forward-ios"
-                  }
-                  size={20}
-                  color={iconColor}
-                  style={{ marginLeft: 8 }}
-                />
+                {checked[index] && (
+                 <Icon 
+                    name={"check"}
+                    size={20}
+                    color={iconColor}
+                    /> 
+                )}
               </View>
             </Pressable>
             {index < texts.length - 1 && (
@@ -92,4 +90,4 @@ const Navigator: React.FC<NavigatorProps> = ({
   );
 };
 
-export default Navigator;
+export default OptionSelector;

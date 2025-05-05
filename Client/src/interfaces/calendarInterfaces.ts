@@ -55,6 +55,7 @@ interface EventProps {
   overlapCount: number;
   overlapIndex: number;
   isSaturday: boolean;
+  isSunday: boolean;
 }
 
 interface HoursProps {
