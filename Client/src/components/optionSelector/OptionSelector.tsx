@@ -17,7 +17,6 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
   checked,
   isEmoji = false,
 }) => {
-
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -57,26 +56,16 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
               <View className="flex-row justify-between items-center">
                 <View className="flex-row items-center">
                   {isEmoji ? (
-                    <Text className="text-xl">
-                      {iconNames[index]}
-                    </Text>
+                    <Text className="text-xl">{iconNames[index]}</Text>
                   ) : (
-                    <Icon
-                      name={iconNames[index]}
-                      size={20}
-                      color={iconColor}
-                    />
+                    <Icon name={iconNames[index]} size={20} color={iconColor} />
                   )}
                   <Text className="text-black dark:text-white font-bold text-lg ml-2">
                     {text}
                   </Text>
                 </View>
                 {checked[index] && (
-                 <Icon 
-                    name={"check"}
-                    size={20}
-                    color={iconColor}
-                    /> 
+                  <Icon name={"check"} size={20} color={iconColor} />
                 )}
               </View>
             </Pressable>

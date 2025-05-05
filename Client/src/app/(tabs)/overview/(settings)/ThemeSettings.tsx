@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import { useTheme } from "../../../../provider/ThemeProvider";
 import { View, ScrollView } from "react-native";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import OptionSelector from "../../../../components/optionSelector/OptionSelector";
 
 const ThemeSettings: React.FC = () => {
@@ -37,24 +37,32 @@ const ThemeSettings: React.FC = () => {
 
   const themeSelectorTitle = t("settings_theme_selector");
 
-  const onPressThemeFunctions = [handleLightPress, handleDarkPress, handleSystemPress];
+  const onPressThemeFunctions = [
+    handleLightPress,
+    handleDarkPress,
+    handleSystemPress,
+  ];
 
   const themeTexts = [t("light_mode"), t("dark_mode"), t("system_mode")];
 
   const themeIconNames = ["light-mode", "dark-mode", "smartphone"];
 
-  const checkedTheme = [theme === "light", theme === "dark", theme === "system"];
-  
+  const checkedTheme = [
+    theme === "light",
+    theme === "dark",
+    theme === "system",
+  ];
+
   return (
-      <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
-        <OptionSelector 
-          title={themeSelectorTitle}
-          texts={themeTexts}
-          iconNames={themeIconNames}
-          onPressFunctions={onPressThemeFunctions}
-          checked={checkedTheme}
-        />
-      </ScrollView>
+    <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
+      <OptionSelector
+        title={themeSelectorTitle}
+        texts={themeTexts}
+        iconNames={themeIconNames}
+        onPressFunctions={onPressThemeFunctions}
+        checked={checkedTheme}
+      />
+    </ScrollView>
   );
 };
 

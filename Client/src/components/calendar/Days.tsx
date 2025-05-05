@@ -52,7 +52,7 @@ const Days: React.FC<{ currentDate: Date; events: Array<any> }> = ({
   // Sets the start of the current week (dynamically shift if no weekend events)
   const baseStartOfWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
   const baseEndOfWeek = endOfWeek(currentDate, { weekStartsOn: 1 });
-  const hasWeekendEvents = events.some(event => {
+  const hasWeekendEvents = events.some((event) => {
     const day = getDay(event.start) === 0 ? 7 : getDay(event.start);
     return day === 6 || day === 7;
   });

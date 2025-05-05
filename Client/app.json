@@ -13,9 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#CBF8FB"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.TheMasterCollection.TheStudentMaster",
@@ -39,10 +37,7 @@
       }
     },
     "owner": "themastercollection",
-    "plugins": [
-      "expo-secure-store",
-      "expo-router"
-    ],
+    "plugins": ["expo-secure-store", "expo-router"],
     "experiments": {
       "typedRoutes": true
     }

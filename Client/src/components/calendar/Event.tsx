@@ -186,7 +186,8 @@ const Event: React.FC<EventProps> = ({
         {eventHeight > MIN_EVENT_HEIGHT_LOCATION &&
           overlapCount === 1 &&
           overlapIndex === 0 &&
-          !isSaturday && !isSunday && (
+          !isSaturday &&
+          !isSunday && (
             <>
               <Text className="text-white px-1 text-xs absolute bottom-1">
                 {event.location}
