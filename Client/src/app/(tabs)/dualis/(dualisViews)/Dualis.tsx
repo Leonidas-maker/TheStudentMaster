@@ -55,8 +55,9 @@ const Dualis: React.FC = () => {
     ? JSON.parse(params.gpaSemesterData as string)
     : [];
 
-  const [selectedSemester, setSelectedSemester] =
-    useState<string>(t("performance_overview_text"));
+  const [selectedSemester, setSelectedSemester] = useState<string>(
+    t("performance_overview_text"),
+  );
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme

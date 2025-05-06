@@ -110,11 +110,7 @@ const DualisLogin: React.FC = () => {
   }, [navigation, colorScheme]);
 
   const handleInfoPress = () => {
-    Alert.alert(
-      t("info_title"),
-      t("info_message"),
-      [{ text: "OK" }],
-    );
+    Alert.alert(t("info_title"), t("info_message"), [{ text: "OK" }]);
   };
 
   // Function to save login credentials
@@ -225,7 +221,9 @@ const DualisLogin: React.FC = () => {
             />
             {error ? (
               <View className="px-4">
-                <Text className="text-red-500 mt-2 text-center">{t("login_error_msg")}</Text>
+                <Text className="text-red-500 mt-2 text-center">
+                  {t("login_error_msg")}
+                </Text>
               </View>
             ) : null}
             <DefaultButton

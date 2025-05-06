@@ -1,5 +1,5 @@
 {
-    "chooseCanteenDropdown": "Mensa Auswählen",
-    "noCanteenSelected": "Bitte wähle eine Mensa aus",
-    "noDataForCanteenOnDate": "Keine Daten verfügbar für {{canteen}} am {{date}}."
+  "chooseCanteenDropdown": "Mensa Auswählen",
+  "noCanteenSelected": "Bitte wähle eine Mensa aus",
+  "noDataForCanteenOnDate": "Keine Daten verfügbar für {{canteen}} am {{date}}."
 }

@@ -1,17 +1,16 @@
 {
-    "settingsPageNavigator_title1": "App Settings",
-    "settings_course_btn": "Select course",
-    "settings_theme_btn": "Select appearance",
-    "settings_lang_btn": "Select language",
-    "settings_lang_selector": "Available languages",
-    "de_btn": "German",
-    "en_btn": "English",
-    "settings_theme_selector": "Appearances",
-    "light_mode": "Light mode",
-    "dark_mode": "Dark mode",
-    "system_mode": "System mode",
-    "selectCourse": "Select course",
-    "selectUniversity": "Select university",
-    "settings_course_header": "Select university and course"
-  }
-  
+  "settingsPageNavigator_title1": "App Settings",
+  "settings_course_btn": "Select course",
+  "settings_theme_btn": "Select appearance",
+  "settings_lang_btn": "Select language",
+  "settings_lang_selector": "Available languages",
+  "de_btn": "German",
+  "en_btn": "English",
+  "settings_theme_selector": "Appearances",
+  "light_mode": "Light mode",
+  "dark_mode": "Dark mode",
+  "system_mode": "System mode",
+  "selectCourse": "Select course",
+  "selectUniversity": "Select university",
+  "settings_course_header": "Select university and course"
+}

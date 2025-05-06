@@ -44,8 +44,9 @@ const CourseSettings: React.FC = () => {
     uuid: string;
   } | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
-  const [placeholderUniversity, setPlaceholderUniversity] =
-    useState(t("selectUniversity"));
+  const [placeholderUniversity, setPlaceholderUniversity] = useState(
+    t("selectUniversity"),
+  );
   const [placeholderCourse, setPlaceholderCourse] = useState(t("selectCourse"));
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [missingUniversity, setMissingUniversity] = useState(false);

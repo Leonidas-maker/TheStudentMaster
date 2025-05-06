@@ -69,7 +69,15 @@ const saveLanguage = async (language: string): Promise<void> => {
     resources,
     lng: initialLanguage,
     fallbackLng: "en",
-    ns: ["settings", "calendar", "overview", "router", "meal", "dualis", "components"],
+    ns: [
+      "settings",
+      "calendar",
+      "overview",
+      "router",
+      "meal",
+      "dualis",
+      "components",
+    ],
     interpolation: {
       escapeValue: false,
     },

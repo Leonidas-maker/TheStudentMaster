@@ -54,9 +54,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const placeholderText = placeholder
     ? t(placeholder)
     : t("dropdown.placeholder");
-  const notFoundText = notFound
-    ? t(notFound)
-    : t("dropdown.notFound");
+  const notFoundText = notFound ? t(notFound) : t("dropdown.notFound");
 
   // ====================================================== //
   // ================== Return component ================== //

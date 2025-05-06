@@ -53,18 +53,14 @@ const DualisLoad: React.FC = () => {
       const timeout = setTimeout(() => {
         hasTimedOut = true;
         if (isActive) {
-          Alert.alert(
-            t("alert_title"),
-            t("alert_message"),
-            [
-              {
-                text: "OK",
-                onPress: () => {
-                  router.replace("/(tabs)/dualis");
-                },
+          Alert.alert(t("alert_title"), t("alert_message"), [
+            {
+              text: "OK",
+              onPress: () => {
+                router.replace("/(tabs)/dualis");
               },
-            ],
-          );
+            },
+          ]);
         }
       }, 20000); // 20 seconds
 

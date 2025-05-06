@@ -1,6 +1,5 @@
 {
-    "chooseCanteenDropdown": "Choose canteen",
-    "noCanteenSelected": "Please choose a canteen",
-    "noDataForCanteenOnDate": "No data available for {{canteen}} on {{date}}."
-  }
-  
+  "chooseCanteenDropdown": "Choose canteen",
+  "noCanteenSelected": "Please choose a canteen",
+  "noDataForCanteenOnDate": "No data available for {{canteen}} on {{date}}."
+}
