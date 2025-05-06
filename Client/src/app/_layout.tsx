@@ -6,12 +6,14 @@ import { ThemeProvider } from "../provider/ThemeProvider";
 import { useState, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 import "../custom_logger/custom_logger";
 import "../locales/i18n";
 
 export default function RootLayout() {
   const [isLight, setIsLight] = useState(false);
+  const { t } = useTranslation("router");
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
@@ -56,7 +58,7 @@ export default function RootLayout() {
               name="(calendar)/CalendarCourseSettings"
               options={{
                 presentation: "modal",
-                headerTitle: "Kalender Kurs Einstellungen",
+                headerTitle: t("course_settings_header"),
               }}
             />
           </Stack>

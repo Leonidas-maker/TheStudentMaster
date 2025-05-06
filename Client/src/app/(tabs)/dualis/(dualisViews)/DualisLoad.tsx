@@ -3,6 +3,7 @@ import { View, Alert } from "react-native";
 import * as Progress from "react-native-progress";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
 import Heading from "../../../../components/textFields/Heading";
@@ -27,6 +28,7 @@ import {
 import { logoutDualis } from "../../../../services/dualis/loginService";
 
 const DualisLoad: React.FC = () => {
+  const { t } = useTranslation("dualis");
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const router = useRouter();
 
@@ -52,8 +54,8 @@ const DualisLoad: React.FC = () => {
         hasTimedOut = true;
         if (isActive) {
           Alert.alert(
-            "Da hat etwas nicht funktioniert :(",
-            "Der Ladevorgang dauert länger als erwartet. Du wirst zur Startseite weitergeleitet. Überprüfe deine Internetverbindung und versuche es erneut.",
+            t("alert_title"),
+            t("alert_message"),
             [
               {
                 text: "OK",
@@ -138,7 +140,7 @@ const DualisLoad: React.FC = () => {
             }
           }
         } catch (err: any) {
-          setError(err.message || "Ein unbekannter Fehler ist aufgetreten.");
+          setError(err.message);
           setLoading(false);
         }
       };
@@ -154,8 +156,8 @@ const DualisLoad: React.FC = () => {
 
   return (
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">
-      <Heading text="Lade Dualis Daten" />
-      <Subheading text="Dies kann einige Sekunden dauern..." />
+      <Heading text={t("dualis_load_header")} />
+      <Subheading text={t("dualis_load_subheading")} />
 
       <View className="justify-center w-[80%]">
         {loading && (
@@ -167,7 +169,7 @@ const DualisLoad: React.FC = () => {
         )}
       </View>
 
-      <Subheading text={`Lade ${load}...`} />
+      <Subheading text={t("loading_item", { item: load })} />
     </View>
   );
 };

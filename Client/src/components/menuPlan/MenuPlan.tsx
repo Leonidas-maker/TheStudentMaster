@@ -18,6 +18,7 @@ import {
   setDay,
 } from "date-fns";
 import * as Progress from "react-native-progress";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
@@ -42,6 +43,8 @@ import ConnectionMessage from "../message/ConnectionMessage";
 // ====================== Component ===================== //
 // ====================================================== //
 const MenuPlan: React.FC = () => {
+  const { t } = useTranslation("meal");
+
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -219,7 +222,7 @@ const MenuPlan: React.FC = () => {
       <Dropdown
         setSelected={setSelectedCanteen}
         values={canteenNames}
-        placeholder="Mensa auswählen"
+        placeholder={t("chooseCanteenDropdown")}
         save="key"
         search={true}
       />

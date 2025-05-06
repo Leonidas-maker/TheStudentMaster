@@ -14,6 +14,7 @@ import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
@@ -50,6 +51,7 @@ import ConnectionMessage from "../message/ConnectionMessage";
 // ====================== Component ===================== //
 // ====================================================== //
 const WeekCalendar: React.FC = () => {
+  const { t } = useTranslation("calendar");
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -147,15 +149,15 @@ const WeekCalendar: React.FC = () => {
               await AsyncStorage.removeItem("events");
 
               Alert.alert(
-                "Calendar nicht verfügbar",
-                "Der gewählte Kalender ist nicht verfügbar. Bitte wählen Sie einen neuen Kalender aus.",
+                t("error_title"),
+                t("error_message"),
                 [
                   {
-                    text: "Zurück",
+                    text: t("back_btn"),
                     style: "cancel",
                   },
                   {
-                    text: "Zur Auswahl",
+                    text: t("selection_btn"),
                     onPress: () => {
                       router.push("/(calendar)/CalendarCourseSettings");
                     },
@@ -194,15 +196,15 @@ const WeekCalendar: React.FC = () => {
 
         if (missingUniversity || missingCourse) {
           Alert.alert(
-            "Auswahl erforderlich",
-            "Bitte wählen Sie eine Universität und einen Kurs aus.",
+            t("info_title"),
+            t("info_message"),
             [
               {
-                text: "Zurück",
+                text: t("back_btn"),
                 style: "cancel",
               },
               {
-                text: "Zur Auswahl",
+                text: t("selection_btn"),
                 onPress: () => {
                   router.push("/(calendar)/CalendarCourseSettings");
                 },

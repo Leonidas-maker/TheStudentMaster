@@ -1,1 +1,15 @@
-{}
+{
+    "dashboard_tab": "Stundenplan",
+    "meal_tab": "Speiseplan",
+    "dualis_tab": "Dualis",
+    "overview_tab": "Weiteres",
+    "imprint_header": "Impressum",
+    "licenses_header": "Lizenzen",
+    "settings_header": "Einstellungen",
+    "theme_settings_header": "Erscheinungsbild",
+    "course_settings_header": "Kurs",
+    "language_settings_header": "Sprache",
+    "bug_report_header": "Bug Report",
+    "responsible_disclosure_header": "Responsible Disclosure",
+    "support_header": "Support"
+}

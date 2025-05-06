@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { View, ScrollView, Pressable, useColorScheme } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Heading from "../../../../components/textFields/Heading";
@@ -29,6 +30,7 @@ import DualisExamDetailText from "../../../../components/textFields/dualisTextFi
 // ====================== Component ===================== //
 // ====================================================== //
 const Dualis: React.FC = () => {
+  const { t } = useTranslation("dualis");
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const navigation = useNavigation();
   const router = useRouter();
@@ -54,7 +56,7 @@ const Dualis: React.FC = () => {
     : [];
 
   const [selectedSemester, setSelectedSemester] =
-    useState<string>("Leistungsübersicht");
+    useState<string>(t("performance_overview_text"));
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
@@ -76,20 +78,20 @@ const Dualis: React.FC = () => {
     // Add "Leistungsübersicht" as the first option
     return [
       {
-        key: "Leistungsübersicht",
-        value: "Leistungsübersicht",
+        key: t("performance_overview_text"),
+        value: t("performance_overview_text"),
       },
       ...semesterOptions,
     ];
   };
 
   const filteredGradeData =
-    selectedSemester === "Leistungsübersicht"
+    selectedSemester === t("performance_overview_text")
       ? gradeData
       : gradeData.filter((grade: any) => grade.semester === selectedSemester);
 
   const filteredGpaSemesterData =
-    selectedSemester === "Leistungsübersicht"
+    selectedSemester === t("performance_overview_text")
       ? gpaSemesterData
       : gpaSemesterData.filter((gpa: any) => gpa.semester === selectedSemester);
 
@@ -118,33 +120,33 @@ const Dualis: React.FC = () => {
     <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1">
       <ScrollView>
         {selectedSemester.length > 1 &&
-        selectedSemester === "Leistungsübersicht" ? (
+        selectedSemester === t("performance_overview_text") ? (
           <View>
             <View className="mt-4 w-full">
-              <Heading text="Übersicht" />
+              <Heading text={t("overview_header")} />
               <View className="flex-row p-2 pl-5 items-end">
                 <DualisOverviewText text={`${gpaData.gpaTotal}`} />
-                <DualisOverviewDescText text="Gesamt-GPA" />
+                <DualisOverviewDescText text={t("total_gpa")} />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
                 <DualisOverviewText text={`${gpaData.gpaSubject}`} />
-                <DualisOverviewDescText text="Hauptfach-GPA" />
+                <DualisOverviewDescText text={t("main_subject_gpa")} />
               </View>
               <View className="flex-row p-2 pl-5 items-end">
                 <DualisOverviewText
                   text={`${ectsData.ectsSum} / ${ectsData.ectsTotal}`}
                 />
-                <DualisOverviewDescText text="ECTS" />
+                <DualisOverviewDescText text={t("ects_text")} />
               </View>
               <View className="py-4">
-                <Heading text="Studienergebnisse" />
+                <Heading text={t("study_results_header")} />
               </View>
               {moduleData.length > 0 ? (
                 <View>
                   <View className="flex-row items-center justify-between flex-wrap m-2">
-                    <DualisHeaderModuleText text="Modul" />
-                    <DualisHeaderDescText text="ECTS" />
-                    <DualisHeaderDescText text="Note" />
+                    <DualisHeaderModuleText text={t("module_text")} />
+                    <DualisHeaderDescText text={t("ects_text")} />
+                    <DualisHeaderDescText text={t("grade_text")} />
                     <View className="w-1/10 items-end px-3">
                       <Icon name="check" size={20} color={placeholderColor} />
                     </View>
@@ -178,18 +180,18 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGpaSemesterData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== t("performance_overview_text") ? (
           <View className="mt-4 w-full">
-            <Heading text="Übersicht" />
+            <Heading text={t("overview_header")} />
             {filteredGpaSemesterData.map((semester: any, index: number) => (
               <View key={index} className="">
                 <View className="flex-row p-2 pl-5 items-end">
                   <DualisOverviewText text={`${semester.grade}`} />
-                  <DualisOverviewDescText text="Semester-GPA" />
+                  <DualisOverviewDescText text={t("semester_gpa_text")} />
                 </View>
                 <View className="flex-row p-2 pl-5 items-end">
                   <DualisOverviewText text={`${semester.ects}`} />
-                  <DualisOverviewDescText text="Semester-ECTS" />
+                  <DualisOverviewDescText text={t("semester_ects_text")} />
                 </View>
               </View>
             ))}
@@ -197,15 +199,15 @@ const Dualis: React.FC = () => {
         ) : null}
 
         {filteredGradeData.length > 0 &&
-        selectedSemester !== "Leistungsübersicht" ? (
+        selectedSemester !== t("performance_overview_text") ? (
           <View className="w-full">
             <View className="py-4">
-              <Heading text="Ergebnisse" />
+              <Heading text={t("results_header")} />
             </View>
             <View className="flex-row items-center justify-between flex-wrap m-2">
-              <DualisHeaderModuleText text="Modul" />
-              <DualisHeaderDescText text="ECTS" />
-              <DualisHeaderDescText text="Note" />
+              <DualisHeaderModuleText text={t("module_text")} />
+              <DualisHeaderDescText text={t("ects_text")} />
+              <DualisHeaderDescText text={t("grade_text")} />
               <View className="w-1/10 items-end px-3">
                 <Icon name="check" size={20} color={placeholderColor} />
               </View>
@@ -270,11 +272,11 @@ const Dualis: React.FC = () => {
         <Dropdown
           setSelected={setSelectedSemester}
           values={getSemesterDropdownValues()}
-          placeholder="Semester auswählen"
+          placeholder={t("select_semester")}
           save="value"
           defaultOption={{
-            key: "Leistungsübersicht",
-            value: "Leistungsübersicht",
+            key: t("performance_overview_text"),
+            value: t("performance_overview_text"),
           }}
         />
       </View>

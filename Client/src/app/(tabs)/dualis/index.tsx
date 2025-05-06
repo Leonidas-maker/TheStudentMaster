@@ -7,9 +7,11 @@ import {
   Alert,
   Keyboard,
   TouchableWithoutFeedback,
+  Text,
 } from "react-native";
 import { useRouter, useNavigation } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~~~~~~ Own components imports ~~~~~~~~~~~~~~~ //
 import OptionSwitch from "../../../components/switch/OptionSwitch";
@@ -36,6 +38,8 @@ const DualisLogin: React.FC = () => {
   const router = useRouter();
   const navigation = useNavigation();
 
+  const { t } = useTranslation("dualis");
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -59,24 +63,23 @@ const DualisLogin: React.FC = () => {
 
   // Function to handle login
   const login = async () => {
+    setError("");
     setLoading(true);
-    setProgress(0);
+    // await boolean success flag
+    const success = await loginDualis(
+      username,
+      password,
+      saveCredentials,
+      setError,
+      setAuthArguments,
+      saveLogin,
+    );
 
-    try {
-      await loginDualis(
-        username,
-        password,
-        saveCredentials,
-        setError,
-        setAuthArguments,
-        saveLogin,
-      );
-
+    if (success) {
       router.replace("/(tabs)/dualis/(dualisViews)/DualisLoad");
-    } catch (error) {
-      setConnectionError(true);
-      setLoading(false);
     }
+    // else: error state was set by the service, stay on this screen
+    setLoading(false);
   };
 
   // useEffect(() => {
@@ -108,8 +111,8 @@ const DualisLogin: React.FC = () => {
 
   const handleInfoPress = () => {
     Alert.alert(
-      "Dualis Informationen",
-      "Deine Dualis Anmeldedaten werden ausschließlich lokal auf deinem Gerät gespeichert. Die Daten werden nur für den Login bei Dualis verwendet und deine Noten werden nur von deinem Gerät lokal verarbeitet. Nach dem Logout werden alle Noten von deinem Gerät gelöscht. Weder deine Anmeldedaten noch deine Noten werden an unseren Server übertragen.",
+      t("info_title"),
+      t("info_message"),
       [{ text: "OK" }],
     );
   };
@@ -178,7 +181,7 @@ const DualisLogin: React.FC = () => {
     return (
       <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#0000ff" />
-        <DefaultText text="Lade Anmeldedaten..." />
+        <DefaultText text={t("loading_credentials")} />
       </View>
     );
   }
@@ -191,29 +194,42 @@ const DualisLogin: React.FC = () => {
           setVisible={setConnectionError}
         />
         <View>
-          <Heading text="Bei Dualis anmelden" />
+          <Heading text={t("dualis_login_header")} />
           <View className="items-center">
             <TextFieldInput
-              placeholder="Username"
+              placeholder={t("username")}
               value={username}
-              onChangeText={setUsername}
+              onChangeText={(text) => {
+                setError("");
+                setConnectionError(false);
+                setUsername(text);
+              }}
               autoCapitalize="none"
             />
             <TextFieldInput
-              placeholder="Password"
+              placeholder={t("password")}
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setError("");
+                setConnectionError(false);
+                setPassword(text);
+              }}
               secureTextEntry
             />
             <OptionSwitch
-              title="Login Optionen"
-              texts={["Anmeldedaten speichern"]}
+              title={t("login_options_title")}
+              texts={[t("save_login_credentials")]}
               iconNames={["update"]}
               onValueChanges={[toggleSaveLogin]}
               values={[saveLogin]}
             />
+            {error ? (
+              <View className="px-4">
+                <Text className="text-red-500 mt-2 text-center">{t("login_error_msg")}</Text>
+              </View>
+            ) : null}
             <DefaultButton
-              text="Login"
+              text={t("login_btn")}
               onPress={login}
               disabled={disableButton}
             />

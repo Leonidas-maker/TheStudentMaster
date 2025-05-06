@@ -15,6 +15,8 @@ import enRouter from "./en/router.json";
 import deRouter from "./de/router.json";
 import enMeal from "./en/meal.json";
 import deMeal from "./de/meal.json";
+import enComponents from "./en/components.json";
+import deComponents from "./de/components.json";
 
 const resources = {
   en: {
@@ -24,6 +26,7 @@ const resources = {
     router: enRouter,
     meal: enMeal,
     dualis: enDualis,
+    components: enComponents,
   },
   de: {
     settings: deSettings,
@@ -32,6 +35,7 @@ const resources = {
     router: deRouter,
     meal: deMeal,
     dualis: deDualis,
+    components: deComponents,
   },
 };
 
@@ -65,7 +69,7 @@ const saveLanguage = async (language: string): Promise<void> => {
     resources,
     lng: initialLanguage,
     fallbackLng: "en",
-    ns: ["settings", "calendar", "overview", "router", "meal", "dualis"],
+    ns: ["settings", "calendar", "overview", "router", "meal", "dualis", "components"],
     interpolation: {
       escapeValue: false,
     },

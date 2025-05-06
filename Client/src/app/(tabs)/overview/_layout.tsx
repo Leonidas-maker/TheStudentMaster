@@ -34,62 +34,62 @@ export default function DualisLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: "Weiteres",
+          headerTitle: t("overview_tab"),
         }}
       />
 
       <Stack.Screen
         name="(misc)/Imprint"
         options={{
-          headerTitle: "Impressum",
+          headerTitle: t("imprint_header"),
         }}
       />
       <Stack.Screen
         name="(misc)/Licenses"
         options={{
-          headerTitle: "Lizenzen",
+          headerTitle: t("licenses_header"),
         }}
       />
       <Stack.Screen
         name="(settings)/Settings"
         options={{
-          headerTitle: "Einstellungen",
+          headerTitle: t("settings_header"),
         }}
       />
       <Stack.Screen
         name="(settings)/ThemeSettings"
         options={{
-          headerTitle: "Erscheinungsbild",
+          headerTitle: t("theme_settings_header"),
         }}
       />
       <Stack.Screen
         name="(settings)/CourseSettings"
         options={{
-          headerTitle: "Kurs",
+          headerTitle: t("course_settings_header"),
         }}
       />
       <Stack.Screen
         name="(settings)/LanguageSettings"
         options={{
-          headerTitle: "Sprache",
+          headerTitle: t("language_settings_header"),
         }}
       />
       <Stack.Screen
         name="(support)/BugReport"
         options={{
-          headerTitle: "Bug Report",
+          headerTitle: t("bug_report_header"),
         }}
       />
       <Stack.Screen
         name="(support)/ResponsibleDisclosure"
         options={{
-          headerTitle: "Responsible Disclosure",
+          headerTitle: t("responsible_disclosure_header"),
         }}
       />
       <Stack.Screen
         name="(support)/Support"
         options={{
-          headerTitle: "Support",
+          headerTitle: t("support_header"),
         }}
       />
     </Stack>

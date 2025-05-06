@@ -37,6 +37,7 @@ export const navigateToPerformanceOverview = async (
   gpaData: GpaData;
   ectsData: EctsData;
 }> => {
+
   setProgress(0.25);
   setLoad("Leistungsübersicht");
   try {

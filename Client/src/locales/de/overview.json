@@ -1,1 +1,26 @@
-{}
+{
+    "overviewPageNavigator_title1": "Weitere Inhalte",
+    "settings_btn": "Einstellungen",
+    "support_btn": "Support",
+    "bug_report_btn": "Bug Report",
+    "responsible_disclosure_btn": "Responsible Disclosure",
+    "licenses_btn": "Lizenzen",
+    "gitlab_btn": "GitLab",
+    "github_btn": "GitHub",
+    "imprint_btn": "Impressum",
+    "app_version": "App Version: {{version}} ❤️",
+    "imprint_heading": "Kontaktinformationen",
+    "imprint_subheading": "Dies ist keine offizielle App der DHBW.",
+    "under_development": "Unter anderem entwickelt von:",
+    "email_text": "E-Mail: ",
+    "license_title_icons1": "In der App verwendete Icons & Symbole: material-design-icons",
+    "license_title_icons2": "Verwendete UIcons in der unteren Leiste: Flaticon",
+    "bug_report_header": "Du hast einen Fehler gefunden?",
+    "bug_report_text": "Erstelle ein Issue auf GitLab damit wir diesen beheben können.",
+    "bug_report_open_source": "Gerne kannst du auch selber versuchen den Fehler zu beheben, da diese App ein Open Source Projekt ist!",
+    "bug_report_repo": "Zum GitLab Repository",
+    "responsible_disclosure_heading": "Du hast eine Sicherheitslücke in unserer App oder unserem Server gefunden?",
+    "responsible_disclosure_text": "Schreib uns bitte eine E-Mail an die unten stehende Adresse mit allen relevanten Informationen und wir werden so schnell wie möglich mit dir in Kontakt treten.",
+    "support_heading": "Du benötigst Hilfe oder hast eine Frage?",
+    "support_text": "Schreib uns bitte eine E-Mail an die unten stehende Adresse und wir werden versuchen dir so schnell wie möglich weiterzuhelfen."
+}

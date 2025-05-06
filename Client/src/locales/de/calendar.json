@@ -1,1 +1,8 @@
-{}
+{
+    "error_title": "Kalendar nicht verfügbar",
+    "error_message": "Der gewählte Kalender ist nicht verfügbar. Bitte wählen Sie einen neuen Kalender aus.",
+    "back_btn": "Zurück",
+    "selection_btn": "Zur Auswahl",
+    "info_title": "Auswahl erforderlich",
+    "info_message": "Bitte wählen Sie eine Universität und einen Kurs aus."
+}

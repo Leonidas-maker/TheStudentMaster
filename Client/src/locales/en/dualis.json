@@ -1,1 +1,30 @@
-{}
+{
+    "info_title": "Dualis Information",
+    "info_message": "Your Dualis login credentials are stored only locally on your device. The data is used solely for logging in to Dualis, and your grades are processed only locally on your device. After logging out, all grades are deleted from your device. Neither your login credentials nor your grades are transmitted to our server.",
+    "loading_credentials": "Loading credentials...",
+    "dualis_login_header": "Log in to Dualis",
+    "username": "Username",
+    "password": "Password",
+    "login_options_title": "Login options",
+    "save_login_credentials": "Save login credentials",
+    "login_btn": "Log in",
+    "login_error_msg": "Login failed. Please check your credentials.",
+    "alert_title": "Something went wrong :(",
+    "alert_message": "The loading process is taking longer than expected. You will be redirected to the home page. Please check your internet connection and try again.",
+    "dualis_load_header": "Loading Dualis data",
+    "dualis_load_subheading": "This may take a few seconds...",
+    "loading_item": "Loading {{item}}...",
+    "performance_overview_text": "Performance overview",
+    "overview_header": "Overview",
+    "total_gpa": "Total GPA",
+    "main_subject_gpa": "Major GPA",
+    "ects_text": "ECTS",
+    "module_text": "Module",
+    "grade_text": "Grade",
+    "study_results_header": "Study results",
+    "semester_gpa_text": "Semester GPA",
+    "semester_ects_text": "Semester ECTS",
+    "results_header": "Results",
+    "select_semester": "Select semester"
+  }
+  

@@ -6,6 +6,7 @@ import { Linking } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import ProfileView from "../../../components/profileView/ProfileView";
@@ -16,6 +17,7 @@ import DefaultText from "../../../components/textFields/DefaultText";
 // ====================== Component ===================== //
 // ====================================================== //
 const Overview: React.FC = () => {
+  const { t } = useTranslation("overview");
   // ~~~~~~~~~~~ Define navigator ~~~~~~~~~~ //
   const router = useRouter();
 
@@ -124,7 +126,7 @@ const Overview: React.FC = () => {
     router.push("/(tabs)/overview/(support)/BugReport");
   };
 
-  const overviewTitle = "Weitere Inhalte";
+  const overviewTitle = t("overviewPageNavigator_title1");
 
   const onPressOverviewFunctions = [
     handleSettingsPress,
@@ -138,14 +140,14 @@ const Overview: React.FC = () => {
   ];
 
   const overviewTexts = [
-    "Einstellungen",
-    "Support",
-    "Bug Report",
-    "Responsible Disclosure",
-    "Lizenzen",
-    "GitLab",
-    "GitHub",
-    "Impressum",
+    t("settings_btn"),
+    t("support_btn"),
+    t("bug_report_btn"),
+    t("responsible_disclosure_btn"),
+    t("licenses_btn"),
+    t("gitlab_btn"),
+    t("github_btn"),
+    t("imprint_btn"),
   ];
 
   //! Icons for GitLab, GitHub and TheMasterCollection need change
@@ -198,7 +200,7 @@ const Overview: React.FC = () => {
         isExternalLink={moduleIsExternalLink}
       />
       <View className="justify-center items-center my-2">
-        <DefaultText text={`App Version: ${expo.version} ❤️`} />
+        <DefaultText text={t("app_version", { version: expo.version })} />
       </View>
     </ScrollView>
   );

@@ -9,6 +9,7 @@ import React, {
 import { View, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Progress from "react-native-progress";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import Dropdown from "../../../../components/dropdown/Dropdown";
@@ -33,6 +34,7 @@ import {
 // ====================== Component ===================== //
 // ====================================================== //
 const CourseSettings: React.FC = () => {
+  const { t } = useTranslation("settings");
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -43,8 +45,8 @@ const CourseSettings: React.FC = () => {
   } | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const [placeholderUniversity, setPlaceholderUniversity] =
-    useState("Uni auswählen");
-  const [placeholderCourse, setPlaceholderCourse] = useState("Kurs auswählen");
+    useState(t("selectUniversity"));
+  const [placeholderCourse, setPlaceholderCourse] = useState(t("selectCourse"));
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [missingUniversity, setMissingUniversity] = useState(false);
   const [missingCourse, setMissingCourse] = useState(false);
@@ -114,7 +116,7 @@ const CourseSettings: React.FC = () => {
         JSON.stringify(selectedUniData),
       );
       setSelectedCourse(null);
-      setPlaceholderCourse("Select a Course");
+      setPlaceholderCourse(t("selectCourse"));
     }
   };
 
@@ -164,7 +166,7 @@ const CourseSettings: React.FC = () => {
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       {loading && <Progress.Bar progress={progress} width={null} />}
       <View className="p-4">
-        <Subheading text="Kurs auswählen" />
+        <Subheading text={t("settings_course_header")} />
         <Dropdown
           setSelected={handleUniversitySelect}
           values={dropdownUniversityValues}

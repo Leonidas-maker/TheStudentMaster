@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View, Pressable, useColorScheme } from "react-native";
 import "nativewind";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { WeekSelectProps } from "../../interfaces/componentInterfaces";
@@ -22,6 +23,7 @@ const WeekSelector: React.FC<WeekSelectProps> = ({
   currentDate,
   mode,
 }) => {
+  const { t } = useTranslation("meal");
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //

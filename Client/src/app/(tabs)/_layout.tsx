@@ -10,13 +10,12 @@ import ActiveMealPlanSVG from "../../../public/images/svg/navigatorIcons/active/
 import MealPlanSVG from "../../../public/images/svg/navigatorIcons/inactive/MealPlanSVG";
 import ActiveOverviewSVG from "../../../public/images/svg/navigatorIcons/active/ActiveOverviewSVG";
 import OverviewSVG from "../../../public/images/svg/navigatorIcons/inactive/OverviewSVG";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
   const [isLight, setIsLight] = useState(false);
   //TODO: Add login logic
-  //const { t } = useTranslation("router");
+  const { t } = useTranslation("router");
 
   //const { authState } = useAuth();
   //const { isLoggedIn, isVerified, isAdmin } = authState;
@@ -60,7 +59,7 @@ export default function TabLayout() {
           name="index" // Dashboard
           options={{
             headerTitle: "TheStudentMaster",
-            tabBarLabel: "Stundenplan",
+            tabBarLabel: t("dashboard_tab"),
             headerShown: false,
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -74,7 +73,7 @@ export default function TabLayout() {
           name="meal"
           options={{
             headerTitle: "TheStudentMaster",
-            tabBarLabel: "Essensplan",
+            tabBarLabel: t("meal_tab"),
             headerShown: false,
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -88,7 +87,7 @@ export default function TabLayout() {
           name="dualis"
           options={{
             headerTitle: "TheStudentMaster",
-            tabBarLabel: "Dualis",
+            tabBarLabel: t("dualis_tab"),
             headerShown: false,
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (
@@ -101,8 +100,8 @@ export default function TabLayout() {
         <Tabs.Screen
           name="overview"
           options={{
-            headerTitle: "Weiteres",
-            tabBarLabel: "Weiteres",
+            headerTitle: t("overview_tab"),
+            tabBarLabel: t("overview_tab"),
             headerShown: false,
             tabBarIcon: ({ color, size, focused }) =>
               focused ? (

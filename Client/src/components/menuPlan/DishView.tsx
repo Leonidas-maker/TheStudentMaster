@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import "nativewind";
 import { format, parseISO } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { DishMenuProps } from "../../interfaces/canteenInterfaces";
@@ -42,6 +43,7 @@ const DishView: React.FC<DishProps> = ({
   selectedCanteen,
   selectedDate,
 }) => {
+  const { t } = useTranslation("meal");
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -117,15 +119,17 @@ const DishView: React.FC<DishProps> = ({
         ) : (
           <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
             <Text className="text-black dark:text-white">
-              Keine Daten verfügbar für {menu?.canteen_name} am{" "}
-              {selectedDate.toLocaleDateString("de-DE")}.
+              {t("noDataForCanteenOnDate", {
+                canteen: menu?.canteen_name,
+                date: selectedDate.toLocaleDateString("de-DE"),
+              })}
             </Text>
           </View>
         )
       ) : (
         <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
           <Text className="text-black dark:text-white">
-            Bitte wähle eine Mensa aus.
+            {t("noCanteenSelected")}
           </Text>
         </View>
       )}
