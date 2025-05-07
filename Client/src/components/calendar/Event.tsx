@@ -101,7 +101,9 @@ const Event: React.FC<EventProps> = ({
   // ====================================================== //
   // Handles the event press and sets the modal visible
   const handleEventPress = () => {
-    router.push(`/(calendar)/CourseInfo?event=${JSON.stringify(event)}&startTimeString=${startTimeString}&endTimeString=${endTimeString}`);
+    router.push(
+      `/(calendar)/CourseInfo?event=${JSON.stringify(event)}&startTimeString=${startTimeString}&endTimeString=${endTimeString}`,
+    );
   };
 
   // ====================================================== //
