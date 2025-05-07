@@ -11,5 +11,6 @@
   "language_settings_header": "Language",
   "bug_report_header": "Bug Report",
   "responsible_disclosure_header": "Responsible Disclosure",
-  "support_header": "Support"
+  "support_header": "Support",
+  "course_info_header": "Details"
 }

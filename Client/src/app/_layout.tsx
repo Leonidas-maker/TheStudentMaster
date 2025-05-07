@@ -61,6 +61,13 @@ export default function RootLayout() {
                 headerTitle: t("course_settings_header"),
               }}
             />
+            <Stack.Screen
+              name="(calendar)/CourseInfo"
+              options={{
+                presentation: "modal",
+                headerTitle: t("course_info_header"),
+              }}
+            />
           </Stack>
         </GestureHandlerRootView>
       </SafeAreaProvider>

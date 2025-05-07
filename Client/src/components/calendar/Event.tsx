@@ -9,6 +9,7 @@ import {
   useColorScheme,
 } from "react-native";
 import "nativewind";
+import { useRouter } from "expo-router";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import {
@@ -38,6 +39,7 @@ const Event: React.FC<EventProps> = ({
   isSaturday,
   isSunday,
 }) => {
+  const router = useRouter();
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -99,12 +101,7 @@ const Event: React.FC<EventProps> = ({
   // ====================================================== //
   // Handles the event press and sets the modal visible
   const handleEventPress = () => {
-    setModalVisible(true);
-  };
-
-  // Handles the close press and sets the modal invisible
-  const handleClosePress = () => {
-    setModalVisible(false);
+    router.push(`/(calendar)/CourseInfo?event=${JSON.stringify(event)}&startTimeString=${startTimeString}&endTimeString=${endTimeString}`);
   };
 
   // ====================================================== //
@@ -195,38 +192,6 @@ const Event: React.FC<EventProps> = ({
             </>
           )}
       </Pressable>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <Pressable
-          className="flex-1 justify-center items-center"
-          onPressOut={handleClosePress}
-        >
-          <View
-            className="bg-light_secondary dark:bg-dark_secondary p-5 rounded-2xl items-center shadow-md"
-            onStartShouldSetResponder={() => true}
-          >
-            <Text className="item-center pb-3 text-black dark:text-white">
-              {event.summary}
-            </Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Startzeit: ${startTimeString}`}</Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Endzeit: ${endTimeString}`}</Text>
-            {event.location && (
-              <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>
-            )}
-            {isWeb && (
-              <>
-                <DefaultButton text="Schließen" />
-              </>
-            )}
-          </View>
-        </Pressable>
-      </Modal>
     </View>
   );
 };

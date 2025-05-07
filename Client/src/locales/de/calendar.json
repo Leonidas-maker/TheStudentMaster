@@ -4,5 +4,9 @@
   "back_btn": "Zurück",
   "selection_btn": "Zur Auswahl",
   "info_title": "Auswahl erforderlich",
-  "info_message": "Bitte wählen Sie eine Universität und einen Kurs aus."
+  "info_message": "Bitte wählen Sie eine Universität und einen Kurs aus.",
+  "start_time": "Startzeit",
+  "end_time": "Endzeit",
+  "location": "Ort",
+  "date": "Datum"
 }

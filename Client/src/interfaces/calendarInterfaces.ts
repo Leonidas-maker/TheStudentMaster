@@ -58,6 +58,16 @@ interface EventProps {
   isSunday: boolean;
 }
 
+interface RawEventProp {
+  summary: string;
+  description?: {
+    tags?: string[];
+  };
+  location?: string;
+  start: Date;
+  end: Date;
+}
+
 interface HoursProps {
   startHour: number;
   endHour: number;
@@ -110,4 +120,5 @@ export {
   TimeMarkerProps,
   EventTimeProps,
   CalendarProps,
+  RawEventProp,
 };
