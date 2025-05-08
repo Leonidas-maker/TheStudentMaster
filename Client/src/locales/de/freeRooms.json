@@ -1,10 +1,10 @@
 {
-    "subheading_text": "Universität und Zeit auswählen",
-    "search_btn": "Suchen",
-    "search_rooms_placeholder": "Suche nach Räumen",
-    "last_booked": "Zuletzt besetzt am",
-    "next_booked": "Wieder besetzt am",
-    "info_title": "Informationen",
-    "info_message": "Die Anzeige von freien Räumen ist unverbindlich und gilt nur als Orientierung. Dieses Tool soll dabei helfen einen möglichen freien Raum zu finden. Grundsätzlich werden nur freie Räume angezeigt. Die Anzeige basiert auf der Buchung der Räume in den Stundenplänen der einzelnen Kurse.",
-    "no_rooms_found": "Es wurden keine freien Räume gefunden."
+  "subheading_text": "Universität und Zeit auswählen",
+  "search_btn": "Suchen",
+  "search_rooms_placeholder": "Suche nach Räumen",
+  "last_booked": "Zuletzt besetzt am",
+  "next_booked": "Wieder besetzt am",
+  "info_title": "Informationen",
+  "info_message": "Die Anzeige von freien Räumen ist unverbindlich und gilt nur als Orientierung. Dieses Tool soll dabei helfen einen möglichen freien Raum zu finden. Grundsätzlich werden nur freie Räume angezeigt. Die Anzeige basiert auf der Buchung der Räume in den Stundenplänen der einzelnen Kurse.",
+  "no_rooms_found": "Es wurden keine freien Räume gefunden."
 }

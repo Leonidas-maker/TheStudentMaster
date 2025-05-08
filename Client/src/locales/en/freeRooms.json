@@ -1,11 +1,10 @@
 {
-    "subheading_text": "Select University and Time",
-    "search_btn": "Search",
-    "search_rooms_placeholder": "Search for rooms",
-    "last_booked": "Last booked on",
-    "next_booked": "Next booked on",
-    "info_title": "Information",
-    "info_message": "The display of available rooms is non-binding and for guidance only. This tool is intended to help you find a potentially available room. Only available rooms are shown. The display is based on the room bookings in the schedules of the individual courses.",
-    "no_rooms_found": "No available rooms found."
-  }
-  
+  "subheading_text": "Select University and Time",
+  "search_btn": "Search",
+  "search_rooms_placeholder": "Search for rooms",
+  "last_booked": "Last booked on",
+  "next_booked": "Next booked on",
+  "info_title": "Information",
+  "info_message": "The display of available rooms is non-binding and for guidance only. This tool is intended to help you find a potentially available room. Only available rooms are shown. The display is based on the room bookings in the schedules of the individual courses.",
+  "no_rooms_found": "No available rooms found."
+}
