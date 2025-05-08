@@ -17,6 +17,8 @@ import enMeal from "./en/meal.json";
 import deMeal from "./de/meal.json";
 import enComponents from "./en/components.json";
 import deComponents from "./de/components.json";
+import enFreeRooms from "./en/freeRooms.json";
+import deFreeRooms from "./de/freeRooms.json";
 
 const resources = {
   en: {
@@ -27,6 +29,7 @@ const resources = {
     meal: enMeal,
     dualis: enDualis,
     components: enComponents,
+    freeRooms: enFreeRooms,
   },
   de: {
     settings: deSettings,
@@ -36,6 +39,7 @@ const resources = {
     meal: deMeal,
     dualis: deDualis,
     components: deComponents,
+    freeRooms: deFreeRooms,
   },
 };
 
@@ -77,6 +81,7 @@ const saveLanguage = async (language: string): Promise<void> => {
       "meal",
       "dualis",
       "components",
+      "freeRooms",
     ],
     interpolation: {
       escapeValue: false,

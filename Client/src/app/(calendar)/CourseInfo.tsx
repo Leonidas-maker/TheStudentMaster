@@ -64,7 +64,7 @@ const CourseInfo = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Accent Card */}
-        <View className={`rounded-3xl p-6 shadow-lg`}>
+        <View className={`rounded-3xl p-6`}>
           {/* Title */}
           <Text className="text-2xl font-bold dark:text-white text-black mb-4">
             {event.summary}

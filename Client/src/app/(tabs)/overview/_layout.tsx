@@ -92,6 +92,12 @@ export default function DualisLayout() {
           headerTitle: t("support_header"),
         }}
       />
+      <Stack.Screen
+        name="(modules)/FreeRooms"
+        options={{
+          headerTitle: t("free_rooms_header"),
+        }}
+      />
     </Stack>
   );
 }

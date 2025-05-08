@@ -61,28 +61,17 @@ const Overview: React.FC = () => {
   // =================== ModuleNavigator ================== //
   // ====================================================== //
   //TODO: Change for later use if some modules are disabled
-  const handleDashboardPress = () => {
-    // @ts-ignore
-    router.push("/(tabs)/overview/(module)/Dashboard");
+  const handleFreeRoomsPress = () => {
+    router.push("/(tabs)/overview/(modules)/FreeRooms");
   };
 
-  const handleDualisPress = () => {
-    // @ts-ignore
-    router.push("/(tabs)/overview/(module)/Dualis");
-  };
+  const moduleTitle = t("more_functions_title");
 
-  const handleMealPlanPress = () => {
-    // @ts-ignore
-    router.push("/(tabs)/overview/(module)/MealPlan");
-  };
+  const onPressModuleFunctions = [handleFreeRoomsPress];
 
-  const moduleTitle = "Weitere Funktionen";
+  const moduleTexts = [t("free_rooms_btn")];
 
-  const onPressModuleFunctions = [handleMealPlanPress];
-
-  const moduleTexts = ["Essensplan"];
-
-  const moduleIconNames = ["restaurant"];
+  const moduleIconNames = ["meeting-room"];
 
   // ====================================================== //
   // ================== OverviewNavigator ================= //
@@ -180,12 +169,12 @@ const Overview: React.FC = () => {
   return (
     <ScrollView className="h-screen bg-light_primary dark:bg-dark_primary">
       {/* <ProfileView /> */}
-      {/* <Navigator
+      <Navigator
         title={moduleTitle}
         onPressFunctions={onPressModuleFunctions}
         texts={moduleTexts}
         iconNames={moduleIconNames}
-      /> */}
+      />
       {/* <Navigator
         title={accountTitle}
         onPressFunctions={onPressAccountFunctions}
