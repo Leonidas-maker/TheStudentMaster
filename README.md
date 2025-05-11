@@ -20,13 +20,13 @@ TheStudentMaster is available on both iOS and Android platforms. Download the ap
 - **🗓️ Timetable Management**: Manage your timetables, check lecture times, and quickly capture changes.
 - **🍽️ Cafeteria Menu**: Get an overview of cafeteria menus to help plan your meals.
 - **📊 Integration with Dualis**: Connect to the Dualis platform for quick access to your grades.
+- **🏫 Available Rooms**: Identify available rooms for study purposes.
 
 ---
 
 ## 🌟 Planned Features
 
 - **🚦 Cafeteria Occupancy**: View predicted occupancy of the cafeteria to choose times with less waiting.
-- **🏫 Available Rooms**: Identify available rooms for study purposes.
 
 ---
 
