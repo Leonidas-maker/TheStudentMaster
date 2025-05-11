@@ -37,6 +37,13 @@ export default function MealLayout() {
           headerTitle: "TheStudentMaster",
         }}
       />
+      <Stack.Screen
+        name="(mealViews)/MealInfo"
+        options={{
+          headerTitle: t("mealInfo_header"),
+          presentation: "modal"
+        }}
+        />
     </Stack>
   );
 }

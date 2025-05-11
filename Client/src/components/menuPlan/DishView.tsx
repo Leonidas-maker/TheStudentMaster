@@ -7,10 +7,13 @@ import {
   Modal,
   Platform,
   Pressable,
+  useColorScheme,
 } from "react-native";
 import "nativewind";
 import { format, parseISO } from "date-fns";
 import { useTranslation } from "react-i18next";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { DishMenuProps } from "../../interfaces/canteenInterfaces";
@@ -48,22 +51,13 @@ const DishView: React.FC<DishProps> = ({
   // ======================= States ======================= //
   // ====================================================== //
   const [dishes, setDishes] = useState<DishMenuProps[]>([]);
-  // const [modalVisible, setModalVisible] = useState(false);
-  // const [isWeb, setIsWeb] = useState(false);
+  const colorScheme = useColorScheme();
+  const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
+  const router = useRouter();
 
   // ====================================================== //
   // ===================== useEffects ===================== //
   // ====================================================== //
-  // Checks if the platform is web
-  //? For future use
-  // useEffect(() => {
-  //   if (Platform.OS === "web") {
-  //     setIsWeb(true);
-  //   } else {
-  //     setIsWeb(false);
-  //   }
-  // }, []);
-
   // Filters the dishes based on the selected date and canteen
   useEffect(() => {
     if (menu && menu.canteen_short_name === selectedCanteen) {
@@ -79,23 +73,8 @@ const DishView: React.FC<DishProps> = ({
   }, [menu, selectedCanteen, selectedDate]);
 
   // ====================================================== //
-  // =================== Press handlers =================== //
-  // ====================================================== //
-  // Opens the modal with the dish details
-  //? For future use
-  // const handleDishPress = () => {
-  //   setModalVisible(true);
-  // };
-
-  // Closes the modal
-  // const handleClosePress = () => {
-  //   setModalVisible(false);
-  // };
-
-  // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
-  //? If Modal is implemented add active:opacity-50 to Pressable
   return (
     <ScrollView className="flex-1 active:opacity-50" ref={scrollViewRef}>
       {selectedCanteen ? (
@@ -103,22 +82,44 @@ const DishView: React.FC<DishProps> = ({
           dishes.map((dish, index) => (
             <Pressable
               key={`${dish.dish_type}-${format(parseISO(dish.serving_date), "yyyy-MM-dd")}-${index}`}
-              className="flex-1"
+              className="mx-4 mb-3 bg-light_secondary dark:bg-dark_secondary rounded-lg p-4 shadow-lg"
+              onPress={() =>
+                router.push(
+                  `/meal/MealInfo?dish=${encodeURIComponent(
+                    JSON.stringify({
+                      ...dish,
+                      canteen_name: menu?.canteen_name,
+                    }),
+                  )}`,
+                )
+              }
             >
-              <View
-                key={index}
-                className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]"
-              >
-                <Text className="text-black dark:text-white">
-                  {dish.dish_type}: {dish.dish}
+              {/* Row: Icon + Dish Type */}
+              <View className="flex-row items-center mb-2">
+                <Icon name="restaurant" size={20} color={iconColor} />
+                <Text className="ml-2 text-lg font-bold text-black dark:text-white">
+                  {dish.dish_type}
                 </Text>
-                <Text className="text-black dark:text-white">{dish.price}</Text>
+              </View>
+
+              {/* Divider */}
+              <View className="h-px bg-light_primary dark:bg-dark_primary mb-2" />
+
+              {/* Details Row: Dish name left, Price right */}
+              <View className="flex-row justify-between items-center">
+                <Text className="text-base text-black dark:text-white flex-1">
+                  {dish.dish}
+                </Text>
+                <Text className="font-semibold text-black dark:text-white ml-4">
+                  {dish.price}
+                </Text>
               </View>
             </Pressable>
           ))
         ) : (
-          <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
-            <Text className="text-black dark:text-white">
+          <View className="mx-4 mb-3 bg-light_secondary dark:bg-dark_secondary rounded-lg p-6 shadow-lg items-center">
+            <Icon name="restaurant-menu" size={40} color={iconColor} />
+            <Text className="mt-3 text-center text-lg text-black dark:text-white">
               {t("noDataForCanteenOnDate", {
                 canteen: menu?.canteen_name,
                 date: selectedDate.toLocaleDateString("de-DE"),
@@ -127,8 +128,9 @@ const DishView: React.FC<DishProps> = ({
           </View>
         )
       ) : (
-        <View className="m-2 p-2 bg-light_secondary dark:bg-dark_secondary rounded-xl shadow-[rgba(0,0,0,0.5)_0px_5px_4px_0px]">
-          <Text className="text-black dark:text-white">
+        <View className="mx-4 mb-3 bg-light_secondary dark:bg-dark_secondary rounded-lg p-6 shadow-lg items-center">
+          <Icon name="info-outline" size={40} color={iconColor} />
+          <Text className="mt-3 text-center text-lg text-black dark:text-white">
             {t("noCanteenSelected")}
           </Text>
         </View>

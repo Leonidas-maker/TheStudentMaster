@@ -11,20 +11,20 @@ import { useRouter, useNavigation, useLocalSearchParams } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTranslation } from "react-i18next";
 
-import { RawEventProp } from "../../interfaces/calendarInterfaces";
+interface DishInfo {
+  dish_type: string;
+  dish: string;
+  price: string;
+  serving_date: string;
+  canteen_name?: string;
+}
 
-const CourseInfo: React.FC = () => {
-  const {
-    event: rawEvent,
-    startTimeString,
-    endTimeString,
-  } = useLocalSearchParams();
-  const event = JSON.parse(
-    decodeURIComponent(rawEvent as string)
-  ) as RawEventProp;
+const MealInfo: React.FC = () => {
+  const { dish: rawDish } = useLocalSearchParams();
+  const dish = JSON.parse(decodeURIComponent(rawDish as string)) as DishInfo;
   const router = useRouter();
   const navigation = useNavigation();
-  const { t } = useTranslation("calendar");
+  const { t } = useTranslation("meal");
 
   const [isLight, setIsLight] = useState(false);
   const colorScheme = useColorScheme();
@@ -48,21 +48,50 @@ const CourseInfo: React.FC = () => {
     });
   }, [navigation, iconColor]);
 
-  const eventDate = new Date(event.start).toLocaleDateString("de-DE");
+  const dateString = new Date(dish.serving_date).toLocaleDateString("de-DE");
 
    return (
     <SafeAreaView className="flex-1 bg-light_primary dark:bg-dark_primary">
-      <ScrollView
-        contentContainerStyle={{ padding: 16 }}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View className="rounded-3xl p-6">
           <Text className="text-2xl font-bold dark:text-white text-black mb-4">
-            {event.summary}
+            {dish.dish}
           </Text>
           <View className="h-px dark:bg-dark_secondary bg-light_secondary mb-4" />
 
           <View className="space-y-3">
+            {/* TYPE */}
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center">
+                <Icon name="restaurant" size={20} color={iconColor} />
+                <Text className="ml-2 uppercase text-xs dark:text-white text-black">
+                  {t("type")}
+                </Text>
+              </View>
+              <Text
+                className="font-semibold dark:text-white text-black flex-shrink flex-wrap text-right"
+                style={{ maxWidth: "60%" }}
+              >
+                {dish.dish_type}
+              </Text>
+            </View>
+
+            {/* PRICE */}
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center">
+                <Icon name="attach-money" size={20} color={iconColor} />
+                <Text className="ml-2 uppercase text-xs dark:text-white text-black">
+                  {t("price")}
+                </Text>
+              </View>
+              <Text
+                className="font-semibold dark:text-white text-black flex-shrink flex-wrap text-right"
+                style={{ maxWidth: "60%" }}
+              >
+                {dish.price}
+              </Text>
+            </View>
+
             {/* DATE */}
             <View className="flex-row items-center justify-between mb-2">
               <View className="flex-row items-center">
@@ -72,59 +101,27 @@ const CourseInfo: React.FC = () => {
                 </Text>
               </View>
               <Text
-                className="dark:text-white text-black font-semibold flex-shrink flex-wrap text-right"
+                className="font-semibold dark:text-white text-black flex-shrink flex-wrap text-right"
                 style={{ maxWidth: "60%" }}
               >
-                {eventDate}
+                {dateString}
               </Text>
             </View>
 
-            {/* START TIME */}
-            <View className="flex-row items-center justify-between mb-2">
-              <View className="flex-row items-center">
-                <Icon name="schedule" size={20} color={iconColor} />
-                <Text className="ml-2 uppercase text-xs dark:text-white text-black">
-                  {t("start_time")}
-                </Text>
-              </View>
-              <Text
-                className="dark:text-white text-black font-semibold flex-shrink flex-wrap text-right"
-                style={{ maxWidth: "60%" }}
-              >
-                {startTimeString}
-              </Text>
-            </View>
-
-            {/* END TIME */}
-            <View className="flex-row items-center justify-between mb-2">
-              <View className="flex-row items-center">
-                <Icon name="schedule" size={20} color={iconColor} />
-                <Text className="ml-2 uppercase text-xs dark:text-white text-black">
-                  {t("end_time")}
-                </Text>
-              </View>
-              <Text
-                className="dark:text-white text-black font-semibold flex-shrink flex-wrap text-right"
-                style={{ maxWidth: "60%" }}
-              >
-                {endTimeString}
-              </Text>
-            </View>
-
-            {/* LOCATION */}
-            {event.location && (
+            {/* CANTEEN */}
+            {dish.canteen_name && (
               <View className="flex-row items-center justify-between mb-2">
                 <View className="flex-row items-center">
-                  <Icon name="place" size={20} color={iconColor} />
+                  <Icon name="store" size={20} color={iconColor} />
                   <Text className="ml-2 uppercase text-xs dark:text-white text-black">
-                    {t("location")}
+                    {t("canteen")}
                   </Text>
                 </View>
                 <Text
-                  className="dark:text-white text-black font-semibold flex-shrink flex-wrap text-right"
+                  className="font-semibold dark:text-white text-black flex-shrink flex-wrap text-right"
                   style={{ maxWidth: "60%" }}
                 >
-                  {event.location}
+                  {dish.canteen_name}
                 </Text>
               </View>
             )}
@@ -135,4 +132,4 @@ const CourseInfo: React.FC = () => {
   );
 };
 
-export default CourseInfo;
+export default MealInfo;

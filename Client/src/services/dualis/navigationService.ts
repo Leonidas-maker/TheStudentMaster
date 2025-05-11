@@ -13,7 +13,6 @@ import {
   GradeData,
   GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
-import { useTranslation } from "react-i18next";
 
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,9 +37,8 @@ export const navigateToPerformanceOverview = async (
   gpaData: GpaData;
   ectsData: EctsData;
 }> => {
-  const { t } = useTranslation("dualis");
   setProgress(0.25);
-  setLoad(t("performanceOverview"));
+  setLoad("Leistungsübersicht");
   try {
     const performanceUrl = `/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=STUDENT_RESULT&ARGUMENTS=${authArguments},-N000310,-N0,-N000000000000000,-N000000000000000,-N000000000000000,-N0,-N000000000000000`;
     const response = await axiosInstance.get(performanceUrl);
@@ -79,9 +77,8 @@ export const navigateToExamResults = async (
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
 ): Promise<SemesterData> => {
-  const { t } = useTranslation("dualis");
   setProgress(0.35);
-  setLoad(t("semester"));
+  setLoad("Semester");
   try {
     const examResultsUrl = `/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
     const response = await axiosInstance.get(examResultsUrl);
@@ -108,9 +105,8 @@ export const navigateThroughSemesters = async (
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
 ): Promise<{ gradeData: GradeData[]; gpaSemesterData: GpaSemesterData[] }> => {
-  const { t } = useTranslation("dualis");
   setProgress(0.45);
-  setLoad(t("semesterData"));
+  setLoad("Semester Daten");
   try {
     let allSemesterData: Array<{ name: string; html: string }> = [];
 
@@ -151,9 +147,8 @@ export const navigateThroughGradeDetails = async (
   setError: (msg: string) => void,
   setLoad: (load: string) => void,
 ): Promise<GradeData[]> => {
-  const { t } = useTranslation("dualis");
   setProgress(0.75);
-  setLoad(t("semesterDetails"));
+  setLoad("Semester Details");
   try {
     let updatedGradeData = [...gradeData];
     const promises = updatedGradeData.map(async (grade, i) => {
