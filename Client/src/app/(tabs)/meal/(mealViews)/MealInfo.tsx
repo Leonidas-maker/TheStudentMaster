@@ -50,7 +50,7 @@ const MealInfo: React.FC = () => {
 
   const dateString = new Date(dish.serving_date).toLocaleDateString("de-DE");
 
-   return (
+  return (
     <SafeAreaView className="flex-1 bg-light_primary dark:bg-dark_primary">
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <View className="rounded-3xl p-6">

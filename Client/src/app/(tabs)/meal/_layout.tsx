@@ -41,9 +41,9 @@ export default function MealLayout() {
         name="(mealViews)/MealInfo"
         options={{
           headerTitle: t("mealInfo_header"),
-          presentation: "modal"
+          presentation: "modal",
         }}
-        />
+      />
     </Stack>
   );
 }

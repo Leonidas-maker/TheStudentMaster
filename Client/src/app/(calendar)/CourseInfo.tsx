@@ -20,7 +20,7 @@ const CourseInfo: React.FC = () => {
     endTimeString,
   } = useLocalSearchParams();
   const event = JSON.parse(
-    decodeURIComponent(rawEvent as string)
+    decodeURIComponent(rawEvent as string),
   ) as RawEventProp;
   const router = useRouter();
   const navigation = useNavigation();
@@ -50,7 +50,7 @@ const CourseInfo: React.FC = () => {
 
   const eventDate = new Date(event.start).toLocaleDateString("de-DE");
 
-   return (
+  return (
     <SafeAreaView className="flex-1 bg-light_primary dark:bg-dark_primary">
       <ScrollView
         contentContainerStyle={{ padding: 16 }}
