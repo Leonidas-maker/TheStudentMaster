@@ -84,8 +84,8 @@ const CourseSettings: React.FC = () => {
           text1: t("connection_error_text1"),
           text2: t("connection_error_text2"),
         });
-        setLoading(false);  
-        return;             
+        setLoading(false);
+        return;
       }
       setProgress(0.5);
       await getSelectedUniversity(

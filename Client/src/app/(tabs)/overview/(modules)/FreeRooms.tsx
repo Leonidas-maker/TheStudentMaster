@@ -178,7 +178,7 @@ const FreeRooms: React.FC = () => {
           text2: t("connection_error_text2"),
         });
         setLoading(false);
-      };
+      }
     };
     loadData();
   }, []);

@@ -98,7 +98,7 @@ const MenuPlan: React.FC = () => {
             type: "error",
             text1: t("connection_error_text1"),
             text2: t("connection_error_text2"),
-          })
+          });
         } finally {
           setLoading(false);
         }
@@ -126,7 +126,7 @@ const MenuPlan: React.FC = () => {
               type: "error",
               text1: t("connection_error_text1"),
               text2: t("connection_error_text2"),
-            })
+            });
             setLoading(false);
           }
         }

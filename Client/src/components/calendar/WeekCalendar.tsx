@@ -183,15 +183,15 @@ const WeekCalendar: React.FC = () => {
         let missingCourse = false;
 
         await getSelectedUniversity(
-          () => { },
-          () => { },
+          () => {},
+          () => {},
           (missing) => {
             missingUniversity = missing;
           },
         );
         await getSelectedCourse(
-          () => { },
-          () => { },
+          () => {},
+          () => {},
           (missing) => {
             missingCourse = missing;
           },

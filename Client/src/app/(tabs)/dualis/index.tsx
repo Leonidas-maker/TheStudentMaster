@@ -79,7 +79,7 @@ const DualisLogin: React.FC = () => {
       Toast.show({
         type: "error",
         text1: t("login_error_title"),
-        text2: t("login_error_msg")
+        text2: t("login_error_msg"),
       });
     }
     // else: error state was set by the service, stay on this screen

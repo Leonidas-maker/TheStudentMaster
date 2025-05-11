@@ -32,7 +32,7 @@ export const navigateToPerformanceOverview = async (
   authArguments: string,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ): Promise<{
   moduleData: ModuleData[];
   gpaData: GpaData;
@@ -61,7 +61,7 @@ export const navigateToPerformanceOverview = async (
     return { moduleData, gpaData, ectsData };
   } catch (err) {
     setError(
-      "An error occurred while navigating to the performance overview. Please try again."
+      "An error occurred while navigating to the performance overview. Please try again.",
     );
     console.error(err);
 
@@ -77,7 +77,7 @@ export const navigateToExamResults = async (
   authArguments: string,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ): Promise<SemesterData> => {
   const { t } = useTranslation("dualis");
   setProgress(0.35);
@@ -94,7 +94,7 @@ export const navigateToExamResults = async (
     return semesterData;
   } catch (err) {
     setError(
-      "An error occurred while navigating to the exam results. Please try again."
+      "An error occurred while navigating to the exam results. Please try again.",
     );
     console.error(err);
     return { semester: [] };
@@ -106,7 +106,7 @@ export const navigateThroughSemesters = async (
   semesterArray: Array<{ name: string; value: string }>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ): Promise<{ gradeData: GradeData[]; gpaSemesterData: GpaSemesterData[] }> => {
   const { t } = useTranslation("dualis");
   setProgress(0.45);
@@ -138,7 +138,7 @@ export const navigateThroughSemesters = async (
     return { gradeData, gpaSemesterData };
   } catch (err) {
     setError(
-      "An error occurred while navigating through the semesters. Please try again."
+      "An error occurred while navigating through the semesters. Please try again.",
     );
     console.error(err);
     return { gradeData: [], gpaSemesterData: [] };
@@ -149,7 +149,7 @@ export const navigateThroughGradeDetails = async (
   gradeData: GradeData[],
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void
+  setLoad: (load: string) => void,
 ): Promise<GradeData[]> => {
   const { t } = useTranslation("dualis");
   setProgress(0.75);
@@ -179,7 +179,7 @@ export const navigateThroughGradeDetails = async (
     return resolvedData;
   } catch (err) {
     setError(
-      "An error occurred while navigating through the grade details. Please try again."
+      "An error occurred while navigating through the grade details. Please try again.",
     );
     console.error(err);
     return [];
