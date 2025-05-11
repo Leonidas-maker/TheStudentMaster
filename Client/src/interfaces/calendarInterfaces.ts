@@ -55,6 +55,17 @@ interface EventProps {
   overlapCount: number;
   overlapIndex: number;
   isSaturday: boolean;
+  isSunday: boolean;
+}
+
+interface RawEventProp {
+  summary: string;
+  description?: {
+    tags?: string[];
+  };
+  location?: string;
+  start: Date;
+  end: Date;
 }
 
 interface HoursProps {
@@ -109,4 +120,5 @@ export {
   TimeMarkerProps,
   EventTimeProps,
   CalendarProps,
+  RawEventProp,
 };

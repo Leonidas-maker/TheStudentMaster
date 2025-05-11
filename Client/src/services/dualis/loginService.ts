@@ -46,7 +46,7 @@ export const loginDualis = async (
   setError: (msg: string) => void,
   setAuthArguments: (authArgs: string) => void,
   saveLogin: boolean,
-) => {
+): Promise<boolean> => {
   try {
     const url = `${BASE_URL}/scripts/mgrqispi.dll`;
 
@@ -74,21 +74,21 @@ export const loginDualis = async (
 
     if (status !== 200 || content.length > 500) {
       setError("Login failed. Please check your credentials.");
-      return;
+      return false; // bad credentials
     }
 
-    // Extract auth arguments and save them
+    // successful login
     const authArgs = extractAuthArguments(response.headers["refresh"]);
     setAuthArguments(authArgs);
     secureSaveData("dualisAuthArgs", authArgs);
 
-    // Save credentials after successful login
     if (saveLogin) {
       await saveCredentials();
     }
+    return true; // indicate success
   } catch (err) {
     setError("An error occurred. Please try again.");
     console.error(err);
-    throw err;
+    return false; // network / unexpected error
   }
 };

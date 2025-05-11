@@ -1,0 +1,18 @@
+{
+  "dashboard_tab": "Schedule",
+  "meal_tab": "Menu",
+  "dualis_tab": "Dualis",
+  "overview_tab": "More",
+  "imprint_header": "Imprint",
+  "licenses_header": "Licenses",
+  "settings_header": "Settings",
+  "theme_settings_header": "Appearance",
+  "course_settings_header": "Course",
+  "language_settings_header": "Language",
+  "bug_report_header": "Bug Report",
+  "responsible_disclosure_header": "Responsible Disclosure",
+  "support_header": "Support",
+  "course_info_header": "Details",
+  "free_rooms_header": "Free Rooms",
+  "mealInfo_header": "Meal Information"
+}

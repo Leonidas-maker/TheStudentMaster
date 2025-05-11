@@ -1,0 +1,14 @@
+{
+  "error_title": "Calendar not available",
+  "error_message": "The selected calendar is not available. Please select a different calendar.",
+  "back_btn": "Back",
+  "selection_btn": "Select",
+  "info_title": "Selection required",
+  "info_message": "Please select a university and a course.",
+  "start_time": "Start time",
+  "end_time": "End time",
+  "location": "Location",
+  "date": "Date",
+  "toast_error_title": "Network error",
+  "toast_error_message": "Check your internet connection."
+}
