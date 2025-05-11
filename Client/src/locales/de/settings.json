@@ -12,5 +12,7 @@
   "system_mode": "Systemmodus",
   "selectCourse": "Kurs auswählen",
   "selectUniversity": "Universität auswählen",
-  "settings_course_header": "Universität und Kurs auswählen"
+  "settings_course_header": "Universität und Kurs auswählen",
+  "connection_error_text1": "Netzwerkfehler",
+  "connection_error_text2": "Überprüfe deine Internetverbindung."
 }

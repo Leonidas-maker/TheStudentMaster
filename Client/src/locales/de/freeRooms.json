@@ -7,5 +7,13 @@
   "info_title": "Informationen",
   "info_message": "Die Anzeige von freien Räumen ist unverbindlich und gilt nur als Orientierung. Dieses Tool soll dabei helfen einen möglichen freien Raum zu finden. Grundsätzlich werden nur freie Räume angezeigt. Die Anzeige basiert auf der Buchung der Räume in den Stundenplänen der einzelnen Kurse.",
   "no_rooms_found": "Es wurden keine freien Räume gefunden.",
-  "selectUniversity": "Universität auswählen"
+  "selectUniversity": "Universität auswählen",
+  "connection_error_text1": "Netzwerkfehler",
+  "connection_error_text2": "Überprüfe deine Internetverbindung.",
+  "university_error_title": "Keine Universität gewählt",
+  "university_error_message": "Bitte wähle eine Universität aus.",
+  "no_rooms_title": "Keine freien Räume gefunden",
+  "no_rooms_message": "Für diese Suche wurden keine freien Räume gefunden.",
+  "error_title": "Ein Fehler ist aufgetreten",
+  "error_message": "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut."
 }

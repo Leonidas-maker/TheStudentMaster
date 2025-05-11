@@ -37,7 +37,8 @@ import {
   CanteenProps,
   MenuDataProps,
 } from "../../interfaces/canteenInterfaces";
-import ConnectionMessage from "../message/ConnectionMessage";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../defaultToast/DefaultToast";
 
 // ====================================================== //
 // ====================== Component ===================== //
@@ -59,7 +60,6 @@ const MenuPlan: React.FC = () => {
   const [menu, setMenu] = useState<MenuDataProps | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [connectionError, setConnectionError] = useState(false);
 
   // ====================================================== //
   // ====================== Variables ===================== //
@@ -94,7 +94,11 @@ const MenuPlan: React.FC = () => {
           await fetchCanteens(setCanteenNames);
           setProgress(1);
         } catch (error) {
-          setConnectionError(true);
+          Toast.show({
+            type: "error",
+            text1: t("connection_error_text1"),
+            text2: t("connection_error_text2"),
+          })
         } finally {
           setLoading(false);
         }
@@ -118,7 +122,11 @@ const MenuPlan: React.FC = () => {
           try {
             await fetchCanteenDishes(canteen.key, setMenu);
           } catch (error) {
-            setConnectionError(true);
+            Toast.show({
+              type: "error",
+              text1: t("connection_error_text1"),
+              text2: t("connection_error_text2"),
+            })
             setLoading(false);
           }
         }
@@ -195,10 +203,9 @@ const MenuPlan: React.FC = () => {
   // ====================================================== //
   return (
     <View className="flex-1">
-      <ConnectionMessage
-        visible={connectionError}
-        setVisible={setConnectionError}
-      />
+      <View className="z-50">
+        <DefaultToast />
+      </View>
       <WeekSelector
         mode={"menu"}
         onBackPress={handleBackPress}

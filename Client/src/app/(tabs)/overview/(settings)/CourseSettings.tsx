@@ -23,6 +23,8 @@ import {
   getSelectedCourse,
   fetchInitialHash,
 } from "../../../../services/calendarService";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../../../../components/defaultToast/DefaultToast";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import {
@@ -54,6 +56,7 @@ const CourseSettings: React.FC = () => {
 
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   let activateCallback = useRef(false);
 
@@ -65,11 +68,25 @@ const CourseSettings: React.FC = () => {
       activateCallback.current = false;
       setLoading(true);
       setProgress(0.25);
-      const availableCalendars = await fetchCalendars();
-      if (availableCalendars.length > 0) {
-        setCalendars(availableCalendars);
+      try {
+        const availableCalendars = await fetchCalendars();
+        // check success
+        if (!Array.isArray(availableCalendars)) {
+          throw new Error("Invalid response format");
+        }
+        if (availableCalendars.length > 0) {
+          setCalendars(availableCalendars);
+        }
+      } catch (err) {
+        console.error("Failed to fetch calendars:", err);
+        Toast.show({
+          type: "error",
+          text1: t("connection_error_text1"),
+          text2: t("connection_error_text2"),
+        });
+        setLoading(false);  
+        return;             
       }
-
       setProgress(0.5);
       await getSelectedUniversity(
         setSelectedUniversity,
@@ -182,6 +199,7 @@ const CourseSettings: React.FC = () => {
           />
         )}
       </View>
+      <DefaultToast />
     </ScrollView>
   );
 };

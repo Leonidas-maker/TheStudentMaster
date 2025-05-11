@@ -8,7 +8,7 @@
   "login_options_title": "Login options",
   "save_login_credentials": "Save login credentials",
   "login_btn": "Log in",
-  "login_error_msg": "Login failed. Please check your credentials.",
+  "login_error_msg": "Check your login credentials or internet connection.",
   "alert_title": "Something went wrong :(",
   "alert_message": "The loading process is taking longer than expected. You will be redirected to the home page. Please check your internet connection and try again.",
   "dualis_load_header": "Loading Dualis data",
@@ -25,5 +25,10 @@
   "semester_gpa_text": "Semester GPA",
   "semester_ects_text": "Semester ECTS",
   "results_header": "Results",
-  "select_semester": "Select semester"
+  "select_semester": "Select semester",
+  "login_error_title": "Login failed",
+  "performanceOverview": "Performance Overview",
+  "semester": "Semester",
+  "semesterData": "Semester Data",
+  "semesterDetails": "Semester Details"
 }

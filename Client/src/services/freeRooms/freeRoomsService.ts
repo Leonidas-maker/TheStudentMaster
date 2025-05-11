@@ -3,7 +3,7 @@ import { axiosInstance } from "../api";
 export const fetchFreeRooms = async (
   universityUuid: string,
   startTime: Date,
-  endTime: Date,
+  endTime: Date
 ) => {
   try {
     const requestBody = {
@@ -15,7 +15,7 @@ export const fetchFreeRooms = async (
       `/calendar/rooms/free/${universityUuid}`,
       {
         params: requestBody,
-      },
+      }
     );
     return response.data;
   } catch (error) {

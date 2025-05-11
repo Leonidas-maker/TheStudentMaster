@@ -29,7 +29,8 @@ import {
   secureLoadData,
   secureRemoveData,
 } from "../../../components/storageManager/secureStorageManager";
-import ConnectionMessage from "../../../components/message/ConnectionMessage";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../../../components/defaultToast/DefaultToast";
 
 import { loginDualis } from "../../../services/dualis/loginService";
 
@@ -45,11 +46,8 @@ const DualisLogin: React.FC = () => {
   const [error, setError] = useState("");
   const [saveLogin, setSaveLogin] = useState(true);
   const [isLoginLoading, setIsLoginLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
   const [authArguments, setAuthArguments] = useState<string>("");
-  const [isLight, setIsLight] = useState(false);
-  const [connectionError, setConnectionError] = useState(false);
 
   // ~~~~~~~~~~~ Use color scheme ~~~~~~~~~~ //
   // Get the current color scheme
@@ -77,6 +75,12 @@ const DualisLogin: React.FC = () => {
 
     if (success) {
       router.replace("/(tabs)/dualis/(dualisViews)/DualisLoad");
+    } else {
+      Toast.show({
+        type: "error",
+        text1: t("login_error_title"),
+        text2: t("login_error_msg")
+      });
     }
     // else: error state was set by the service, stay on this screen
     setLoading(false);
@@ -185,10 +189,7 @@ const DualisLogin: React.FC = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View className="h-screen bg-light_primary dark:bg-dark_primary flex-1 justify-center">
-        <ConnectionMessage
-          visible={connectionError}
-          setVisible={setConnectionError}
-        />
+        <DefaultToast />
         <View>
           <Heading text={t("dualis_login_header")} />
           <View className="items-center">
@@ -197,7 +198,6 @@ const DualisLogin: React.FC = () => {
               value={username}
               onChangeText={(text) => {
                 setError("");
-                setConnectionError(false);
                 setUsername(text);
               }}
               autoCapitalize="none"
@@ -207,7 +207,6 @@ const DualisLogin: React.FC = () => {
               value={password}
               onChangeText={(text) => {
                 setError("");
-                setConnectionError(false);
                 setPassword(text);
               }}
               secureTextEntry
@@ -219,13 +218,13 @@ const DualisLogin: React.FC = () => {
               onValueChanges={[toggleSaveLogin]}
               values={[saveLogin]}
             />
-            {error ? (
+            {/* {error ? (
               <View className="px-4">
                 <Text className="text-red-500 mt-2 text-center">
                   {t("login_error_msg")}
                 </Text>
               </View>
-            ) : null}
+            ) : null} */}
             <DefaultButton
               text={t("login_btn")}
               onPress={login}

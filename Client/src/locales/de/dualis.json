@@ -8,7 +8,7 @@
   "login_options_title": "Login Optionen",
   "save_login_credentials": "Anmeldedaten speichern",
   "login_btn": "Anmelden",
-  "login_error_msg": "Anmeldung fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.",
+  "login_error_msg": "Prüfe deine Anmeldedaten oder Internetverbindung.",
   "alert_title": "Da hat etwas nicht funktioniert :(",
   "alert_message": "Der Ladevorgang dauert länger als erwartet. Du wirst zur Startseite weitergeleitet. Überprüfe deine Internetverbindung und versuche es erneut.",
   "dualis_load_header": "Lade Dualis Daten",
@@ -25,5 +25,10 @@
   "semester_gpa_text": "Semester-GPA",
   "semester_ects_text": "Semester-ECTS",
   "results_header": "Ergebnisse",
-  "select_semester": "Semester auswählen"
+  "select_semester": "Semester auswählen",
+  "login_error_title": "Anmeldung fehlgeschlagen",
+  "performanceOverview": "Leistungsübersicht",
+  "semester": "Semester",
+  "semesterData": "Semester Daten",
+  "semesterDetails": "Semester Details"
 }

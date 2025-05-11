@@ -13,6 +13,7 @@ import {
   GradeData,
   GpaSemesterData,
 } from "../../interfaces/dualisInterfaces";
+import { useTranslation } from "react-i18next";
 
 const sleep = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,14 +32,15 @@ export const navigateToPerformanceOverview = async (
   authArguments: string,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void,
+  setLoad: (load: string) => void
 ): Promise<{
   moduleData: ModuleData[];
   gpaData: GpaData;
   ectsData: EctsData;
 }> => {
+  const { t } = useTranslation("dualis");
   setProgress(0.25);
-  setLoad("Leistungsübersicht");
+  setLoad(t("performanceOverview"));
   try {
     const performanceUrl = `/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=STUDENT_RESULT&ARGUMENTS=${authArguments},-N000310,-N0,-N000000000000000,-N000000000000000,-N000000000000000,-N0,-N000000000000000`;
     const response = await axiosInstance.get(performanceUrl);
@@ -59,7 +61,7 @@ export const navigateToPerformanceOverview = async (
     return { moduleData, gpaData, ectsData };
   } catch (err) {
     setError(
-      "An error occurred while navigating to the performance overview. Please try again.",
+      "An error occurred while navigating to the performance overview. Please try again."
     );
     console.error(err);
 
@@ -75,10 +77,11 @@ export const navigateToExamResults = async (
   authArguments: string,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void,
+  setLoad: (load: string) => void
 ): Promise<SemesterData> => {
+  const { t } = useTranslation("dualis");
   setProgress(0.35);
-  setLoad("Semester");
+  setLoad(t("semester"));
   try {
     const examResultsUrl = `/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSERESULTS&ARGUMENTS=${authArguments},-N000307`;
     const response = await axiosInstance.get(examResultsUrl);
@@ -91,7 +94,7 @@ export const navigateToExamResults = async (
     return semesterData;
   } catch (err) {
     setError(
-      "An error occurred while navigating to the exam results. Please try again.",
+      "An error occurred while navigating to the exam results. Please try again."
     );
     console.error(err);
     return { semester: [] };
@@ -103,10 +106,11 @@ export const navigateThroughSemesters = async (
   semesterArray: Array<{ name: string; value: string }>,
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void,
+  setLoad: (load: string) => void
 ): Promise<{ gradeData: GradeData[]; gpaSemesterData: GpaSemesterData[] }> => {
+  const { t } = useTranslation("dualis");
   setProgress(0.45);
-  setLoad("Semester Daten");
+  setLoad(t("semesterData"));
   try {
     let allSemesterData: Array<{ name: string; html: string }> = [];
 
@@ -134,7 +138,7 @@ export const navigateThroughSemesters = async (
     return { gradeData, gpaSemesterData };
   } catch (err) {
     setError(
-      "An error occurred while navigating through the semesters. Please try again.",
+      "An error occurred while navigating through the semesters. Please try again."
     );
     console.error(err);
     return { gradeData: [], gpaSemesterData: [] };
@@ -145,10 +149,11 @@ export const navigateThroughGradeDetails = async (
   gradeData: GradeData[],
   setProgress: (progress: number) => void,
   setError: (msg: string) => void,
-  setLoad: (load: string) => void,
+  setLoad: (load: string) => void
 ): Promise<GradeData[]> => {
+  const { t } = useTranslation("dualis");
   setProgress(0.75);
-  setLoad("Semester Details");
+  setLoad(t("semesterDetails"));
   try {
     let updatedGradeData = [...gradeData];
     const promises = updatedGradeData.map(async (grade, i) => {
@@ -174,7 +179,7 @@ export const navigateThroughGradeDetails = async (
     return resolvedData;
   } catch (err) {
     setError(
-      "An error occurred while navigating through the grade details. Please try again.",
+      "An error occurred while navigating through the grade details. Please try again."
     );
     console.error(err);
     return [];

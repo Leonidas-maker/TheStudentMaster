@@ -21,6 +21,8 @@ import {
   fetchCalendars,
   getSelectedUniversity,
 } from "../../../../services/calendarService";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../../../../components/defaultToast/DefaultToast";
 
 // Interfaces
 import { CalendarProps } from "../../../../interfaces/calendarInterfaces";
@@ -44,6 +46,7 @@ interface HeaderProps {
   query: string;
   onQueryChange: (text: string) => void;
   t: (key: string) => string;
+  searching: boolean;
 }
 
 const ListHeader: React.FC<HeaderProps> = React.memo(
@@ -57,6 +60,7 @@ const ListHeader: React.FC<HeaderProps> = React.memo(
     query,
     onQueryChange,
     t,
+    searching,
   }) => {
     const colorScheme = useColorScheme();
     const iconColor = colorScheme !== "light" ? "#FFFFFF" : "#000000";
@@ -79,7 +83,11 @@ const ListHeader: React.FC<HeaderProps> = React.memo(
             minimumDate={today}
           />
 
-          <DefaultButton onPress={onSearchPress} text={t("search_btn")} />
+          <DefaultButton
+            onPress={onSearchPress}
+            text={t("search_btn")}
+            disabled={searching}
+          />
         </View>
 
         <View className="mt-2 mb-3 flex-row items-center bg-light_secondary dark:bg-dark_secondary rounded-lg px-3 py-2 shadow">
@@ -123,6 +131,7 @@ const FreeRooms: React.FC = () => {
   const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [query, setQuery] = useState<string>("");
   const [searched, setSearched] = useState<boolean>(false);
+  const [searching, setSearching] = useState<boolean>(false);
 
   // Header info button
   useEffect(() => {
@@ -149,18 +158,27 @@ const FreeRooms: React.FC = () => {
     const loadData = async () => {
       setLoading(true);
       setProgress(0.3);
-      const cals = await fetchCalendars();
-      if (cals.length) setCalendars(cals);
+      try {
+        const cals = await fetchCalendars();
+        if (cals.length) setCalendars(cals);
 
-      setProgress(0.6);
-      await getSelectedUniversity(
-        setSelectedUniversity,
-        setPlaceholderUniversity,
-        setMissingUniversity,
-      );
+        setProgress(0.6);
+        await getSelectedUniversity(
+          setSelectedUniversity,
+          setPlaceholderUniversity,
+          setMissingUniversity,
+        );
 
-      setProgress(1);
-      setLoading(false);
+        setProgress(1);
+        setLoading(false);
+      } catch (error) {
+        Toast.show({
+          type: "error",
+          text1: t("connection_error_text1"),
+          text2: t("connection_error_text2"),
+        });
+        setLoading(false);
+      };
     };
     loadData();
   }, []);
@@ -200,13 +218,14 @@ const FreeRooms: React.FC = () => {
   const handleSearchPress = async () => {
     const universityUUID = selectedUniversity ? selectedUniversity.uuid : "";
     if (!universityUUID) {
-      Alert.alert(
-        t("no_university_selected_title"),
-        t("no_university_selected_message"),
-        [{ text: "OK" }],
-      );
+      Toast.show({
+        type: "warning",
+        text1: t("university_error_title"),
+        text2: t("university_error_message"),
+      });
       return;
     }
+    setSearching(true);
     try {
       const endDate = new Date(selectedDate);
       endDate.setSeconds(endDate.getSeconds() + 1);
@@ -216,18 +235,28 @@ const FreeRooms: React.FC = () => {
       setQuery("");
       setSearched(true);
       if (!rooms.length)
-        Alert.alert(t("no_rooms_title"), t("no_rooms_message"), [
-          { text: "OK" },
-        ]);
+        Toast.show({
+          type: "warning",
+          text1: t("no_rooms_title"),
+          text2: t("no_rooms_message"),
+        });
     } catch {
-      Alert.alert(t("error_title"), t("error_message"), [{ text: "OK" }]);
+      Toast.show({
+        type: "error",
+        text1: t("error_title"),
+        text2: t("error_message"),
+      });
+    } finally {
+      setSearching(false);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-light_primary dark:bg-dark_primary">
       {loading && <Progress.Bar progress={progress} width={null} />}
-
+      <View className="z-50">
+        <DefaultToast />
+      </View>
       <FlatList
         data={filteredRooms}
         keyExtractor={(item) => item.room_name}
@@ -242,6 +271,7 @@ const FreeRooms: React.FC = () => {
             query={query}
             onQueryChange={setQuery}
             t={t}
+            searching={searching}
           />
         }
         ListEmptyComponent={() =>
