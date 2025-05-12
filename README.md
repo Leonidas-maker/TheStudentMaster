@@ -34,7 +34,7 @@ TheStudentMaster is available on both iOS and Android platforms. Download the ap
 - **🎒 Moodle Integration**: Access your Moodle courses, submissions, grades, and materials without leaving the app.
 - **🗺️ Interactive Room Map**: Explore the campus on an interactive map to locate lecture halls, study rooms, and other facilities.
 - **🚆 Train & Tram Timetable**: View real-time departures and get step-by-step directions to campus.
-- **📰 Newsroom**: Stay up to date with app updates, announcements, and all DHBW-related news.  
+- **📰 Newsroom**: Stay up to date with app updates, announcements, and all DHBW-related news.
 
 ---
 
