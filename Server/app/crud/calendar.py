@@ -1,4 +1,4 @@
-from sqlalchemy import select, func, distinct
+from sqlalchemy import select, func, case, distinct
 from sqlalchemy.orm import load_only, joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 import uuid
@@ -8,6 +8,7 @@ import uuid
 import datetime
 
 from models import m_calendar
+from config.settings import DEFAULT_TIMEZONE
 
 
 async def get_available_calendars(db: AsyncSession) -> List[m_calendar.University]:
@@ -68,7 +69,7 @@ async def get_calendar_by_university_and_course(
             m_calendar.Session.end_time,
             rooms_agg,
             tags_agg,
-            m_calendar.University.name,
+            m_calendar.University.name.label("university_name"),
             m_calendar.Course.last_modified,
         )
         .select_from(m_calendar.Session)
@@ -151,25 +152,36 @@ async def get_calendar_last_modified(
 async def get_rooms_last_next_booked(
     db: AsyncSession,
     room_ids: List[int],
+    current_time: Optional[datetime.datetime] = None,
 ) -> list[m_calendar.RoomBooking]:
     """
-    Get the next booked time for specific rooms.
+    Retrieve the previous and upcoming booking times for the specified rooms.
 
-    :param db: Database session.
+    :param db: AsyncSession instance for database operations.
     :param room_ids: List of room IDs.
-    :return: List of dicts with keys: room_id, last_booked, next_booked.
+    :param current_time: Optional current time; if not provided, uses the current time in the default timezone.
+    :return: List of RoomBooking objects containing room_id, last_booked, and next_booked.
     """
-    res = await db.execute(
+    now = current_time or datetime.datetime.now(DEFAULT_TIMEZONE)
+
+    stmt = (
         select(
-            m_calendar.SessionRoom.room_id,
-            func.min(m_calendar.Session.start_time).label("last_booked"),
-            func.max(m_calendar.Session.end_time).label("next_booked"),
+            m_calendar.SessionRoom.room_id.label("room_id"),
+            func.max(case((m_calendar.Session.end_time <= now, m_calendar.Session.end_time), else_=None)).label(
+                "last_booked"
+            ),
+            func.min(case((m_calendar.Session.start_time >= now, m_calendar.Session.start_time), else_=None)).label(
+                "next_booked"
+            ),
         )
-        .join(
-            m_calendar.Session,
-            m_calendar.SessionRoom.session_id == m_calendar.Session.id,
-        )
-        .filter(m_calendar.SessionRoom.room_id.in_(room_ids))
+        .join(m_calendar.Session, m_calendar.Session.id == m_calendar.SessionRoom.session_id)
+        .where(m_calendar.SessionRoom.room_id.in_(room_ids))
         .group_by(m_calendar.SessionRoom.room_id)
     )
-    return [m_calendar.RoomBooking(**row._mapping) for row in res.all()]
+
+    result = await db.execute(stmt)
+
+    return [
+        m_calendar.RoomBooking(room_id=row.room_id, last_booked=row.last_booked, next_booked=row.next_booked)
+        for row in result
+    ]

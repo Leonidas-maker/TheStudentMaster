@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from sqlalchemy.orm import Session, joinedload
 import json
+from typing import Optional
 
 
 # ~~~~~~~~~~~~~~~ Middleware ~~~~~~~~~~~~~~ #
@@ -23,41 +24,6 @@ from utils.canteen.canteen_scraper import fetch_menu
 # ======================================================== #
 # ======================== Update ======================== #
 # ======================================================== #
-def create_canteens(db: Session):
-    """function to add all canteens included in the canteen_addresses.json file to the database
-
-    Args:
-        db (Session): database session
-    """
-    try:
-        with open("./data/canteen_addresses.json", "r") as file:
-            canteens = json.load(file)
-        for canteen_obj in canteens:
-            # create address for canteen
-            address_new = s_general.AddressCreate(
-                address1=canteen_obj["address1"],
-                address2=canteen_obj["address2"] if "address2" in canteen_obj else None,
-                district=canteen_obj["district"],
-                postal_code=canteen_obj["postal_code"],
-                city=canteen_obj["city"],
-                country=canteen_obj["country"],
-            )
-            address_new = create_address(db, address_new)
-
-            # create canteen
-            canteen_new = m_canteen.Canteen(
-                canteen_name=canteen_obj["name"],
-                canteen_short_name=(canteen_obj["short_name"] if "short_name" in canteen_obj else None),
-                address_id=address_new.address_id,
-            )
-            create_canteen(db, canteen_new)
-        db.commit()
-    except Exception as e:
-        # print error and rollback changes to database
-        db.rollback()
-        raise e
-
-
 def update_canteen_menus(db: Session, progress, task_id) -> bool:
     """This function updates the canteen menus in the database. This function is used by the repeated update task.
 
@@ -93,42 +59,43 @@ def clean_canteen_menus(db: Session) -> bool:
         db.rollback()
         raise e
 
-def create_canteen(db: Session, canteen: m_canteen.Canteen) -> m_canteen.Canteen:
-    if isinstance(canteen.address, m_generic.Address):
-        canteen_address = create_address(db, canteen.address)
-    elif canteen.address_id:
-        canteen_address = db.query(m_generic.Address).filter_by(address_id=canteen.address_id).first()
-    else:
-        raise ValueError("Error while creating canteen. Address is missing.")
+def get_create_canteen(db: Session, canteen_name: str, canteen_short_name: str, address_id: int, image_url: Optional[str] = None) -> m_canteen.Canteen:
+    """This function checks if a canteen exists in the database. If it does not exist, it creates a new canteen.
+
+    :param db: database session
+    :param canteen_name: name of the canteen
+    :param canteen_short_name: short name of the canteen
+    :param address_id: ID of the address
+    :param image_url: URL of the canteen image, defaults to ""
+    :return: canteen object
+    """
+    if not canteen_name:
+        raise ValueError("Parameter canteen_name is required")
+    if not canteen_short_name:
+        raise ValueError("Parameter canteen_short_name is required")
+    if not address_id:
+        raise ValueError("Parameter address_id is required")
 
     # Check if canteen exists
-    canteen_exists = (
-        db.query(m_canteen.Canteen)
-        .filter_by(
-            canteen_name=canteen.canteen_name,
-            address_id=canteen_address.address_id,
-        )
-        .first()
-    )
+    canteen_exists = db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first()
 
     if canteen_exists:
+        # check if image has been updated
+        if canteen_exists.image_url != image_url:
+            canteen_exists.image_url = image_url
+            db.flush()
         return canteen_exists
 
-    if canteen.image_url == "":
-        canteen.image_url = None
-
+    # Create new canteen
     new_canteen = m_canteen.Canteen(
-        canteen_name=canteen.canteen_name,
-        canteen_short_name=canteen.canteen_short_name,
-        image_url=canteen.image_url,
-        address_id=canteen_address.address_id,
+        canteen_name=canteen_name,
+        canteen_short_name=canteen_short_name,
+        address_id=address_id,
+        image_url=image_url,
     )
-   
     db.add(new_canteen)
     db.flush()
-
     return new_canteen
-
 
 def create_dish(db: Session, dish: m_canteen.Dish) -> m_canteen.Dish:
     if not dish:

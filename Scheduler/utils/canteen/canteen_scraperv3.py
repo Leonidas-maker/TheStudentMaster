@@ -1,6 +1,6 @@
 import re
 import requests
-from datetime import datetime
+import datetime
 from sqlalchemy.orm import Session
 
 # helpers
@@ -65,16 +65,14 @@ def sync_dhbw_menus(db: Session, progress=None, task_id=None) -> bool:
         addr_db = create_address(db, addr_in)
 
         # 2) fetch canteen
-        canteen_in = m_canteen.Canteen(
-            canteen_name=mensa["name"],
+        canteen_db = canteen.get_create_canteen(db, canteen_name=mensa["name"],
+            canteen_short_name=mensa["name"].lower().replace(" ", "_"),
             address_id=addr_db.address_id,
-            image_url=None,
-        )
-        canteen_db = canteen.create_canteen(db, canteen_in)
+            image_url=None)
 
         # 3) for each menu day, create dishes & menus
         for menu in entry.get("menus", []):
-            serving_date = datetime.fromisoformat(menu["date"][:-1]).date()
+            serving_date = datetime.datetime.fromisoformat(menu["date"]).date() + datetime.timedelta(days=1)
             for category in ("starters", "mainCourses", "sideOrders", "desserts"):
                 for d in menu.get(category, []):
                     price = d.get("priceStudent")

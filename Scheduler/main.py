@@ -13,7 +13,6 @@ def main():
     task_scheduler = TaskScheduler(verbose=True)
 
     db = SessionLocal()
-    canteen.create_canteens(db)
     db.close()
 
     task_scheduler.add_task(

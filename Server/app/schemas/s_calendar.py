@@ -68,7 +68,7 @@ class CalendarBackend(BaseModel):
 class NativeCalendarIdentifier(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    university_uuid: UUID4
+    id: UUID4 = Field(..., serialization_alias="university_uuid")
     course_name: str
 
     @field_validator("course_name", mode="before")
@@ -83,8 +83,8 @@ class NativeCalendarIdentifier(BaseModel):
 class ResAvailableNativeCalendars(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    university_name: str
-    university_uuid: UUID4
+    name: str = Field(..., serialization_alias="university_name")
+    id: UUID4 = Field(..., serialization_alias="university_uuid")
     course_names: List[str]
 
 
@@ -108,7 +108,7 @@ class ResEventData(BaseModel):
 
 class ResCalendar(BaseModel):
     university_name: Optional[str] = None
-    course_name: str
+    name: str = Field(..., serialization_alias="course_name")
     data: ResEventData
     hash: datetime
     last_modified: datetime

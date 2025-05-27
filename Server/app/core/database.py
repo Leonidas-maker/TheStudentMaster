@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.exc import OperationalError
-from sqlalchemy import event, text
+from sqlalchemy import event, text, DateTime
+from sqlalchemy.types import TypeDecorator, DateTime
+from sqlalchemy.orm import Mapper
 import os
 from contextlib import asynccontextmanager
 from rich.console import Console
@@ -8,6 +10,7 @@ from urllib.parse import quote_plus
 import time
 import asyncio
 from typing import AsyncIterator
+
 
 from config.database import Base
 from config.settings import DEFAULT_TIMEZONE, ENVIRONMENT
@@ -105,3 +108,33 @@ async def get_async_session():
         yield db
     finally:
         await db.close()
+
+
+
+class UTCDateTime(TypeDecorator):
+    impl = DateTime(timezone=False)
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        # Python → DB
+        if value is None:
+            return None
+        if value.tzinfo is not None:
+            # in UTC konvertieren und tzinfo entfernen
+            value = value.astimezone(DEFAULT_TIMEZONE).replace(tzinfo=None)
+        return value
+
+    def process_result_value(self, value, dialect):
+        # DB → Python
+        if value is None:
+            return None
+        # aus naivem UTC ein tz-aware UTC machen
+        return DEFAULT_TIMEZONE.localize(value)
+
+
+@event.listens_for(Mapper, "mapper_configured")
+def _replace_datetime(mapper_, class_):
+    for prop in mapper_.iterate_properties:
+        for col in getattr(prop, "columns", []):
+            if isinstance(col.type, DateTime):
+                col.type = UTCDateTime()

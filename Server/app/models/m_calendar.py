@@ -10,7 +10,7 @@ from sqlalchemy import (
     UniqueConstraint,
     DateTime,
     UUID,
-    PrimaryKeyConstraint,
+    PrimaryKeyConstraint, TIMESTAMP
 )
 from sqlalchemy.orm import validates, relationship, Mapped, mapped_column
 import datetime
@@ -60,7 +60,7 @@ class University(Base):
 
     @property
     def course_names(self):
-        return [course.course_name for course in self.courses]
+        return [course.name for course in self.courses]
 
     @property
     def room_count(self):
@@ -175,11 +175,11 @@ class Session(Base):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Generiere external_id, wenn nicht gesetzt
+        # Generate a SHA1 hash for the session if external_id is not provided
         if not self.external_id:
             self.external_id = self.generate_sha1_hash()
 
-        # Konvertiere start_time und end_time in UTC, falls sie als Strings übergeben werden
+        # Convert start_time and end_time to UTC if they are strings
         if isinstance(self.start_time, str):
             dt = parser.parse(self.start_time)
             if dt.tzinfo is None:
@@ -192,13 +192,13 @@ class Session(Base):
             self.end_time = dt.astimezone(DEFAULT_TIMEZONE)
 
     def generate_sha1_hash(self):
-        # Konvertiere start_time und end_time zu Strings
+        # Convert start_time and end_time to ISO format strings
         start_str = (
             self.start_time.isoformat() if isinstance(self.start_time, datetime.datetime) else str(self.start_time)
         )
         end_str = self.end_time.isoformat() if isinstance(self.end_time, datetime.datetime) else str(self.end_time)
 
-        # Kombiniere start_time und end_time, encodiere und generiere SHA-1 Hash
+        # Create a SHA1 hash of the concatenated start and end time strings
         hash_input = f"{start_str}{end_str}".encode("utf-8")
         return hashlib.sha1(hash_input).hexdigest()
 

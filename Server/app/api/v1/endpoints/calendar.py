@@ -20,7 +20,7 @@ from utils.exceptions import handle_exception
 router = APIRouter()
 
 
-@router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars])
+@router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars], tags=["Calendar"])
 @cache(expire=60, key_builder=request_key_builder)
 async def api_get_available_calendars(ep_context: EndpointContext = Depends(get_endpoint_context)):
     try:
@@ -30,7 +30,7 @@ async def api_get_available_calendars(ep_context: EndpointContext = Depends(get_
         await handle_exception(e, ep_context, "Failed to search clubs")
 
 
-@router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar)
+@router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar, tags=["Calendar"])
 async def api_get_calendar(
     university_uuid: uuid.UUID,
     course_name: str,
@@ -45,7 +45,7 @@ async def api_get_calendar(
         await handle_exception(e, ep_context, "Failed to get calendar")
 
 
-@router.get("/{university_uuid}/{course_name}/hash", response_model=s_generic.MessageResponse)
+@router.get("/{university_uuid}/{course_name}/hash", response_model=s_generic.MessageResponse, tags=["Calendar"])
 @cache(expire=60, key_builder=request_key_builder)
 async def api_get_calendar_hash(
     university_uuid: uuid.UUID, course_name: str, ep_context: EndpointContext = Depends(get_endpoint_context)
@@ -60,7 +60,7 @@ async def api_get_calendar_hash(
         await handle_exception(e, ep_context, "Failed to get calendar hash")
 
 
-@router.get("/rooms/free/{university_uuid}", response_model=List[s_calendar.RoomAvailabilityResponse])
+@router.get("/rooms/free/{university_uuid}", response_model=List[s_calendar.RoomAvailabilityResponse], tags=["Calendar"])
 @cache(expire=60, key_builder=request_key_builder)
 async def api_get_free_rooms_by_university(
     university_uuid: uuid.UUID,

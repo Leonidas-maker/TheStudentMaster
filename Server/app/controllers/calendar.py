@@ -10,7 +10,7 @@ from fastapi_cache.decorator import cache
 
 from models import m_calendar
 from schemas import s_calendar, s_generic
-from config.settings import DEFAULT_TIMEZONE_RESPONSE
+from config.settings import DEFAULT_TIMEZONE_RESPONSE, DEFAULT_TIMEZONE
 from core.generic import EndpointContext
 
 from crud import calendar as crud_calendar, university as crud_university
@@ -46,15 +46,15 @@ async def get_calendar_by_university_and_course(
         tags = row["tags"].split(",") if row["tags"] else []
 
         # Convert and format times
-        start_iso = row["start_time"].astimezone(DEFAULT_TIMEZONE_RESPONSE).isoformat()
-        end_iso = row["end_time"].astimezone(DEFAULT_TIMEZONE_RESPONSE).isoformat()
+        start_iso = row["start_time"].astimezone(DEFAULT_TIMEZONE_RESPONSE).replace(tzinfo=None).isoformat()
+        end_iso = row["end_time"].astimezone(DEFAULT_TIMEZONE_RESPONSE).replace(tzinfo=None).isoformat()
 
         # Create event object
         events.append(
             s_calendar.ResEvent(
                 start=start_iso,
                 end=end_iso,
-                summary=row["lecture_name"],
+                summary=row["name"],
                 location=", ".join(rooms),
                 description=s_calendar.ResEventDescription(
                     tags=tags,
@@ -72,7 +72,7 @@ async def get_calendar_by_university_and_course(
     first = rows[0]
     return s_calendar.ResCalendar(
         university_name=first["university_name"],
-        course_name=course_name,
+        name=course_name,
         data=s_calendar.ResEventData(
             X_WR_TIMEZONE=DEFAULT_TIMEZONE_RESPONSE.zone or "",
             events=events,
@@ -93,7 +93,7 @@ async def get_free_rooms(
     :param end_time: End time for the room availability check
     :return: List of available room names
     """
-    if start_time >= end_time:
+    if start_time.replace(tzinfo=None) >= end_time.replace(tzinfo=None):
         raise HTTPException(status_code=400, detail="Start time must be before end time.")
 
     if not await crud_university.university_exists(db, university_uuid):
@@ -107,10 +107,10 @@ async def get_free_rooms(
             status_code=404, detail="No free rooms found in the specified time range for this university."
         )
 
-    free_room_ids = [room.room_id for room in free_rooms]
+    free_room_ids = [room.id for room in free_rooms]
 
     # Fetch first and last booking times for the free rooms
-    rooms_booked = await crud_calendar.get_rooms_last_next_booked(db, free_room_ids)
+    rooms_booked = await crud_calendar.get_rooms_last_next_booked(db, free_room_ids, start_time)
 
     rooms_booked_dic = {
         data.room_id: {"last_booked": data.last_booked, "next_booked": data.next_booked} for data in rooms_booked
@@ -119,10 +119,10 @@ async def get_free_rooms(
     # Build the response with room names and their booking information
     response = []
     for room in free_rooms:
-        rooms_booked = rooms_booked_dic.get(room.room_id, {"last_booked": None, "next_booked": None})
+        rooms_booked = rooms_booked_dic.get(room.id, {"last_booked": None, "next_booked": None})
         response.append(
             s_calendar.RoomAvailabilityResponse(
-                room_name=room.room_name,
+                room_name=room.name,
                 last_booked=rooms_booked["last_booked"],
                 next_booked=rooms_booked["next_booked"],
             )

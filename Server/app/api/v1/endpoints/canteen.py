@@ -1,104 +1,46 @@
-from typing import Annotated
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException, Path
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemas.s_canteen import (
-    ResGetCanteen,
-    ResGetCanteenAddress,
-    ResGetCanteenMenu,
-    ResGetCanteenMenuDay,
-    ResGetCanteenHash,
-)
-
-from models import m_canteen
-
-from crud.canteen import get_menu_for_canteen, get_menu_for_day
 from core.database import get_db
 
-###########################################################################
-################################### MAIN ##################################
-###########################################################################
+from middleware.general import get_endpoint_context
+from core.generic import EndpointContext
+from utils.exceptions import handle_exception
+
+from schemas import s_canteen
+import crud.canteen as crud_canteen
+
 router = APIRouter()
 
-# ======================================================== #
-# ======================== Canteen ======================= #
-# ======================================================== #
-@router.get("/all", response_model=list[ResGetCanteen])
-def canteen_read_all(db: Session = Depends(get_db)) -> list[dict]:
-    # Retrieve all canteens from the database and return as a list of dictionaries
-    return [canteen.as_dict() for canteen in db.query(m_canteen.Canteen).all()]
+
+@router.get("/all", response_model=list[s_canteen.ResGetCanteen], tags=["Canteen"])
+async def get_canteens_v1(db: AsyncSession = Depends(get_db)):
+    canteens = await crud_canteen.get_all_canteens(db)
+    return [s_canteen.ResGetCanteen.model_validate(canteen) for canteen in canteens]
 
 
-@router.get("/{canteen_short_name}", response_model=ResGetCanteen)
-def canteen_read(
-    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
-    db: Session = Depends(get_db),
-):
-    # Retrieve a specific canteen by its short name
-    return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict()
-
-
-@router.get("/{canteen_short_name}/address", response_model=ResGetCanteenAddress)
-def canteen_read_all_details(
-    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the address for."],
-    db: Session = Depends(get_db),
-):
-    # Retrieve complete details including address for a specific canteen
-    return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict_complete()
-
-
-# ======================================================== #
-# ===================== Canteen Menu ===================== #
-# ======================================================== #
-
-
-@router.get("/{canteen_short_name}/menu/all", response_model=ResGetCanteenMenu)
-def canteen_read_menu_all(
-    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the menu for."],
-    db: Session = Depends(get_db),
-) -> ResGetCanteenMenu:
-    # Retrieve the full menu for a specific canteen
-    return get_menu_for_canteen(db=db, canteen_short_name=canteen_short_name, current_week_only=False)
-
-
-@router.get("/{canteen_short_name}/menu/currentweek", response_model=ResGetCanteenMenu)
-def canteen_read_canteen_menu(
-    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve the menu for."],
-    db: Session = Depends(get_db),
-) -> ResGetCanteenMenu:
-    # Retrieve the current week's menu for a specific canteen
-    return get_menu_for_canteen(db=db, canteen_short_name=canteen_short_name, current_week_only=True)
-
-
-@router.get("/menu/{day}", response_model=list[ResGetCanteenMenuDay])
-def canteen_read_menu_day(
-    day: Annotated[str, "The day to retrieve the menu for. (e.g. '2021-10-01')"],
-    db: Session = Depends(get_db),
-) -> list[ResGetCanteenMenuDay]:
-    return get_menu_for_day(db=db, day=day)
-
-
-# ======================================================== #
-# ==================== Canteen Hashes ==================== #
-# ======================================================== #
-
-
-@router.get("/all/hash", response_model=list[ResGetCanteenHash])
-def canteen_read_all_hash(db: Session = Depends(get_db)) -> list[dict]:
-    try:
-        return [canteen.as_dict_hash() for canteen in db.query(m_canteen.Canteen).all()]
-    except Exception as e:
-        print(e)
-        return [{"canteen_short_name": "", "hash": ""}]
-
-
-@router.get("/{canteen_short_name}/hash", response_model=ResGetCanteenHash)
-def canteen_read_hash(
-    canteen_short_name: Annotated[str, "The short name of the canteen to retrieve."],
-    db: Session = Depends(get_db),
+@router.get("/{canteen_short_name}/menu/all", response_model=s_canteen.ResGetCanteenMenu, tags=["Canteen"])
+async def canteen_read_menu_all(
+    canteen_short_name: str = Path(..., description="Short name of the canteen"),
+    ep_context: EndpointContext = Depends(get_endpoint_context),
 ):
     try:
-        return db.query(m_canteen.Canteen).filter_by(canteen_short_name=canteen_short_name).first().as_dict_hash()
+        calendar = await crud_canteen.get_canteen(ep_context.db, canteen_short_name, with_menus=True)
+        if calendar is None:
+            raise HTTPException(status_code=404, detail="Canteen not found")
+        return s_canteen.ResGetCanteenMenu(
+            canteen_name=calendar.canteen_name,
+            canteen_short_name=calendar.canteen_short_name,
+            image_url=calendar.image_url,
+            menu=[
+                s_canteen.ResGetMenuDay(
+                    dish_type=menu.dish_type,
+                    dish=menu.dish.description,
+                    price=menu.dish.price,
+                    serving_date=menu.serving_date,
+                )
+                for menu in calendar.menus
+            ],
+        )
     except Exception as e:
-        print(e)
-        return {"canteen_short_name": "", "hash": ""}
+        await handle_exception(e, ep_context, "Failed to retrieve canteen menu")

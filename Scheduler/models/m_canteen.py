@@ -14,7 +14,7 @@ class Canteen(Base):
     # Primary key and basic information columns
     canteen_id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     canteen_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    canteen_short_name: Mapped[str | None] = mapped_column(String(255), default=None)
+    canteen_short_name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
     image_url: Mapped[str | None] = mapped_column(String(255))
     address_id: Mapped[int] = mapped_column(Integer, ForeignKey("addresses.address_id"), nullable=False)
 
@@ -67,7 +67,7 @@ class Dish(Base):
 
     # Primary key and dish information columns
     dish_id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
-    description: Mapped[str | None] = mapped_column(String(510))
+    description: Mapped[str] = mapped_column(String(510), nullable=False)
     image_url: Mapped[str | None] = mapped_column(String(255))
     price: Mapped[str] = mapped_column(String(255), nullable=False)
     last_modified: Mapped[datetime.datetime] = mapped_column(TIMESTAMP, nullable=False)
