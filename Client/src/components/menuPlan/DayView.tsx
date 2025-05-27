@@ -2,6 +2,10 @@
 import React from "react";
 import { View, Text, Pressable } from "react-native";
 import { format, addDays, isSameDay } from "date-fns";
+import { enUS } from "date-fns/locale/en-US";
+import { de } from "date-fns/locale/de";
+
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { DayViewProps } from "../../interfaces/canteenInterfaces";
@@ -14,6 +18,10 @@ const DayView: React.FC<DayViewProps> = ({
   setSelectedDate,
   startOfWeekDate,
 }) => {
+  const { i18n } = useTranslation();
+
+  // Checks the current language and sets the locale accordingly
+  const locale = i18n.language === "de" ? de : enUS;
   // ====================================================== //
   // ================== Return component ================== //
   // ====================================================== //
@@ -39,12 +47,14 @@ const DayView: React.FC<DayViewProps> = ({
               <Text
                 className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
               >
-                {format(day, "eee")}
+                {/* Format the weekday using the selected locale */}
+                {format(day, "eee", { locale })}
               </Text>
               <Text
                 className={`text-lg text-black dark:text-white ${isSelectedDay ? "font-bold" : ""}`}
               >
-                {format(day, "d")}. {format(day, "LLL")}
+                {/* Format the day and month using the selected locale */}
+                {format(day, "d", { locale })}. {format(day, "LLL", { locale })}
               </Text>
             </Pressable>
           </View>

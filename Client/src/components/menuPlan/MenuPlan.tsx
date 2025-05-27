@@ -18,6 +18,7 @@ import {
   setDay,
 } from "date-fns";
 import * as Progress from "react-native-progress";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import DayView from "./DayView";
@@ -36,12 +37,15 @@ import {
   CanteenProps,
   MenuDataProps,
 } from "../../interfaces/canteenInterfaces";
-import ConnectionMessage from "../message/ConnectionMessage";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../defaultToast/DefaultToast";
 
 // ====================================================== //
 // ====================== Component ===================== //
 // ====================================================== //
 const MenuPlan: React.FC = () => {
+  const { t } = useTranslation("meal");
+
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -56,7 +60,6 @@ const MenuPlan: React.FC = () => {
   const [menu, setMenu] = useState<MenuDataProps | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [connectionError, setConnectionError] = useState(false);
 
   // ====================================================== //
   // ====================== Variables ===================== //
@@ -79,6 +82,7 @@ const MenuPlan: React.FC = () => {
   // Sets the selected date to the current date and adjusts it for the weekend (if weekend then set to friday)
   useEffect(() => {
     setSelectedDate((date) => adjustDateForWeekend(date));
+    setCurrentDate((date) => adjustDateForWeekend(date));
   }, []);
 
   // Sets the canteen names to the canteen name data
@@ -91,7 +95,11 @@ const MenuPlan: React.FC = () => {
           await fetchCanteens(setCanteenNames);
           setProgress(1);
         } catch (error) {
-          setConnectionError(true);
+          Toast.show({
+            type: "error",
+            text1: t("connection_error_text1"),
+            text2: t("connection_error_text2"),
+          });
         } finally {
           setLoading(false);
         }
@@ -115,7 +123,11 @@ const MenuPlan: React.FC = () => {
           try {
             await fetchCanteenDishes(canteen.key, setMenu);
           } catch (error) {
-            setConnectionError(true);
+            Toast.show({
+              type: "error",
+              text1: t("connection_error_text1"),
+              text2: t("connection_error_text2"),
+            });
             setLoading(false);
           }
         }
@@ -150,14 +162,13 @@ const MenuPlan: React.FC = () => {
   // ====================================================== //
   // ====================== Functions ===================== //
   // ====================================================== //
-  // Adjusts the date for the weekend (if weekend then set to friday)
+  // Adjusts the date for the weekend (if past Friday then set to next Monday)
   const adjustDateForWeekend = (date: Date): Date => {
     if (isSaturday(date) || isSunday(date)) {
-      return setDay(subWeeks(date, 1), 5);
-    } else {
-      const today = new Date();
-      return setDay(date, today.getDay());
+      // jump to next Monday
+      return startOfWeek(addWeeks(date, 1), { weekStartsOn: 1 });
     }
+    return date;
   };
 
   // Updates the date to the new date and adjusts it for the weekend (if weekend then set to friday)
@@ -178,13 +189,53 @@ const MenuPlan: React.FC = () => {
   // Handles the back press by subtracting a week from the current displayed date
   const handleBackPress = () => {
     animateTransition();
-    setCurrentDate((current) => updateDate(subWeeks(current, 1)));
+    setCurrentDate((current) => {
+      const newDate = subWeeks(current, 1);
+      const today = new Date();
+      const adjToday = adjustDateForWeekend(today);
+      const adjStart = startOfWeek(adjToday, { weekStartsOn: 1 });
+      let toSelect: Date;
+
+      if (newDate.getTime() === adjStart.getTime()) {
+        // currently on the adjusted week → keep today (Mon–Fri)
+        toSelect = adjToday;
+      } else if (newDate < adjStart) {
+        // strictly past week → pick Friday
+        toSelect = setDay(startOfWeek(newDate, { weekStartsOn: 1 }), 5);
+      } else {
+        // future beyond adjusted → pick Monday
+        toSelect = startOfWeek(newDate, { weekStartsOn: 1 });
+      }
+
+      setSelectedDate(toSelect);
+      return newDate;
+    });
   };
 
   // Handles the forward press by adding a week to the current displayed date
   const handleForwardPress = () => {
     animateTransition();
-    setCurrentDate((current) => updateDate(addWeeks(current, 1)));
+    setCurrentDate((current) => {
+      const newDate = addWeeks(current, 1);
+      const today = new Date();
+      const adjToday = adjustDateForWeekend(today);
+      const adjStart = startOfWeek(adjToday, { weekStartsOn: 1 });
+      let toSelect: Date;
+
+      if (newDate.getTime() === adjStart.getTime()) {
+        // on adjusted current week → keep today
+        toSelect = adjToday;
+      } else if (newDate > adjStart) {
+        // strictly future week → pick Monday
+        toSelect = startOfWeek(newDate, { weekStartsOn: 1 });
+      } else {
+        // past before adjusted → pick Friday
+        toSelect = setDay(startOfWeek(newDate, { weekStartsOn: 1 }), 5);
+      }
+
+      setSelectedDate(toSelect);
+      return newDate;
+    });
   };
 
   // ====================================================== //
@@ -192,10 +243,9 @@ const MenuPlan: React.FC = () => {
   // ====================================================== //
   return (
     <View className="flex-1">
-      <ConnectionMessage
-        visible={connectionError}
-        setVisible={setConnectionError}
-      />
+      <View className="z-50">
+        <DefaultToast />
+      </View>
       <WeekSelector
         mode={"menu"}
         onBackPress={handleBackPress}
@@ -219,7 +269,7 @@ const MenuPlan: React.FC = () => {
       <Dropdown
         setSelected={setSelectedCanteen}
         values={canteenNames}
-        placeholder="Mensa auswählen"
+        placeholder={t("chooseCanteenDropdown")}
         save="key"
         search={true}
       />
