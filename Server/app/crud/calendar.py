@@ -21,20 +21,20 @@ async def get_available_calendars(db: AsyncSession) -> List[m_calendar.Universit
         select(m_calendar.University)
         .filter(m_calendar.University.courses.any())
         .options(
-            load_only(m_calendar.University.university_name, m_calendar.University.university_uuid),
-            joinedload(m_calendar.University.courses).load_only(m_calendar.Course.course_name),
+            load_only(m_calendar.University.name, m_calendar.University.id),
+            joinedload(m_calendar.University.courses).load_only(m_calendar.Course.name),
         )
-        .distinct(m_calendar.University.university_name, m_calendar.University.university_uuid)
+        .distinct(m_calendar.University.name, m_calendar.University.id)
     )
 
     # res = await db.execute(select(
-    #         m_calendar.University.university_name,
-    #         m_calendar.University.university_uuid,
+    #         m_calendar.University.name,
+    #         m_calendar.University.id,
     #         func.group_concat(m_calendar.Course.course_name)
     #     )
     #     .join(m_calendar.Course)
     #     .group_by(
-    #         m_calendar.University.university_name,
+    #         m_calendar.University.name,
     #         m_calendar.University.university_uuid
     #     ))
 
@@ -43,74 +43,74 @@ async def get_available_calendars(db: AsyncSession) -> List[m_calendar.Universit
 
 async def get_calendar_by_university_and_course(
     db: AsyncSession,
-    university_uuid: uuid.UUID,
+    university_id: uuid.UUID,
     course_name: str,
 ) -> list[dict]:
     """Get the calendar for a specific university and course.
 
     :param db: Database session.
-    :param university_uuid: UUID of the university.
+    :param university_id: ID of the university.
     :param course_name: Name of the course.
     :return: List of dictionaries containing session details.
     """
     normalized_name = course_name.replace("_", " ")
 
-    rooms_agg = func.coalesce(func.group_concat(distinct(m_calendar.Room.room_name)), "").label("rooms")
+    rooms_agg = func.coalesce(func.group_concat(distinct(m_calendar.Room.name)), "").label("rooms")
 
-    tags_agg = func.coalesce(func.group_concat(distinct(m_calendar.Tag.tag_name)), "").label("tags")
+    tags_agg = func.coalesce(func.group_concat(distinct(m_calendar.Tag.name)), "").label("tags")
 
     stmt = (
         select(
-            m_calendar.Session.session_id,
-            m_calendar.Lecture.lecture_name,
+            m_calendar.Session.id,
+            m_calendar.Lecture.name,
             m_calendar.Lecture.lecturer,
             m_calendar.Session.start_time,
             m_calendar.Session.end_time,
             rooms_agg,
             tags_agg,
-            m_calendar.University.university_name,
+            m_calendar.University.name,
             m_calendar.Course.last_modified,
         )
         .select_from(m_calendar.Session)
         .join(
             m_calendar.Lecture,
-            m_calendar.Session.lecture_id == m_calendar.Lecture.lecture_id,
+            m_calendar.Session.lecture_id == m_calendar.Lecture.id,
         )
         .join(
             m_calendar.Course,
-            m_calendar.Lecture.course_id == m_calendar.Course.course_id,
+            m_calendar.Lecture.course_id == m_calendar.Course.id,
         )
         .join(
             m_calendar.University,
-            m_calendar.Course.university_id == m_calendar.University.university_id,
+            m_calendar.Course.university_id == m_calendar.University.id,
         )
         .outerjoin(
             m_calendar.SessionRoom,
-            m_calendar.Session.session_id == m_calendar.SessionRoom.session_id,
+            m_calendar.Session.id == m_calendar.SessionRoom.session_id,
         )
         .outerjoin(
             m_calendar.Room,
-            m_calendar.SessionRoom.room_id == m_calendar.Room.room_id,
+            m_calendar.SessionRoom.room_id == m_calendar.Room.id,
         )
         .outerjoin(
             m_calendar.SessionTag,
-            m_calendar.Session.session_id == m_calendar.SessionTag.session_id,
+            m_calendar.Session.id == m_calendar.SessionTag.session_id,
         )
         .outerjoin(
             m_calendar.Tag,
-            m_calendar.SessionTag.tag_id == m_calendar.Tag.tag_id,
+            m_calendar.SessionTag.tag_id == m_calendar.Tag.id,
         )
         .where(
-            m_calendar.University.university_uuid == university_uuid,
-            m_calendar.Course.course_name == normalized_name,
+            m_calendar.University.id == university_id,
+            m_calendar.Course.name == normalized_name,
         )
         .group_by(
-            m_calendar.Session.session_id,
-            m_calendar.Lecture.lecture_name,
+            m_calendar.Session.id,
+            m_calendar.Lecture.name,
             m_calendar.Lecture.lecturer,
             m_calendar.Session.start_time,
             m_calendar.Session.end_time,
-            m_calendar.University.university_name,
+            m_calendar.University.name,
             m_calendar.Course.last_modified,
         )
         .order_by(m_calendar.Session.start_time)
@@ -122,14 +122,14 @@ async def get_calendar_by_university_and_course(
 
 async def get_calendar_last_modified(
     db: AsyncSession,
-    university_uuid: uuid.UUID,
+    university_id: uuid.UUID,
     course_name: str,
 ) -> Optional[datetime.datetime]:
     """
     Get the last modified date of a specific course for a given university.
 
     :param db: Database session.
-    :param university_uuid: UUID of the university.
+    :param university_id: ID of the university.
     :param course_name: Name of the course.
     :return: Last modified date as a string.
     """
@@ -137,10 +137,10 @@ async def get_calendar_last_modified(
 
     stmt = (
         select(m_calendar.Course.last_modified)
-        .join(m_calendar.University, m_calendar.Course.university_id == m_calendar.University.university_id)
+        .join(m_calendar.University, m_calendar.Course.university_id == m_calendar.University.id)
         .where(
-            m_calendar.University.university_uuid == university_uuid,
-            m_calendar.Course.course_name == normalized_name,
+            m_calendar.University.id == university_id,
+            m_calendar.Course.name == normalized_name,
         )
     )
 
@@ -167,7 +167,7 @@ async def get_rooms_last_next_booked(
         )
         .join(
             m_calendar.Session,
-            m_calendar.SessionRoom.session_id == m_calendar.Session.session_id,
+            m_calendar.SessionRoom.session_id == m_calendar.Session.id,
         )
         .filter(m_calendar.SessionRoom.room_id.in_(room_ids))
         .group_by(m_calendar.SessionRoom.room_id)

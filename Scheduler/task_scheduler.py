@@ -172,6 +172,7 @@ class TaskScheduler:
                     self.__log(f"Task '{task_id}' failed.", level="error")
             except Exception as e:
                 self.__log(f"Task '{task_id}' failed with error: {str(e)}", level="error")
+                self.console.print_exception()
             finally:
                 if with_progress and task_progress is not None:
                     self.progress.remove_task(task_progress)

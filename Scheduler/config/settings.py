@@ -14,7 +14,7 @@ TESTING = os.environ.get("TESTING", "False") == "True" and ENVIRONMENT == "dev"
 
 
 MAX_COURSE_NAME_LENGTH = 255
-COURSE_HISTORY_DAYS = 183
+COURSE_HISTORY_DAYS = 90
 
 # Only needed for first database setup
 ROUTE_VERSIONS_BASE = {

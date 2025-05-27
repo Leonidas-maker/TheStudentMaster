@@ -1,155 +1,133 @@
-from pydantic import BaseModel, UUID4, field_validator, field_serializer
+from pydantic import BaseModel, UUID4, field_validator, field_serializer, ConfigDict, Field, computed_field
 from typing import Optional, Union, List, Dict
 from datetime import datetime
 from dateutil import parser
 import pytz
 import hashlib
 
-from config.general import DEFAULT_TIMEZONE
+# from config.general import DEFAULT_TIMEZONE
+DEFAULT_TIMEZONE = pytz.timezone("UTC")
+
+
+###########################################################################
+################################# DHBW.APP ################################
+###########################################################################
+class ApiLectureDTO(BaseModel):
+    date: datetime
+    site: str
+    lecturer: Optional[str] = Field(default=None)
+    startTime: datetime
+    endTime: datetime
+    name: str
+    type: str
+    rooms: List[str]
+    course: str
+    id: int
+
+
+class ApiChangeInfoDTO(BaseModel):
+    fieldName: str
+    fieldType: str
+    previousValue: str
+    value: str
+    id: int
+
+
+class ApiUpdatedLectureDTO(BaseModel):
+    lecture: ApiLectureDTO
+    changeInfos: List[ApiChangeInfoDTO]
+    id: int
+
+
+class ApiSyncLecturesInfoResponseDTO(BaseModel):
+    sites: List[str]
+    startTime: datetime
+    endTime: datetime
+    status: str
+    newLectures: List[ApiLectureDTO]
+    updatedLectures: List[ApiUpdatedLectureDTO]
+    removedLectures: List[ApiLectureDTO]
+    id: int
 
 
 ###########################################################################
 ########################## Database Add / Update ##########################
 ###########################################################################
-# ======================================================== #
-# ======================= Equipment ====================== #
-# ======================================================== #
-class EquipmentBase(BaseModel):
-    """Represents a piece of equipment in a room."""
-
-    name: str
-
-
-class EquipmentCreate(EquipmentBase):
-    """Represents a piece of equipment in a room."""
-
-    pass
-
-
-class Equipment(EquipmentBase):
-    """Represents a piece of equipment in a room."""
-
-    id: int
-
-    class Config:
-        from_attributes = True
 
 
 # ======================================================== #
 # ========================= Room ========================= #
 # ======================================================== #
-class RoomBase(BaseModel):
+class Room(BaseModel):
     """Represents a room in the university."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     name: str
-    capacity: int
-    description: str
-
-
-class RoomCreate(RoomBase):
-    """Represents a room in the university."""
-
-    equipment: Union[List[str], List[Equipment]]
-
-
-class Room(RoomBase):
-    """Represents a room in the university."""
-
-    equipment: List[str]
+    capacity: Optional[int] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    equipment: List[str] = Field(default_factory=list)
 
 
 # ======================================================== #
 # ======================== Session ======================= #
 # ======================================================== #
-class SessionBase(BaseModel):
+
+def session_parse_dt(v: Union[str, datetime]) -> datetime:
+    """Parses a datetime string into a datetime object."""
+    if isinstance(v, str):
+        dt = parser.parse(v)
+        if dt.tzinfo is None:
+            dt = pytz.utc.localize(dt)
+        return dt.astimezone(DEFAULT_TIMEZONE)
+    return v.astimezone(DEFAULT_TIMEZONE) if isinstance(v, datetime) else v
+
+def get_session_hash(start: datetime, end: datetime) -> str:
+    """Generates a hash for the session based on its start and end times."""
+    key = f"{start.isoformat()}|{end.isoformat()}"
+    return hashlib.sha1(key.encode("utf-8")).hexdigest()
+
+class Lecture(BaseModel):
     """Represents a session in the university."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    name: str
+    lecturer: Optional[str] = Field(default=None)
 
     start: datetime
     end: datetime
-    rooms: Optional[List[str]] = None
-    tags: Optional[List[str]] = None
+    rooms: List[str] = Field(default_factory=list)
+    tags: List[str] = Field(default_factory=list)
 
     @field_validator("start", "end", mode="before")
-    def parse_datetime(cls, value):
-        if isinstance(value, str):
-            dt = parser.parse(value)
-            if dt.tzinfo is None:
-                dt = pytz.utc.localize(dt)
-            return dt.astimezone(DEFAULT_TIMEZONE)
-        elif isinstance(value, datetime):
-            return value.astimezone(DEFAULT_TIMEZONE)
-        else:
-            raise ValueError(f"Invalid type for 'start' or 'end': {type(value)}")
+    def _parse_dt(cls, v):
+        return session_parse_dt(v)
 
     @field_serializer("start", "end")
-    def serialize_datetime(self, value: datetime, _info) -> str:
-        if isinstance(value, datetime):
-            return value.astimezone(DEFAULT_TIMEZONE).isoformat()
-        elif isinstance(value, str):
-            dt = parser.parse(value)
-            if dt.tzinfo is None:
-                dt = pytz.utc.localize(dt)
-            return dt.astimezone(DEFAULT_TIMEZONE).isoformat()
-        else:
-            raise ValueError(f"Clould not serialize 'start' or 'end' field: {value} of type {type(value)}")
+    def _ser_dt(self, v: datetime, _info) -> str:
+        return v.astimezone(DEFAULT_TIMEZONE).isoformat()
 
 
-class SessionCreateUpdate(SessionBase):
-    """Represents a session in the university."""
 
-    external_id: str
-
-    # Hash the start and end times to create a unique identifier
-    @field_validator("external_id", mode="before")
-    def hash_times(cls, value: str, values: Dict[str, any]) -> str:
-        if value is None:
-            start = values.get("start")
-            end = values.get("end")
-            if start and end:
-                return hashlib.md5(f"{start}{end}".encode()).hexdigest()
-            else:
-                raise ValueError("Cannot generate external_id without 'start' and 'end' fields.")
-        return value
-
-
-# ======================================================== #
-# ======================== Lecture ======================= #
-# ======================================================== #
-class LectureBase(BaseModel):
-    """Represents a lecture in a course."""
-
-    lecturer: str
-
-
-class LectureCreate(LectureBase):
+class LectureCreate(Lecture):
+    """Represents a session in the university.
+    The 'external_id' field is a unique identifier for the session.
     """
-    Represents a lecture in a course.
+    @computed_field
+    @property
+    def external_id(self) -> str:
+        start: datetime = self.start
+        end:   datetime = self.end
+        if not start or not end:
+            raise ValueError("Cannot generate external_id without both start and end")
 
-    The 'sessions' field is a dictionary where the keys are the external IDs or hashes of the timetable entries.
-    """
-
-    name: str
-    sessions: List[SessionCreateUpdate]
-
-
-# class LectureUpdate(LectureBase):
-#     """
-#     Used to update a lecture in a course.
-
-#     The 'new_sessions' field is a dictionary where the keys are the external IDs or hashes of the timetable entries.
-#     The 'updated_sessions' field is a dictionary where the keys are the external IDs or hashes of the timetable entries.
-#     The 'deleted_sessions' field is a list of session external IDs or hashes of the timetable entries.
-#     """
-
-#     new_sessions: Optional[List[SessionBase]] = None
-#     updated_sessions: Optional[Dict[str, SessionBase]] = None
-#     deleted_sessions: Optional[List[str]] = None
-
-
-class Lecture(LectureBase):
-    """Represents a lecture in a course."""
-
-    name: str
+        return get_session_hash(start, end)
+    
+class LectureUpdate(LectureCreate):
+    """Represents an updated session in the university."""
+    old_name: str
+    old_external_id: str
 
 
 # ======================================================== #
@@ -170,55 +148,13 @@ class CourseCreate(CourseBase):
 
     lectures: List[LectureCreate]
 
-
-# class CourseUpdate(BaseModel):
-#     """
-#     Used to update a course in the university.
-
-#     The 'new_lectures' field is a dictionary where the keys are the lecture names and the values are the lecture base models.
-#     The 'updated_lectures' field is a dictionary where the keys are the lecture names and the values are the lecture update models.
-#     The 'deleted_lectures' field is a list of lecture names.
-#     """
-#     new_lectures:  List[LectureCreate] = None
-#     updated_lectures: Optional[Dict[str, LectureUpdate]] = None
-#     deleted_lectures: Optional[List[str]] = None
-
-
 ###########################################################################
 ########################### Scraper/Fetcher Base ##########################
 ###########################################################################
-
-
-class DHBWLecture(LectureBase):
-    """Represents a lecture in a course."""
-
-    sessions: Dict[str, SessionBase]
-    lecturer: str
-
-    def to_lecture_create(self, lecture_name) -> LectureCreate:
-        sessions_create = [
-            SessionCreateUpdate(external_id=external_id, **session.model_dump())
-            for external_id, session in self.sessions.items()
-        ]
-        return LectureCreate(name=lecture_name, lecturer=self.lecturer, sessions=sessions_create)
-
-
-class DHBWCourses(BaseModel):
-    courses: Dict[str, Dict[str, DHBWLecture]] = {}
-
-    def to_courses_create(self) -> List[CourseCreate]:
-        courses_create = []
-        for course_name, lectures_dict in self.courses.items():
-            lectures_create = [
-                lecture.to_lecture_create(lecture_name) for lecture_name, lecture in lectures_dict.items()
-            ]
-            course_create = CourseCreate(name=course_name, lectures=lectures_create)
-            courses_create.append(course_create)
-        return courses_create
-
-
-class DHBWCourseUpdate(DHBWCourses):
-    deleted_sessions: Dict[str, List[str]] = {}
-
-    def to_dhbw_courses(self) -> DHBWCourses:
-        return DHBWCourses(courses=self.courses)
+class DHBWCourseUpdate(BaseModel):
+    """Represents an update from the DHBW API."""
+    
+    new_sessions: List[LectureCreate] = Field(default_factory=list)
+    updated_sessions: List[LectureUpdate] = Field(default_factory=list)
+    deleted_sessions: List[str] = Field(default_factory=list)
+    

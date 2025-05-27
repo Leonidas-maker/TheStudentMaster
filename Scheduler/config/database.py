@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.exc import OperationalError
 
 
-from config.general import DEFAULT_TIMEZONE, ENVIRONMENT, Config
+from config.settings import DEFAULT_TIMEZONE, ENVIRONMENT
 
 # Set max retries and delay between retries
 MAX_RETRIES = 5
@@ -18,13 +18,12 @@ console = Console()
 
 if ENVIRONMENT == "dev":
     # Load database configuration from a config file
-    server_config = Config()
 
     # Extract database connection details from the configuration
-    db_host = server_config.get("DATABASE", "host")
-    db_user = server_config.get("DATABASE", "user")
-    db_password = server_config.get("DATABASE", "password")
-    db_database = server_config.get("DATABASE", "database")
+    db_host = os.getenv("DB_HOST", "127.0.0.1")
+    db_user = os.getenv("DB_USER", "root")
+    db_password = os.getenv("DB_PASSWORD", "root")
+    db_database = os.getenv("DB_DATABASE", "tsm")
     encoded_db_password = quote_plus(db_password)
     ssl_args = {}
 
