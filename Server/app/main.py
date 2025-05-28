@@ -5,7 +5,7 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
 from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as aioredis
-
+import os
 
 from config.database import Base
 from config.settings import REDIS_URL, REDIS_PORT, REDIS_PASSWORD
@@ -53,32 +53,32 @@ async def lifespan(app: FastAPI):
         redis_host=REDIS_URL, redis_port=REDIS_PORT, redis_password=REDIS_PASSWORD, redis_db=1
     )
 
-    # scheduler.add_task(
-    #     "refresh_calendar",
-    #     calendar_core.refresh_all_dhbw_calendars,
-    #     cron="0 12 * * Sat",  # Every 7 days
-    #     on_startup=True,
-    #     with_console=True,
-    #     with_progress=True,
-    # )
-
     scheduler.add_task(
-        "update_calendar",
-        calendar_core.update_all_dhbw_calendars,
-        cron="*/20 * * * *",  # Every 20 minutes
-        blocked_by=["refresh_calendar"],
+        "refresh_calendar",
+        calendar_core.refresh_all_dhbw_calendars,
+        cron="0 12 * * Sat",  # Every 7 days
         on_startup=True,
         with_console=True,
         with_progress=True,
     )
 
+    # scheduler.add_task(
+    #     "update_calendar",
+    #     calendar_core.update_all_dhbw_calendars,
+    #     cron="*/5 * * * *",  # Every 5 minutes
+    #     blocked_by=["refresh_calendar"],
+    #     on_startup=True,
+    #     with_console=True,
+    #     with_progress=True,
+    # )
+
     scheduler.start()
     yield
     scheduler.stop()
 
-
-with open("app_description.md", "r", encoding="utf-8") as file:
+with open(os.path.join(os.path.dirname(__file__), "app_description.md"), "r", encoding="utf-8") as file:
     description_content = file.read()
+
 app = FastAPI(
     lifespan=lifespan,
     swagger_ui_parameters={"operationsSorter": "tag"},

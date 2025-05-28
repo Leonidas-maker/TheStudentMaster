@@ -20,7 +20,7 @@ from utils.exceptions import handle_exception
 router = APIRouter()
 
 
-@router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars], tags=["Calendar"])
+@router.get("/available_calendars", response_model=List[s_calendar.ResAvailableNativeCalendars], response_model_by_alias=False, tags=["Calendar"])
 @cache(expire=60, key_builder=request_key_builder)
 async def api_get_available_calendars(ep_context: EndpointContext = Depends(get_endpoint_context)):
     try:
@@ -30,7 +30,7 @@ async def api_get_available_calendars(ep_context: EndpointContext = Depends(get_
         await handle_exception(e, ep_context, "Failed to search clubs")
 
 
-@router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar, tags=["Calendar"])
+@router.get("/{university_uuid}/{course_name}", response_model=s_calendar.ResCalendar, response_model_by_alias=False, tags=["Calendar"])
 async def api_get_calendar(
     university_uuid: uuid.UUID,
     course_name: str,

@@ -1,6 +1,7 @@
 import json
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+import os
 
 from models import m_calendar, m_stats
 from schemas import s_generic
@@ -28,7 +29,8 @@ async def init_calendar(session: AsyncSession) -> None:
             session.add(m_calendar.CalendarBackend(name=backend, is_custom_available=is_custom))
 
     # 2) Load universities from JSON file
-    with open("./data/ger_univercity.json", "r", encoding="utf-8") as f:
+    json_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "ger_univercity.json")
+    with open(json_file_path, "r", encoding="utf-8") as f:
         data: list = json.load(f)
 
     # 3) Retrieve already existing university names

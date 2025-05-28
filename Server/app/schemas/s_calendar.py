@@ -68,12 +68,11 @@ class CalendarBackend(BaseModel):
 class NativeCalendarIdentifier(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: UUID4 = Field(..., serialization_alias="university_uuid")
+    id: UUID4 = Field(..., alias="university_uuid")
     course_name: str
 
     @field_validator("course_name", mode="before")
     def normalize_course_name(cls, v: str) -> str:
-        # ersetzt Unterstriche und trimmt
         return v.replace("_", " ").strip()
 
 
@@ -83,8 +82,8 @@ class NativeCalendarIdentifier(BaseModel):
 class ResAvailableNativeCalendars(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: str = Field(..., serialization_alias="university_name")
-    id: UUID4 = Field(..., serialization_alias="university_uuid")
+    university_name: str = Field(..., alias="name")
+    university_uuid: UUID4 = Field(..., alias="id")
     course_names: List[str]
 
 
@@ -108,7 +107,7 @@ class ResEventData(BaseModel):
 
 class ResCalendar(BaseModel):
     university_name: Optional[str] = None
-    name: str = Field(..., serialization_alias="course_name")
+    course_name: str = Field(..., alias="name")
     data: ResEventData
     hash: datetime
     last_modified: datetime

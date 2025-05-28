@@ -243,7 +243,6 @@ async def refresh_lecture(
     else:
         if type(lecture_data[0]) == s_calendar.LectureUpdate:
             raise ValueError(f"Lecture {lecture_name} not found, but LectureUpdate provided")
-
         new_lecture, new_sessions = await create_lecture(
             db,
             car_context,
@@ -423,8 +422,8 @@ async def refresh_all_dhbw_calendars(db: AsyncSession, console: Console, progres
             # Delete all sessions that are not in the new calendar
             threshold = (
                 datetime.datetime.now(tz=DEFAULT_TIMEZONE) - datetime.timedelta(days=COURSE_HISTORY_DAYS)
-            ).replace(tzinfo=None)
-            now = datetime.datetime.now(tz=DEFAULT_TIMEZONE).replace(tzinfo=None)
+            )
+            now = datetime.datetime.now(tz=DEFAULT_TIMEZONE)
 
             res = await db.execute(
                 delete(m_calendar.Session).where(
@@ -539,7 +538,7 @@ async def update_all_dhbw_calendars(db: AsyncSession, console: Console, progress
                                     f"Session {session_external_id} not found in lecture '{lecture_name}' for session deletion."
                                 )
 
-            now = datetime.datetime.now(tz=DEFAULT_TIMEZONE).replace(tzinfo=None)
+            now = datetime.datetime.now(tz=DEFAULT_TIMEZONE)
             res = await db.execute(
                 delete(m_calendar.Session).where(
                     m_calendar.Session.id.in_(sessions_to_delete),
@@ -554,6 +553,9 @@ async def update_all_dhbw_calendars(db: AsyncSession, console: Console, progress
                 "Sessions", car_context.new_sessions, car_context.updated_sessions, deleted_sessions
             )
             print_summary_table(university.name, [course_sum, lecture_sum, session_sum], console)
+
+            await db.flush()
+        await db.commit()
 
         return True
     except Exception:

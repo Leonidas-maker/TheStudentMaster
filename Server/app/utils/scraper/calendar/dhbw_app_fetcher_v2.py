@@ -2,10 +2,10 @@
 import requests
 from rich import print
 from rich.progress import Progress
-import asyncio
 from typing import List, Dict
 import time
 import pytz
+import re
 
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
 import schemas.s_calendar as schemes
@@ -38,21 +38,26 @@ class DHBWAppFetcher:
 
         :param progress (Progress): An instance of Rich's Progress for displaying progress bars.
         """
-        self.exam_keywords = [
-            "klausur",
-            "exam",
-            "prüfung",
-            "quiz",
-            "examen",
-            "examination",
-            "prüfungsleistung",
-            "abschlussklausur",
-            "abschlussprüfung",
-            "abschlussarbeit",
-            "prüfungsform",
-        ]
+        self.tag_patterns = {
+            # Exams (but we’ll handle “exam_review” as a special case below)
+            "exam": re.compile(
+                r"\b(?:klausur|prüfung|prüfung[s]?leistung|quiz|examen|examination|präsentation|"
+                r"abschlussklausur|abschlussprüfung|abschlussarbeit|prüfungsform)\b",
+                re.IGNORECASE,
+            ),
+            # Exam reviews
+            "exam_review": re.compile(r"\bklausureinsicht\b", re.IGNORECASE),
+            # Online sessions
+            "online": re.compile(r"\b(?:online|e-learning)\b", re.IGNORECASE),
+            # Hybrid sessions
+            "hybrid": re.compile(r"\bhybrid\b", re.IGNORECASE),
+            # Presence keywords (used to suppress online/hybrid when present)
+            "presence": re.compile(
+                r"\b(?:präsenz|vor\s*ort|in[- ]?person|face(?:-?to-?face|2face))\b",
+                re.IGNORECASE,
+            ),
+        }
 
-        self.online_keywords = ["online", "e-learning"]
 
         self.progress = progress
         self.tz = DEFAULT_TIMEZONE
@@ -69,32 +74,28 @@ class DHBWAppFetcher:
         :return: List[str]: List of tags associated with the session.
         """
         tags = set()
-        lecture_name_lower = lecture.name.lower()
+        text = " ".join([lecture.name, *lecture.rooms])
 
-        if lecture.type.lower() == "online":
-            tags.add("online")
-        elif lecture.type.lower() == "hybrid":
-            tags.add("hybrid")
+        # 1) Exam review has highest priority
+        if self.tag_patterns["exam_review"].search(text):
+            tags.add("exam_review")
+        # 2) Then any other exam
+        elif self.tag_patterns["exam"].search(text):
+            tags.add("exam")
 
-        # Check if the session is online or hybrid
-        if any(
-            (online_keyword in lecture_name_lower or online_keyword in lecture.rooms)
-            for online_keyword in self.online_keywords
-        ):
-            tags.add("online")
-        elif "hybrid" in lecture_name_lower:
-            tags.add("hybrid")
+        # 3) Online vs. hybrid vs. presence
+        #    Only tag online/hybrid if no strong presence phrase is found
+        has_presence = bool(self.tag_patterns["presence"].search(text))
+        if not has_presence:
+            if self.tag_patterns["online"].search(text) or lecture.type.lower() == "online":
+                tags.add("online")
+            if self.tag_patterns["hybrid"].search(text) or lecture.type.lower() == "hybrid":
+                tags.add("hybrid")
 
-        # Check if the session is an exam
-        if any(exam_keyword in lecture_name_lower for exam_keyword in self.exam_keywords):
-            if "klausureinsicht" in lecture_name_lower:
-                tags.add("exam_review")
-            else:
-                tags.add("exam")
+        return sorted(tags)
 
-        return list(tags)
-
-    def __clean_lecture_name(self, name: str) -> str:
+    @staticmethod
+    def __clean_lecture_name(name: str) -> str:
         """
         Cleans and formats the lecture name.
 
@@ -104,7 +105,8 @@ class DHBWAppFetcher:
         name = name.lower().title().strip()
         return name
 
-    def __clean_room_info(self, rooms: List[str]) -> List[str]:
+    @staticmethod
+    def __clean_room_info(rooms: List[str]) -> List[str]:
         """
         Cleans and formats the room information from a list of room strings.
 

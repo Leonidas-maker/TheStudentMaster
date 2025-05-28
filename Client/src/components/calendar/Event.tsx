@@ -140,6 +140,8 @@ const Event: React.FC<EventProps> = ({
           return "bg-light_exam active:bg-light_exam_active";
         } else if (event.description.tags.includes("online")) {
           return "bg-light_online active:bg-light_online_active";
+        } else if (event.description.tags.includes("exam_review")) {
+          return "bg-light_exam_review active:bg-light_exam_review_active";
         }
       }
       return "bg-light_event active:bg-light_event_active";
@@ -149,6 +151,8 @@ const Event: React.FC<EventProps> = ({
           return "bg-dark_exam active:bg-dark_exam_active";
         } else if (event.description.tags.includes("online")) {
           return "bg-dark_online active:bg-dark_online_active";
+        } else if (event.description.tags.includes("exam_review")) {
+          return "bg-dark_exam_review active:bg-dark_exam_review_active";
         }
       }
       return "bg-dark_event active:bg-dark_event_active";

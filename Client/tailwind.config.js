@@ -42,6 +42,12 @@ module.exports = {
         dark_online: "#084808",
         dark_online_active: "#1f5f1f",
 
+        //* Exam Review Class Colors
+        light_exam_review: "#00008b",
+        light_exam_review_active: "#1c1c81",
+        dark_exam_review: "#08084c",
+        dark_exam_review_active: "#1f1f6f",
+
         primary: "#0A1128",
         secondary: "#171717",
         font_primary: "#E0E0E2",
