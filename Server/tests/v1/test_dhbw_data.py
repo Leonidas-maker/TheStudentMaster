@@ -5,8 +5,13 @@ import random
 from typing import List, Dict, Any
 import datetime
 import json
+from rich.progress import track
 
 from config.settings import DEFAULT_TIMEZONE_RESPONSE  # type: ignore
+
+###########################################################################
+################################# Helpers #################################
+###########################################################################
 
 
 def clean_lecture_name(name: str) -> str:
@@ -37,12 +42,14 @@ def normalize_target(target_list: List[Dict[str, Any]]) -> Dict[int, Dict[str, A
     Wandelt die Liste im 'Ziel-Schema' (mit entityType, startTime, rooms, …)
     in das Format der 'Quell-Liste' (start, end, summary, location, description) um.
     """
-    today = datetime.date.today()
+    now = datetime.datetime.now()
+    max_future = now + datetime.timedelta(days=90)
 
     normalized = {}
     for entry in target_list:
         end = datetime.datetime.fromisoformat(entry.get("endTime", "")).astimezone(DEFAULT_TIMEZONE_RESPONSE)
-        if end.date() < today:
+
+        if end.date() < now.date() or end.date() > max_future.date():
             continue  # Skip events that are in the past
 
         location = clean_room_info(entry.get("rooms", []))
@@ -76,17 +83,23 @@ def filter_api_data(
     :return: Filtered list of events for the specified course.
     """
     now = datetime.datetime.now(DEFAULT_TIMEZONE_RESPONSE).replace(tzinfo=None)
-    return [
-        event
-        for event in api_data
-        if datetime.datetime.fromisoformat(event["start"])
-        .astimezone(DEFAULT_TIMEZONE_RESPONSE)
-        .replace(tzinfo=None)
-        .date()
-        >= now.date()
-    ]
+    max_future = now + datetime.timedelta(days=90)
+    out = []
+
+    for event in api_data:
+        end = (
+            datetime.datetime.fromisoformat(event["end"])
+            .replace(tzinfo=DEFAULT_TIMEZONE_RESPONSE)
+            .astimezone(datetime.timezone.utc)
+        )
+        if end.date() >= now.date() and end.date() <= max_future.date():
+            out.append(event)
+    return out
 
 
+###########################################################################
+################################## Tests ##################################
+###########################################################################
 def test_correct_dhbw_data(client):
     res = client.get("/api/v1/calendar/available_calendars")
     assert res.status_code == 200, f"Expected status code 200, got {res.status_code}"
@@ -102,8 +115,7 @@ def test_correct_dhbw_data(client):
             else calendar["course_names"]
         )
 
-        for course in check_courses:
-
+        for course in track(check_courses, description=f"Checking courses for {calendar['university_name']}..."):
             res = requests.get(f"https://api.dhbw.app/rapla/lectures/{site}-{course}")
             if res.status_code != 200:
                 print(
@@ -119,6 +131,12 @@ def test_correct_dhbw_data(client):
 
             normalized_dhbw_data = normalize_target(dhbw_data)
 
+            with open("./dhbw_data.json", "w", encoding="utf-8") as f:
+                json.dump(normalized_dhbw_data, f, ensure_ascii=False, indent=4)
+
+            with open("./calendar_data.json", "w", encoding="utf-8") as f:
+                json.dump(calendar_data, f, ensure_ascii=False, indent=4)
+
             assert len(normalized_dhbw_data.keys()) == len(
                 calendar_data
             ), f"Expected {len(normalized_dhbw_data.keys())} events, got {len(calendar_data)} for course {course} in {calendar['university_name']}"
@@ -128,4 +146,3 @@ def test_correct_dhbw_data(client):
                 assert (
                     event_hash in normalized_dhbw_data
                 ), f"Event {event['summary']} not found in DHBW data for course {course} in {calendar['university_name']}"
-            print(f"All events for course {course} in {calendar['university_name']} match DHBW.APP data.")

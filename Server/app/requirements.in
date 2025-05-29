@@ -1,8 +1,4 @@
 fastapi[all] 
-fastapi-mail
-alt-profanity-check
-bcrypt
-beautifulsoup4
 SQLAlchemy
 rich
 pytz
@@ -12,12 +8,18 @@ python-dateutil
 uvicorn
 pymysql
 icalendar
-cryptography
-pyotp
 fastapi-cache2
 redis
-pyyaml 
-ua-parser 
-user-agents
-anonip
 asyncmy
+apscheduler
+beautifulsoup4
+
+# pyyaml
+# ua-parser 
+# user-agents
+# anonip
+
+# fastapi-mail
+# alt-profanity-check
+# bcrypt
+# pyotp

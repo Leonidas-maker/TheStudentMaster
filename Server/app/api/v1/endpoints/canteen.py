@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database import get_db
@@ -14,8 +14,11 @@ router = APIRouter()
 
 
 @router.get("/all", response_model=list[s_canteen.ResGetCanteen], tags=["Canteen"])
-async def get_canteens_v1(db: AsyncSession = Depends(get_db)):
-    canteens = await crud_canteen.get_all_canteens(db)
+async def get_canteens_v1(
+    details: bool = Query(False, description="If true, returns detailed information about each canteen", example=False),
+    db: AsyncSession = Depends(get_db),
+):
+    canteens = await crud_canteen.get_all_canteens(db, details)
     return [s_canteen.ResGetCanteen.model_validate(canteen) for canteen in canteens]
 
 

@@ -41,4 +41,4 @@ def map_dhbw_university_to_site_code(university: str) -> Optional[str]:
         case _:
             return None
 
-COURSES_COUNT_TO_CHECK = 15
+COURSES_COUNT_TO_CHECK = 30

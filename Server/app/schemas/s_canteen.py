@@ -1,43 +1,28 @@
 import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Optional
 
-# ~~~~~~~~~~~~~~~~ Schemas ~~~~~~~~~~~~~~~~ #
 from .s_generic import CompleteAddress
-
 
 class CanteenBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    canteen_name: str
-    canteen_short_name: Optional[str]
-    image_url: Optional[str]
-
-
-# ======================================================== #
-# ======================= Requests ======================= #
-# ======================================================== #
+    canteen_name: str = Field(..., description="Name of the canteen.")
+    canteen_short_name: str = Field(..., description="Short name of the canteen, used for URL paths.")
+    image_url: Optional[str] = Field(
+        None, description="URL of the canteen's image. If not provided, no image will be displayed."
+    )
 
 
 # ======================================================== #
 # ======================= Responses ====================== #
 # ======================================================== #
-
-
 class ResGetCanteen(CanteenBase):
     model_config = ConfigDict(from_attributes=True)
-
-    canteen_name: str
-    canteen_short_name: Optional[str]
-    image_url: Optional[str]
-
-
-class ResGetCanteenAddress(CanteenBase):
-    model_config = ConfigDict(from_attributes=True)
-
-    address: CompleteAddress
-
-
+    address: Optional[CompleteAddress]  = Field(
+        None, description="Complete address of the canteen. If not provided, no address will be displayed.",
+    )
+  
 class ResGetMenuDay(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -51,10 +36,6 @@ class ResGetCanteenMenu(CanteenBase):
     model_config = ConfigDict(from_attributes=True)
 
     # Response model for a canteen's full menu
-    canteen_name: str
-    canteen_short_name: Optional[str]
-
-    image_url: Optional[str]
     menu: list[ResGetMenuDay]
 
 

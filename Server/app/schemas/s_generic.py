@@ -1,14 +1,14 @@
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, ConfigDict, model_validator
+from typing import Optional, Any
 from datetime import datetime
 
 
 # ======================================================== #
 # ======================== Address ======================= #
 # ======================================================== #
-
-
 class AddressBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     address1: str = Field(..., description="First line of the street address.")
     address2: Optional[str] = Field(
         None, description="Second line of the street address (e.g., apartment or suite number)."
@@ -34,8 +34,6 @@ class Address(AddressBase):
 # ======================================================== #
 # ====================== PostalCode ====================== #
 # ======================================================== #
-
-
 class PostalCodeBase(BaseModel):
     postal_code: str = Field(..., description="Postal or ZIP code.")
 
@@ -58,8 +56,6 @@ class PostalCode(PostalCodeBase):
 # ======================================================== #
 # ========================= City ========================= #
 # ======================================================== #
-
-
 class CityBase(BaseModel):
     city: str = Field(..., description="Name of the city.")
 
@@ -81,8 +77,6 @@ class City(CityBase):
 # ======================================================== #
 # ======================= District ======================= #
 # ======================================================== #
-
-
 class DistrictBase(BaseModel):
     district: str = Field(..., description="Name of the district, state, or region.")
 
@@ -103,8 +97,6 @@ class District(DistrictBase):
 # ======================================================== #
 # ======================== Country ======================= #
 # ======================================================== #
-
-
 class CountryBase(BaseModel):
     country: str = Field(..., description="Name of the country.")
 
@@ -121,12 +113,32 @@ class Country(CountryBase):
 # ======================= Sonstiges ====================== #
 # ======================================================== #
 class CompleteAddress(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     address1: str = Field(..., description="First line of the street address.")
     address2: Optional[str] = Field(None, description="Second line of the street address (e.g., apartment or suite).")
-    district: str = Field(..., description="District, state, or region.")
     postal_code: str = Field(..., description="Postal or ZIP code.")
     city: str = Field(..., description="Name of the city.")
+    district: str = Field(..., description="District, state, or region.")
     country: str = Field(..., description="Name of the country.")
+
+    @model_validator(mode="before")
+    def flatten(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            return data
+
+        if hasattr(data, "postal_code"):
+            return {
+                "address1": data.address1,
+                "address2": data.address2,
+                "postal_code": data.postal_code.postal_code,
+                "city": data.postal_code.city.city,
+                "district": data.postal_code.city.district.district,
+                "country": data.postal_code.city.district.country.country,
+            }
+        return data
+
+
 
 class MessageResponse(BaseModel):
     """

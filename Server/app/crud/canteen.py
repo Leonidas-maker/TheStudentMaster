@@ -5,13 +5,17 @@ from typing import Optional
 
 from models import m_canteen
 
-async def get_all_canteens(db: AsyncSession) -> list[m_canteen.Canteen]:
+async def get_all_canteens(db: AsyncSession, details: bool = False) -> list[m_canteen.Canteen]:
     """Get all canteens from the database.
 
     :param db: database session
     :return: list of canteen objects
     """
-    res = await db.execute(select(m_canteen.Canteen).options(joinedload(m_canteen.Canteen.address)))
+    query_options = []
+    if details:
+        query_options.append(joinedload(m_canteen.Canteen.address))
+
+    res = await db.execute(select(m_canteen.Canteen).options(*query_options))
     canteens = res.scalars().all()
     return list(canteens)
 
