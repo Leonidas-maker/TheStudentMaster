@@ -93,7 +93,10 @@ async def get_free_rooms(
     :param end_time: End time for the room availability check
     :return: List of available room names
     """
-    if start_time.replace(tzinfo=None) >= end_time.replace(tzinfo=None):
+    start_time = start_time.astimezone(DEFAULT_TIMEZONE)
+    end_time = end_time.astimezone(DEFAULT_TIMEZONE)
+
+    if start_time >= end_time:
         raise HTTPException(status_code=400, detail="Start time must be before end time.")
 
     if not await crud_university.university_exists(db, university_uuid):
@@ -113,7 +116,11 @@ async def get_free_rooms(
     rooms_booked = await crud_calendar.get_rooms_last_next_booked(db, free_room_ids, start_time)
 
     rooms_booked_dic = {
-        data.room_id: {"last_booked": data.last_booked, "next_booked": data.next_booked} for data in rooms_booked
+        data.room_id: {
+            "last_booked": data.last_booked.replace(tzinfo=DEFAULT_TIMEZONE) if data.last_booked else None,
+            "next_booked": data.next_booked.replace(tzinfo=DEFAULT_TIMEZONE) if data.next_booked else None,
+        }
+        for data in rooms_booked
     }
 
     # Build the response with room names and their booking information
@@ -123,8 +130,16 @@ async def get_free_rooms(
         response.append(
             s_calendar.RoomAvailabilityResponse(
                 room_name=room.name,
-                last_booked=rooms_booked["last_booked"],
-                next_booked=rooms_booked["next_booked"],
+                last_booked=(
+                    rooms_booked["last_booked"].astimezone(DEFAULT_TIMEZONE_RESPONSE)
+                    if rooms_booked["last_booked"]
+                    else None
+                ),
+                next_booked=(
+                    rooms_booked["next_booked"].astimezone(DEFAULT_TIMEZONE_RESPONSE)
+                    if rooms_booked["next_booked"]
+                    else None
+                ),
             )
         )
 

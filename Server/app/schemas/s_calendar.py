@@ -8,11 +8,9 @@ from datetime import datetime
 from dataclasses import dataclass, field
 
 
-
-from config.settings import DEFAULT_TIMEZONE
+from config.settings import DEFAULT_TIMEZONE, DEFAULT_TIMEZONE_RESPONSE
 
 from models import m_calendar
-
 
 
 ###########################################################################
@@ -156,8 +154,6 @@ class RoomAvailabilityResponse(BaseModel):
     next_booked: Optional[datetime] = None
 
 
-
-
 ###########################################################################
 ################################# DHBW.APP ################################
 ###########################################################################
@@ -222,6 +218,7 @@ class Room(BaseModel):
 # ======================== Session ======================= #
 # ======================================================== #
 
+
 def session_parse_dt(v: Union[str, datetime]) -> datetime:
     """Parses a datetime string into a datetime object."""
     if isinstance(v, str):
@@ -231,10 +228,12 @@ def session_parse_dt(v: Union[str, datetime]) -> datetime:
         return dt.astimezone(DEFAULT_TIMEZONE)
     return v.astimezone(DEFAULT_TIMEZONE) if isinstance(v, datetime) else v
 
+
 def get_session_hash(start: datetime, end: datetime) -> str:
     """Generates a hash for the session based on its start and end times."""
     key = f"{start.isoformat()}|{end.isoformat()}"
     return hashlib.sha1(key.encode("utf-8")).hexdigest()
+
 
 class Lecture(BaseModel):
     """Represents a session in the university."""
@@ -258,23 +257,25 @@ class Lecture(BaseModel):
         return v.astimezone(DEFAULT_TIMEZONE).isoformat()
 
 
-
 class LectureCreate(Lecture):
     """Represents a session in the university.
     The 'external_id' field is a unique identifier for the session.
     """
+
     @computed_field
     @property
     def external_id(self) -> str:
         start: datetime = self.start
-        end:   datetime = self.end
+        end: datetime = self.end
         if not start or not end:
             raise ValueError("Cannot generate external_id without both start and end")
 
         return get_session_hash(start, end)
-    
+
+
 class LectureUpdate(LectureCreate):
     """Represents an updated session in the university."""
+
     old_name: str
     old_external_id: str
 
@@ -297,39 +298,44 @@ class CourseCreate(CourseBase):
 
     lectures: List[LectureCreate]
 
+
 ###########################################################################
 ########################### Scraper/Fetcher Base ##########################
 ###########################################################################
 class DHBWCourseUpdate(BaseModel):
     """Represents an update from the DHBW API."""
-    
+
     new_sessions: List[LectureCreate] = Field(default_factory=list)
     updated_sessions: List[LectureUpdate] = Field(default_factory=list)
     deleted_sessions: Dict[str, List[str]] = Field(default_factory=dict)
 
 
 @dataclass
-class ExistingLecture():
+class ExistingLecture:
     """Represents an existing lecture in the university."""
 
     lecture: m_calendar.Lecture
     sessions: Dict[str, m_calendar.Session]
+
+
 @dataclass
-class ExistingCourse():
+class ExistingCourse:
     """Represents an existing course in the university."""
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     course: m_calendar.Course
     lectures: Dict[str, ExistingLecture]
 
+
 @dataclass
-class CalendarContext():
+class CalendarContext:
     university: m_calendar.University
 
     existing_courses: Dict[str, ExistingCourse]
     existing_rooms: Dict[str, m_calendar.Room]
     existing_tags: Dict[str, m_calendar.Tag]
-    
+
     new_courses: int = 0
     new_lectures: int = 0
     new_sessions: int = 0
@@ -338,8 +344,8 @@ class CalendarContext():
     updated_lectures: int = 0
     updated_sessions: int = 0
 
+
 @dataclass
 class CalendarRefreshContext(CalendarContext):
     lectures_to_delete: Set[int] = field(default_factory=set)
     sessions_to_delete: Set[int] = field(default_factory=set)
-    
