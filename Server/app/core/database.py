@@ -10,6 +10,7 @@ from urllib.parse import quote_plus
 import time
 import asyncio
 from typing import AsyncIterator
+import ssl
 
 
 from config.database import Base
@@ -48,31 +49,33 @@ if ENVIRONMENT == "dev":
     db_host = os.getenv("DB_HOST", "127.0.0.1")
     SQLALCHEMY_DATABASE_URL = f"root:root@{db_host}:3306/tsm"
     ssl_args = {}
-else:
+elif ENVIRONMENT == "prod":
+    # Extract database connection details from the environment variables
     db_host = os.getenv("DB_HOST")
     db_database = os.getenv("DB_DATABASE")
     db_user = os.getenv("DB_USER")
 
     # Get Docker secrets for the database user and password
     try:
+        my_ssl_ctx = ssl.create_default_context()
+        my_ssl_ctx.check_hostname = False
+        my_ssl_ctx.verify_mode = ssl.CERT_NONE
+
         ssl_args = {
-            "ssl": {
-                "cert": "/run/secrets/tsm_db_cert",
-                "key": "/run/secrets/tsm_db_key",
-                "check_hostname": False,
-                "ca": "/run/secrets/tsm_mariadb_ca_cert",
-            }
+            "ssl": my_ssl_ctx
         }
         with open("/run/secrets/tsm_db_password", "r") as file:
             db_password = file.read().strip()
             encoded_db_password = quote_plus(db_password)
-        with open("/run/secrets/tsm_db_cert_password", "r") as file:
-            cert_password = file.read().strip()
-            ssl_args["ssl"]["passphrase"] = cert_password
+        # with open("/run/secrets/tsm_db_cert_password", "r") as file:
+        #     cert_password = file.read().strip()
+        #     ssl_args["ssl"]["passphrase"] = cert_password
     except FileNotFoundError as e:
         raise RuntimeError("Database user and password secrets not found") from e
 
-    SQLALCHEMY_DATABASE_URL = f"{db_user}:{encoded_db_password}@{db_host}:3306/{db_database}"
+    SQLALCHEMY_DATABASE_URL = f"{db_user}:{encoded_db_password}@{db_host}/{db_database}"
+else:
+    raise RuntimeError("Invalid environment, must be either dev or prod")
 
 engine = create_async_engine(
     f"mysql+asyncmy://{SQLALCHEMY_DATABASE_URL}",

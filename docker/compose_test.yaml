@@ -1,0 +1,178 @@
+services:
+  scheduler-service:
+    image: registry.gitlab.com/themastercollection/thestudentmaster/scheduler-service:alpha
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      - ENVIRONMENT=prod
+      - DB_HOST=mariadb
+      - DB_DATABASE=prod
+      - DB_USER=prod_user
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    secrets:
+      - tsm_db_password
+      - tsm_db_cert
+      - tsm_db_key
+      - tsm_db_cert_password
+      - tsm_mariadb_ca_cert
+    networks:
+      - tsm_test_db_network
+    ports:
+      - "8102:8002"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    depends_on:
+      - mariadb
+
+  backend:
+    image: registry.gitlab.com/themastercollection/thestudentmaster:alpha
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    environment:
+      # Set environment variables for the FastAPI application
+      - ENVIRONMENT=prod
+      - DB_HOST=mariadb
+      - DB_DATABASE=prod
+      - DB_USER=prod_user
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    secrets:
+      - tsm_db_password
+      - tsm_db_cert
+      - tsm_db_key
+      - tsm_db_cert_password
+      - tsm_mariadb_ca_cert
+      - tsm_redis_password
+    networks:
+      - tsm_test_db_network
+      - tsm_test_redis_network
+      - tsm_test_shared_overlay
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    ports:
+      - "8101:8001"
+    depends_on:
+      - mariadb
+      - redis
+
+  mariadb:
+    image: registry.gitlab.com/themastercollection/thestudentmaster:mariadb
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+      - tsm_test_db_network
+    secrets:
+      - tsm_db_root_password
+      - tsm_access_user_password
+      - tsm_prod_user_password
+      - tsm_mariadb_ca_cert
+      - tsm_mariadb_cert
+      - tsm_mariadb_key
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/tsm_db_root_password
+    command: [ "--character-set-server=utf8mb4", "--collation-server=utf8mb4_uca1400_as_ci" ]
+    volumes:
+      - tsm_test_mariadb_data:/var/lib/mysql
+    configs:
+      - source: tsm_test_mariadb_init_sh
+        target: /docker-entrypoint-initdb.d/01-init.sh
+        mode: 0775
+      - source: tsm_test_mariadb_init_users_sql
+        target: /docker-entrypoint-initdb.d/02-init-users.sql
+        mode: 0644
+      - source: tsm_mariadb_config
+        target: /etc/mysql/conf.d/my_custom.cnf
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    secrets:
+      - tsm_redis_password
+    configs:
+      - source: tsm_redis_start_script
+        target: /usr/local/bin/redis_start.sh
+        mode: 0775
+    command: bash -c "/usr/local/bin/redis_start.sh"
+    volumes:
+      - tsm_test_redis_data:/data
+    networks:
+      - tsm_test_redis_network
+
+secrets:
+  tsm_db_password:
+    external: true
+  tsm_db_cert:
+    external: true
+  tsm_db_cert_password:
+    external: true
+  tsm_db_key:
+    external: true
+  tsm_backend_db_ca_cert:
+    external: true
+  tsm_db_root_password:
+    external: true
+  tsm_access_user_password:
+    external: true
+  tsm_prod_user_password:
+    external: true
+  tsm_mariadb_ca_cert:
+    external: true
+  tsm_mariadb_cert:
+    external: true
+  tsm_mariadb_key:
+    external: true
+  tsm_redis_password:
+    external: true
+
+configs:
+  tsm_test_mariadb_init_sh:
+    external: true
+  tsm_test_mariadb_init_users_sql:
+    external: true
+  tsm_mariadb_config:
+    external: true
+  tsm_redis_start_script:
+    external: true
+
+networks:
+  tsm_test_db_network:
+    driver: overlay
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 20.20.0.0/24
+  tsm_test_redis_network:
+    driver: overlay
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 20.30.0.0/24
+
+  tsm_test_shared_overlay:
+    attachable: true
+    internal: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 20.10.0.0/24
+
+volumes:
+  tsm_test_mariadb_data:
+    driver: local
+  tsm_test_redis_data:
+    driver: local

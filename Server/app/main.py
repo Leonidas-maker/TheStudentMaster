@@ -13,7 +13,7 @@ from config.settings import REDIS_URL, REDIS_PORT, REDIS_PASSWORD
 from core.database import engine, get_async_session, check_db_connection
 from core.redis import redis_manager_dependency
 
-from middleware.analytics import Analytics, Config as AnalyticsConfig
+# from middleware.analytics import Analytics, Config as AnalyticsConfig
 
 import core.init_database as init_db
 import core.calendar as calendar_core
@@ -62,15 +62,15 @@ async def lifespan(app: FastAPI):
         with_progress=True,
     )
 
-    # scheduler.add_task(
-    #     "update_calendar",
-    #     calendar_core.update_all_dhbw_calendars,
-    #     cron="*/5 * * * *",  # Every 5 minutes
-    #     blocked_by=["refresh_calendar"],
-    #     on_startup=True,
-    #     with_console=True,
-    #     with_progress=True,
-    # )
+    scheduler.add_task(
+        "update_calendar",
+        calendar_core.update_all_dhbw_calendars,
+        cron="*/5 * * * *",  # Every 5 minutes
+        blocked_by=["refresh_calendar"],
+        on_startup=True,
+        with_console=True,
+        with_progress=True,
+    )
 
     scheduler.start()
     yield
@@ -85,7 +85,7 @@ app = FastAPI(
     root_path="/api",
     title="🎓 TheStudentMaster API",
     description=description_content,
-    version="1.4.0",
+    version="1.5.0",
     contact={
         "name": "TheStudentMaster Support",
         "email": "support@thestudentmaster.de",
@@ -97,7 +97,7 @@ app = FastAPI(
 async def favicon():
     return FileResponse("static/favicon.ico")
 
-
+app.include_router(router_v1, prefix="", deprecated=True)
 app.include_router(router_v1, prefix="/v1")
 # static_folder = os.path.join(os.path.dirname(__file__), "static")
 # app.mount("/static", StaticFiles(directory=static_folder), name="static")

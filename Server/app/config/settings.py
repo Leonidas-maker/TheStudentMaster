@@ -29,7 +29,12 @@ ROUTE_VERSIONS_BASE = {
 # Redis
 REDIS_URL = os.getenv("REDIS_HOST", "127.0.0.1")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "root")
+
+if ENVIRONMENT == "dev":
+    REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "root")
+else:
+    with open("/run/secrets/tsm_redis_password", "r") as file:
+        REDIS_PASSWORD = file.read().strip()
 
 # Email
 # EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
