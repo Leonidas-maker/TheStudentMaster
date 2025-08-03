@@ -24,7 +24,7 @@ import datetime
 
 
 from config.database import Base
-from config.settings import DEFAULT_TIMEZONE
+from config.settings import DEFAULT_TIMEZONE, MAX_DB_NAME_LENGTH
 
 from .m_generic import Address
 
@@ -86,7 +86,7 @@ class CalendarBackend(Base):
 class Course(Base):
     __tablename__ = "calendar_native_courses"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(MAX_DB_NAME_LENGTH), nullable=False)
     university_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("university.id"), nullable=False, index=True
     )
@@ -109,7 +109,6 @@ class Course(Base):
         CheckConstraint("name != ''", name="check_name_not_empty"),
     )
 
-
 class Lecture(Base):
     __tablename__ = "calendar_native_lectures"
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -117,7 +116,7 @@ class Lecture(Base):
         Integer, ForeignKey("calendar_native_courses.id", ondelete="CASCADE"), nullable=False, index=True
     )
 
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(MAX_DB_NAME_LENGTH), nullable=False)
     lecturer: Mapped[str | None] = mapped_column(String(255), nullable=True, default=None)
     last_modified: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
@@ -133,7 +132,6 @@ class Lecture(Base):
         UniqueConstraint("course_id", "name", name="uq_course_id_name"),
         CheckConstraint("name != ''", name="check_name_not_empty"),
     )
-
 
 class SessionRoom(Base):
     __tablename__ = "calendar_native_session_room"

@@ -13,7 +13,7 @@ DEBUG = True if ENVIRONMENT == "dev" else False #* Set to True for debugging
 TESTING = os.environ.get("TESTING", "False") == "True" and ENVIRONMENT == "dev"
 
 
-MAX_COURSE_NAME_LENGTH = 255
+MAX_DB_NAME_LENGTH = 255
 COURSE_HISTORY_DAYS = 183
 
 # Only needed for first database setup

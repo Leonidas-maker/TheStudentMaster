@@ -9,11 +9,7 @@ import re
 
 # ~~~~~~~~~~~~~~ Own Imports ~~~~~~~~~~~~~~ #
 import schemas.s_calendar as schemes
-
-# from config.general import DEFAULT_TIMEZONE, MAX_COURSE_NAME_LENGTH
-
-DEFAULT_TIMEZONE = pytz.timezone("UTC")
-MAX_COURSE_NAME_LENGTH = 255
+from config.settings import DEFAULT_TIMEZONE, MAX_DB_NAME_LENGTH
 
 ###########################################################################
 ############################## DHBWAppFetcher #############################
@@ -102,7 +98,18 @@ class DHBWAppFetcher:
         :param name (str): Lecture name to clean.
         :return: str: Cleaned lecture name.
         """
-        name = name.lower().title().strip()
+        name = name.lower().title().strip()[:MAX_DB_NAME_LENGTH]
+        return name
+
+    @staticmethod
+    def __get_course_name(splitted_course: List[str]) -> str:
+        """
+        Converts a course name to a standardized ID format.
+
+        :param course_name (str): Course name to convert.
+        :return: str: Standardized course ID.
+        """
+        name = "-".join(splitted_course[1:]).strip()[:MAX_DB_NAME_LENGTH]
         return name
 
     @staticmethod
@@ -131,7 +138,7 @@ class DHBWAppFetcher:
             # Extract site and course name
             splitted_course = lecture.course.split("-")
             site = splitted_course[0].strip()
-            course_name = "-".join(splitted_course[1:]).strip()
+            course_name = self.__get_course_name(splitted_course)
 
             # Initialize site in updated_sites if not present
             if not updated_sites.get(site):
@@ -183,7 +190,7 @@ class DHBWAppFetcher:
             # Extract site from the course identifier
             splitted_course = lecture.course.split("-")
             site = splitted_course[0].strip()
-            course_name = "-".join(splitted_course[1:]).strip()
+            course_name = self.__get_course_name(splitted_course)
 
             if updated_sites.get(site) is None:
                 updated_sites[site] = {}
@@ -219,7 +226,7 @@ class DHBWAppFetcher:
             # Extract site and course name
             splitted_course = lecture.course.split("-")
             site = splitted_course[0].strip()
-            course_name = "-".join(splitted_course[1:]).strip()
+            course_name = self.__get_course_name(splitted_course)
 
             # Initialize site in updated_sites if not present
             if updated_sites.get(site) is None:
@@ -347,7 +354,7 @@ class DHBWAppFetcher:
         ]
         courses = {}
         for session in sessions:
-            course_name = "-".join(session.course.split("-")[1:]).strip()
+            course_name = "-".join(session.course.split("-")[1:]).strip()[:MAX_DB_NAME_LENGTH]
             if not courses.get(course_name):
                 courses[course_name] = []
 

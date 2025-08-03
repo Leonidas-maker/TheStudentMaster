@@ -56,21 +56,21 @@ async def lifespan(app: FastAPI):
     scheduler.add_task(
         "refresh_calendar",
         calendar_core.refresh_all_dhbw_calendars,
-        cron="0 12 * * Sat",  # Every 7 days
+        cron="*/30 * * * *",  # Every 30 minutes
         on_startup=True,
         with_console=True,
         with_progress=True,
     )
 
-    scheduler.add_task(
-        "update_calendar",
-        calendar_core.update_all_dhbw_calendars,
-        cron="*/5 * * * *",  # Every 5 minutes
-        blocked_by=["refresh_calendar"],
-        on_startup=True,
-        with_console=True,
-        with_progress=True,
-    )
+    # scheduler.add_task(
+    #     "update_calendar",
+    #     calendar_core.update_all_dhbw_calendars,
+    #     cron="*/5 * * * *",  # Every 5 minutes
+    #     blocked_by=["refresh_calendar"],
+    #     on_startup=False,
+    #     with_console=True,
+    #     with_progress=True,
+    # )
 
     scheduler.start()
     yield

@@ -14,7 +14,7 @@ from models import m_calendar
 from utils.scraper.calendar.dhbw_app_fetcher_v2 import DHBWAppFetcher
 from schemas import s_calendar
 
-from config.settings import COURSE_HISTORY_DAYS, DEFAULT_TIMEZONE
+from config.settings import COURSE_HISTORY_DAYS, DEFAULT_TIMEZONE, MAX_DB_NAME_LENGTH
 
 
 ###########################################################################

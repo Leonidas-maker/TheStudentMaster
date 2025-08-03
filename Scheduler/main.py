@@ -18,7 +18,7 @@ def main():
     task_scheduler.add_task(
         "canteen",
         canteen.update_canteen_menus,
-        cron="*/20 6-18 * * 1-5",  # Every 15 minutes from 6am to 6pm on weekdays
+        cron="*/20 6-18 * * 1-5",  # Every 20 minutes from 6am to 6pm on weekdays
         blocked_by=[],
         on_startup=True,
         with_progress=True,
