@@ -1,0 +1,11 @@
+{
+  "chooseCanteenDropdown": "Mensa Auswählen",
+  "noCanteenSelected": "Bitte wähle eine Mensa aus",
+  "noDataForCanteenOnDate": "Keine Daten verfügbar für {{canteen}} am {{date}}.",
+  "connection_error_text1": "Netzwerkfehler",
+  "connection_error_text2": "Überprüfe deine Internetverbindung.",
+  "type": "Art",
+  "price": "Preis",
+  "date": "Datum",
+  "canteen": "Mensa"
+}

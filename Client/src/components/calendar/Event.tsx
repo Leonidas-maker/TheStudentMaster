@@ -9,6 +9,7 @@ import {
   useColorScheme,
 } from "react-native";
 import "nativewind";
+import { useRouter } from "expo-router";
 
 // ~~~~~~~~ Own components imports ~~~~~~~ //
 import {
@@ -36,7 +37,9 @@ const Event: React.FC<EventProps> = ({
   overlapCount = 1,
   overlapIndex = 0,
   isSaturday,
+  isSunday,
 }) => {
+  const router = useRouter();
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -98,12 +101,9 @@ const Event: React.FC<EventProps> = ({
   // ====================================================== //
   // Handles the event press and sets the modal visible
   const handleEventPress = () => {
-    setModalVisible(true);
-  };
-
-  // Handles the close press and sets the modal invisible
-  const handleClosePress = () => {
-    setModalVisible(false);
+    router.push(
+      `/(calendar)/CourseInfo?event=${JSON.stringify(event)}&startTimeString=${startTimeString}&endTimeString=${endTimeString}`,
+    );
   };
 
   // ====================================================== //
@@ -140,6 +140,8 @@ const Event: React.FC<EventProps> = ({
           return "bg-light_exam active:bg-light_exam_active";
         } else if (event.description.tags.includes("online")) {
           return "bg-light_online active:bg-light_online_active";
+        } else if (event.description.tags.includes("exam_review")) {
+          return "bg-light_exam_review active:bg-light_exam_review_active";
         }
       }
       return "bg-light_event active:bg-light_event_active";
@@ -149,6 +151,8 @@ const Event: React.FC<EventProps> = ({
           return "bg-dark_exam active:bg-dark_exam_active";
         } else if (event.description.tags.includes("online")) {
           return "bg-dark_online active:bg-dark_online_active";
+        } else if (event.description.tags.includes("exam_review")) {
+          return "bg-dark_exam_review active:bg-dark_exam_review_active";
         }
       }
       return "bg-dark_event active:bg-dark_event_active";
@@ -185,7 +189,8 @@ const Event: React.FC<EventProps> = ({
         {eventHeight > MIN_EVENT_HEIGHT_LOCATION &&
           overlapCount === 1 &&
           overlapIndex === 0 &&
-          !isSaturday && (
+          !isSaturday &&
+          !isSunday && (
             <>
               <Text className="text-white px-1 text-xs absolute bottom-1">
                 {event.location}
@@ -193,36 +198,6 @@ const Event: React.FC<EventProps> = ({
             </>
           )}
       </Pressable>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <Pressable
-          className="flex-1 justify-center items-center"
-          onPressOut={handleClosePress}
-        >
-          <View
-            className="bg-light_secondary dark:bg-dark_secondary p-5 rounded-2xl items-center shadow-md"
-            onStartShouldSetResponder={() => true}
-          >
-            <Text className="item-center pb-3 text-black dark:text-white">
-              {event.summary}
-            </Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Startzeit: ${startTimeString}`}</Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Endzeit: ${endTimeString}`}</Text>
-            <Text className="item-center font-bold text-black dark:text-white">{`Ort: ${event.location}`}</Text>
-            {isWeb && (
-              <>
-                <DefaultButton text="Schließen" />
-              </>
-            )}
-          </View>
-        </Pressable>
-      </Modal>
     </View>
   );
 };

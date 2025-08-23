@@ -5,6 +5,8 @@ module.exports = {
     "./src/**/**/*.{js,jsx,ts,tsx}",
     "./src/components/**/*.{js,jsx,ts,tsx}",
     "./src/provider/**/*.{js,jsx,ts,tsx}",
+    "./src/app/**/*.{js,jsx,ts,tsx}",
+    "./src/app/*.{js,jsx,ts,tsx}",
   ],
   darkMode: "class",
   presets: [require("nativewind/preset")],
@@ -39,6 +41,12 @@ module.exports = {
         light_online_active: "#1c811c",
         dark_online: "#084808",
         dark_online_active: "#1f5f1f",
+
+        //* Exam Review Class Colors
+        light_exam_review: "#00008b",
+        light_exam_review_active: "#1c1c81",
+        dark_exam_review: "#08084c",
+        dark_exam_review_active: "#1f1f6f",
 
         primary: "#0A1128",
         secondary: "#171717",

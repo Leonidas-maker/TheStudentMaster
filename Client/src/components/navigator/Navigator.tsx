@@ -31,11 +31,7 @@ const Navigator: React.FC<NavigatorProps> = ({
 
   // Check if the color scheme is light or dark
   useEffect(() => {
-    if (colorScheme === "light") {
-      setIsLight(true);
-    } else {
-      setIsLight(false);
-    }
+    setIsLight(colorScheme === "light");
   }, [colorScheme]);
 
   // Set the icon color based on the color scheme
@@ -56,13 +52,24 @@ const Navigator: React.FC<NavigatorProps> = ({
               onPress={onPressFunctions[index]}
               className="active:opacity-50"
             >
-              <View className="flex-row justify-between items-center">
-                <View className="flex-row items-center">
-                  <Icon name={iconNames[index]} size={20} color={iconColor} />
-                  <Text className="text-black dark:text-white font-bold text-lg ml-2">
+              <View className="flex-row items-center">
+                {/* Left Icon */}
+                <Icon
+                  name={iconNames[index]}
+                  size={20}
+                  color={iconColor}
+                  style={{ marginRight: 8 }}
+                />
+                {/* Text container to allow wrapping */}
+                <View style={{ flex: 1 }}>
+                  <Text
+                    className="text-black dark:text-white font-bold text-lg"
+                    numberOfLines={0}
+                  >
                     {text}
                   </Text>
                 </View>
+                {/* Right Icon */}
                 <Icon
                   name={
                     effectiveIsExternalLink[index]
@@ -71,6 +78,7 @@ const Navigator: React.FC<NavigatorProps> = ({
                   }
                   size={20}
                   color={iconColor}
+                  style={{ marginLeft: 8 }}
                 />
               </View>
             </Pressable>

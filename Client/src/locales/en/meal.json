@@ -1,0 +1,11 @@
+{
+  "chooseCanteenDropdown": "Choose canteen",
+  "noCanteenSelected": "Please choose a canteen",
+  "noDataForCanteenOnDate": "No data available for {{canteen}} on {{date}}.",
+  "connection_error_text1": "Network error",
+  "connection_error_text2": "Check your internet connection.",
+  "type": "Type",
+  "price": "Price",
+  "date": "Date",
+  "canteen": "Canteen"
+}

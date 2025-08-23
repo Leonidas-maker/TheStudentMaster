@@ -5,7 +5,7 @@ from sqlalchemy import union
 from schemes import s_general
 
 # ~~~~~~~~~~~~~~~~~ Models ~~~~~~~~~~~~~~~~ #
-from models import m_general, m_user, m_calendar, m_canteen
+from models import m_generic, m_canteen
 
 ###########################################################################
 ####################### Database specific functions #######################
@@ -13,18 +13,18 @@ from models import m_general, m_user, m_calendar, m_canteen
 
 
 # Function to create a new address in the database
-def create_address(db: Session, new_address: s_general.AddressCreate) -> m_general.Address:
+def create_address(db: Session, new_address: s_general.AddressCreate) -> m_generic.Address:
     if not new_address:
         raise ValueError("Address is required")
 
     # Check if the address already exists
     address_db = (
-        db.query(m_general.Address)
-        .join(m_general.PostalCode)
+        db.query(m_generic.Address)
+        .join(m_generic.PostalCode)
         .filter(
-            m_general.Address.address1 == new_address.address1,
-            m_general.Address.address2 == new_address.address2,
-            m_general.PostalCode.postal_code == new_address.postal_code,
+            m_generic.Address.address1 == new_address.address1,
+            m_generic.Address.address2 == new_address.address2,
+            m_generic.PostalCode.postal_code == new_address.postal_code,
         )
         .first()
     )
@@ -35,11 +35,11 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> m_gener
     new_db_objects = []
     # Check if the postal code already exists
     postal_code_db = (
-        db.query(m_general.PostalCode)
-        .join(m_general.City)
+        db.query(m_generic.PostalCode)
+        .join(m_generic.City)
         .filter(
-            m_general.PostalCode.postal_code == new_address.postal_code,
-            m_general.City.city == new_address.city,
+            m_generic.PostalCode.postal_code == new_address.postal_code,
+            m_generic.City.city == new_address.city,
         )
         .first()
     )
@@ -47,11 +47,11 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> m_gener
     if not postal_code_db:
         # Check if the city already exists
         city_db = (
-            db.query(m_general.City)
-            .join(m_general.District)
+            db.query(m_generic.City)
+            .join(m_generic.District)
             .filter(
-                m_general.City.city == new_address.city,
-                m_general.District.district == new_address.district,
+                m_generic.City.city == new_address.city,
+                m_generic.District.district == new_address.district,
             )
             .first()
         )
@@ -59,11 +59,11 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> m_gener
         if not city_db:
             # Check if the district already exists
             district_db = (
-                db.query(m_general.District)
-                .join(m_general.Country)
+                db.query(m_generic.District)
+                .join(m_generic.Country)
                 .filter(
-                    m_general.District.district == new_address.district,
-                    m_general.Country.country == new_address.country,
+                    m_generic.District.district == new_address.district,
+                    m_generic.Country.country == new_address.country,
                 )
                 .first()
             )
@@ -71,32 +71,32 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> m_gener
             if not district_db:
                 # Check if the country already exists
                 country_db = (
-                    db.query(m_general.Country).filter(m_general.Country.country == new_address.country).first()
+                    db.query(m_generic.Country).filter(m_generic.Country.country == new_address.country).first()
                 )
 
                 if not country_db:
                     # Create new country
-                    country_db = m_general.Country(country=new_address.country)
+                    country_db = m_generic.Country(country=new_address.country)
                     new_db_objects.append(country_db)
                 # >> End country check <<
 
                 # Create new district
-                district_db = m_general.District(district=new_address.district, country=country_db)
+                district_db = m_generic.District(district=new_address.district, country=country_db)
                 new_db_objects.append(district_db)
             # >> End district check <<
 
             # Create new city
-            city_db = m_general.City(city=new_address.city, district=district_db)
+            city_db = m_generic.City(city=new_address.city, district=district_db)
             new_db_objects.append(city_db)
         # >> End city check <<
 
         # Create new postal code
-        postal_code_db = m_general.PostalCode(postal_code=new_address.postal_code, city=city_db)
+        postal_code_db = m_generic.PostalCode(postal_code=new_address.postal_code, city=city_db)
         new_db_objects.append(postal_code_db)
     # >> End postal code check <<
 
     # Create new address
-    new_address = m_general.Address(
+    new_address = m_generic.Address(
         address1=new_address.address1,
         address2=new_address.address2,
         postal_code=postal_code_db,
@@ -112,23 +112,23 @@ def create_address(db: Session, new_address: s_general.AddressCreate) -> m_gener
 def clean_address(db: Session) -> int:
     # Addresses used by University Table (calendar)
     native_address_1_subquery = (
-        db.query(m_general.Address.address_id)
+        db.query(m_generic.Address.address_id)
         .join(m_calendar.University)
-        .filter(m_calendar.University.address_id == m_general.Address.address_id)
+        .filter(m_calendar.University.address_id == m_generic.Address.address_id)
     )
 
     # Addresses used by Canteen Table
     native_address_2_subquery = (
-        db.query(m_general.Address.address_id)
+        db.query(m_generic.Address.address_id)
         .join(m_canteen.Canteen)
-        .filter(m_canteen.Canteen.address_id == m_general.Address.address_id)
+        .filter(m_canteen.Canteen.address_id == m_generic.Address.address_id)
     )
 
     # Addresses used by User Table
     user_address_subquery = (
-        db.query(m_general.Address.address_id)
+        db.query(m_generic.Address.address_id)
         .join(m_user.User)
-        .filter(m_user.User.address_id == m_general.Address.address_id)
+        .filter(m_user.User.address_id == m_generic.Address.address_id)
     )
 
     # Combine all subqueries
@@ -138,8 +138,8 @@ def clean_address(db: Session) -> int:
 
     # Delete all addresses that are not in any of the subqueries
     delete_count = (
-        db.query(m_general.Address)
-        .filter(m_general.Address.address_id.notin_(all_subquery.element))
+        db.query(m_generic.Address)
+        .filter(m_generic.Address.address_id.notin_(all_subquery.element))
         .delete(synchronize_session=False)
     )
     db.commit()

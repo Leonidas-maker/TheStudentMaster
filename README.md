@@ -15,16 +15,26 @@ TheStudentMaster is available on both iOS and Android platforms. Download the ap
 
 ---
 
-## 🌟 Planned Features
+## 📋 Features
 
 - **🗓️ Timetable Management**: Manage your timetables, check lecture times, and quickly capture changes.
 - **🍽️ Cafeteria Menu**: Get an overview of cafeteria menus to help plan your meals.
+- **📊 Integration with Dualis**: Connect to the Dualis platform for quick access to your grades.
+- **🏫 Available Rooms**: Identify available rooms for study purposes.
+
+---
+
+## 🌟 Planned Features
 
 - **🚦 Cafeteria Occupancy**: View predicted occupancy of the cafeteria to choose times with less waiting.
-
-- **📊 Integration with Dualis**: Connect to the Dualis platform for quick access to your grades.
-
-- **🏫 Available Rooms**: Identify available rooms for study purposes.
+- **🧮 Grade Calculator** : Enter the maximum possible points and your estimated points for an exam — the calculator converts them into your final grade.
+- **📊 Average Grade Calculator**: Calculate your semester GPA or overall average grade based on all entered marks.
+- **📧 Zimbra Integration**: Sync your Zimbra mailbox to receive university emails and notifications directly in the app.
+- **📂 Dualis Document Downloads**: Download your enrollment certificates and grade transcripts from Dualis with a single click.
+- **🎒 Moodle Integration**: Access your Moodle courses, submissions, grades, and materials without leaving the app.
+- **🗺️ Interactive Room Map**: Explore the campus on an interactive map to locate lecture halls, study rooms, and other facilities.
+- **🚆 Train & Tram Timetable**: View real-time departures and get step-by-step directions to campus.
+- **📰 Newsroom**: Stay up to date with app updates, announcements, and all DHBW-related news.
 
 ---
 

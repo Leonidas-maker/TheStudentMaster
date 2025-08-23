@@ -191,6 +191,15 @@ interface RadioOptionProps {
   radioColor: string;
 }
 
+interface OptionSelectorProps {
+  title: string;
+  onPressFunctions: (() => void)[];
+  texts: string[];
+  iconNames: string[];
+  checked: boolean[];
+  isEmoji?: boolean;
+}
+
 // ====================================================== //
 // ================== Interfaces export ================= //
 // ====================================================== //
@@ -207,4 +216,5 @@ export {
   OnboardingButtonProps,
   OnboardingPageProps,
   RadioOptionProps,
+  OptionSelectorProps,
 };

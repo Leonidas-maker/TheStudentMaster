@@ -1,0 +1,25 @@
+fastapi[all] 
+SQLAlchemy
+rich
+pytz
+requests
+fastapi_cdn_host
+python-dateutil
+uvicorn
+pymysql
+icalendar
+fastapi-cache2
+redis
+asyncmy
+apscheduler
+beautifulsoup4
+
+# pyyaml
+# ua-parser 
+# user-agents
+# anonip
+
+# fastapi-mail
+# alt-profanity-check
+# bcrypt
+# pyotp

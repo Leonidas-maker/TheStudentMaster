@@ -1,13 +1,13 @@
 // ~~~~~~~~~~~~~~~ Imports ~~~~~~~~~~~~~~~ //
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { axiosInstance } from "./api";
 
 // ~~~~~~~~~~ Interfaces imports ~~~~~~~~~ //
 import { CalendarProps } from "../interfaces/calendarInterfaces";
 
 // Function to fetch available calendars and update the state
 const fetchCalendars = async (): Promise<CalendarProps[]> => {
-  const response = await axios.get("/calendar/available_calendars"); // Make a GET request to fetch calendars
+  const response = await axiosInstance.get("/calendar/available_calendars"); // Make a GET request to fetch calendars
   return response.data; // Return the fetched calendar data
 };
 
@@ -59,7 +59,7 @@ const getSelectedCourse = async (
 // Function to fetch the initial hash value and store it in AsyncStorage
 const fetchInitialHash = async (universityUuid: string, courseName: string) => {
   try {
-    const hashResponse = await axios.get(
+    const hashResponse = await axiosInstance.get(
       `/calendar/${universityUuid}/${courseName}/hash`, // Make a GET request to fetch the hash value
     );
     const currentHash = hashResponse.data.message; // Extract the hash value from the response

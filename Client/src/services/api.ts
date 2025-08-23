@@ -3,9 +3,9 @@ import axios, { AxiosInstance } from "axios";
 
 // Define the base URL
 const BASE_URL = "https://thestudentmaster.de/api";
-axios.defaults.baseURL = BASE_URL;
 
-// Create an axios instance
-const axiosInstance: AxiosInstance = axios.create();
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+});
 
 export { axiosInstance, BASE_URL };

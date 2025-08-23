@@ -10,3 +10,4 @@ __pycache__
 .pytest_cache
 yarn.lock
 package-lock.json
+.venv

@@ -13,7 +13,8 @@ import { addWeeks, subWeeks } from "date-fns";
 import { FlingGestureHandler, Directions } from "react-native-gesture-handler";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Progress from "react-native-progress";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 // ~~~~~~~~~~~ Service imports ~~~~~~~~~~~ //
 import {
@@ -36,7 +37,8 @@ import {
   EventTimeProps,
 } from "../../interfaces/calendarInterfaces";
 import axios, { AxiosError } from "axios";
-import ConnectionMessage from "../message/ConnectionMessage";
+import Toast from "react-native-toast-message";
+import DefaultToast from "../defaultToast/DefaultToast";
 
 // Important for LayoutAnimation on Android according to the docs
 //! Disabled because it causes a crash on Android
@@ -50,6 +52,7 @@ import ConnectionMessage from "../message/ConnectionMessage";
 // ====================== Component ===================== //
 // ====================================================== //
 const WeekCalendar: React.FC = () => {
+  const { t } = useTranslation("calendar");
   // ====================================================== //
   // ======================= States ======================= //
   // ====================================================== //
@@ -58,8 +61,7 @@ const WeekCalendar: React.FC = () => {
   const [events, setEvents] = useState<EventTimeProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [connectionError, setConnectionError] = useState(false);
-  const navigation = useNavigation<any>();
+  const router = useRouter();
 
   // ====================================================== //
   // ===================== Animations ===================== //
@@ -78,7 +80,6 @@ const WeekCalendar: React.FC = () => {
       const loadEvents = async () => {
         setLoading(true);
         setProgress(0.3);
-        setConnectionError(false);
         await loadEventsFromStorage(setEvents);
         setProgress(0.6);
         // Function to try fetching the new uuid
@@ -99,7 +100,11 @@ const WeekCalendar: React.FC = () => {
               error.response?.status !== 404 &&
               error.response?.status !== 422
             ) {
-              setConnectionError(true);
+              Toast.show({
+                type: "error",
+                text1: t("toast_error_title"),
+                text2: t("toast_error_message"),
+              });
               setLoading(false);
               throw new Error("Error fetching events");
             }
@@ -147,17 +152,17 @@ const WeekCalendar: React.FC = () => {
               await AsyncStorage.removeItem("events");
 
               Alert.alert(
-                "Calendar nicht verfügbar",
-                "Der gewählte Kalender ist nicht verfügbar. Bitte wählen Sie einen neuen Kalender aus.",
+                t("error_title"),
+                t("error_message"),
                 [
                   {
-                    text: "Zurück",
+                    text: t("back_btn"),
                     style: "cancel",
                   },
                   {
-                    text: "Zur Auswahl",
+                    text: t("selection_btn"),
                     onPress: () => {
-                      navigation.navigate("MiscStack", { screen: "Settings" });
+                      router.push("/(calendar)/CalendarCourseSettings");
                     },
                     style: "default",
                   },
@@ -194,17 +199,17 @@ const WeekCalendar: React.FC = () => {
 
         if (missingUniversity || missingCourse) {
           Alert.alert(
-            "Auswahl erforderlich",
-            "Bitte wählen Sie eine Universität und einen Kurs aus.",
+            t("info_title"),
+            t("info_message"),
             [
               {
-                text: "Zurück",
+                text: t("back_btn"),
                 style: "cancel",
               },
               {
-                text: "Zur Auswahl",
+                text: t("selection_btn"),
                 onPress: () => {
-                  navigation.navigate("MiscStack", { screen: "Settings" });
+                  router.push("/(calendar)/CalendarCourseSettings");
                 },
                 style: "default",
               },
@@ -216,7 +221,7 @@ const WeekCalendar: React.FC = () => {
 
       loadEvents();
       checkSelections();
-    }, [navigation]),
+    }, [router]),
   );
 
   // ====================================================== //
@@ -259,10 +264,9 @@ const WeekCalendar: React.FC = () => {
         }}
       >
         <View className="h-full flex-1">
-          <ConnectionMessage
-            visible={connectionError}
-            setVisible={setConnectionError} // Verbindungsfehler setzen und zurücksetzen
-          />
+          <View className="z-50">
+            <DefaultToast />
+          </View>
           <WeekSelector
             mode="calendar"
             onBackPress={handleBackPress}
